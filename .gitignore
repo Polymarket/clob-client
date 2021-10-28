@@ -1,0 +1,24 @@
+# folders
+.coverage_artifacts/
+.coverage_cache/
+.coverage_contracts/
+artifacts/
+bin/
+build/
+cache/
+coverage/
+dist/
+node_modules/
+typechain/
+
+# files
+.env
+*.log
+*.tsbuildinfo
+coverage.json
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.DS_Store
+packages/tracker/main
+package-lock.json

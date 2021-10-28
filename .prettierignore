@@ -1,0 +1,14 @@
+# folders
+artifacts/
+build/
+cache/
+coverage/
+dist/
+lib/
+node_modules/
+typechain/
+
+forks/fx-portal
+
+# files
+coverage.json
