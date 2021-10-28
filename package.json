@@ -1,0 +1,59 @@
+{
+    "name": "@polymarket/clob-client",
+    "description": "Typescript client for Polymarket's CLOB",
+    "version": "1.0.0",
+    "contributors": [
+        {
+            "name": "Jonathan Amenechi",
+            "url": "https://github.com/JonathanAmenechi"
+        }
+    ],
+    "main": "dist/index.js",
+    "types": "dist/index.d.ts",
+    "devDependencies": {
+        "@commitlint/cli": "^9.1.2",
+        "@commitlint/config-conventional": "^9.1.2",
+        "@ethersproject/abstract-signer": "^5.4.5",
+        "@ethersproject/bignumber": "^5.4.5",
+        "@ethersproject/abstract-provider": "^5.4.5",
+        "@ethersproject/contracts": "^5.4.5",
+        "@ethersproject/hash": "^5.4.5",
+        "@ethersproject/providers": "^5.4.5",
+        "@ethersproject/random": "^5.4.5",
+        "@ethersproject/transactions": "^5.4.5",
+        "@ethersproject/constants": "^5.4.5",
+        "@ethersproject/wallet": "^5.4.5",
+        "@polymarket/order-utils": "^1.0.2",
+        "commitizen": "^4.2.1",
+        "cz-conventional-changelog": "^3.3.0",
+        "dotenv": "^8.2.0",
+        "eslint": "^7.11.0",
+        "eslint-config-airbnb-base-typescript-prettier": "^4.1.0",
+        "eslint-config-prettier": "^6.12.0",
+        "eslint-plugin-import": "^2.22.1",
+        "husky": "^4.3.0",
+        "mocha": "^8.1.3",
+        "prettier": "^2.1.2",
+        "prettier-plugin-solidity": "^1.0.0-beta.9",
+        "shelljs": "^0.8.4",
+        "ethers": "^5.4.5",
+        "axios": "^0.21.1",
+        "ts-generator": "^0.1.1",
+        "ts-node": "^9.1.1",
+        "typechain": "^4.0.2",
+        "typescript": "^3.9.7"
+    },
+    "files": [
+        "/dist"
+    ],
+    "keywords": [
+        "blockchain",
+        "ethereum"
+    ],
+    "license": "MIT",
+    "scripts": {
+        "build": "tsc",
+        "deploy": "yarn build && npm publish",
+        "lint": "eslint --config ./.eslintrc.js --ignore-path ./.eslintignore src"
+    }
+}
