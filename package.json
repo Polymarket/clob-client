@@ -23,7 +23,7 @@
         "@ethersproject/transactions": "^5.4.5",
         "@ethersproject/constants": "^5.4.5",
         "@ethersproject/wallet": "^5.4.5",
-        "@polymarket/order-utils": "^1.0.2",
+        "@polymarket/order-utils": "^1.0.3",
         "commitizen": "^4.2.1",
         "cz-conventional-changelog": "^3.3.0",
         "dotenv": "^8.2.0",
