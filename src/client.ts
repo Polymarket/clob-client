@@ -1,8 +1,10 @@
 import { Wallet } from "@ethersproject/wallet";
 import { JsonRpcSigner } from "@ethersproject/providers";
 import { ApiKeyCreds } from "./types";
-import { get } from "./helpers";
-import { createApiKey } from "./keys.ts";
+import { createApiKeyHeaders } from "./keys.ts";
+import { CREDS_CREATION_WARNING } from "./constants";
+import { get, post } from "./helpers";
+import { L1_AUTH_UNAVAILABLE_ERROR, L2_AUTH_NOT_AVAILABLE } from "./errors";
 
 export class ClobClient {
     readonly host: string;
@@ -39,14 +41,25 @@ export class ClobClient {
 
     // L1 Authed
     public async createApiKey(): Promise<any> {
-        if (this.signer === undefined) {
-            // TODO: add some helpers to check and throw automatically
-            throw new Error("Signer is needed to interact with this endpoint!");
-        }
+        this.canL1Auth();
 
         const endpoint = `${this.host}/create-api-key`;
-        const resp = await createApiKey(endpoint, this.signer);
+        const headers = await createApiKeyHeaders(this.signer as Wallet | JsonRpcSigner);
+        const resp = await post(endpoint, headers);
+        console.log(CREDS_CREATION_WARNING);
         return resp.data;
+    }
+
+    private canL1Auth(): void {
+        if (this.signer === undefined) {
+            throw L1_AUTH_UNAVAILABLE_ERROR;
+        }
+    }
+
+    private canL2Auth(): void {
+        if (this.creds === undefined) {
+            throw L2_AUTH_NOT_AVAILABLE;
+        }
     }
 
     // public async getApiKeys() {
