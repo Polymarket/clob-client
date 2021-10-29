@@ -1,4 +1,4 @@
 export const CREDS_CREATION_WARNING = `🚨🚨🚨
-Your passphrase and secret CANNOT be recovered. 
-Make sure to write them down!
+Your credentials CANNOT be recovered once created. 
+Be sure to store them safely!
 🚨🚨🚨`;
