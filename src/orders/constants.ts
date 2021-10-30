@@ -1,0 +1,2 @@
+export const COLLATERAL_TOKEN_DECIMALS = 6;
+export const CONDITIONAL_TOKEN_DECIMALS = 18;

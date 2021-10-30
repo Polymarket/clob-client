@@ -271,7 +271,7 @@
     "@ethersproject/transactions" "^5.5.0"
     "@ethersproject/web" "^5.5.0"
 
-"@ethersproject/abstract-signer@5.5.0", "@ethersproject/abstract-signer@^5.0.6", "@ethersproject/abstract-signer@^5.4.5", "@ethersproject/abstract-signer@^5.5.0":
+"@ethersproject/abstract-signer@5.5.0", "@ethersproject/abstract-signer@^5.4.5", "@ethersproject/abstract-signer@^5.5.0":
   version "5.5.0"
   resolved "https://registry.yarnpkg.com/@ethersproject/abstract-signer/-/abstract-signer-5.5.0.tgz#590ff6693370c60ae376bf1c7ada59eb2a8dd08d"
   integrity sha512-lj//7r250MXVLKI7sVarXAbZXbv9P50lgmJQGr2/is82EwEb8r7HrxsmMqAjTsztMYy7ohrIhGMIml+Gx4D3mA==
@@ -308,7 +308,7 @@
     "@ethersproject/bytes" "^5.5.0"
     "@ethersproject/properties" "^5.5.0"
 
-"@ethersproject/bignumber@5.5.0", "@ethersproject/bignumber@^5.1.1", "@ethersproject/bignumber@^5.4.5", "@ethersproject/bignumber@^5.5.0":
+"@ethersproject/bignumber@5.5.0", "@ethersproject/bignumber@^5.4.5", "@ethersproject/bignumber@^5.5.0":
   version "5.5.0"
   resolved "https://registry.yarnpkg.com/@ethersproject/bignumber/-/bignumber-5.5.0.tgz#875b143f04a216f4f8b96245bde942d42d279527"
   integrity sha512-6Xytlwvy6Rn3U3gKEc1vP7nR92frHkv6wtVr95LFR3jREXiCPzdWxKQ1cx4JGQBXxcguAwjA8murlYN2TSiEbg==
@@ -540,7 +540,7 @@
     "@ethersproject/constants" "^5.5.0"
     "@ethersproject/logger" "^5.5.0"
 
-"@ethersproject/wallet@5.5.0", "@ethersproject/wallet@^5.5.0":
+"@ethersproject/wallet@5.5.0", "@ethersproject/wallet@^5.4.5":
   version "5.5.0"
   resolved "https://registry.yarnpkg.com/@ethersproject/wallet/-/wallet-5.5.0.tgz#322a10527a440ece593980dca6182f17d54eae75"
   integrity sha512-Mlu13hIctSYaZmUOo7r2PhNSd8eaMPVXe1wxrz4w4FCE4tDYBywDH+bAR1Xz2ADyXGwqYMwstzTrtUVIsKDO0Q==
@@ -618,15 +618,15 @@
     "@nodelib/fs.scandir" "2.1.5"
     fastq "^1.6.0"
 
-"@polymarket/order-utils@^1.0.3":
-  version "1.0.3"
-  resolved "https://registry.yarnpkg.com/@polymarket/order-utils/-/order-utils-1.0.3.tgz#55d10e5bfa6d3bf328e17319029693c1478a77e7"
-  integrity sha512-1zjU8k9dpden0EE3GVv8GN0l6AElUeWc+2e87glSahVgSQWrnMdGRiE0T6Ezunb4CbXHtvQBHU5ZXAv4SUGOJg==
+"@polymarket/order-utils@^1.0.6":
+  version "1.0.6"
+  resolved "https://registry.yarnpkg.com/@polymarket/order-utils/-/order-utils-1.0.6.tgz#2c4fecb86ac58d92be1bb83c0c0f4360ec072b9e"
+  integrity sha512-HCrQwFZLl71Kh/dtgFbaCo6vyhIwQksVibegl7eoqZFm7dUO4rPvqJXu7DrUl6kdxWtrJ77nDcp/vHswEPyL7g==
   dependencies:
-    "@ethersproject/abstract-signer" "^5.0.6"
-    "@ethersproject/bignumber" "^5.1.1"
+    "@ethersproject/abstract-signer" "^5.4.5"
+    "@ethersproject/bignumber" "^5.4.5"
     eth-sig-util "^3.0.1"
-    ethers "^5.4.0"
+    ethers "^5.4.5"
     ethers-eip712 "^0.2.0"
     prompts "^2.4.1"
     web3 "^2.0.0-alpha.1"
@@ -2073,7 +2073,7 @@ ethers@^4.0.27:
     uuid "2.0.1"
     xmlhttprequest "1.8.0"
 
-ethers@^5.4.0, ethers@^5.4.5:
+ethers@^5.4.5:
   version "5.5.1"
   resolved "https://registry.yarnpkg.com/ethers/-/ethers-5.5.1.tgz#d3259a95a42557844aa543906c537106c0406fbf"
   integrity sha512-RodEvUFZI+EmFcE6bwkuJqpCYHazdzeR1nMzg+YWQSmQEsNtfl1KHGfp/FWZYl48bI/g7cgBeP2IlPthjiVngw==
