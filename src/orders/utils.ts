@@ -5,6 +5,8 @@ import { COLLATERAL_TOKEN_DECIMALS } from "./constants";
 
 const getTokenID = (condition: string): number => {
     switch (condition.toLowerCase()) {
+        // TODO: assuming YES = 0, NO = 1, following the [Yes, No] structure
+        // will be a problem for scalars, non binary markets, figure out fix
         case "yes":
             return 0;
         case "no":
