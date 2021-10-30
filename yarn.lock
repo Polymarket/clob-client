@@ -540,7 +540,7 @@
     "@ethersproject/constants" "^5.5.0"
     "@ethersproject/logger" "^5.5.0"
 
-"@ethersproject/wallet@5.5.0", "@ethersproject/wallet@^5.4.5":
+"@ethersproject/wallet@5.5.0", "@ethersproject/wallet@^5.5.0":
   version "5.5.0"
   resolved "https://registry.yarnpkg.com/@ethersproject/wallet/-/wallet-5.5.0.tgz#322a10527a440ece593980dca6182f17d54eae75"
   integrity sha512-Mlu13hIctSYaZmUOo7r2PhNSd8eaMPVXe1wxrz4w4FCE4tDYBywDH+bAR1Xz2ADyXGwqYMwstzTrtUVIsKDO0Q==
@@ -618,10 +618,10 @@
     "@nodelib/fs.scandir" "2.1.5"
     fastq "^1.6.0"
 
-"@polymarket/order-utils@^1.0.2":
-  version "1.0.2"
-  resolved "https://registry.yarnpkg.com/@polymarket/order-utils/-/order-utils-1.0.2.tgz#2e692d1308f84cf30e7adeef52537338d609206a"
-  integrity sha512-ww1vrHyzWdbwbpbDbPp7LDQ5WUO2XkikaE96HAtPZE/m3iAf8RPn1zVMAnnCpYgQ+Eo5tB9rBS+EohF/lqlonw==
+"@polymarket/order-utils@^1.0.3":
+  version "1.0.3"
+  resolved "https://registry.yarnpkg.com/@polymarket/order-utils/-/order-utils-1.0.3.tgz#55d10e5bfa6d3bf328e17319029693c1478a77e7"
+  integrity sha512-1zjU8k9dpden0EE3GVv8GN0l6AElUeWc+2e87glSahVgSQWrnMdGRiE0T6Ezunb4CbXHtvQBHU5ZXAv4SUGOJg==
   dependencies:
     "@ethersproject/abstract-signer" "^5.0.6"
     "@ethersproject/bignumber" "^5.1.1"
