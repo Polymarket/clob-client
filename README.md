@@ -11,9 +11,9 @@ const creds: ApiKeyCreds = {
     secret: `${process.env.CLOB_SECRET}`,
     passphrase: `${process.env.CLOB_PASS_PHRASE}`,
 }
-const clobClient = new ClobClient(host, wallet, creds);
 
-await clobClient.createOrder
+// Initialize the clob client
+const clobClient = new ClobClient(host, wallet, creds);
 
 // Create a buy order for 100 YES for 0.50c
 const order = await clobClient.createOrder({
