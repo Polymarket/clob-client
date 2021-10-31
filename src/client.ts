@@ -53,6 +53,25 @@ export class ClobClient {
         return resp.data;
     }
 
+    public async getApiKeys(): Promise<any> {
+        this.canL2Auth();
+
+        const endpoint = `${this.host}/get-api-keys`;
+        const headerArgs = {
+            method: "GET",
+            requestPath: "/get-api-keys",
+        };
+
+        const headers = await createL2Headers(
+            this.signer as Wallet | JsonRpcSigner,
+            this.creds as ApiKeyCreds,
+            headerArgs,
+        );
+
+        const resp = await get(endpoint, headers);
+        return resp.data;
+    }
+
     public async createOrder(userOrder: UserOrder): Promise<LimitOrderAndSignature> {
         this.canL1Auth();
         const orderAndSig = await createOrder(this.signer as Wallet | JsonRpcSigner, userOrder);
@@ -86,6 +105,10 @@ export class ClobClient {
     }
 
     private canL2Auth(): void {
+        if (this.signer === undefined) {
+            throw L1_AUTH_UNAVAILABLE_ERROR;
+        }
+
         if (this.creds === undefined) {
             throw L2_AUTH_NOT_AVAILABLE;
         }
