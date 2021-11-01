@@ -54,7 +54,6 @@ export const buildOrderCreationArgs = async (
         const rawMakerAmt = parseFloat(userOrder.size.toFixed(2));
         makerAmount = ethers.utils.parseEther(rawMakerAmt.toString()).toString();
         const rawTakerAmt = parseFloat((userOrder.price * userOrder.size).toFixed(2));
-        console.log(`raw taker Amount: ${rawTakerAmt}`);
         takerAmount = ethers.utils.parseUnits(rawTakerAmt.toString(), COLLATERAL_TOKEN_DECIMALS).toString();
     }
 

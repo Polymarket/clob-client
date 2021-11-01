@@ -78,6 +78,29 @@ export class ClobClient {
         return orderAndSig;
     }
 
+    public async getOpenOrders(): Promise<any> {
+        this.canL2Auth();
+        const endpoint = "/open-orders";
+        const l2HeaderArgs = {
+            method: "GET",
+            requestPath: endpoint,
+        };
+
+        const headers = await createL2Headers(
+            this.signer as Wallet | JsonRpcSigner,
+            this.creds as ApiKeyCreds,
+            l2HeaderArgs,
+        );
+
+        const resp = await get(`${this.host}${endpoint}`, headers);
+        return resp.data;
+    }
+
+
+    // public async cancel(orderID: string): Promise<any> {
+    //     this.canL2Auth();
+    // }
+
     public async postOrder(order: LimitOrderAndSignature): Promise<any> {
         this.canL2Auth();
         const endpoint = `${this.host}/order`;

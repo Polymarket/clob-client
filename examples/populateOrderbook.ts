@@ -20,20 +20,30 @@ async function main(){
     }
     const clobClient = new ClobClient(host, wallet, creds);
 
-    // Create a buy order for 100 YES for 0.50c
-    const order = await clobClient.createOrder({
-        asset: { 
-            address: "0xadbeD21409324e0fcB80AE8b5e662B0C857D85ed",
-            condition: "YES",
-        },
-        price: 0.5,
-        side: Side.Buy,
-        size: 100,
-    });
+    const orders = [
+        {side: Side.Buy, price: 0.10, size: 1000},
+        {side: Side.Buy, price: 0.40, size: 80},
+        {side: Side.Buy, price: 0.44, size: 60},
+        {side: Side.Buy, price: 0.50, size: 40},
 
-    // Send it to the server
-    const resp = await clobClient.postOrder(order);
-    console.log(resp);
+        {side: Side.Sell, price: 0.60, size: 30},
+        {side: Side.Sell, price: 0.60, size: 75},
+        {side: Side.Sell, price: 0.75, size: 50},
+        {side: Side.Sell, price: 0.99, size: 1000},
+    ]
+
+    for(const newOrder of orders){
+        await clobClient.postOrder(
+            await clobClient.createOrder({
+                asset: { 
+                    address: "0xadbeD21409324e0fcB80AE8b5e662B0C857D85ed",
+                    condition: "YES",
+                },
+                side: newOrder.side,
+                price: newOrder.price,
+                size: newOrder.size,
+        }));
+    }
     console.log(`Done!`)
 }
 
