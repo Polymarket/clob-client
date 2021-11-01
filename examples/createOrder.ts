@@ -26,8 +26,8 @@ async function main(){
             address: "0xadbeD21409324e0fcB80AE8b5e662B0C857D85ed",
             condition: "YES",
         },
-        price: 0.5,
-        side: Side.Buy,
+        price: 0.55,
+        side: Side.Sell,
         size: 100,
     });
 

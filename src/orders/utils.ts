@@ -42,18 +42,19 @@ export const buildOrderCreationArgs = async (
         takerAsset = userOrder.asset.address;
         makerAssetID = undefined;
         takerAssetID = getTokenID(userOrder.asset.condition);
-        const rawMakerAmt = userOrder.price * userOrder.size;
+        const rawMakerAmt = parseFloat((userOrder.price * userOrder.size).toFixed(2));
         makerAmount = ethers.utils.parseUnits(rawMakerAmt.toString(), COLLATERAL_TOKEN_DECIMALS).toString();
-        const rawTakerAmt = userOrder.size;
+        const rawTakerAmt = parseFloat(userOrder.size.toFixed(2));
         takerAmount = ethers.utils.parseEther(rawTakerAmt.toString()).toString();
     } else {
         makerAsset = userOrder.asset.address;
         takerAsset = collateral;
         makerAssetID = getTokenID(userOrder.asset.condition);
         takerAssetID = undefined;
-        const rawMakerAmt = userOrder.size;
+        const rawMakerAmt = parseFloat(userOrder.size.toFixed(2));
         makerAmount = ethers.utils.parseEther(rawMakerAmt.toString()).toString();
-        const rawTakerAmt = userOrder.price * userOrder.size;
+        const rawTakerAmt = parseFloat((userOrder.price * userOrder.size).toFixed(2));
+        console.log(`raw taker Amount: ${rawTakerAmt}`);
         takerAmount = ethers.utils.parseUnits(rawTakerAmt.toString(), COLLATERAL_TOKEN_DECIMALS).toString();
     }
 
