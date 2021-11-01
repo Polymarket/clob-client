@@ -618,10 +618,10 @@
     "@nodelib/fs.scandir" "2.1.5"
     fastq "^1.6.0"
 
-"@polymarket/order-utils@^1.0.6":
-  version "1.0.6"
-  resolved "https://registry.yarnpkg.com/@polymarket/order-utils/-/order-utils-1.0.6.tgz#2c4fecb86ac58d92be1bb83c0c0f4360ec072b9e"
-  integrity sha512-HCrQwFZLl71Kh/dtgFbaCo6vyhIwQksVibegl7eoqZFm7dUO4rPvqJXu7DrUl6kdxWtrJ77nDcp/vHswEPyL7g==
+"@polymarket/order-utils@^1.0.7":
+  version "1.0.7"
+  resolved "https://registry.yarnpkg.com/@polymarket/order-utils/-/order-utils-1.0.7.tgz#be682c2c38dd58effce5317f8ff2bca3eb89c98f"
+  integrity sha512-6O6eni7Os2noLBg4NFXFd2SjoO5h3kZriZszC+0zFmtTrYTjkvnLM35TRaZbGhxy1kf4h+s/qTcezpy1kjfP6g==
   dependencies:
     "@ethersproject/abstract-signer" "^5.4.5"
     "@ethersproject/bignumber" "^5.4.5"
