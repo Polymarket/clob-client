@@ -1,10 +1,13 @@
 import { Wallet } from "@ethersproject/wallet";
 import { JsonRpcSigner } from "@ethersproject/providers";
-import { ApiKeyCreds } from "./types";
-import { createApiKeyHeaders } from "./keys.ts";
+import { LimitOrderAndSignature } from "@polymarket/order-utils";
+import { ApiKeyCreds, UserOrder } from "./types";
+import { createL1Headers, createL2Headers } from "./headers";
 import { CREDS_CREATION_WARNING } from "./constants";
 import { get, post } from "./helpers";
 import { L1_AUTH_UNAVAILABLE_ERROR, L2_AUTH_NOT_AVAILABLE } from "./errors";
+import { createOrder } from "./orders";
+import { orderToJson } from "./orders/utils";
 
 export class ClobClient {
     readonly host: string;
@@ -44,9 +47,54 @@ export class ClobClient {
         this.canL1Auth();
 
         const endpoint = `${this.host}/create-api-key`;
-        const headers = await createApiKeyHeaders(this.signer as Wallet | JsonRpcSigner);
+        const headers = await createL1Headers(this.signer as Wallet | JsonRpcSigner);
         const resp = await post(endpoint, headers);
         console.log(CREDS_CREATION_WARNING);
+        return resp.data;
+    }
+
+    public async getApiKeys(): Promise<any> {
+        this.canL2Auth();
+
+        const endpoint = `${this.host}/get-api-keys`;
+        const headerArgs = {
+            method: "GET",
+            requestPath: "/get-api-keys",
+        };
+
+        const headers = await createL2Headers(
+            this.signer as Wallet | JsonRpcSigner,
+            this.creds as ApiKeyCreds,
+            headerArgs,
+        );
+
+        const resp = await get(endpoint, headers);
+        return resp.data;
+    }
+
+    public async createOrder(userOrder: UserOrder): Promise<LimitOrderAndSignature> {
+        this.canL1Auth();
+        const orderAndSig = await createOrder(this.signer as Wallet | JsonRpcSigner, userOrder);
+        return orderAndSig;
+    }
+
+    public async postOrder(order: LimitOrderAndSignature): Promise<any> {
+        this.canL2Auth();
+        const endpoint = `${this.host}/order`;
+        const orderPayload = orderToJson(order);
+        const l2HeaderArgs = {
+            method: "POST",
+            requestPath: "/order",
+            body: JSON.stringify(orderPayload),
+        };
+
+        const headers = await createL2Headers(
+            this.signer as Wallet | JsonRpcSigner,
+            this.creds as ApiKeyCreds,
+            l2HeaderArgs,
+        );
+        // TODO: add an api response type to types
+        const resp = await post(endpoint, headers, orderPayload);
         return resp.data;
     }
 
@@ -57,6 +105,10 @@ export class ClobClient {
     }
 
     private canL2Auth(): void {
+        if (this.signer === undefined) {
+            throw L1_AUTH_UNAVAILABLE_ERROR;
+        }
+
         if (this.creds === undefined) {
             throw L2_AUTH_NOT_AVAILABLE;
         }
