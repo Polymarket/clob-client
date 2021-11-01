@@ -26,8 +26,12 @@ import { buildOrderCreationArgs } from "./utils";
  */
 const buildOrder = async (signer: Wallet | JsonRpcSigner, args: OrderCreationArgs): Promise<any> => {
     console.log(`Building Limit order signed by: ${args.maker}...`);
-
-    const jsonRpcSigner = await getSignerFromWallet(signer, args.chainID, signer.provider as JsonRpcProvider);
+    let jsonRpcSigner: JsonRpcSigner;
+    if (signer instanceof Wallet) {
+        jsonRpcSigner = await getSignerFromWallet(signer, args.chainID, signer.provider as JsonRpcProvider);
+    } else {
+        jsonRpcSigner = signer;
+    }
 
     const connector = new EthersProviderConnector(jsonRpcSigner);
 
