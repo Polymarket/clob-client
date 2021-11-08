@@ -20,20 +20,8 @@ async function main(){
     }
     const clobClient = new ClobClient(host, wallet, creds);
 
-    // Create a buy order for 100 YES for 0.50c
-    const order = await clobClient.createOrder({
-        asset: { 
-            address: "0xadbeD21409324e0fcB80AE8b5e662B0C857D85ed",
-            condition: "YES",
-        },
-        price: 0.5,
-        side: Side.Buy,
-        size: 100,
-    });
-
-    // Send it to the server
-    const resp = await clobClient.postOrder(order);
-    console.log(resp);
+    const resp = await clobClient.getOpenOrders();
+    console.log(resp)
     console.log(`Done!`)
 }
 
