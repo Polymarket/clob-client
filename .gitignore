@@ -10,6 +10,7 @@ coverage/
 dist/
 node_modules/
 typechain/
+scripts/
 
 # files
 .env
