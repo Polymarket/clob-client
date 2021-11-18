@@ -29,8 +29,8 @@ export interface L2PolyHeader {
 }
 
 export enum Side {
-    Buy,
-    Sell,
+    BUY = "buy",
+    SELL = "sell",
 }
 
 export interface Asset {
@@ -38,11 +38,31 @@ export interface Asset {
     condition: string;
 }
 
-export interface UserOrder {
+// Simplified Limit order for users
+export interface UserLimitOrder {
+    // Conditional token Asset being traded
     asset: Asset;
+    // Price used to create the limit order
     price: number;
+    // Size in terms of the ConditionalToken
     size: number;
+    // Side of the Limit order
     side: Side;
+}
+
+// Simplified Market order for users
+export interface UserMarketOrder {
+    // ConditionalToken Asset being traded
+    asset: Asset;
+    // Size in terms of Collateral, if market buy. E.g USDC size if market buy
+    // OR in terms of the quote currency, if market sell. E.g YES token if market sell
+    size: number;
+    // Side of the Market order
+    side: Side;
+}
+
+export interface OrderPayload {
+    orderID: string;
 }
 
 export interface OrderCreationArgs {
@@ -54,5 +74,16 @@ export interface OrderCreationArgs {
     makerAssetID?: number;
     takerAsset: string;
     takerAmount: string;
+    takerAssetID?: number;
+}
+
+export interface MarketOrderCreationArgs {
+    chainID: number;
+    exchange: string;
+    maker: string;
+    makerAsset: string;
+    makerAmount: string;
+    makerAssetID?: number;
+    takerAsset: string;
     takerAssetID?: number;
 }

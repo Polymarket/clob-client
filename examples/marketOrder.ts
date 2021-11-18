@@ -20,30 +20,30 @@ async function main(){
     }
     const clobClient = new ClobClient(host, wallet, creds);
 
-    const orders = [
-        {side: Side.Buy, price: 0.10, size: 1000},
-        {side: Side.Buy, price: 0.40, size: 80},
-        {side: Side.Buy, price: 0.44, size: 60},
-        {side: Side.Buy, price: 0.50, size: 40},
+    // Create a market sell order for 150 YES tokens
+    const order = await clobClient.createMarketOrder({
+        asset: { 
+            address: "0xadbeD21409324e0fcB80AE8b5e662B0C857D85ed",
+            condition: "YES",
+        },
+        side: Side.SELL,
+        size: 150,
+    });
 
-        {side: Side.Sell, price: 0.60, size: 30},
-        {side: Side.Sell, price: 0.60, size: 75},
-        {side: Side.Sell, price: 0.75, size: 50},
-        {side: Side.Sell, price: 0.99, size: 1000},
-    ]
 
-    for(const newOrder of orders){
-        await clobClient.postOrder(
-            await clobClient.createOrder({
-                asset: { 
-                    address: "0xadbeD21409324e0fcB80AE8b5e662B0C857D85ed",
-                    condition: "YES",
-                },
-                side: newOrder.side,
-                price: newOrder.price,
-                size: newOrder.size,
-        }));
-    }
+    // const order = await clobClient.createMarketOrder({
+    //     asset: { 
+    //         address: "0xadbeD21409324e0fcB80AE8b5e662B0C857D85ed",
+    //         condition: "YES",
+    //     },
+    //     side: Side.BUY,
+    //     size: 150,
+    //     type: OrderType.MARKET,
+    // });
+
+    // Send it to the server
+    const resp = await clobClient.postOrder(order);
+    console.log(resp);
     console.log(`Done!`)
 }
 

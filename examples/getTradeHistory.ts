@@ -1,5 +1,5 @@
 import { ethers } from "ethers";
-import { ApiKeyCreds, Asset, ClobClient, Side } from "../src";
+import { ApiKeyCreds, ClobClient } from "../src";
 import { config as dotenvConfig } from "dotenv";
 import { resolve } from "path";
 
@@ -20,21 +20,9 @@ async function main(){
     }
     const clobClient = new ClobClient(host, wallet, creds);
 
-    // Create a buy order for 100 YES for 0.50c
-    const order = await clobClient.createLimitOrder({
-        asset: { 
-            address: "0xadbeD21409324e0fcB80AE8b5e662B0C857D85ed",
-            condition: "YES",
-        },
-        price: 0.5,
-        side: Side.BUY,
-        size: 100,
-    });
-
-    // Send it to the server
-    const resp = await clobClient.postOrder(order);
+    console.log(`Response: `);
+    const resp = await clobClient.getTradeHistory();
     console.log(resp);
-    console.log(`Done!`)
 }
 
 main();
