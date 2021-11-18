@@ -19,8 +19,8 @@ const clobClient = new ClobClient(host, wallet, creds);
 
 await clobClient.approve();
 
-// Create a buy order for 100 YES for 0.50c
-const order = await clobClient.createOrder({
+// Create a limit buy order for 100 YES for 0.50c
+const order = await clobClient.createLimitOrder({
     asset: { 
         address: "0xadbeD21409324e0fcB80AE8b5e662B0C857D85ed",
         condition: "YES",
@@ -32,6 +32,18 @@ const order = await clobClient.createOrder({
 
 // Send it to the server
 const resp = await clobClient.postOrder(order);
+
+// Init a market sell of 100 YES tokens
+const marketSell = await clobClient.createMarketOrder({
+    asset: { 
+        address: "0xadbeD21409324e0fcB80AE8b5e662B0C857D85ed",
+        condition: "YES",
+    },
+    side: Side.Sell,
+    size: 100,
+});
+
+await clobClient.postMarketOrder(marketSell);
 ```
 
 See examples
