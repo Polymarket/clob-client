@@ -15,6 +15,10 @@ const creds: ApiKeyCreds = {
 // Initialize the clob client
 const clobClient = new ClobClient(host, wallet, creds);
 
+//Approve the collateral token(USDC)
+
+await clobClient.approve();
+
 // Create a buy order for 100 YES for 0.50c
 const order = await clobClient.createOrder({
     asset: { 
