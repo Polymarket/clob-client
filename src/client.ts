@@ -8,6 +8,15 @@ import { get, post } from "./http_helpers";
 import { L1_AUTH_UNAVAILABLE_ERROR, L2_AUTH_NOT_AVAILABLE } from "./errors";
 import { createLimitOrder, createMarketOrder, marketOrderToJson, orderToJson } from "./orders";
 import { approveCollateral, approveConditionalToken } from "./approve";
+import {
+    CANCEL_ORDER,
+    CREATE_API_KEY,
+    GET_API_KEYS,
+    POST_LIMIT_ORDER,
+    POST_MARKET_ORDER,
+    TIME,
+    TRADE_HISTORY,
+} from "./endpoints";
 
 export class ClobClient {
     readonly host: string;
@@ -38,7 +47,7 @@ export class ClobClient {
     }
 
     public async getServerTime(): Promise<any> {
-        const resp = await get(`${this.host}/time`);
+        const resp = await get(`${this.host}${TIME}`);
         return resp.data;
     }
 
@@ -56,7 +65,7 @@ export class ClobClient {
     public async createApiKey(): Promise<any> {
         this.canL1Auth();
 
-        const endpoint = `${this.host}/create-api-key`;
+        const endpoint = `${this.host}${CREATE_API_KEY}`;
         const headers = await createL1Headers(this.signer as Wallet | JsonRpcSigner);
         const resp = await post(endpoint, headers);
         console.log(CREDS_CREATION_WARNING);
@@ -66,7 +75,7 @@ export class ClobClient {
     public async getApiKeys(): Promise<any> {
         this.canL2Auth();
 
-        const endpoint = `/get-api-keys`;
+        const endpoint = GET_API_KEYS;
         const headerArgs = {
             method: "GET",
             requestPath: endpoint,
@@ -85,7 +94,7 @@ export class ClobClient {
     public async getTradeHistory(): Promise<any> {
         this.canL2Auth();
 
-        const endpoint = `/trade-history`;
+        const endpoint = TRADE_HISTORY;
         const headerArgs = {
             method: "GET",
             requestPath: endpoint,
@@ -140,7 +149,7 @@ export class ClobClient {
     // flows on the tracker based on orderType
     public async postLimitOrder(order: LimitOrderAndSignature): Promise<any> {
         this.canL2Auth();
-        const endpoint = `/order`;
+        const endpoint = POST_LIMIT_ORDER;
         const orderPayload = orderToJson(order);
         const l2HeaderArgs = {
             method: "POST",
@@ -160,7 +169,7 @@ export class ClobClient {
 
     public async postMarketOrder(order: MarketOrderAndSignature): Promise<any> {
         this.canL2Auth();
-        const endpoint = `/market-order`;
+        const endpoint = POST_MARKET_ORDER;
         const orderPayload = marketOrderToJson(order);
         const l2HeaderArgs = {
             method: "POST",
@@ -180,7 +189,7 @@ export class ClobClient {
 
     public async cancelOrder(payload: OrderPayload): Promise<any> {
         this.canL2Auth();
-        const endpoint = `/cancel-order`;
+        const endpoint = CANCEL_ORDER;
         const l2HeaderArgs = {
             method: "POST",
             requestPath: endpoint,
