@@ -1,5 +1,5 @@
 import { ethers } from "ethers";
-import { ApiKeyCreds, Asset, ClobClient, Side } from "../src";
+import { ApiKeyCreds, ClobClient, Side } from "../src";
 import { config as dotenvConfig } from "dotenv";
 import { resolve } from "path";
 

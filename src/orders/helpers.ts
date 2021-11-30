@@ -107,7 +107,6 @@ const buildMarketOrder = async (signer: Wallet | JsonRpcSigner, args: MarketOrde
     };
     console.log(`Market order and signature:`);
     console.log(orderAndSignature);
-
     return orderAndSignature;
 };
 
