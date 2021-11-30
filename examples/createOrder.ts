@@ -32,7 +32,7 @@ async function main(){
     });
 
     // Send it to the server
-    const resp = await clobClient.postOrder(order);
+    const resp = await clobClient.postLimitOrder(order);
     console.log(resp);
     console.log(`Done!`)
 }
