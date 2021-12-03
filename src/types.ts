@@ -1,4 +1,4 @@
-export { LimitOrderAndSignature } from "@polymarket/order-utils";
+export * from "@polymarket/order-utils";
 
 export interface ApiKeyCreds {
     key: string;
@@ -68,6 +68,7 @@ export interface OrderPayload {
 export interface OrderCreationArgs {
     chainID: number;
     exchange: string;
+    signer: string;
     maker: string;
     makerAsset: string;
     makerAmount: string;
@@ -75,15 +76,18 @@ export interface OrderCreationArgs {
     takerAsset: string;
     takerAmount: string;
     takerAssetID?: number;
+    signatureType: number;
 }
 
 export interface MarketOrderCreationArgs {
     chainID: number;
     exchange: string;
+    signer: string;
     maker: string;
     makerAsset: string;
     makerAmount: string;
     makerAssetID?: number;
     takerAsset: string;
     takerAssetID?: number;
+    signatureType: number;
 }
