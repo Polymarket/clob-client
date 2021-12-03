@@ -16,11 +16,8 @@ export const getTokenID = (condition: string): number => {
 };
 
 export const getJsonRpcSigner = async (signer: Wallet | JsonRpcSigner, chainID: number): Promise<JsonRpcSigner> => {
-    let jsonRpcSigner: JsonRpcSigner;
     if (signer instanceof Wallet) {
-        jsonRpcSigner = await getSignerFromWallet(signer, chainID, signer.provider as JsonRpcProvider);
-    } else {
-        jsonRpcSigner = signer;
+        return getSignerFromWallet(signer, chainID, signer.provider as JsonRpcProvider);
     }
-    return jsonRpcSigner;
+    return signer;
 };
