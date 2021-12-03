@@ -189,8 +189,7 @@ export class ClobClient {
             l2HeaderArgs,
         );
         // TODO: add an api response type to types
-        const resp = await post(`${this.host}${endpoint}`, headers, orderPayload);
-        return resp.data;
+        return post(`${this.host}${endpoint}`, headers, orderPayload);
     }
 
     public async cancelOrder(payload: OrderPayload): Promise<any> {
@@ -209,8 +208,7 @@ export class ClobClient {
         );
 
         // TODO: add an api response type to types
-        const resp = await post(`${this.host}${endpoint}`, headers, payload);
-        return resp.data;
+        return post(`${this.host}${endpoint}`, headers, payload);
     }
 
     private canL1Auth(): void {
