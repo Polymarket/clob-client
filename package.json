@@ -23,7 +23,7 @@
         "@ethersproject/random": "^5.4.5",
         "@ethersproject/transactions": "^5.4.5",
         "@ethersproject/wallet": "^5.4.5",
-        "@polymarket/order-utils": "^1.1.3",
+        "@polymarket/order-utils": "^1.1.5",
         "axios": "^0.21.1",
         "commitizen": "^4.2.1",
         "cz-conventional-changelog": "^3.3.0",

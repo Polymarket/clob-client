@@ -7,7 +7,6 @@ import { CREDS_CREATION_WARNING } from "./constants";
 import { get, post } from "./http_helpers";
 import { L1_AUTH_UNAVAILABLE_ERROR, L2_AUTH_NOT_AVAILABLE } from "./errors";
 import { createLimitOrder, createMarketOrder, marketOrderToJson, orderToJson } from "./orders";
-import { approveCollateral, approveConditionalToken } from "./approve";
 import {
     CANCEL_ORDER,
     CREATE_API_KEY,
@@ -49,16 +48,6 @@ export class ClobClient {
     public async getServerTime(): Promise<any> {
         const resp = await get(`${this.host}${TIME}`);
         return resp.data;
-    }
-
-    /**
-     * Approve the signer on the necessary contracts
-     * Note api keys are not needed
-     */
-    public async approve(): Promise<any> {
-        this.canL1Auth();
-
-        await approveCollateral(this.signer as Wallet | JsonRpcSigner);
     }
 
     // L1 Authed
@@ -112,7 +101,6 @@ export class ClobClient {
 
     public async createLimitOrder(userOrder: UserLimitOrder): Promise<LimitOrderAndSignature> {
         this.canL1Auth();
-        await approveConditionalToken(this.signer as Wallet | JsonRpcSigner, userOrder.asset.address);
 
         const orderAndSig = await createLimitOrder(this.signer as Wallet | JsonRpcSigner, userOrder);
         return orderAndSig;
@@ -120,7 +108,6 @@ export class ClobClient {
 
     public async createMarketOrder(userOrder: UserMarketOrder): Promise<MarketOrderAndSignature> {
         this.canL1Auth();
-        await approveConditionalToken(this.signer as Wallet | JsonRpcSigner, userOrder.asset.address);
 
         const orderAndSig = await createMarketOrder(this.signer as Wallet | JsonRpcSigner, userOrder);
         return orderAndSig;

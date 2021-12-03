@@ -54,8 +54,8 @@ export interface UserLimitOrder {
 export interface UserMarketOrder {
     // ConditionalToken Asset being traded
     asset: Asset;
-    // Size in terms of Collateral, if market buy. E.g USDC size if market buy
-    // OR in terms of the quote currency, if market sell. E.g YES token if market sell
+    // Size in terms of Collateral, if market buy. e.g USDC size if market buy
+    // OR in terms of the quote currency, if market sell. e.g YES token if market sell
     size: number;
     // Side of the Market order
     side: Side;
