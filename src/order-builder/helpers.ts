@@ -254,8 +254,7 @@ export const createLimitOrder = async (
         userOrder,
     );
     const orderAndSig = await buildOrder(signer, orderArgs);
-    console.log(`Generated limit order: `);
-    console.log(orderAndSig);
+    console.log(`Generated limit order!`);
     return orderAndSig;
 };
 
@@ -285,7 +284,6 @@ export const createMarketOrder = async (
     );
 
     const marketOrderAndSig = await buildMarketOrder(signer, marketOrderArgs);
-    console.log(`Generated market ${userMarketOrder.side} order: `);
-    console.log(marketOrderAndSig);
+    console.log(`Generated market ${userMarketOrder.side} order!`);
     return marketOrderAndSig;
 };

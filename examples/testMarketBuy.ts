@@ -27,7 +27,7 @@ async function populateBook(client: ClobClient) {
 }
 
 async function market(client: ClobClient) {
-    const resp = await client.postMarketOrder(
+    await client.postMarketOrder(
         await client.createMarketOrder({
             asset: {
                 address: "0xadbeD21409324e0fcB80AE8b5e662B0C857D85ed",
@@ -37,7 +37,6 @@ async function market(client: ClobClient) {
             size: 150,
         }),
     );
-    console.log(resp);
 }
 
 async function main() {
