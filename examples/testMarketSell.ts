@@ -40,7 +40,7 @@ async function market(client: ClobClient) {
 }
 
 async function main() {
-    const provider = new ethers.providers.JsonRpcProvider(`https://kovan.infura.io/v3/${process.env.INFURA_KEY}`);
+    const provider = new ethers.providers.JsonRpcProvider(process.env.ETH_RPC_URL);
     const pk = new ethers.Wallet(`${process.env.PK}`);
     const wallet = pk.connect(provider);
     console.log(`Address: ${await wallet.getAddress()}`);
