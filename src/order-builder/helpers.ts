@@ -178,7 +178,7 @@ const buildOrder = async (signer: Wallet | JsonRpcSigner, args: OrderCreationArg
     const orderAndSignature: LimitOrderAndSignature = {
         order: limitOrder,
         signature: limitOrderSignature,
-        orderType: "limit", // TODO: remove orderType from order-utils
+        orderType: "limit",
     };
 
     return orderAndSignature;
@@ -228,17 +228,33 @@ const buildMarketOrder = async (signer: Wallet | JsonRpcSigner, args: MarketOrde
     return orderAndSignature;
 };
 
+const getSigner = (eoa: string, makerAddress: string, sigType: number): string => {
+    switch (sigType) {
+        case SignatureType.EOA:
+            // signer is always the EOA address for EOA sigs
+            return eoa;
+        case SignatureType.CONTRACT:
+            // signer is the contract address/ funder address
+            return makerAddress;
+        case SignatureType.POLY_PROXY:
+            // signer is the eoa
+            return eoa;
+        default:
+            throw new Error("invalid signature type");
+    }
+};
+
 export const createLimitOrder = async (
-    signer: Wallet | JsonRpcSigner,
+    eoaSigner: Wallet | JsonRpcSigner,
     signatureType: SignatureType,
     funderAddress: string | undefined,
     userOrder: UserLimitOrder,
 ): Promise<any> => {
-    const chainID = await signer.getChainId();
-    const signerAddress = await signer.getAddress();
-
+    const chainID = await eoaSigner.getChainId();
+    const eoaSignerAddress = await eoaSigner.getAddress();
     // If funder address is not given, use the signer address
-    const maker = funderAddress === undefined ? signerAddress : funderAddress;
+    const maker = funderAddress === undefined ? eoaSignerAddress : funderAddress;
+    const signerAddress = getSigner(eoaSignerAddress, maker, signatureType);
 
     const clobContracts: ClobContracts = getContracts(chainID);
     const exchange = clobContracts.Exchange;
@@ -253,22 +269,23 @@ export const createLimitOrder = async (
         signatureType,
         userOrder,
     );
-    const orderAndSig = await buildOrder(signer, orderArgs);
+    const orderAndSig = await buildOrder(eoaSigner, orderArgs);
     console.log(`Generated limit order!`);
     console.log(orderAndSig);
     return orderAndSig;
 };
 
 export const createMarketOrder = async (
-    signer: Wallet | JsonRpcSigner,
+    eoaSigner: Wallet | JsonRpcSigner,
     signatureType: SignatureType,
     funderAddress: string | undefined,
     userMarketOrder: UserMarketOrder,
 ): Promise<any> => {
-    const chainID = await signer.getChainId();
-    const signerAddress = await signer.getAddress();
+    const chainID = await eoaSigner.getChainId();
+    const eoaSignerAddress = await eoaSigner.getAddress();
     // If funder address is not given, use the signer address
-    const maker = funderAddress === undefined ? signerAddress : funderAddress;
+    const maker = funderAddress === undefined ? eoaSignerAddress : funderAddress;
+    const signerAddress = getSigner(eoaSignerAddress, maker, signatureType);
 
     const clobContracts: ClobContracts = getContracts(chainID);
     const exchange = clobContracts.Exchange;
@@ -284,7 +301,7 @@ export const createMarketOrder = async (
         userMarketOrder,
     );
 
-    const marketOrderAndSig = await buildMarketOrder(signer, marketOrderArgs);
+    const marketOrderAndSig = await buildMarketOrder(eoaSigner, marketOrderArgs);
     console.log(`Generated market ${userMarketOrder.side} order!`);
     console.log(marketOrderAndSig);
     return marketOrderAndSig;
