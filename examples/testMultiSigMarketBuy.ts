@@ -1,7 +1,7 @@
 import { ethers } from "ethers";
 import { config as dotenvConfig } from "dotenv";
 import { resolve } from "path";
-import { ApiKeyCreds, ClobClient, Side } from "../src";
+import { ApiKeyCreds, ClobClient, Side, SignatureType } from "../src";
 
 dotenvConfig({ path: resolve(__dirname, "../.env") });
 
@@ -51,9 +51,19 @@ async function main() {
         secret: `${process.env.CLOB_SECRET}`,
         passphrase: `${process.env.CLOB_PASS_PHRASE}`,
     };
-    const clobClient = new ClobClient(host, wallet, creds);
-    await populateBook(clobClient);
-    await market(clobClient);
+
+    // Create a clob client, using the CONTRACT signature scheme
+    // and providing the multisig as funder address
+    const clobPolyClient = new ClobClient(
+        host,
+        wallet,
+        creds,
+        SignatureType.CONTRACT,
+        "0x5cc0c75CdB2235b453e22c9882fAa6945cD6Ec71",
+    );
+
+    await populateBook(clobPolyClient);
+    await market(clobPolyClient);
 
     console.log(`Done!`);
 }

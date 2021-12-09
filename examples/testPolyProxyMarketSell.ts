@@ -1,7 +1,7 @@
 import { ethers } from "ethers";
 import { config as dotenvConfig } from "dotenv";
 import { resolve } from "path";
-import { ApiKeyCreds, ClobClient, Side } from "../src";
+import { ApiKeyCreds, ClobClient, Side, SignatureType } from "../src";
 
 dotenvConfig({ path: resolve(__dirname, "../.env") });
 
@@ -51,9 +51,19 @@ async function main() {
         secret: `${process.env.CLOB_SECRET}`,
         passphrase: `${process.env.CLOB_PASS_PHRASE}`,
     };
-    const clobClient = new ClobClient(host, wallet, creds);
-    await populateBook(clobClient);
-    await market(clobClient);
+
+    // Create a clob client, using the poly proxy signature scheme
+    // and providing the proxy address
+    const clobPolyClient = new ClobClient(
+        host,
+        wallet,
+        creds,
+        SignatureType.POLY_PROXY,
+        "0xb57af06b944df7df17b9661652f72b954286ee07",
+    );
+
+    await populateBook(clobPolyClient);
+    await market(clobPolyClient);
 
     console.log(`Done!`);
 }

@@ -1,13 +1,19 @@
 import { Wallet } from "@ethersproject/wallet";
 import { JsonRpcSigner } from "@ethersproject/providers";
-import { LimitOrderAndSignature, MarketOrderAndSignature } from "@polymarket/order-utils";
-import { ApiKeyCreds, OrderPayload, UserLimitOrder, UserMarketOrder } from "./types";
+import { SignatureType } from "@polymarket/order-utils";
+import {
+    LimitOrderAndSignature,
+    MarketOrderAndSignature,
+    ApiKeyCreds,
+    OrderPayload,
+    UserLimitOrder,
+    UserMarketOrder,
+} from "./types";
 import { createL1Headers, createL2Headers } from "./headers";
 import { CREDS_CREATION_WARNING } from "./constants";
 import { get, post } from "./http_helpers";
 import { L1_AUTH_UNAVAILABLE_ERROR, L2_AUTH_NOT_AVAILABLE } from "./errors";
-import { createLimitOrder, createMarketOrder, marketOrderToJson, orderToJson } from "./orders";
-import { approveCollateral, approveConditionalToken } from "./approve";
+import { marketOrderToJson, limitOrderToJson } from "./utilities";
 import {
     CANCEL_ORDER,
     CREATE_API_KEY,
@@ -17,17 +23,26 @@ import {
     TIME,
     TRADE_HISTORY,
 } from "./endpoints";
+import { OrderBuilder } from "./order-builder/builder";
 
 export class ClobClient {
     readonly host: string;
 
-    // Used to perform Level 1 authentication
+    // Used to perform Level 1 authentication and sign orders
     readonly signer?: Wallet | JsonRpcSigner;
 
     // Used to perform Level 2 authentication
     readonly creds?: ApiKeyCreds;
 
-    constructor(host: string, signer?: Wallet | JsonRpcSigner, creds?: ApiKeyCreds) {
+    readonly orderBuilder: OrderBuilder;
+
+    constructor(
+        host: string,
+        signer?: Wallet | JsonRpcSigner,
+        creds?: ApiKeyCreds,
+        signatureType?: SignatureType,
+        funderAddress?: string,
+    ) {
         this.host = host;
         if (signer !== undefined) {
             if (signer.provider == null || !signer.provider._isProvider) {
@@ -38,6 +53,7 @@ export class ClobClient {
         if (creds !== undefined) {
             this.creds = creds;
         }
+        this.orderBuilder = new OrderBuilder(signer as Wallet | JsonRpcSigner, signatureType, funderAddress);
     }
 
     // Public endpoints
@@ -49,16 +65,6 @@ export class ClobClient {
     public async getServerTime(): Promise<any> {
         const resp = await get(`${this.host}${TIME}`);
         return resp.data;
-    }
-
-    /**
-     * Approve the signer on the necessary contracts
-     * Note api keys are not needed
-     */
-    public async approve(): Promise<any> {
-        this.canL1Auth();
-
-        await approveCollateral(this.signer as Wallet | JsonRpcSigner);
     }
 
     // L1 Authed
@@ -112,17 +118,17 @@ export class ClobClient {
 
     public async createLimitOrder(userOrder: UserLimitOrder): Promise<LimitOrderAndSignature> {
         this.canL1Auth();
-        await approveConditionalToken(this.signer as Wallet | JsonRpcSigner, userOrder.asset.address);
 
-        const orderAndSig = await createLimitOrder(this.signer as Wallet | JsonRpcSigner, userOrder);
+        const orderAndSig = await this.orderBuilder.buildLimitOrder(userOrder);
+        console.log(`orderAndSig: `);
+        console.log(orderAndSig);
         return orderAndSig;
     }
 
     public async createMarketOrder(userOrder: UserMarketOrder): Promise<MarketOrderAndSignature> {
         this.canL1Auth();
-        await approveConditionalToken(this.signer as Wallet | JsonRpcSigner, userOrder.asset.address);
 
-        const orderAndSig = await createMarketOrder(this.signer as Wallet | JsonRpcSigner, userOrder);
+        const orderAndSig = await this.orderBuilder.buildMarketOrder(userOrder);
         return orderAndSig;
     }
 
@@ -150,7 +156,7 @@ export class ClobClient {
     public async postLimitOrder(order: LimitOrderAndSignature): Promise<any> {
         this.canL2Auth();
         const endpoint = POST_LIMIT_ORDER;
-        const orderPayload = orderToJson(order);
+        const orderPayload = limitOrderToJson(order);
         const l2HeaderArgs = {
             method: "POST",
             requestPath: endpoint,
@@ -183,8 +189,7 @@ export class ClobClient {
             l2HeaderArgs,
         );
         // TODO: add an api response type to types
-        const resp = await post(`${this.host}${endpoint}`, headers, orderPayload);
-        return resp.data;
+        return post(`${this.host}${endpoint}`, headers, orderPayload);
     }
 
     public async cancelOrder(payload: OrderPayload): Promise<any> {
@@ -203,8 +208,7 @@ export class ClobClient {
         );
 
         // TODO: add an api response type to types
-        const resp = await post(`${this.host}${endpoint}`, headers, payload);
-        return resp.data;
+        return post(`${this.host}${endpoint}`, headers, payload);
     }
 
     private canL1Auth(): void {

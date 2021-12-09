@@ -12,6 +12,7 @@ module.exports = {
       "no-underscore-dangle" : "off",
       "import/no-extraneous-dependencies": "off",
       "@typescript-eslint/no-explicit-any": "off",
+      "no-restricted-syntax": "off"
     },
     root: true,
     parser: '@typescript-eslint/parser',
