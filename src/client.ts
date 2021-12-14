@@ -58,13 +58,11 @@ export class ClobClient {
 
     // Public endpoints
     public async getOk(): Promise<any> {
-        const resp = await get(`${this.host}/`);
-        return resp.data;
+        return get(`${this.host}/`);
     }
 
     public async getServerTime(): Promise<any> {
-        const resp = await get(`${this.host}${TIME}`);
-        return resp.data;
+        return get(`${this.host}${TIME}`);
     }
 
     // L1 Authed
@@ -75,7 +73,7 @@ export class ClobClient {
         const headers = await createL1Headers(this.signer as Wallet | JsonRpcSigner);
         const resp = await post(endpoint, headers);
         console.log(CREDS_CREATION_WARNING);
-        return resp.data;
+        return resp;
     }
 
     public async getApiKeys(): Promise<any> {
@@ -93,8 +91,7 @@ export class ClobClient {
             headerArgs,
         );
 
-        const resp = await get(`${this.host}${endpoint}`, headers);
-        return resp.data;
+        return get(`${this.host}${endpoint}`, headers);
     }
 
     public async getTradeHistory(): Promise<any> {
@@ -112,8 +109,7 @@ export class ClobClient {
             headerArgs,
         );
 
-        const resp = await get(`${this.host}${endpoint}`, headers);
-        return resp.data;
+        return get(`${this.host}${endpoint}`, headers);
     }
 
     public async createLimitOrder(userOrder: UserLimitOrder): Promise<LimitOrderAndSignature> {
@@ -146,8 +142,7 @@ export class ClobClient {
             l2HeaderArgs,
         );
 
-        const resp = await get(`${this.host}${endpoint}`, headers);
-        return resp.data;
+        return get(`${this.host}${endpoint}`, headers);
     }
 
     // TODO: we're currently exposing 2 endpoints: postLimit/postMarket

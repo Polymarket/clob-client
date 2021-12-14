@@ -53,7 +53,7 @@ async function main() {
     };
 
     // Create a clob client, using the CONTRACT signature scheme
-    // and providing the multisig as funder address
+    // and providing a multisig as funder address
     const clobPolyClient = new ClobClient(
         host,
         wallet,

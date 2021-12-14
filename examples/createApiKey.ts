@@ -16,7 +16,7 @@ async function main() {
 
     console.log(`Response: `);
     const resp = await clobClient.createApiKey();
-    console.log(resp.data);
+    console.log(resp);
     console.log(`Complete!`);
 }
 
