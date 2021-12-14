@@ -12,6 +12,7 @@ export const request = async (endpoint: string, method: Method, headers?: any, d
         } else {
             console.error(err);
         }
+        return null;
     }
 };
 

@@ -168,9 +168,7 @@ export class ClobClient {
             this.creds as ApiKeyCreds,
             l2HeaderArgs,
         );
-        // TODO: add an api response type to types
-        const resp = await post(`${this.host}${endpoint}`, headers, orderPayload);
-        return resp.data;
+        return post(`${this.host}${endpoint}`, headers, orderPayload);
     }
 
     public async postMarketOrder(order: MarketOrderAndSignature): Promise<any> {
