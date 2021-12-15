@@ -2,7 +2,6 @@
     "compilerOptions": {
         "esModuleInterop": true,
         "forceConsistentCasingInFileNames": true,
-        "target": "esnext",
         "moduleResolution": "node",
         "noImplicitAny": true,
         "outDir": "./dist",
@@ -11,6 +10,8 @@
         "declaration": true,
         "declarationMap": true,
         "strict": true,
+        "module": "commonjs",
+        "target": "ES5"
     },
     "exclude": [
         "node_modules"

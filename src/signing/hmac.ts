@@ -1,5 +1,8 @@
-/* eslint-disable import/no-extraneous-dependencies */
 import crypto from "crypto";
+
+function replaceAll(s: string, search: string, replace: string) {
+    return s.split(search).join(replace);
+}
 
 /**
  * Builds the canonical Polymarket CLOB HMAC signature
@@ -25,8 +28,8 @@ export const buildPolyHmacSignature = async (
     const sig = hmac.update(message).digest("base64");
 
     // NOTE: Must be url safe base64 encoding, but keep base64 "=" suffix
-    const sigUrlSafe = sig
-        .replaceAll(/\+/g, "-") // Convert '+' to '-'
-        .replaceAll(/\//g, "_"); // Convert '/' to '_'
+    // Convert '+' to '-'
+    // Convert '/' to '_'
+    const sigUrlSafe = replaceAll(replaceAll(sig, "+", "-"), "/", "_");
     return sigUrlSafe;
 };
