@@ -1,7 +1,7 @@
 {
     "name": "@polymarket/clob-client",
     "description": "Typescript client for Polymarket's CLOB",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "contributors": [
         {
             "name": "Jonathan Amenechi",
@@ -36,8 +36,6 @@
         "husky": "^4.3.0",
         "mocha": "^8.1.3",
         "prettier": "^2.1.2",
-        "prettier-plugin-solidity": "^1.0.0-beta.9",
-        "shelljs": "^0.8.4",
         "ts-generator": "^0.1.1",
         "ts-node": "^9.1.1",
         "typechain": "^4.0.2",
