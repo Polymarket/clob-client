@@ -9,9 +9,8 @@ export const request = async (endpoint: string, method: Method, headers?: any, d
             console.error(err.response?.status);
             console.error(err.response?.statusText);
             console.error(err.response?.data);
-        } else {
-            console.error(err);
         }
+        console.error(err);
         return null;
     }
 };
