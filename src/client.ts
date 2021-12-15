@@ -181,7 +181,6 @@ export class ClobClient {
             this.creds as ApiKeyCreds,
             l2HeaderArgs,
         );
-        // TODO: add an api response type to types
         return post(`${this.host}${endpoint}`, headers, orderPayload);
     }
 
@@ -199,8 +198,6 @@ export class ClobClient {
             this.creds as ApiKeyCreds,
             l2HeaderArgs,
         );
-
-        // TODO: add an api response type to types
         return post(`${this.host}${endpoint}`, headers, payload);
     }
 

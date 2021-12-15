@@ -13,11 +13,8 @@ const creds: ApiKeyCreds = {
 }
 
 // Initialize the clob client
+// Note that the signer must be approved on the LimitOrderProtocol and OrderExecutor contracts
 const clobClient = new ClobClient(host, wallet, creds);
-
-//Approve the collateral token(USDC)
-
-await clobClient.approve();
 
 // Create a limit buy order for 100 YES for 0.50c
 const order = await clobClient.createLimitOrder({
