@@ -222,6 +222,7 @@ const buildMarketOrder = async (signer: Wallet | JsonRpcSigner, args: MarketOrde
     const orderAndSignature: MarketOrderAndSignature = {
         order: marketOrder,
         signature: sig,
+        orderType: "market",
     };
     console.log(`Market order and signature:`);
     console.log(orderAndSignature);
