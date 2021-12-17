@@ -15,10 +15,11 @@ import {
 } from "./types";
 import { createL1Headers, createL2Headers } from "./headers";
 import { CREDS_CREATION_WARNING } from "./constants";
-import { GET, get, POST, post } from "./http_helpers";
+import { del, DELETE, GET, get, POST, post } from "./http_helpers";
 import { L1_AUTH_UNAVAILABLE_ERROR, L2_AUTH_NOT_AVAILABLE } from "./errors";
 import { marketOrderToJson, limitOrderToJson } from "./utilities";
 import {
+    CANCEL_ALL,
     CANCEL_ORDER,
     CREATE_API_KEY,
     GET_API_KEYS,
@@ -220,6 +221,22 @@ export class ClobClient {
             l2HeaderArgs,
         );
         return post(`${this.host}${endpoint}`, headers, payload);
+    }
+
+    public async cancelAll(): Promise<any> {
+        this.canL2Auth();
+        const endpoint = CANCEL_ALL;
+        const l2HeaderArgs = {
+            method: DELETE,
+            requestPath: endpoint,
+        };
+
+        const headers = await createL2Headers(
+            this.signer as Wallet | JsonRpcSigner,
+            this.creds as ApiKeyCreds,
+            l2HeaderArgs,
+        );
+        return del(`${this.host}${endpoint}`, headers);
     }
 
     private canL1Auth(): void {
