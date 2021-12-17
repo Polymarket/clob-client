@@ -139,8 +139,6 @@ export class ClobClient {
         this.canL1Auth();
 
         const orderAndSig = await this.orderBuilder.buildLimitOrder(userOrder);
-        console.log(`orderAndSig: `);
-        console.log(orderAndSig);
         return orderAndSig;
     }
 
