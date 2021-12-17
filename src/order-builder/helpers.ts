@@ -224,8 +224,7 @@ const buildMarketOrder = async (signer: Wallet | JsonRpcSigner, args: MarketOrde
         signature: sig,
         orderType: "market",
     };
-    console.log(`Market order and signature:`);
-    console.log(orderAndSignature);
+    console.log(`Generated Market order!`);
     return orderAndSignature;
 };
 
@@ -272,7 +271,6 @@ export const createLimitOrder = async (
     );
     const orderAndSig = await buildOrder(eoaSigner, orderArgs);
     console.log(`Generated limit order!`);
-    console.log(orderAndSig);
     return orderAndSig;
 };
 
@@ -303,7 +301,5 @@ export const createMarketOrder = async (
     );
 
     const marketOrderAndSig = await buildMarketOrder(eoaSigner, marketOrderArgs);
-    console.log(`Generated market ${userMarketOrder.side} order!`);
-    console.log(marketOrderAndSig);
     return marketOrderAndSig;
 };

@@ -1,5 +1,10 @@
 import axios, { Method } from "axios";
 
+export const GET = "GET";
+export const POST = "POST";
+export const DELETE = "DELETE";
+export const PUT = "PUT";
+
 export const request = async (endpoint: string, method: Method, headers?: any, data?: any): Promise<any> => {
     try {
         const response = await axios({ method, url: endpoint, headers, data });
@@ -16,11 +21,16 @@ export const request = async (endpoint: string, method: Method, headers?: any, d
 };
 
 export const post = async (endpoint: string, headers: any, data?: any): Promise<any> => {
-    const resp = await request(endpoint, "POST", headers, data);
+    const resp = await request(endpoint, POST, headers, data);
     return resp !== null ? resp.data : null;
 };
 
 export const get = async (endpoint: string, headers?: any, data?: any): Promise<any> => {
-    const resp = await request(endpoint, "GET", headers, data);
+    const resp = await request(endpoint, GET, headers, data);
+    return resp !== null ? resp.data : null;
+};
+
+export const del = async (endpoint: string, headers?: any, data?: any): Promise<any> => {
+    const resp = await request(endpoint, DELETE, headers, data);
     return resp !== null ? resp.data : null;
 };
