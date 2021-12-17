@@ -1,5 +1,10 @@
 import axios, { Method } from "axios";
 
+export const GET = "GET";
+export const POST = "POST";
+export const DELETE = "DELETE";
+export const PUT = "PUT";
+
 export const request = async (endpoint: string, method: Method, headers?: any, data?: any): Promise<any> => {
     try {
         const response = await axios({ method, url: endpoint, headers, data });

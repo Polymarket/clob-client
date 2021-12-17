@@ -91,3 +91,28 @@ export interface MarketOrderCreationArgs {
     takerAssetID?: number;
     signatureType: number;
 }
+
+export interface ApiKeysResponse {
+    apiKeys: ApiKeyCreds[];
+}
+
+export interface OrderResponse {
+    success: boolean;
+    errorMsg: string;
+    orderID: string;
+    transactionHash: string;
+    status: string;
+}
+
+export interface Order {
+    orderID: string;
+    owner: string;
+    timestamp: string;
+    price: string;
+    size: string;
+    side: string;
+}
+
+export interface OpenOrdersResponse {
+    orders: Order[];
+}

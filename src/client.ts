@@ -8,16 +8,21 @@ import {
     OrderPayload,
     UserLimitOrder,
     UserMarketOrder,
+    OpenOrdersResponse,
+    Order,
+    ApiKeysResponse,
+    OrderResponse,
 } from "./types";
 import { createL1Headers, createL2Headers } from "./headers";
 import { CREDS_CREATION_WARNING } from "./constants";
-import { get, post } from "./http_helpers";
+import { GET, get, POST, post } from "./http_helpers";
 import { L1_AUTH_UNAVAILABLE_ERROR, L2_AUTH_NOT_AVAILABLE } from "./errors";
 import { marketOrderToJson, limitOrderToJson } from "./utilities";
 import {
     CANCEL_ORDER,
     CREATE_API_KEY,
     GET_API_KEYS,
+    GET_ORDER,
     POST_LIMIT_ORDER,
     POST_MARKET_ORDER,
     TIME,
@@ -66,7 +71,7 @@ export class ClobClient {
     }
 
     // L1 Authed
-    public async createApiKey(): Promise<any> {
+    public async createApiKey(): Promise<ApiKeyCreds> {
         this.canL1Auth();
 
         const endpoint = `${this.host}${CREATE_API_KEY}`;
@@ -76,12 +81,12 @@ export class ClobClient {
         return resp;
     }
 
-    public async getApiKeys(): Promise<any> {
+    public async getApiKeys(): Promise<ApiKeysResponse> {
         this.canL2Auth();
 
         const endpoint = GET_API_KEYS;
         const headerArgs = {
-            method: "GET",
+            method: GET,
             requestPath: endpoint,
         };
 
@@ -94,12 +99,30 @@ export class ClobClient {
         return get(`${this.host}${endpoint}`, headers);
     }
 
-    public async getTradeHistory(): Promise<any> {
+    public async getOrder(orderID: string): Promise<Order> {
+        this.canL2Auth();
+
+        const endpoint = `${GET_ORDER}${orderID}`;
+        const headerArgs = {
+            method: GET,
+            requestPath: endpoint,
+        };
+
+        const headers = await createL2Headers(
+            this.signer as Wallet | JsonRpcSigner,
+            this.creds as ApiKeyCreds,
+            headerArgs,
+        );
+
+        return get(`${this.host}${endpoint}`, headers);
+    }
+
+    public async getTradeHistory(): Promise<Order[]> {
         this.canL2Auth();
 
         const endpoint = TRADE_HISTORY;
         const headerArgs = {
-            method: "GET",
+            method: GET,
             requestPath: endpoint,
         };
 
@@ -128,11 +151,11 @@ export class ClobClient {
         return orderAndSig;
     }
 
-    public async getOpenOrders(): Promise<any> {
+    public async getOpenOrders(): Promise<OpenOrdersResponse> {
         this.canL2Auth();
         const endpoint = "/open-orders";
         const l2HeaderArgs = {
-            method: "GET",
+            method: GET,
             requestPath: endpoint,
         };
 
@@ -148,12 +171,12 @@ export class ClobClient {
     // TODO: we're currently exposing 2 endpoints: postLimit/postMarket
     // move to a single endpoint /order endpoint and route to different
     // flows on the tracker based on orderType
-    public async postLimitOrder(order: LimitOrderAndSignature): Promise<any> {
+    public async postLimitOrder(order: LimitOrderAndSignature): Promise<OrderResponse> {
         this.canL2Auth();
         const endpoint = POST_LIMIT_ORDER;
         const orderPayload = limitOrderToJson(order);
         const l2HeaderArgs = {
-            method: "POST",
+            method: POST,
             requestPath: endpoint,
             body: JSON.stringify(orderPayload),
         };
@@ -166,12 +189,12 @@ export class ClobClient {
         return post(`${this.host}${endpoint}`, headers, orderPayload);
     }
 
-    public async postMarketOrder(order: MarketOrderAndSignature): Promise<any> {
+    public async postMarketOrder(order: MarketOrderAndSignature): Promise<OrderResponse> {
         this.canL2Auth();
         const endpoint = POST_MARKET_ORDER;
         const orderPayload = marketOrderToJson(order);
         const l2HeaderArgs = {
-            method: "POST",
+            method: POST,
             requestPath: endpoint,
             body: JSON.stringify(orderPayload),
         };
@@ -188,7 +211,7 @@ export class ClobClient {
         this.canL2Auth();
         const endpoint = CANCEL_ORDER;
         const l2HeaderArgs = {
-            method: "POST",
+            method: POST,
             requestPath: endpoint,
             body: JSON.stringify(payload),
         };
