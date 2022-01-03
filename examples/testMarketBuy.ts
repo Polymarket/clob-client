@@ -12,7 +12,7 @@ async function populateBook(client: ClobClient) {
     ];
 
     for (const newOrder of orders) {
-        await client.postLimitOrder(
+        await client.postOrder(
             await client.createLimitOrder({
                 asset: {
                     address: "0xadbeD21409324e0fcB80AE8b5e662B0C857D85ed",
@@ -27,7 +27,7 @@ async function populateBook(client: ClobClient) {
 }
 
 async function market(client: ClobClient) {
-    await client.postMarketOrder(
+    await client.postOrder(
         await client.createMarketOrder({
             asset: {
                 address: "0xadbeD21409324e0fcB80AE8b5e662B0C857D85ed",
