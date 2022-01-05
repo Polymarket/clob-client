@@ -6,6 +6,7 @@ Typescript client for the Polymarket CLOB
 
 ```ts
 const host = "http://localhost:8080";
+const signer = new ethers.Wallet(`${process.env.PK}`);
 const creds: ApiKeyCreds = {
     key: `${process.env.CLOB_API_KEY}`,
     secret: `${process.env.CLOB_SECRET}`,
@@ -14,7 +15,7 @@ const creds: ApiKeyCreds = {
 
 // Initialize the clob client
 // Note that the signer must be approved on the LimitOrderProtocol and OrderExecutor contracts
-const clobClient = new ClobClient(host, wallet, creds);
+const clobClient = new ClobClient(host, signer, creds);
 
 // Create a limit buy order for 100 YES for 0.50c
 const order = await clobClient.createLimitOrder({
@@ -43,4 +44,4 @@ const marketSell = await clobClient.createMarketOrder({
 await clobClient.postOrder(marketSell);
 ```
 
-See examples
+See [examples](examples/) for more information
