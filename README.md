@@ -1,6 +1,6 @@
 # Polymarket CLOB Client
 
-This is a Typescript client for the Polymarket CLOB
+Typescript client for the Polymarket CLOB
 
 ### Usage
 
