@@ -26,21 +26,13 @@ async function main() {
             condition: "YES",
         },
         side: Side.SELL,
-        size: 150,
+        size: 100,
     });
-
-    // const order = await clobClient.createMarketOrder({
-    //     asset: {
-    //         address: "0xadbeD21409324e0fcB80AE8b5e662B0C857D85ed",
-    //         condition: "YES",
-    //     },
-    //     side: Side.BUY,
-    //     size: 150,
-    //     type: OrderType.MARKET,
-    // });
+    console.log(`Market order: `);
+    console.log(order);
 
     // Send it to the server
-    const resp = await clobClient.postMarketOrder(order);
+    const resp = await clobClient.postOrder(order);
     console.log(resp);
     console.log(`Done!`);
 }

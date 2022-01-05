@@ -10,10 +10,8 @@ export const GET_ORDER = "/order/";
 
 export const OPEN_ORDERS = "/open-orders";
 
-export const POST_LIMIT_ORDER = "/order";
+export const POST_ORDER = "/order";
 
-export const POST_MARKET_ORDER = "/market-order";
-
-export const CANCEL_ORDER = "/cancel-order";
+export const CANCEL = "/order";
 
 export const CANCEL_ALL = "/cancel-all";

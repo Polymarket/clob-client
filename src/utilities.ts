@@ -17,7 +17,7 @@ export const limitOrderToJson = (order: LimitOrderAndSignature): any => {
             sigType: order.order.sigType,
         },
         signature: order.signature,
-        orderType: order.orderType,
+        orderType: "limit",
     };
 };
 
@@ -35,5 +35,6 @@ export const marketOrderToJson = (mktOrder: MarketOrderAndSignature): any => {
             sigType: mktOrder.order.sigType,
         },
         signature: mktOrder.signature,
+        orderType: "market",
     };
 };

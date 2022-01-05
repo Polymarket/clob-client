@@ -40,7 +40,7 @@ const marketSell = await clobClient.createMarketOrder({
     size: 100,
 });
 
-await clobClient.postMarketOrder(marketSell);
+await clobClient.postOrder(marketSell);
 ```
 
 See examples

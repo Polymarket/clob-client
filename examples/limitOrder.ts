@@ -29,9 +29,11 @@ async function main() {
         side: Side.BUY,
         size: 100,
     });
+    console.log(`Created Limit Order: `);
+    console.log(order);
 
     // Send it to the server
-    const resp = await clobClient.postLimitOrder(order);
+    const resp = await clobClient.postOrder(order);
     console.log(resp);
     console.log(`Done!`);
 }
