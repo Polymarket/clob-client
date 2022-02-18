@@ -19,12 +19,10 @@ async function main() {
     };
     const clobClient = new ClobClient(host, wallet, creds);
 
-    // Create a market sell order for 150 YES tokens
+    // Create a market sell order for 100 YES tokens
+    // YES: 16678291189211314787145083999015737376658799626183230671758641503291735614088
     const order = await clobClient.createMarketOrder({
-        asset: {
-            address: "0xadbeD21409324e0fcB80AE8b5e662B0C857D85ed",
-            condition: "YES",
-        },
+        tokenID: "16678291189211314787145083999015737376658799626183230671758641503291735614088",
         side: Side.SELL,
         size: 100,
     });

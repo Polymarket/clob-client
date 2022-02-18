@@ -15,7 +15,7 @@ import {
 import { ethers } from "ethers";
 import { OrderCreationArgs, UserMarketOrder, UserLimitOrder, MarketOrderCreationArgs, Side } from "../types";
 import { COLLATERAL_TOKEN_DECIMALS } from "./constants";
-import { getJsonRpcSigner, getTokenID } from "./utils";
+import { getJsonRpcSigner } from "./utils";
 
 /**
  * Translate simple user order to args used to generate LimitOrders
@@ -26,14 +26,15 @@ export const buildLimitOrderCreationArgs = async (
     chainID: number,
     exchange: string,
     collateral: string,
+    conditional: string,
     signatureType: SignatureType,
     userOrder: UserLimitOrder,
 ): Promise<OrderCreationArgs> => {
     let makerAsset: string;
     let takerAsset: string;
 
-    let makerAssetID: number | undefined;
-    let takerAssetID: number | undefined;
+    let makerAssetID: string | undefined;
+    let takerAssetID: string | undefined;
 
     let makerAmount: string;
     let takerAmount: string;
@@ -42,18 +43,19 @@ export const buildLimitOrderCreationArgs = async (
 
     if (userOrder.side === Side.BUY) {
         makerAsset = collateral;
-        takerAsset = userOrder.asset.address;
+        takerAsset = conditional;
         makerAssetID = undefined;
-        takerAssetID = getTokenID(userOrder.asset.condition);
+        takerAssetID = userOrder.tokenID;
+
         // force 2 decimals places
         const rawMakerAmt = parseFloat((price * userOrder.size).toFixed(2));
         makerAmount = ethers.utils.parseUnits(rawMakerAmt.toString(), COLLATERAL_TOKEN_DECIMALS).toString();
         const rawTakerAmt = parseFloat(userOrder.size.toFixed(2));
         takerAmount = ethers.utils.parseEther(rawTakerAmt.toString()).toString();
     } else {
-        makerAsset = userOrder.asset.address;
+        makerAsset = conditional;
         takerAsset = collateral;
-        makerAssetID = getTokenID(userOrder.asset.condition as string);
+        makerAssetID = userOrder.tokenID;
         takerAssetID = undefined;
         const rawMakerAmt = parseFloat(userOrder.size.toFixed(2));
         makerAmount = ethers.utils.parseEther(rawMakerAmt.toString()).toString();
@@ -85,31 +87,32 @@ export const buildMarketOrderCreationArgs = async (
     chainID: number,
     exchange: string,
     collateral: string,
+    conditional: string,
     signatureType: SignatureType,
     userOrder: UserMarketOrder,
 ): Promise<MarketOrderCreationArgs> => {
     let makerAsset: string;
     let takerAsset: string;
 
-    let makerAssetID: number | undefined;
-    let takerAssetID: number | undefined;
+    let makerAssetID: string | undefined;
+    let takerAssetID: string | undefined;
 
     let makerAmount: string;
 
     if (userOrder.side === Side.BUY) {
         // market buy
         makerAsset = collateral; // Set maker asset to collateral if market buy
-        takerAsset = userOrder.asset.address; // taker Asset to ConditionalToken
+        takerAsset = conditional; // taker Asset to ConditionalToken
         makerAssetID = undefined;
-        takerAssetID = getTokenID(userOrder.asset.condition);
+        takerAssetID = userOrder.tokenID;
         // We always round sizes to 2 decimal places
         const roundedMakerAmt = userOrder.size.toFixed(2).toString();
         makerAmount = ethers.utils.parseUnits(roundedMakerAmt, COLLATERAL_TOKEN_DECIMALS).toString();
     } else {
         // market sell
-        makerAsset = userOrder.asset.address;
+        makerAsset = conditional;
         takerAsset = collateral;
-        makerAssetID = getTokenID(userOrder.asset.condition as string);
+        makerAssetID = userOrder.tokenID;
         takerAssetID = undefined;
         const roundedMakerAmt = userOrder.size.toFixed(2).toString();
         makerAmount = ethers.utils.parseEther(roundedMakerAmt).toString();
@@ -259,6 +262,7 @@ export const createLimitOrder = async (
     const clobContracts: ClobContracts = getContracts(chainID);
     const exchange = clobContracts.Exchange;
     const collateral = clobContracts.Collateral;
+    const conditional = clobContracts.Conditional;
 
     const orderArgs = await buildLimitOrderCreationArgs(
         signerAddress,
@@ -266,6 +270,7 @@ export const createLimitOrder = async (
         chainID,
         exchange,
         collateral,
+        conditional,
         signatureType,
         userOrder,
     );
@@ -289,6 +294,7 @@ export const createMarketOrder = async (
     const clobContracts: ClobContracts = getContracts(chainID);
     const exchange = clobContracts.Exchange;
     const collateral = clobContracts.Collateral;
+    const conditional = clobContracts.Conditional;
 
     const marketOrderArgs = await buildMarketOrderCreationArgs(
         signerAddress,
@@ -296,6 +302,7 @@ export const createMarketOrder = async (
         chainID,
         exchange,
         collateral,
+        conditional,
         signatureType,
         userMarketOrder,
     );

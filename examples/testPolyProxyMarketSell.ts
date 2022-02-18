@@ -14,10 +14,7 @@ async function populateBook(client: ClobClient) {
     for (const newOrder of orders) {
         await client.postOrder(
             await client.createLimitOrder({
-                asset: {
-                    address: "0xadbeD21409324e0fcB80AE8b5e662B0C857D85ed",
-                    condition: "YES",
-                },
+                tokenID: "16678291189211314787145083999015737376658799626183230671758641503291735614088",
                 side: newOrder.side,
                 price: newOrder.price,
                 size: newOrder.size,
@@ -29,10 +26,7 @@ async function populateBook(client: ClobClient) {
 async function market(client: ClobClient) {
     await client.postOrder(
         await client.createMarketOrder({
-            asset: {
-                address: "0xadbeD21409324e0fcB80AE8b5e662B0C857D85ed",
-                condition: "YES",
-            },
+            tokenID: "16678291189211314787145083999015737376658799626183230671758641503291735614088",
             side: Side.BUY,
             size: 150,
         }),
@@ -40,7 +34,7 @@ async function market(client: ClobClient) {
 }
 
 async function main() {
-    const provider = new ethers.providers.JsonRpcProvider(process.env.ETH_RPC_URL);
+    const provider = new ethers.providers.JsonRpcProvider(process.env.RPC_URL);
     const pk = new ethers.Wallet(`${process.env.PK}`);
     const wallet = pk.connect(provider);
     console.log(`Address: ${await wallet.getAddress()}`);
