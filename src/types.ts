@@ -33,15 +33,10 @@ export enum Side {
     SELL = "sell",
 }
 
-export interface Asset {
-    address: string;
-    condition: string;
-}
-
 // Simplified Limit order for users
 export interface UserLimitOrder {
-    // Conditional token Asset being traded
-    asset: Asset;
+    // TokenID of the Conditional token asset being traded
+    tokenID: string;
     // Price used to create the limit order
     price: number;
     // Size in terms of the ConditionalToken
@@ -52,10 +47,11 @@ export interface UserLimitOrder {
 
 // Simplified Market order for users
 export interface UserMarketOrder {
-    // ConditionalToken Asset being traded
-    asset: Asset;
-    // Size in terms of Collateral, if market buy. e.g USDC size if market buy
-    // OR in terms of the quote currency, if market sell. e.g YES token if market sell
+    // TokenID of the Conditional token asset being traded
+    tokenID: string;
+    // Size
+    // If market buy, this is in terms of the Collateral( i.e USDC)
+    // If market sell, this is in terms of the Conditional token( i.e YES/NO token)
     size: number;
     // Side of the Market order
     side: Side;
@@ -72,10 +68,10 @@ export interface OrderCreationArgs {
     maker: string;
     makerAsset: string;
     makerAmount: string;
-    makerAssetID?: number;
+    makerAssetID?: string;
     takerAsset: string;
     takerAmount: string;
-    takerAssetID?: number;
+    takerAssetID?: string;
     signatureType: number;
 }
 
@@ -86,9 +82,9 @@ export interface MarketOrderCreationArgs {
     maker: string;
     makerAsset: string;
     makerAmount: string;
-    makerAssetID?: number;
+    makerAssetID?: string;
     takerAsset: string;
-    takerAssetID?: number;
+    takerAssetID?: string;
     signatureType: number;
 }
 
