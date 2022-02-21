@@ -6,7 +6,7 @@ import { ApiKeyCreds, ClobClient } from "../src";
 dotenvConfig({ path: resolve(__dirname, "../.env") });
 
 async function main() {
-    const provider = new ethers.providers.JsonRpcProvider(process.env.ETH_RPC_URL);
+    const provider = new ethers.providers.JsonRpcProvider(process.env.RPC_URL);
     const pk = new ethers.Wallet(`${process.env.PK}`);
     const wallet = pk.connect(provider);
     console.log(`Address: ${await wallet.getAddress()}`);

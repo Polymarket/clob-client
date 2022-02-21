@@ -14,7 +14,7 @@ import {
 } from "@polymarket/order-utils";
 import { ethers } from "ethers";
 import { OrderCreationArgs, UserMarketOrder, UserLimitOrder, MarketOrderCreationArgs, Side } from "../types";
-import { COLLATERAL_TOKEN_DECIMALS } from "./constants";
+import { COLLATERAL_TOKEN_DECIMALS, CONDITIONAL_TOKEN_DECIMALS } from "./constants";
 import { getJsonRpcSigner } from "./utils";
 
 /**
@@ -51,14 +51,14 @@ export const buildLimitOrderCreationArgs = async (
         const rawMakerAmt = parseFloat((price * userOrder.size).toFixed(2));
         makerAmount = ethers.utils.parseUnits(rawMakerAmt.toString(), COLLATERAL_TOKEN_DECIMALS).toString();
         const rawTakerAmt = parseFloat(userOrder.size.toFixed(2));
-        takerAmount = ethers.utils.parseEther(rawTakerAmt.toString()).toString();
+        takerAmount = ethers.utils.parseUnits(rawTakerAmt.toString(), CONDITIONAL_TOKEN_DECIMALS).toString();
     } else {
         makerAsset = conditional;
         takerAsset = collateral;
         makerAssetID = userOrder.tokenID;
         takerAssetID = undefined;
         const rawMakerAmt = parseFloat(userOrder.size.toFixed(2));
-        makerAmount = ethers.utils.parseEther(rawMakerAmt.toString()).toString();
+        makerAmount = ethers.utils.parseUnits(rawMakerAmt.toString(), CONDITIONAL_TOKEN_DECIMALS).toString();
         const rawTakerAmt = parseFloat((price * userOrder.size).toFixed(2));
         takerAmount = ethers.utils.parseUnits(rawTakerAmt.toString(), COLLATERAL_TOKEN_DECIMALS).toString();
     }
@@ -115,7 +115,7 @@ export const buildMarketOrderCreationArgs = async (
         makerAssetID = userOrder.tokenID;
         takerAssetID = undefined;
         const roundedMakerAmt = userOrder.size.toFixed(2).toString();
-        makerAmount = ethers.utils.parseEther(roundedMakerAmt).toString();
+        makerAmount = ethers.utils.parseUnits(roundedMakerAmt, CONDITIONAL_TOKEN_DECIMALS).toString();
     }
     return {
         chainID,
