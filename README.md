@@ -14,15 +14,12 @@ const creds: ApiKeyCreds = {
 }
 
 // Initialize the clob client
-// Note that the signer must be approved on the LimitOrderProtocol and OrderExecutor contracts
+// NOTE: the signer must be approved on the LimitOrderProtocol and OrderExecutor contracts
 const clobClient = new ClobClient(host, signer, creds);
 
 // Create a limit buy order for 100 YES for 0.50c
 const order = await clobClient.createLimitOrder({
-    asset: { 
-        address: "0xadbeD21409324e0fcB80AE8b5e662B0C857D85ed",
-        condition: "YES",
-    },
+    tokenId: "16678291189211314787145083999015737376658799626183230671758641503291735614088",
     price: 0.5,
     side: Side.Buy,
     size: 100,
@@ -33,10 +30,7 @@ const resp = await clobClient.postOrder(order);
 
 // Init a market sell of 100 YES tokens
 const marketSell = await clobClient.createMarketOrder({
-    asset: { 
-        address: "0xadbeD21409324e0fcB80AE8b5e662B0C857D85ed",
-        condition: "YES",
-    },
+    tokenId: "16678291189211314787145083999015737376658799626183230671758641503291735614088",
     side: Side.Sell,
     size: 100,
 });
