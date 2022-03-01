@@ -173,10 +173,8 @@ const buildOrder = async (signer: Wallet | JsonRpcSigner, args: OrderCreationArg
 
     // And sign it with the maker address
     const limitOrderTypedData = limitOrderBuilder.buildLimitOrderTypedData(limitOrder);
-    const limitOrderSignature = await limitOrderBuilder.buildOrderSignature(
-        jsonRpcSigner._address,
-        limitOrderTypedData,
-    );
+    const address = await jsonRpcSigner.getAddress();
+    const limitOrderSignature = await limitOrderBuilder.buildOrderSignature(address, limitOrderTypedData);
 
     const orderAndSignature: LimitOrderAndSignature = {
         order: limitOrder,
@@ -220,7 +218,8 @@ const buildMarketOrder = async (signer: Wallet | JsonRpcSigner, args: MarketOrde
 
     // And sign it with the maker address
     const typedData = marketOrderBuilder.buildOrderTypedData(marketOrder);
-    const sig = await marketOrderBuilder.buildOrderSignature(jsonRpcSigner._address, typedData);
+    const address = await jsonRpcSigner.getAddress();
+    const sig = await marketOrderBuilder.buildOrderSignature(address, typedData);
 
     const orderAndSignature: MarketOrderAndSignature = {
         order: marketOrder,
