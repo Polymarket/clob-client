@@ -1,7 +1,7 @@
 import { ethers } from "ethers";
 import { config as dotenvConfig } from "dotenv";
 import { resolve } from "path";
-import { ApiKeyCreds, ClobClient } from "../src";
+import { ApiKeyCreds, ClobClient, Side } from "../src";
 
 dotenvConfig({ path: resolve(__dirname, "../.env") });
 
@@ -19,13 +19,24 @@ async function main() {
     };
     const clobClient = new ClobClient(host, wallet, creds);
 
-    const resp = await clobClient.getOpenOrders();
-    console.log(resp);
+    // YES: 16678291189211314787145083999015737376658799626183230671758641503291735614088
+    const bid = await clobClient.createLimitOrder({
+        tokenID: "16678291189211314787145083999015737376658799626183230671758641503291735614088",
+        price: 0.40,
+        side: Side.BUY,
+        size: 100,
+    });
+    
+    await clobClient.postOrder(bid);
+    const ask = await clobClient.createLimitOrder({
+        tokenID: "16678291189211314787145083999015737376658799626183230671758641503291735614088",
+        price: 0.60,
+        side: Side.SELL,
+        size: 100,
+    });
+    
+    await clobClient.postOrder(ask);
 
-    // Filtered
-    const yesTokenID = "16678291189211314787145083999015737376658799626183230671758641503291735614088";
-    const filteredByMarket = await clobClient.getOpenOrders(yesTokenID);
-    console.log(filteredByMarket);
     console.log(`Done!`);
 }
 

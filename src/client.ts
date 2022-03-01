@@ -13,7 +13,7 @@ import {
     ApiKeysResponse,
 } from "./types";
 import { createL1Headers, createL2Headers } from "./headers";
-import { CREDS_CREATION_WARNING } from "./constants";
+import { CONDITIONAL, CREDS_CREATION_WARNING } from "./constants";
 import { del, DELETE, GET, get, POST, post } from "./http_helpers";
 import { L1_AUTH_UNAVAILABLE_ERROR, L2_AUTH_NOT_AVAILABLE } from "./errors";
 import { marketOrderToJson, limitOrderToJson } from "./utilities";
@@ -26,6 +26,7 @@ import {
     POST_ORDER,
     TIME,
     TRADE_HISTORY,
+    GET_ORDER_BOOK,
 } from "./endpoints";
 import { OrderBuilder } from "./order-builder/builder";
 
@@ -67,6 +68,11 @@ export class ClobClient {
 
     public async getServerTime(): Promise<any> {
         return get(`${this.host}${TIME}`);
+    }
+
+    public async getOrderBook(tokenID: string): Promise<any> {
+        const endpoint = `${this.host}${GET_ORDER_BOOK}?market=${CONDITIONAL}&tokenID=${tokenID}`;
+        return get(endpoint);
     }
 
     // L1 Authed
@@ -148,7 +154,7 @@ export class ClobClient {
         return orderAndSig;
     }
 
-    public async getOpenOrders(): Promise<OpenOrdersResponse> {
+    public async getOpenOrders(tokenID?: string): Promise<OpenOrdersResponse> {
         this.canL2Auth();
         const endpoint = "/open-orders";
         const l2HeaderArgs = {
@@ -162,7 +168,13 @@ export class ClobClient {
             l2HeaderArgs,
         );
 
-        return get(`${this.host}${endpoint}`, headers);
+        let url = `${this.host}${endpoint}`;
+
+        if (tokenID != null) {
+            url = `${url}?market=${CONDITIONAL}&tokenID=${tokenID}`;
+        }
+
+        return get(url, headers);
     }
 
     public async postOrder(order: LimitOrderAndSignature | MarketOrderAndSignature): Promise<any> {

@@ -1,5 +1,7 @@
 export const TIME = "/time";
 
+export const GET_ORDER_BOOK = "/book";
+
 export const CREATE_API_KEY = "/create-api-key";
 
 export const GET_API_KEYS = "/get-api-keys";
