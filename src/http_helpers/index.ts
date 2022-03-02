@@ -14,7 +14,10 @@ export const request = async (endpoint: string, method: Method, headers?: any, d
             console.error(err.response?.status);
             console.error(err.response?.statusText);
             console.error(err.response?.data);
-            return err.response?.data;
+            if ("error" in err.response?.data) {
+                return err.response?.data;
+            }
+            return { error: err.response?.data };
         }
         console.error(err);
         return { error: err };
