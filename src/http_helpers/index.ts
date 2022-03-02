@@ -14,23 +14,24 @@ export const request = async (endpoint: string, method: Method, headers?: any, d
             console.error(err.response?.status);
             console.error(err.response?.statusText);
             console.error(err.response?.data);
+            return err.response?.data;
         }
         console.error(err);
-        return null;
+        return { error: err };
     }
 };
 
 export const post = async (endpoint: string, headers: any, data?: any): Promise<any> => {
     const resp = await request(endpoint, POST, headers, data);
-    return resp !== null ? resp.data : null;
+    return "error" in resp ? resp : resp.data;
 };
 
 export const get = async (endpoint: string, headers?: any, data?: any): Promise<any> => {
     const resp = await request(endpoint, GET, headers, data);
-    return resp !== null ? resp.data : null;
+    return "error" in resp ? resp : resp.data;
 };
 
 export const del = async (endpoint: string, headers?: any, data?: any): Promise<any> => {
     const resp = await request(endpoint, DELETE, headers, data);
-    return resp !== null ? resp.data : null;
+    return "error" in resp ? resp : resp.data;
 };
