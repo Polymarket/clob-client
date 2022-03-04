@@ -13,7 +13,7 @@ import {
     ApiKeysResponse,
 } from "./types";
 import { createL1Headers, createL2Headers } from "./headers";
-import { CONDITIONAL, CREDS_CREATION_WARNING } from "./constants";
+import { CREDS_CREATION_WARNING } from "./constants";
 import { del, DELETE, GET, get, POST, post } from "./http_helpers";
 import { L1_AUTH_UNAVAILABLE_ERROR, L2_AUTH_NOT_AVAILABLE } from "./errors";
 import { marketOrderToJson, limitOrderToJson } from "./utilities";
@@ -71,7 +71,7 @@ export class ClobClient {
     }
 
     public async getOrderBook(tokenID: string): Promise<any> {
-        const endpoint = `${this.host}${GET_ORDER_BOOK}?market=${CONDITIONAL}&tokenID=${tokenID}`;
+        const endpoint = `${this.host}${GET_ORDER_BOOK}?market=${tokenID}`;
         return get(endpoint);
     }
 
@@ -171,7 +171,7 @@ export class ClobClient {
         let url = `${this.host}${endpoint}`;
 
         if (tokenID != null) {
-            url = `${url}?market=${CONDITIONAL}&tokenID=${tokenID}`;
+            url = `${url}?market=${tokenID}`;
         }
 
         return get(url, headers);
