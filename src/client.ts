@@ -27,6 +27,9 @@ import {
     TIME,
     TRADE_HISTORY,
     GET_ORDER_BOOK,
+    DELETE_API_KEY,
+    MIDPOINT,
+    PRICE,
 } from "./endpoints";
 import { OrderBuilder } from "./order-builder/builder";
 
@@ -75,6 +78,14 @@ export class ClobClient {
         return get(endpoint);
     }
 
+    public async getMidpoint(tokenID: string): Promise<any> {
+        return get(`${this.host}${MIDPOINT}?market=${tokenID}`);
+    }
+
+    public async getPrice(tokenID: string, side: string): Promise<any> {
+        return get(`${this.host}${PRICE}?market=${tokenID}&side=${side}`);
+    }
+
     // L1 Authed
     public async createApiKey(): Promise<ApiKeyCreds> {
         this.canL1Auth();
@@ -102,6 +113,24 @@ export class ClobClient {
         );
 
         return get(`${this.host}${endpoint}`, headers);
+    }
+
+    public async deleteApiKey(): Promise<any> {
+        this.canL2Auth();
+
+        const endpoint = DELETE_API_KEY;
+        const headerArgs = {
+            method: DELETE,
+            requestPath: endpoint,
+        };
+
+        const headers = await createL2Headers(
+            this.signer as Wallet | JsonRpcSigner,
+            this.creds as ApiKeyCreds,
+            headerArgs,
+        );
+
+        return del(`${this.host}${endpoint}`, headers);
     }
 
     public async getOrder(orderID: string): Promise<Order> {
