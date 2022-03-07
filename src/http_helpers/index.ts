@@ -11,6 +11,7 @@ export const request = async (endpoint: string, method: Method, headers?: any, d
         return response;
     } catch (err) {
         if (axios.isAxiosError(err)) {
+            console.error(err);
             console.error(err.response?.status);
             console.error(err.response?.statusText);
             console.error(err.response?.data);

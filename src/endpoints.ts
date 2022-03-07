@@ -2,9 +2,15 @@ export const TIME = "/time";
 
 export const GET_ORDER_BOOK = "/book";
 
+export const MIDPOINT = "/midpoint";
+
+export const PRICE = "/price";
+
 export const CREATE_API_KEY = "/create-api-key";
 
 export const GET_API_KEYS = "/get-api-keys";
+
+export const DELETE_API_KEY = "/delete-api-key";
 
 export const TRADE_HISTORY = "/trade-history";
 
