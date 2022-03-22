@@ -11,13 +11,13 @@ import { MSG_TO_SIGN } from "./constants";
  */
 export const buildClobEip712Signature = async (signer: Wallet | JsonRpcSigner, timestamp: number): Promise<string> => {
     const address = await signer.getAddress();
-    const chainId = await signer.getChainId();
+    const chainID = await signer.getChainId();
     const ts = `${timestamp}`;
 
     const domain = {
         name: "ClobAuthDomain",
         version: "1",
-        chainId: chainId,
+        chainId: chainID,
     };
 
     const types = {
