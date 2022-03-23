@@ -241,6 +241,9 @@ const getSigner = (eoa: string, makerAddress: string, sigType: number): string =
         case SignatureType.POLY_PROXY:
             // signer is the eoa
             return eoa;
+        case SignatureType.POLY_GNOSIS_SAFE:
+            // signer is the eoa
+            return eoa;
         default:
             throw new Error("invalid signature type");
     }
