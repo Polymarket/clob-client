@@ -64,6 +64,7 @@ export interface OrderPayload {
 export interface OrderCreationArgs {
     chainID: number;
     exchange: string;
+    executor: string;
     signer: string;
     maker: string;
     makerAsset: string;
