@@ -25,6 +25,7 @@ export const buildLimitOrderCreationArgs = async (
     maker: string,
     chainID: number,
     exchange: string,
+    executor: string,
     collateral: string,
     conditional: string,
     signatureType: SignatureType,
@@ -66,6 +67,7 @@ export const buildLimitOrderCreationArgs = async (
     return {
         chainID,
         exchange,
+        executor,
         signer,
         maker,
         makerAsset,
@@ -155,6 +157,7 @@ const buildOrder = async (signer: Wallet | JsonRpcSigner, args: OrderCreationArg
         makerAssetAddress: args.makerAsset,
         takerAssetAddress: args.takerAsset,
         makerAddress: args.maker,
+        takerAddress: args.executor,
         makerAmount: args.makerAmount,
         takerAmount: args.takerAmount,
         signer: args.signer,
@@ -263,6 +266,7 @@ export const createLimitOrder = async (
 
     const clobContracts: ClobContracts = getContracts(chainID);
     const exchange = clobContracts.Exchange;
+    const executor = clobContracts.Executor;
     const collateral = clobContracts.Collateral;
     const conditional = clobContracts.Conditional;
 
@@ -271,6 +275,7 @@ export const createLimitOrder = async (
         maker,
         chainID,
         exchange,
+        executor,
         collateral,
         conditional,
         signatureType,
