@@ -14,6 +14,8 @@ export const DELETE_API_KEY = "/delete-api-key";
 
 export const TRADE_HISTORY = "/trade-history";
 
+export const ORDER_HISTORY = "/order-history";
+
 export const GET_ORDER = "/order/";
 
 export const OPEN_ORDERS = "/open-orders";
