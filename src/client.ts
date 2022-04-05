@@ -30,6 +30,8 @@ import {
     DELETE_API_KEY,
     MIDPOINT,
     PRICE,
+    OPEN_ORDERS,
+    ORDER_HISTORY,
 } from "./endpoints";
 import { OrderBuilder } from "./order-builder/builder";
 
@@ -151,7 +153,30 @@ export class ClobClient {
         return get(`${this.host}${endpoint}`, headers);
     }
 
-    public async getTradeHistory(): Promise<Order[]> {
+    public async getOrderHistory(tokenID?: string): Promise<any> {
+        this.canL2Auth();
+        const endpoint = ORDER_HISTORY;
+        const l2HeaderArgs = {
+            method: GET,
+            requestPath: endpoint,
+        };
+
+        const headers = await createL2Headers(
+            this.signer as Wallet | JsonRpcSigner,
+            this.creds as ApiKeyCreds,
+            l2HeaderArgs,
+        );
+
+        let url = `${this.host}${endpoint}`;
+
+        if (tokenID != null) {
+            url = `${url}?market=${tokenID}`;
+        }
+
+        return get(url, headers);
+    }
+
+    public async getTradeHistory(tokenID?: string): Promise<any> {
         this.canL2Auth();
 
         const endpoint = TRADE_HISTORY;
@@ -166,7 +191,13 @@ export class ClobClient {
             headerArgs,
         );
 
-        return get(`${this.host}${endpoint}`, headers);
+        let url = `${this.host}${endpoint}`;
+
+        if (tokenID != null) {
+            url = `${url}?market=${tokenID}`;
+        }
+
+        return get(url, headers);
     }
 
     public async createLimitOrder(userOrder: UserLimitOrder): Promise<LimitOrderAndSignature> {
@@ -185,7 +216,7 @@ export class ClobClient {
 
     public async getOpenOrders(tokenID?: string): Promise<OpenOrdersResponse> {
         this.canL2Auth();
-        const endpoint = "/open-orders";
+        const endpoint = OPEN_ORDERS;
         const l2HeaderArgs = {
             method: GET,
             requestPath: endpoint,
