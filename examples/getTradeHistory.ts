@@ -12,6 +12,7 @@ async function main() {
     console.log(`Address: ${await wallet.getAddress()}`);
 
     const host = "http://localhost:8080";
+    // const host = "https://clob-staging.polymarket.com";
     const creds: ApiKeyCreds = {
         key: `${process.env.CLOB_API_KEY}`,
         secret: `${process.env.CLOB_SECRET}`,
@@ -20,7 +21,10 @@ async function main() {
     const clobClient = new ClobClient(host, wallet, creds);
 
     console.log(`Response: `);
-    const resp = await clobClient.getTradeHistory();
+    const resp = await clobClient.getTradeHistory({
+        market: "16678291189211314787145083999015737376658799626183230671758641503291735614088",
+        max: 2,
+    });
     console.log(resp);
 }
 

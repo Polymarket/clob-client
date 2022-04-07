@@ -11,12 +11,13 @@ import {
     OpenOrdersResponse,
     Order,
     ApiKeysResponse,
+    FilterParams,
 } from "./types";
 import { createL1Headers, createL2Headers } from "./headers";
 import { CREDS_CREATION_WARNING } from "./constants";
 import { del, DELETE, GET, get, POST, post } from "./http_helpers";
 import { L1_AUTH_UNAVAILABLE_ERROR, L2_AUTH_NOT_AVAILABLE } from "./errors";
-import { marketOrderToJson, limitOrderToJson } from "./utilities";
+import { marketOrderToJson, limitOrderToJson, addQueryParamsToUrl } from "./utilities";
 import {
     CANCEL_ALL,
     CANCEL,
@@ -153,7 +154,7 @@ export class ClobClient {
         return get(`${this.host}${endpoint}`, headers);
     }
 
-    public async getOrderHistory(tokenID?: string): Promise<any> {
+    public async getOrderHistory(params?: FilterParams): Promise<any> {
         this.canL2Auth();
         const endpoint = ORDER_HISTORY;
         const l2HeaderArgs = {
@@ -167,16 +168,11 @@ export class ClobClient {
             l2HeaderArgs,
         );
 
-        let url = `${this.host}${endpoint}`;
-
-        if (tokenID != null) {
-            url = `${url}?market=${tokenID}`;
-        }
-
+        const url = addQueryParamsToUrl(`${this.host}${endpoint}`, params);
         return get(url, headers);
     }
 
-    public async getTradeHistory(tokenID?: string): Promise<any> {
+    public async getTradeHistory(params?: FilterParams): Promise<any> {
         this.canL2Auth();
 
         const endpoint = TRADE_HISTORY;
@@ -191,12 +187,7 @@ export class ClobClient {
             headerArgs,
         );
 
-        let url = `${this.host}${endpoint}`;
-
-        if (tokenID != null) {
-            url = `${url}?market=${tokenID}`;
-        }
-
+        const url = addQueryParamsToUrl(`${this.host}${endpoint}`, params);
         return get(url, headers);
     }
 
@@ -214,7 +205,7 @@ export class ClobClient {
         return orderAndSig;
     }
 
-    public async getOpenOrders(tokenID?: string): Promise<OpenOrdersResponse> {
+    public async getOpenOrders(params?: FilterParams): Promise<OpenOrdersResponse> {
         this.canL2Auth();
         const endpoint = OPEN_ORDERS;
         const l2HeaderArgs = {
@@ -228,12 +219,7 @@ export class ClobClient {
             l2HeaderArgs,
         );
 
-        let url = `${this.host}${endpoint}`;
-
-        if (tokenID != null) {
-            url = `${url}?market=${tokenID}`;
-        }
-
+        const url = addQueryParamsToUrl(`${this.host}${endpoint}`, params);
         return get(url, headers);
     }
 
