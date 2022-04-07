@@ -40,34 +40,35 @@ export const marketOrderToJson = (mktOrder: MarketOrderAndSignature): any => {
     };
 };
 
-const buildQueryParams = (url: string, param: string, value: string) : string => {
+const buildQueryParams = (url: string, param: string, value: string): string => {
+    let urlWithParams = url;
     const last = url.at(url.length - 1);
     // Check the last char in the url string
     // if ?, append the param directly: api.com?param=value
     if (last === "?") {
-
+        urlWithParams = `${urlWithParams}${param}=${value}`;
+    } else {
+        // else append "&" then the param: api.com?param1=value1&param2=value2
+        urlWithParams = `${urlWithParams}&${param}=${value}`;
     }
-}
+    return urlWithParams;
+};
 
 export const addQueryParamsToUrl = (baseUrl: string, params?: FilterParams): string => {
     let url = baseUrl;
     if (params !== undefined) {
         url = `${url}?`;
         if (params.market !== undefined) {
-            const last = url.at(url.length - 1);
-            if (last === "?") {
-
-            }
-            url = `${url}market=${params.market}`;
+            url = buildQueryParams(url, "market", params.market as string);
         }
         if (params.max !== undefined) {
-            url = `${url}?max=${params.max}`;
+            url = buildQueryParams(url, "max", `${params.max}`);
         }
         if (params.startTs !== undefined) {
-            url = `${url}startTs=${params.startTs}`;
+            url = buildQueryParams(url, "startTs", `${params.startTs}`);
         }
         if (params.endTs !== undefined) {
-            url = `${url}endTs=${params.endTs}`;
+            url = buildQueryParams(url, "endTs", `${params.endTs}`);
         }
     }
     return url;
