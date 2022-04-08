@@ -113,3 +113,10 @@ export interface Order {
 export interface OpenOrdersResponse {
     orders: Order[];
 }
+
+export interface FilterParams {
+    market?: string;
+    max?: number;
+    startTs?: number;
+    endTs?: number;
+}
