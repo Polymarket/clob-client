@@ -12,6 +12,8 @@ import {
     Order,
     ApiKeysResponse,
     FilterParams,
+    TradeHistory,
+    OrderHistory,
 } from "./types";
 import { createL1Headers, createL2Headers } from "./headers";
 import { CREDS_CREATION_WARNING } from "./constants";
@@ -154,7 +156,7 @@ export class ClobClient {
         return get(`${this.host}${endpoint}`, headers);
     }
 
-    public async getOrderHistory(params?: FilterParams): Promise<any> {
+    public async getOrderHistory(params?: FilterParams): Promise<OrderHistory> {
         this.canL2Auth();
         const endpoint = ORDER_HISTORY;
         const l2HeaderArgs = {
@@ -172,7 +174,7 @@ export class ClobClient {
         return get(url, headers);
     }
 
-    public async getTradeHistory(params?: FilterParams): Promise<any> {
+    public async getTradeHistory(params?: FilterParams): Promise<TradeHistory> {
         this.canL2Auth();
 
         const endpoint = TRADE_HISTORY;

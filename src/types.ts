@@ -120,3 +120,23 @@ export interface FilterParams {
     startTs?: number;
     endTs?: number;
 }
+
+export interface Trade {
+    tradeID: string;
+    market: string;
+    timestamp: string;
+    marketOrderID: string;
+    limitOrderIDs: string[];
+    filledAmount: string;
+    side: string;
+    owner: string;
+    avgPrice: string;
+}
+
+export interface TradeHistory {
+    history: Trade[];
+}
+
+export interface OrderHistory {
+    history: Order[];
+}
