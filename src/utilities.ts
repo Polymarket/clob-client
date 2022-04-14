@@ -37,6 +37,7 @@ export const marketOrderToJson = (mktOrder: MarketOrderAndSignature): any => {
         },
         signature: mktOrder.signature,
         orderType: "market",
+        minAmountReceived: mktOrder.minAmountReceived,
     };
 };
 

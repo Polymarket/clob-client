@@ -55,6 +55,9 @@ export interface UserMarketOrder {
     size: number;
     // Side of the Market order
     side: Side;
+    // (Optional) Worst price
+    // The worst price this market order can be executed at
+    worstPrice?: number;
 }
 
 export interface OrderPayload {
@@ -87,6 +90,7 @@ export interface MarketOrderCreationArgs {
     takerAsset: string;
     takerAssetID?: string;
     signatureType: number;
+    minAmountReceived: string;
 }
 
 export interface ApiKeysResponse {
