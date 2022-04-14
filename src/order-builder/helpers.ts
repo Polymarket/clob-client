@@ -101,6 +101,8 @@ export const buildMarketOrderCreationArgs = async (
 
     let makerAmount: string;
 
+    let minAmountReceived = "0"; // Default to 0
+
     if (userOrder.side === Side.BUY) {
         // market buy
         makerAsset = collateral; // Set maker asset to collateral if market buy
@@ -110,6 +112,13 @@ export const buildMarketOrderCreationArgs = async (
         // We always round sizes to 2 decimal places
         const roundedMakerAmt = userOrder.size.toFixed(2).toString();
         makerAmount = ethers.utils.parseUnits(roundedMakerAmt, COLLATERAL_TOKEN_DECIMALS).toString();
+
+        // Calculate minimum amount received
+        if (userOrder.worstPrice !== undefined) {
+            const worstPrice = userOrder.worstPrice as number;
+            const minAmt = parseFloat((userOrder.size / worstPrice).toFixed(2));
+            minAmountReceived = ethers.utils.parseUnits(minAmt.toString(), COLLATERAL_TOKEN_DECIMALS).toString();
+        }
     } else {
         // market sell
         makerAsset = conditional;
@@ -118,6 +127,13 @@ export const buildMarketOrderCreationArgs = async (
         takerAssetID = undefined;
         const roundedMakerAmt = userOrder.size.toFixed(2).toString();
         makerAmount = ethers.utils.parseUnits(roundedMakerAmt, CONDITIONAL_TOKEN_DECIMALS).toString();
+
+        // Calculate minimum amount received
+        if (userOrder.worstPrice !== undefined) {
+            const worstPrice = userOrder.worstPrice as number;
+            const minAmt = parseFloat((userOrder.size * worstPrice).toFixed(2));
+            minAmountReceived = ethers.utils.parseUnits(minAmt.toString(), COLLATERAL_TOKEN_DECIMALS).toString();
+        }
     }
     return {
         chainID,
@@ -130,6 +146,7 @@ export const buildMarketOrderCreationArgs = async (
         takerAsset,
         takerAssetID,
         signatureType,
+        minAmountReceived,
     };
 };
 
@@ -228,6 +245,7 @@ const buildMarketOrder = async (signer: Wallet | JsonRpcSigner, args: MarketOrde
         order: marketOrder,
         signature: sig,
         orderType: "market",
+        minAmountReceived: args.minAmountReceived,
     };
     console.log(`Generated Market order!`);
     return orderAndSignature;

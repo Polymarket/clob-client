@@ -1,7 +1,7 @@
 {
     "name": "@polymarket/clob-client",
     "description": "Typescript client for Polymarket's CLOB",
-    "version": "1.0.20",
+    "version": "1.0.21",
     "contributors": [
         {
             "name": "Jonathan Amenechi",
@@ -23,7 +23,7 @@
         "@ethersproject/random": "^5.5.0",
         "@ethersproject/transactions": "^5.5.0",
         "@ethersproject/wallet": "^5.5.0",
-        "@polymarket/order-utils": "^1.2.7",
+        "@polymarket/order-utils": "^1.2.9",
         "axios": "^0.21.1",
         "commitizen": "^4.2.1",
         "cz-conventional-changelog": "^3.3.0",
