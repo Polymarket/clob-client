@@ -17,6 +17,7 @@ export interface L1PolyHeader {
     POLY_ADDRESS: string;
     POLY_SIGNATURE: string;
     POLY_TIMESTAMP: string;
+    POLY_NONCE: string;
 }
 
 // API key verification

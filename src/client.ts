@@ -16,7 +16,6 @@ import {
     OrderHistory,
 } from "./types";
 import { createL1Headers, createL2Headers } from "./headers";
-import { CREDS_CREATION_WARNING } from "./constants";
 import { del, DELETE, GET, get, POST, post } from "./http_helpers";
 import { L1_AUTH_UNAVAILABLE_ERROR, L2_AUTH_NOT_AVAILABLE } from "./errors";
 import { marketOrderToJson, limitOrderToJson, addQueryParamsToUrl } from "./utilities";
@@ -35,6 +34,7 @@ import {
     PRICE,
     OPEN_ORDERS,
     ORDER_HISTORY,
+    DERIVE_API_KEY,
 } from "./endpoints";
 import { OrderBuilder } from "./order-builder/builder";
 
@@ -92,13 +92,32 @@ export class ClobClient {
     }
 
     // L1 Authed
-    public async createApiKey(): Promise<ApiKeyCreds> {
+
+    /**
+     * Creates a new API key for a user
+     * @param nonce
+     * @returns ApiKeyCreds
+     */
+    public async createApiKey(nonce?: number): Promise<ApiKeyCreds> {
         this.canL1Auth();
 
         const endpoint = `${this.host}${CREATE_API_KEY}`;
-        const headers = await createL1Headers(this.signer as Wallet | JsonRpcSigner);
+        const headers = await createL1Headers(this.signer as Wallet | JsonRpcSigner, nonce);
         const resp = await post(endpoint, headers);
-        console.log(CREDS_CREATION_WARNING);
+        return resp;
+    }
+
+    /**
+     * Derives an existing API key for a user
+     * @param nonce
+     * @returns ApiKeyCreds
+     */
+    public async deriveApiKey(nonce?: number): Promise<ApiKeyCreds> {
+        this.canL1Auth();
+
+        const endpoint = `${this.host}${DERIVE_API_KEY}`;
+        const headers = await createL1Headers(this.signer as Wallet | JsonRpcSigner, nonce);
+        const resp = await get(endpoint, headers);
         return resp;
     }
 
