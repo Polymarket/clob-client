@@ -9,7 +9,11 @@ import { MSG_TO_SIGN } from "./constants";
  * @param ts
  * @returns string
  */
-export const buildClobEip712Signature = async (signer: Wallet | JsonRpcSigner, timestamp: number): Promise<string> => {
+export const buildClobEip712Signature = async (
+    signer: Wallet | JsonRpcSigner,
+    timestamp: number,
+    nonce: number,
+): Promise<string> => {
     const address = await signer.getAddress();
     const chainID = await signer.getChainId();
     const ts = `${timestamp}`;
@@ -24,12 +28,14 @@ export const buildClobEip712Signature = async (signer: Wallet | JsonRpcSigner, t
         ClobAuth: [
             { name: "address", type: "address" },
             { name: "timestamp", type: "string" },
+            { name: "nonce", type: "uint256" },
             { name: "message", type: "string" },
         ],
     };
     const value = {
         address,
         timestamp: ts,
+        nonce,
         message: MSG_TO_SIGN,
     };
     // eslint-disable-next-line no-underscore-dangle
