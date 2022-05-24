@@ -1,5 +1,9 @@
 # Polymarket CLOB Client
 
+<a href='https://www.npmjs.com/package/@polymarket/clob-client'>
+    <img src='https://img.shields.io/npm/v/@polymarket/clob-client.svg' alt='NPM'/>
+</a>
+
 Typescript client for the Polymarket CLOB
 
 ### Usage
