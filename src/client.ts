@@ -35,6 +35,7 @@ import {
     OPEN_ORDERS,
     ORDER_HISTORY,
     DERIVE_API_KEY,
+    GET_LAST_TRADE_PRICE,
 } from "./endpoints";
 import { OrderBuilder } from "./order-builder/builder";
 
@@ -90,6 +91,12 @@ export class ClobClient {
     public async getPrice(tokenID: string, side: string): Promise<any> {
         return get(`${this.host}${PRICE}?market=${tokenID}&side=${side}`);
     }
+
+    public async getLastTradePrice(tokenID: string): Promise<any> {
+        const endpoint = `${this.host}${GET_LAST_TRADE_PRICE}?market=${tokenID}`;
+        return get(endpoint);
+    }
+
 
     // L1 Authed
 
