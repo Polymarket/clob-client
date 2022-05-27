@@ -5,7 +5,7 @@ import { ClobClient } from "../src";
 dotenvConfig({ path: resolve(__dirname, "../.env") });
 
 async function main() {
-    const host = "http://localhost:8080";
+    const host = process.env.CLOB_API_URL || "http://localhost:8080";
     const clobClient = new ClobClient(host);
 
     console.log(`Server time: ${await clobClient.getServerTime()}`);

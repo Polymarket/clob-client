@@ -39,7 +39,7 @@ async function main() {
     const wallet = pk.connect(provider);
     console.log(`Address: ${await wallet.getAddress()}`);
 
-    const host = "http://localhost:8080";
+    const host = process.env.CLOB_API_URL || "http://localhost:8080";
     const creds: ApiKeyCreds = {
         key: `${process.env.CLOB_API_KEY}`,
         secret: `${process.env.CLOB_SECRET}`,

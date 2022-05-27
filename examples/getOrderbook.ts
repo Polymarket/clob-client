@@ -5,7 +5,7 @@ import { ClobClient } from "../src";
 dotenvConfig({ path: resolve(__dirname, "../.env") });
 
 async function main() {
-    const host = "http://localhost:8080";
+    const host = process.env.CLOB_API_URL || "http://localhost:8080";
     const clobClient = new ClobClient(host);
     const resp = await clobClient.getOrderBook("16678291189211314787145083999015737376658799626183230671758641503291735614088")
     console.log(resp);
