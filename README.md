@@ -9,7 +9,7 @@ Typescript client for the Polymarket CLOB
 ### Usage
 
 ```ts
-const host = "http://localhost:8080";
+const host = process.env.CLOB_API_URL || "http://localhost:8080";
 const signer = new ethers.Wallet(`${process.env.PK}`);
 const creds: ApiKeyCreds = {
     key: `${process.env.CLOB_API_KEY}`,

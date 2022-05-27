@@ -19,16 +19,28 @@ async function main() {
     };
     const clobClient = new ClobClient(host, wallet, creds);
 
-    console.log(`Response: `);
-    const resp = await clobClient.getTradeHistory();
-    console.log(resp);
-    // Filtered
-    const filteredResp = await clobClient.getTradeHistory({
-        market: "16678291189211314787145083999015737376658799626183230671758641503291735614088",
-        max: 2,
-    });
-    console.log(`Filtered: `);
-    console.log(filteredResp);
+    const YES_TOKEN_ID="16678291189211314787145083999015737376658799626183230671758641503291735614088"
+    const NO_TOKEN_ID="1343197538147866997676250008839231694243646439454152539053893078719042421992"
+
+    clobClient.getPrice(
+      YES_TOKEN_ID,
+      "buy"
+    ).then((price:any)=> console.log('YES', 'BUY', price));
+
+    clobClient.getPrice(
+      YES_TOKEN_ID,
+      "sell"
+    ).then((price:any)=> console.log('YES', 'SELL', price));
+
+    clobClient.getPrice(
+      NO_TOKEN_ID,
+      "buy"
+    ).then((price:any)=> console.log('NO', 'BUY', price));
+    
+    clobClient.getPrice(
+      NO_TOKEN_ID,
+      "sell"
+    ).then((price:any)=> console.log('NO', 'SELL', price));
 }
 
 main();
