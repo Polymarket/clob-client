@@ -27,3 +27,5 @@ export const POST_ORDER = "/order";
 export const CANCEL = "/order";
 
 export const CANCEL_ALL = "/cancel-all";
+
+export const GET_LAST_TRADE_PRICE = "/last-trade-price";
