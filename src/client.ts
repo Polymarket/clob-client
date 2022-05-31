@@ -80,8 +80,7 @@ export class ClobClient {
     }
 
     public async getOrderBook(tokenID: string): Promise<any> {
-        const endpoint = `${this.host}${GET_ORDER_BOOK}?market=${tokenID}`;
-        return get(endpoint);
+        return get(`${this.host}${GET_ORDER_BOOK}?market=${tokenID}`);
     }
 
     public async getMidpoint(tokenID: string): Promise<any> {
@@ -92,11 +91,9 @@ export class ClobClient {
         return get(`${this.host}${PRICE}?market=${tokenID}&side=${side}`);
     }
 
-    public async getLastTradePrice(tokenID: string, side:string): Promise<any> {
-        const endpoint = `${this.host}${GET_LAST_TRADE_PRICE}?market=${tokenID}&side=${side}`;
-        return get(endpoint);
+    public async getLastTradePrice(tokenID: string, side: string): Promise<any> {
+        return get(`${this.host}${GET_LAST_TRADE_PRICE}?market=${tokenID}&side=${side}`);
     }
-
 
     // L1 Authed
 
