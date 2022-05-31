@@ -15,7 +15,7 @@ async function main() {
     const clobClient = new ClobClient(host, wallet);
 
     console.log(`Price: `);
-    const resp = await clobClient.getLastTradePrice("16678291189211314787145083999015737376658799626183230671758641503291735614088", "buy");
+    const resp = await clobClient.getLastTradePrice("16678291189211314787145083999015737376658799626183230671758641503291735614088");
     console.log(resp);
 }
 
