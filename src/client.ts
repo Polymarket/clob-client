@@ -92,8 +92,8 @@ export class ClobClient {
         return get(`${this.host}${PRICE}?market=${tokenID}&side=${side}`);
     }
 
-    public async getLastTradePrice(tokenID: string): Promise<any> {
-        const endpoint = `${this.host}${GET_LAST_TRADE_PRICE}?market=${tokenID}`;
+    public async getLastTradePrice(tokenID: string, side:string): Promise<any> {
+        const endpoint = `${this.host}${GET_LAST_TRADE_PRICE}?market=${tokenID}&side=${side}`;
         return get(endpoint);
     }
 
