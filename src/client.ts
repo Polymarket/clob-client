@@ -14,6 +14,7 @@ import {
     FilterParams,
     TradeHistory,
     OrderHistory,
+    OptionalParams,
 } from "./types";
 import { createL1Headers, createL2Headers } from "./headers";
 import { del, DELETE, GET, get, POST, post } from "./http_helpers";
@@ -100,28 +101,32 @@ export class ClobClient {
     /**
      * Creates a new API key for a user
      * @param nonce
+     * @param optionalParams - query parameters
      * @returns ApiKeyCreds
      */
-    public async createApiKey(nonce?: number): Promise<ApiKeyCreds> {
+    public async createApiKey(nonce?: number, optionalParams?: OptionalParams): Promise<ApiKeyCreds> {
         this.canL1Auth();
 
         const endpoint = `${this.host}${CREATE_API_KEY}`;
         const headers = await createL1Headers(this.signer as Wallet | JsonRpcSigner, nonce);
-        const resp = await post(endpoint, headers);
+
+        const resp = await post(endpoint, headers, undefined, optionalParams);
         return resp;
     }
 
     /**
      * Derives an existing API key for a user
      * @param nonce
+     * @param optionalParams - query parameters
      * @returns ApiKeyCreds
      */
-    public async deriveApiKey(nonce?: number): Promise<ApiKeyCreds> {
+    public async deriveApiKey(nonce?: number, optionalParams?: OptionalParams): Promise<ApiKeyCreds> {
         this.canL1Auth();
 
         const endpoint = `${this.host}${DERIVE_API_KEY}`;
         const headers = await createL1Headers(this.signer as Wallet | JsonRpcSigner, nonce);
-        const resp = await get(endpoint, headers);
+
+        const resp = await get(endpoint, headers, undefined, optionalParams);
         return resp;
     }
 
@@ -248,13 +253,17 @@ export class ClobClient {
         return get(url, headers);
     }
 
-    public async postOrder(order: LimitOrderAndSignature | MarketOrderAndSignature): Promise<any> {
+    public async postOrder(
+        order: LimitOrderAndSignature | MarketOrderAndSignature,
+        optionalParams?: OptionalParams,
+    ): Promise<any> {
         this.canL2Auth();
         const endpoint = POST_ORDER;
         const orderPayload =
             order.orderType === "limit"
                 ? limitOrderToJson(order as LimitOrderAndSignature)
                 : marketOrderToJson(order as MarketOrderAndSignature);
+
         const l2HeaderArgs = {
             method: POST,
             requestPath: endpoint,
@@ -266,7 +275,8 @@ export class ClobClient {
             this.creds as ApiKeyCreds,
             l2HeaderArgs,
         );
-        return post(`${this.host}${endpoint}`, headers, orderPayload);
+
+        return post(`${this.host}${endpoint}`, headers, orderPayload, optionalParams);
     }
 
     public async cancelOrder(payload: OrderPayload): Promise<any> {

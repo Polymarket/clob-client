@@ -5,9 +5,15 @@ export const POST = "POST";
 export const DELETE = "DELETE";
 export const PUT = "PUT";
 
-export const request = async (endpoint: string, method: Method, headers?: any, data?: any): Promise<any> => {
+export const request = async (
+    endpoint: string,
+    method: Method,
+    headers?: any,
+    data?: any,
+    params?: any,
+): Promise<any> => {
     try {
-        const response = await axios({ method, url: endpoint, headers, data });
+        const response = await axios({ method, url: endpoint, headers, data, params });
         return response;
     } catch (err) {
         if (axios.isAxiosError(err)) {
@@ -22,17 +28,17 @@ export const request = async (endpoint: string, method: Method, headers?: any, d
     }
 };
 
-export const post = async (endpoint: string, headers: any, data?: any): Promise<any> => {
-    const resp = await request(endpoint, POST, headers, data);
+export const post = async (endpoint: string, headers: any, data?: any, params?: any): Promise<any> => {
+    const resp = await request(endpoint, POST, headers, data, params);
     return "error" in resp ? resp : resp.data;
 };
 
-export const get = async (endpoint: string, headers?: any, data?: any): Promise<any> => {
-    const resp = await request(endpoint, GET, headers, data);
+export const get = async (endpoint: string, headers?: any, data?: any, params?: any): Promise<any> => {
+    const resp = await request(endpoint, GET, headers, data, params);
     return "error" in resp ? resp : resp.data;
 };
 
-export const del = async (endpoint: string, headers?: any, data?: any): Promise<any> => {
-    const resp = await request(endpoint, DELETE, headers, data);
+export const del = async (endpoint: string, headers?: any, data?: any, params?: any): Promise<any> => {
+    const resp = await request(endpoint, DELETE, headers, data, params);
     return "error" in resp ? resp : resp.data;
 };

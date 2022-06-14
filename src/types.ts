@@ -145,3 +145,5 @@ export interface TradeHistory {
 export interface OrderHistory {
     history: Order[];
 }
+
+export type OptionalParams = { [query: string]: string };
