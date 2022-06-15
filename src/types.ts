@@ -113,6 +113,7 @@ export interface Order {
     price: string;
     size: string;
     side: string;
+    tokenID: string;
 }
 
 export interface OpenOrdersResponse {
