@@ -27,12 +27,30 @@ async function main() {
         side: Side.BUY,
         size: 100,
     }));
+    await clobClient.postOrder(await clobClient.createLimitOrder({
+        tokenID: NO_TOKEN,
+        price: 0.5,
+        side: Side.BUY,
+        size: 100,
+    }));
+    await clobClient.postOrder(await clobClient.createLimitOrder({
+        tokenID: NO_TOKEN,
+        price: 0.4,
+        side: Side.BUY,
+        size: 100,
+    }));
+    await clobClient.postOrder(await clobClient.createLimitOrder({
+        tokenID: NO_TOKEN,
+        price: 0.4,
+        side: Side.BUY,
+        size: 100,
+    }));
 
     // FOK, error expected
     const fok_order = await clobClient.createMarketOrder({
         tokenID: NO_TOKEN,
         side: Side.SELL,
-        size: 200,
+        size: 500,
         timeInForce: "FOK"
     })
     console.log(`FOK market order: `);
@@ -40,11 +58,26 @@ async function main() {
 
     console.log(await clobClient.postOrder(fok_order));
 
-    // Create a IOC market sell order for 100 YES tokens
+    // Create a IOC market sell that will fail because the slippage check
+    const ioc_slippage_check_order = await clobClient.createMarketOrder({
+        tokenID: NO_TOKEN,
+        side: Side.SELL,
+        size: 500,
+        worstPrice: 0.5,
+        timeInForce: "IOC"
+    });
+    console.log(`IOC market order: `);
+    console.log(ioc_slippage_check_order);
+
+    console.log(await clobClient.postOrder(ioc_slippage_check_order));
+
+
+    // Create a IOC market sell that will match
     const ioc_order = await clobClient.createMarketOrder({
         tokenID: NO_TOKEN,
         side: Side.SELL,
-        size: 200,
+        size: 250,
+        worstPrice: 0.45,
         timeInForce: "IOC"
     });
     console.log(`IOC market order: `);
