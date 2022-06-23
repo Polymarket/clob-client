@@ -11,6 +11,7 @@ import {
     MarketOrderBuilder,
     MarketOrderData,
     SignatureType,
+    TimeInForce,
 } from "@polymarket/order-utils";
 import { ethers } from "ethers";
 import { OrderCreationArgs, UserMarketOrder, UserLimitOrder, MarketOrderCreationArgs, Side } from "../types";
@@ -103,6 +104,8 @@ export const buildMarketOrderCreationArgs = async (
 
     let minAmountReceived = "0"; // Default to 0
 
+    let timeInForce:TimeInForce = "FOK"
+
     if (userOrder.side === Side.BUY) {
         // market buy
         makerAsset = collateral; // Set maker asset to collateral if market buy
@@ -135,6 +138,11 @@ export const buildMarketOrderCreationArgs = async (
             minAmountReceived = ethers.utils.parseUnits(minAmt.toString(), COLLATERAL_TOKEN_DECIMALS).toString();
         }
     }
+
+    if (userOrder.timeInForce) {
+        timeInForce = userOrder.timeInForce
+    }
+
     return {
         chainID,
         exchange,
@@ -147,6 +155,7 @@ export const buildMarketOrderCreationArgs = async (
         takerAssetID,
         signatureType,
         minAmountReceived,
+        timeInForce
     };
 };
 
@@ -246,6 +255,7 @@ const buildMarketOrder = async (signer: Wallet | JsonRpcSigner, args: MarketOrde
         signature: sig,
         orderType: "market",
         minAmountReceived: args.minAmountReceived,
+        timeInForce: args.timeInForce
     };
     console.log(`Generated Market order!`);
     return orderAndSignature;

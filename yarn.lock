@@ -636,10 +636,10 @@
     "@nodelib/fs.scandir" "2.1.5"
     fastq "^1.6.0"
 
-"@polymarket/order-utils@^1.2.13":
-  version "1.2.13"
-  resolved "https://registry.yarnpkg.com/@polymarket/order-utils/-/order-utils-1.2.13.tgz#ddff9c6f074ce363f7d281cd74766b3ba2ede992"
-  integrity sha512-QcZb4CIS0EF0+EJbHmOiXnG0ZY2S2NVJTD+zzrNBUkMVpyy9c863LBSkZnThzUOnkQlcwljcenzwObK8zvGU4g==
+"@polymarket/order-utils@^1.2.14":
+  version "1.2.14"
+  resolved "https://registry.yarnpkg.com/@polymarket/order-utils/-/order-utils-1.2.14.tgz#279728af3dac24e2b17cdab5386034ba8281dc09"
+  integrity sha512-PbBaqwOvtUL1Ks/ZabtQpb/M8cVMR7TZqHfTOemJQbYsTPjuxwRWhyGr5BhgdnU8Dw60cXBEhBSw7b1lrCtrKw==
 
 "@types/bn.js@^4.11.3":
   version "4.11.6"
