@@ -29,3 +29,5 @@ export const CANCEL = "/order";
 export const CANCEL_ALL = "/cancel-all";
 
 export const GET_LAST_TRADE_PRICE = "/last-trade-price";
+
+export const GET_LARGE_ORDERS = "/large-orders";
