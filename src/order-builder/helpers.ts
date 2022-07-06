@@ -104,7 +104,10 @@ export const buildMarketOrderCreationArgs = async (
 
     let minAmountReceived = "0"; // Default to 0
 
-    let timeInForce:TimeInForce = "FOK"
+    let timeInForce: TimeInForce = "FOK";
+    if (userOrder.timeInForce) {
+        timeInForce = userOrder.timeInForce;
+    }
 
     if (userOrder.side === Side.BUY) {
         // market buy
@@ -112,15 +115,26 @@ export const buildMarketOrderCreationArgs = async (
         takerAsset = conditional; // taker Asset to ConditionalToken
         makerAssetID = undefined;
         takerAssetID = userOrder.tokenID;
-        // We always round sizes to 2 decimal places
-        const roundedMakerAmt = userOrder.size.toFixed(2).toString();
-        makerAmount = ethers.utils.parseUnits(roundedMakerAmt, COLLATERAL_TOKEN_DECIMALS).toString();
 
-        // Calculate minimum amount received
-        if (userOrder.worstPrice !== undefined) {
-            const worstPrice = userOrder.worstPrice as number;
-            const minAmt = parseFloat((userOrder.size / worstPrice).toFixed(2));
-            minAmountReceived = ethers.utils.parseUnits(minAmt.toString(), COLLATERAL_TOKEN_DECIMALS).toString();
+        if (timeInForce === "IOC") {
+            // force 2 decimals places
+            const rawMakerAmt = parseFloat((userOrder.worstPrice! * userOrder.size).toFixed(2));
+            makerAmount = ethers.utils.parseUnits(rawMakerAmt.toString(), COLLATERAL_TOKEN_DECIMALS).toString();
+
+            // Calculate minimum amount received
+            const roundedSize = userOrder.size.toFixed(2).toString();
+            minAmountReceived = ethers.utils.parseUnits(roundedSize, COLLATERAL_TOKEN_DECIMALS).toString();
+        } else {
+            // We always round sizes to 2 decimal places
+            const roundedMakerAmt = userOrder.size.toFixed(2).toString();
+            makerAmount = ethers.utils.parseUnits(roundedMakerAmt, COLLATERAL_TOKEN_DECIMALS).toString();
+
+            // Calculate minimum amount received
+            if (userOrder.worstPrice !== undefined) {
+                const worstPrice = userOrder.worstPrice as number;
+                const minAmt = parseFloat((userOrder.size / worstPrice).toFixed(2));
+                minAmountReceived = ethers.utils.parseUnits(minAmt.toString(), COLLATERAL_TOKEN_DECIMALS).toString();
+            }
         }
     } else {
         // market sell
@@ -139,10 +153,6 @@ export const buildMarketOrderCreationArgs = async (
         }
     }
 
-    if (userOrder.timeInForce) {
-        timeInForce = userOrder.timeInForce
-    }
-
     return {
         chainID,
         exchange,
@@ -155,7 +165,7 @@ export const buildMarketOrderCreationArgs = async (
         takerAssetID,
         signatureType,
         minAmountReceived,
-        timeInForce
+        timeInForce,
     };
 };
 
@@ -255,7 +265,7 @@ const buildMarketOrder = async (signer: Wallet | JsonRpcSigner, args: MarketOrde
         signature: sig,
         orderType: "market",
         minAmountReceived: args.minAmountReceived,
-        timeInForce: args.timeInForce
+        timeInForce: args.timeInForce,
     };
     console.log(`Generated Market order!`);
     return orderAndSignature;
