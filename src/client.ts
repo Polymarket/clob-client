@@ -15,6 +15,7 @@ import {
     TradeHistory,
     OrderHistory,
     OptionalParams,
+    MarketOrderHistory,
 } from "./types";
 import { createL1Headers, createL2Headers } from "./headers";
 import { del, DELETE, GET, get, POST, post } from "./http_helpers";
@@ -38,6 +39,7 @@ import {
     DERIVE_API_KEY,
     GET_LAST_TRADE_PRICE,
     GET_LARGE_ORDERS,
+    MARKET_ORDER_HISTORY,
 } from "./endpoints";
 import { OrderBuilder } from "./order-builder/builder";
 
@@ -96,7 +98,6 @@ export class ClobClient {
     public async getLastTradePrice(tokenID: string): Promise<any> {
         return get(`${this.host}${GET_LAST_TRADE_PRICE}?market=${tokenID}`);
     }
-
 
     public async getLargeOrders(minValue: string = ""): Promise<any> {
         return get(`${this.host}${GET_LARGE_ORDERS}?min_value=${minValue}`);
@@ -193,6 +194,24 @@ export class ClobClient {
     public async getOrderHistory(params?: FilterParams): Promise<OrderHistory> {
         this.canL2Auth();
         const endpoint = ORDER_HISTORY;
+        const l2HeaderArgs = {
+            method: GET,
+            requestPath: endpoint,
+        };
+
+        const headers = await createL2Headers(
+            this.signer as Wallet | JsonRpcSigner,
+            this.creds as ApiKeyCreds,
+            l2HeaderArgs,
+        );
+
+        const url = addQueryParamsToUrl(`${this.host}${endpoint}`, params);
+        return get(url, headers);
+    }
+
+    public async getMarketOrderHistory(params?: FilterParams): Promise<MarketOrderHistory> {
+        this.canL2Auth();
+        const endpoint = MARKET_ORDER_HISTORY;
         const l2HeaderArgs = {
             method: GET,
             requestPath: endpoint,
