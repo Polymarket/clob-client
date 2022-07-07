@@ -1,4 +1,4 @@
-import { TimeInForce } from "@polymarket/order-utils";
+import { MarketOrder, TimeInForce } from "@polymarket/order-utils";
 
 export * from "@polymarket/order-utils";
 
@@ -63,7 +63,7 @@ export interface UserMarketOrder {
     worstPrice?: number;
     // (Optional) FOK (fill or kill) / IOC (immediate or cancel)
     // Default: FOK
-    timeInForce?: TimeInForce
+    timeInForce?: TimeInForce;
 }
 
 export interface OrderPayload {
@@ -97,7 +97,7 @@ export interface MarketOrderCreationArgs {
     takerAssetID?: string;
     signatureType: number;
     minAmountReceived: string;
-    timeInForce: TimeInForce
+    timeInForce: TimeInForce;
 }
 
 export interface ApiKeysResponse {
@@ -151,6 +151,10 @@ export interface TradeHistory {
 
 export interface OrderHistory {
     history: Order[];
+}
+
+export interface MarketOrderHistory {
+    history: MarketOrder[];
 }
 
 export type OptionalParams = { [query: string]: string };
