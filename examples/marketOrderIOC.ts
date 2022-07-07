@@ -26,7 +26,7 @@ async function main() {
             tokenID: NO_TOKEN,
             price: 0.4,
             side: Side.SELL,
-            size: 200,
+            size: 1000,
         }),
     );
     await clobClient.postOrder(

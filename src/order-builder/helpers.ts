@@ -118,7 +118,7 @@ export const buildMarketOrderCreationArgs = async (
 
         if (timeInForce === "IOC") {
             // force 2 decimals places
-            const rawMakerAmt = parseFloat((userOrder.worstPrice! * userOrder.size).toFixed(2));
+            const rawMakerAmt = parseFloat((userOrder.size / userOrder.worstPrice!).toFixed(2));
             makerAmount = ethers.utils.parseUnits(rawMakerAmt.toString(), COLLATERAL_TOKEN_DECIMALS).toString();
 
             // Calculate minimum amount received
