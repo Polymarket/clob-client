@@ -24,17 +24,33 @@ async function main() {
     await clobClient.postOrder(
         await clobClient.createLimitOrder({
             tokenID: NO_TOKEN,
-            price: 0.4,
+            price: 0.1,
             side: Side.SELL,
-            size: 1000,
+            size: 100,
         }),
     );
     await clobClient.postOrder(
         await clobClient.createLimitOrder({
             tokenID: NO_TOKEN,
-            price: 0.45,
+            price: 0.2,
             side: Side.SELL,
-            size: 250,
+            size: 100,
+        }),
+    );
+    await clobClient.postOrder(
+        await clobClient.createLimitOrder({
+            tokenID: NO_TOKEN,
+            price: 0.3,
+            side: Side.SELL,
+            size: 100,
+        }),
+    );
+    await clobClient.postOrder(
+        await clobClient.createLimitOrder({
+            tokenID: NO_TOKEN,
+            price: 0.4,
+            side: Side.SELL,
+            size: 100,
         }),
     );
 
@@ -42,8 +58,8 @@ async function main() {
     const ioc_order = await clobClient.createMarketOrder({
         tokenID: NO_TOKEN,
         side: Side.BUY,
-        size: 500,
-        worstPrice: 0.45,
+        size: 1000,
+        worstPrice: 0.5,
         timeInForce: "IOC",
     });
     console.log(`IOC market order: `);
