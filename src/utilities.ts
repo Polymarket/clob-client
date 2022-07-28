@@ -44,7 +44,7 @@ export const marketOrderToJson = (mktOrder: MarketOrderAndSignature): any => {
 
 const buildQueryParams = (url: string, param: string, value: string): string => {
     let urlWithParams = url;
-    const last = url.at(url.length - 1);
+    const last = url.charAt(url.length - 1);
     // Check the last char in the url string
     // if ?, append the param directly: api.com?param=value
     if (last === "?") {
