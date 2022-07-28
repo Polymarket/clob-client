@@ -1,7 +1,7 @@
 {
     "name": "@polymarket/clob-client",
     "description": "Typescript client for Polymarket's CLOB",
-    "version": "1.0.36",
+    "version": "1.0.37",
     "contributors": [
         {
             "name": "Jonathan Amenechi",
