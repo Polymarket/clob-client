@@ -61,7 +61,7 @@ export class ClobClient {
         signatureType?: SignatureType,
         funderAddress?: string,
     ) {
-        this.host = host;
+        this.host = host.endsWith("/") ? host.slice(0, -1) : host;
         if (signer !== undefined) {
             if (signer.provider == null || !signer.provider._isProvider) {
                 throw new Error("signer not connected to a provider!");
