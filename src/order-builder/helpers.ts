@@ -50,9 +50,9 @@ export const buildLimitOrderCreationArgs = async (
         takerAssetID = userOrder.tokenID;
 
         // force 2 decimals places
-        const rawTakerAmt = parseFloat(userOrder.size.toFixed(0));
+        const rawTakerAmt = parseFloat(userOrder.size.toFixed(2));
         const rawPrice = parseFloat(userOrder.price.toFixed(2));
-        const rawMakerAmt = (rawTakerAmt*rawPrice).toFixed(2);
+        const rawMakerAmt = (rawTakerAmt*rawPrice).toFixed(4);
         makerAmount = ethers.utils.parseUnits(rawMakerAmt.toString(), COLLATERAL_TOKEN_DECIMALS).toString();
         takerAmount = ethers.utils.parseUnits(rawTakerAmt.toString(), CONDITIONAL_TOKEN_DECIMALS).toString();
     } else {
@@ -60,10 +60,10 @@ export const buildLimitOrderCreationArgs = async (
         takerAsset = collateral;
         makerAssetID = userOrder.tokenID;
         takerAssetID = undefined;
-        const rawMakerAmt = parseFloat(userOrder.size.toFixed(0));
+        const rawMakerAmt = parseFloat(userOrder.size.toFixed(2));
         makerAmount = ethers.utils.parseUnits(rawMakerAmt.toString(), CONDITIONAL_TOKEN_DECIMALS).toString();
         const rawPrice = parseFloat(userOrder.price.toFixed(2));
-        const rawTakerAmt = parseFloat((rawPrice * rawMakerAmt).toFixed(2));
+        const rawTakerAmt = parseFloat((rawPrice * rawMakerAmt).toFixed(4));
         takerAmount = ethers.utils.parseUnits(rawTakerAmt.toString(), COLLATERAL_TOKEN_DECIMALS).toString();
     }
 
