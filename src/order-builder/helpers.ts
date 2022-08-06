@@ -145,7 +145,7 @@ export const buildMarketOrderCreationArgs = async (
         takerAsset = collateral;
         makerAssetID = userOrder.tokenID;
         takerAssetID = undefined;
-        const roundedMakerAmt = roundDown(userOrder.size, 2);
+        const roundedMakerAmt = roundDown(userOrder.size, 2).toString();
         makerAmount = ethers.utils.parseUnits(roundedMakerAmt, CONDITIONAL_TOKEN_DECIMALS).toString();
 
         // Calculate minimum amount received
