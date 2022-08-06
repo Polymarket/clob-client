@@ -16,7 +16,8 @@ import {
 import { ethers } from "ethers";
 import { OrderCreationArgs, UserMarketOrder, UserLimitOrder, MarketOrderCreationArgs, Side } from "../types";
 import { COLLATERAL_TOKEN_DECIMALS, CONDITIONAL_TOKEN_DECIMALS } from "./constants";
-import { getJsonRpcSigner, roundDown, roundUp  } from "./utils";
+import { getJsonRpcSigner } from "./utils";
+import { roundDown } from "../utilities"
 
 /**
  * Translate simple user order to args used to generate LimitOrders
