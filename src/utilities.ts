@@ -75,3 +75,15 @@ export const addQueryParamsToUrl = (baseUrl: string, params?: FilterParams): str
     }
     return url;
 };
+
+export const roundNormal = (num: number, decimals: number): number => {
+    return Math.round((num + Number.EPSILON) * (10**decimals)) / (10**decimals)
+}
+
+export const roundDown = (num: number, decimals: number): number => {
+    return Math.floor(num * (10**decimals)) / (10**decimals)
+}
+
+export const roundUp = (num: number, decimals: number): number => {
+    return Math.ceil(num * (10**decimals)) / (10**decimals)
+}

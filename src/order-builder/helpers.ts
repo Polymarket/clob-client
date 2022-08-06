@@ -16,7 +16,7 @@ import {
 import { ethers } from "ethers";
 import { OrderCreationArgs, UserMarketOrder, UserLimitOrder, MarketOrderCreationArgs, Side } from "../types";
 import { COLLATERAL_TOKEN_DECIMALS, CONDITIONAL_TOKEN_DECIMALS } from "./constants";
-import { getJsonRpcSigner } from "./utils";
+import { getJsonRpcSigner, roundDown, roundUp  } from "./utils";
 
 /**
  * Translate simple user order to args used to generate LimitOrders
@@ -50,9 +50,9 @@ export const buildLimitOrderCreationArgs = async (
         takerAssetID = userOrder.tokenID;
 
         // force 2 decimals places
-        const rawTakerAmt = parseFloat(userOrder.size.toFixed(2));
-        const rawPrice = parseFloat(userOrder.price.toFixed(2));
-        const rawMakerAmt = (rawTakerAmt*rawPrice).toFixed(4);
+        const rawTakerAmt = roundDown(userOrder.size, 2);
+        const rawPrice = roundDown(userOrder.price, 2);
+        const rawMakerAmt = roundDown(rawTakerAmt*rawPrice, 4)
         makerAmount = ethers.utils.parseUnits(rawMakerAmt.toString(), COLLATERAL_TOKEN_DECIMALS).toString();
         takerAmount = ethers.utils.parseUnits(rawTakerAmt.toString(), CONDITIONAL_TOKEN_DECIMALS).toString();
     } else {
@@ -60,10 +60,10 @@ export const buildLimitOrderCreationArgs = async (
         takerAsset = collateral;
         makerAssetID = userOrder.tokenID;
         takerAssetID = undefined;
-        const rawMakerAmt = parseFloat(userOrder.size.toFixed(2));
+        const rawMakerAmt = roundDown(userOrder.size, 2);
         makerAmount = ethers.utils.parseUnits(rawMakerAmt.toString(), CONDITIONAL_TOKEN_DECIMALS).toString();
-        const rawPrice = parseFloat(userOrder.price.toFixed(2));
-        const rawTakerAmt = parseFloat((rawPrice * rawMakerAmt).toFixed(4));
+        const rawPrice = roundDown(userOrder.price, 2);
+        const rawTakerAmt = roundDown(rawPrice * rawMakerAmt, 4);
         takerAmount = ethers.utils.parseUnits(rawTakerAmt.toString(), COLLATERAL_TOKEN_DECIMALS).toString();
     }
 
@@ -120,21 +120,21 @@ export const buildMarketOrderCreationArgs = async (
 
         if (timeInForce === "IOC") {
             // force 2 decimals places
-            const rawMakerAmt = parseFloat((userOrder.size * userOrder.worstPrice!).toFixed(2));
+            const rawMakerAmt = roundDown(roundDown(userOrder.size, 2) * roundDown(userOrder.worstPrice!, 2), 4); // here now
             makerAmount = ethers.utils.parseUnits(rawMakerAmt.toString(), COLLATERAL_TOKEN_DECIMALS).toString();
 
             // Calculate minimum amount received
-            const roundedSize = userOrder.size.toFixed(2).toString();
+            const roundedSize = roundDown(userOrder.size, 2).toString();
             minAmountReceived = ethers.utils.parseUnits(roundedSize, COLLATERAL_TOKEN_DECIMALS).toString();
         } else {
             // We always round sizes to 2 decimal places
-            const roundedMakerAmt = userOrder.size.toFixed(2).toString();
+            const roundedMakerAmt = roundDown(userOrder.size, 2).toString();
             makerAmount = ethers.utils.parseUnits(roundedMakerAmt, COLLATERAL_TOKEN_DECIMALS).toString();
 
             // Calculate minimum amount received
             if (userOrder.worstPrice !== undefined) {
-                const worstPrice = userOrder.worstPrice as number;
-                const minAmt = parseFloat((userOrder.size / worstPrice).toFixed(2));
+                const worstPrice = roundDown(userOrder.worstPrice as number, 2);
+                const minAmt = roundDown((userOrder.size / worstPrice), 4);
                 minAmountReceived = ethers.utils.parseUnits(minAmt.toString(), COLLATERAL_TOKEN_DECIMALS).toString();
             }
         }
@@ -144,14 +144,14 @@ export const buildMarketOrderCreationArgs = async (
         takerAsset = collateral;
         makerAssetID = userOrder.tokenID;
         takerAssetID = undefined;
-        const roundedMakerAmt = userOrder.size.toFixed(2).toString();
+        const roundedMakerAmt = roundDown(userOrder.size, 2);
         makerAmount = ethers.utils.parseUnits(roundedMakerAmt, CONDITIONAL_TOKEN_DECIMALS).toString();
 
         // Calculate minimum amount received
         if (userOrder.worstPrice !== undefined) {
             const worstPrice = userOrder.worstPrice as number;
-            const minAmt = parseFloat((userOrder.size * worstPrice).toFixed(2));
-            minAmountReceived = ethers.utils.parseUnits(minAmt.toString(), COLLATERAL_TOKEN_DECIMALS).toString();
+            const minAmt = roundDown((userOrder.size * worstPrice), 4);
+            minAmountReceived = ethers.utils.parseUnits(minAmt.toString(), COLLATERAL_TOKEN_DECIMALS).toString(); // think through rounding directions and make sure the are the correct direction
         }
     }
 
