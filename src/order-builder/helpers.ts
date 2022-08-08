@@ -17,7 +17,7 @@ import { ethers } from "ethers";
 import { OrderCreationArgs, UserMarketOrder, UserLimitOrder, MarketOrderCreationArgs, Side } from "../types";
 import { COLLATERAL_TOKEN_DECIMALS, CONDITIONAL_TOKEN_DECIMALS } from "./constants";
 import { getJsonRpcSigner } from "./utils";
-import { roundDown } from "../utilities"
+import { roundDown, roundUp } from "../utilities"
 
 /**
  * Translate simple user order to args used to generate LimitOrders
@@ -121,7 +121,7 @@ export const buildMarketOrderCreationArgs = async (
 
         if (timeInForce === "IOC") {
             // force 2 decimals places
-            const rawMakerAmt = roundDown(roundDown(userOrder.size, 2) * roundDown(userOrder.worstPrice!, 2), 4); // here now
+            const rawMakerAmt = roundDown(roundDown(userOrder.size, 2) * roundUp(userOrder.worstPrice!, 2), 4); // here now
             makerAmount = ethers.utils.parseUnits(rawMakerAmt.toString(), COLLATERAL_TOKEN_DECIMALS).toString();
 
             // Calculate minimum amount received
@@ -134,7 +134,7 @@ export const buildMarketOrderCreationArgs = async (
 
             // Calculate minimum amount received
             if (userOrder.worstPrice !== undefined) {
-                const worstPrice = roundDown(userOrder.worstPrice as number, 2);
+                const worstPrice = roundUp(userOrder.worstPrice as number, 2);
                 const minAmt = roundDown((userOrder.size / worstPrice), 4);
                 minAmountReceived = ethers.utils.parseUnits(minAmt.toString(), COLLATERAL_TOKEN_DECIMALS).toString();
             }
