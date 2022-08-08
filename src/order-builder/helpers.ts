@@ -135,7 +135,7 @@ export const buildMarketOrderCreationArgs = async (
             // Calculate minimum amount received
             if (userOrder.worstPrice !== undefined) {
                 const worstPrice = roundUp(userOrder.worstPrice as number, 2);
-                const minAmt = roundDown((userOrder.size / worstPrice), 4);
+                const minAmt = roundDown((userOrder.size / worstPrice), 2);
                 minAmountReceived = ethers.utils.parseUnits(minAmt.toString(), COLLATERAL_TOKEN_DECIMALS).toString();
             }
         }
@@ -151,7 +151,7 @@ export const buildMarketOrderCreationArgs = async (
         // Calculate minimum amount received
         if (userOrder.worstPrice !== undefined) {
             const worstPrice = userOrder.worstPrice as number;
-            const minAmt = roundDown((userOrder.size * worstPrice), 4);
+            const minAmt = roundDown((userOrder.size * worstPrice), 2);
             minAmountReceived = ethers.utils.parseUnits(minAmt.toString(), COLLATERAL_TOKEN_DECIMALS).toString(); // think through rounding directions and make sure the are the correct direction
         }
     }
