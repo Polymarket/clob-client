@@ -128,14 +128,13 @@ export const buildMarketOrderCreationArgs = async (
             const roundedSize = roundDown(userOrder.size, 2).toString();
             minAmountReceived = ethers.utils.parseUnits(roundedSize, COLLATERAL_TOKEN_DECIMALS).toString();
         } else {
-            // We always round sizes to 2 decimal places
             const roundedMakerAmt = roundDown(userOrder.size, 2).toString();
             makerAmount = ethers.utils.parseUnits(roundedMakerAmt, COLLATERAL_TOKEN_DECIMALS).toString();
 
             // Calculate minimum amount received
             if (userOrder.worstPrice !== undefined) {
                 const worstPrice = roundUp(userOrder.worstPrice as number, 2);
-                const minAmt = roundDown((userOrder.size / worstPrice), 2);
+                const minAmt = roundDown(roundDown(userOrder.size, 2) / worstPrice, 2);
                 minAmountReceived = ethers.utils.parseUnits(minAmt.toString(), COLLATERAL_TOKEN_DECIMALS).toString();
             }
         }
