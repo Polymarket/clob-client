@@ -1,7 +1,7 @@
 {
     "name": "@polymarket/clob-client",
     "description": "Typescript client for Polymarket's CLOB",
-    "version": "1.0.42",
+    "version": "1.0.43",
     "contributors": [
         {
             "name": "Jonathan Amenechi",
@@ -52,7 +52,7 @@
     "license": "MIT",
     "scripts": {
         "w": "tsc",
-        "deploy": "yarn build && npm publish",
+        "deploy": "yarn w && npm publish",
         "test": "mocha --require ts-node/register test/**/*.test.ts"
     },
     "devDependencies": {
