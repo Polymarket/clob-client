@@ -21,19 +21,19 @@ async function main() {
 
     // Create a buy order for 100 YES for 0.50c
     // YES: 16678291189211314787145083999015737376658799626183230671758641503291735614088
-    const order = await clobClient.createLimitOrder({
+    const order = await clobClient.createOrder({
         tokenID: "16678291189211314787145083999015737376658799626183230671758641503291735614088",
         price: 0.5,
         side: Side.BUY,
         size: 100,
+        feeRateBps: "100",
+        nonce: 1,
     });
-    console.log(`Created Limit Order: `);
-    console.log(order);
+    console.log("Created Order", order);
 
     // Send it to the server
     const resp = await clobClient.postOrder(order);
     console.log(resp);
-    console.log(`Done!`);
 }
 
 main();

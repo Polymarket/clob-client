@@ -20,21 +20,25 @@ async function main() {
     const clobClient = new ClobClient(host, wallet, creds);
 
     // YES: 16678291189211314787145083999015737376658799626183230671758641503291735614088
-    const bid = await clobClient.createLimitOrder({
+    const bid = await clobClient.createOrder({
         tokenID: "16678291189211314787145083999015737376658799626183230671758641503291735614088",
-        price: 0.40,
+        price: 0.4,
         side: Side.BUY,
         size: 100,
+        feeRateBps: "100",
+        nonce: 0,
     });
-    
+
     await clobClient.postOrder(bid);
-    const ask = await clobClient.createLimitOrder({
+    const ask = await clobClient.createOrder({
         tokenID: "16678291189211314787145083999015737376658799626183230671758641503291735614088",
-        price: 0.60,
+        price: 0.6,
         side: Side.SELL,
         size: 100,
+        feeRateBps: "100",
+        nonce: 1,
     });
-    
+
     await clobClient.postOrder(ask);
 
     console.log(`Done!`);
