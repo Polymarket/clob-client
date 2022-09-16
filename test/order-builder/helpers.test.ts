@@ -1,7 +1,7 @@
 import "mocha";
 import { expect } from "chai";
-import { UserOrder, Side } from "../src/types";
-import { buildOrderCreationArgs } from "../src/order-builder/helpers";
+import { UserOrder, Side } from "../../src/types";
+import { buildOrderCreationArgs } from "../../src/order-builder/helpers";
 import { OrderData, SignatureType } from "@polymarket/order-utils";
 
 describe("helpers", () => {
@@ -29,6 +29,6 @@ describe("helpers", () => {
         };
 
         const orderData: OrderData = await buildOrderCreationArgs("", "", SignatureType.EOA, order);
-        expect(Number(orderData.makerAmount) / Number(orderData.takerAmount)).to.equal(0.56);
+        expect(Number(orderData.takerAmount) / Number(orderData.makerAmount)).to.equal(0.56);
     });
 });
