@@ -66,7 +66,11 @@ export class ClobClient {
         if (creds !== undefined) {
             this.creds = creds;
         }
-        this.orderBuilder = new OrderBuilder(signer as Wallet | JsonRpcSigner, signatureType, funderAddress);
+        this.orderBuilder = new OrderBuilder(
+            signer as Wallet | JsonRpcSigner,
+            signatureType,
+            funderAddress,
+        );
     }
 
     // Public endpoints
@@ -106,7 +110,10 @@ export class ClobClient {
      * @param optionalParams - query parameters
      * @returns ApiKeyCreds
      */
-    public async createApiKey(nonce?: number, optionalParams?: OptionalParams): Promise<ApiKeyCreds> {
+    public async createApiKey(
+        nonce?: number,
+        optionalParams?: OptionalParams,
+    ): Promise<ApiKeyCreds> {
         this.canL1Auth();
 
         const endpoint = `${this.host}${CREATE_API_KEY}`;
@@ -122,7 +129,10 @@ export class ClobClient {
      * @param optionalParams - query parameters
      * @returns ApiKeyCreds
      */
-    public async deriveApiKey(nonce?: number, optionalParams?: OptionalParams): Promise<ApiKeyCreds> {
+    public async deriveApiKey(
+        nonce?: number,
+        optionalParams?: OptionalParams,
+    ): Promise<ApiKeyCreds> {
         this.canL1Auth();
 
         const endpoint = `${this.host}${DERIVE_API_KEY}`;

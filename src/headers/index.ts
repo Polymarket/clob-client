@@ -3,7 +3,10 @@ import { Wallet } from "@ethersproject/wallet";
 import { buildClobEip712Signature, buildPolyHmacSignature } from "../signing";
 import { ApiKeyCreds, L1PolyHeader, L2HeaderArgs, L2PolyHeader } from "../types";
 
-export const createL1Headers = async (signer: Wallet | JsonRpcSigner, nonce?: number): Promise<L1PolyHeader> => {
+export const createL1Headers = async (
+    signer: Wallet | JsonRpcSigner,
+    nonce?: number,
+): Promise<L1PolyHeader> => {
     const now = Math.floor(Date.now() / 1000);
     let n = 0; // Default nonce is 0
     if (nonce !== undefined) {

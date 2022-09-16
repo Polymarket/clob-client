@@ -28,17 +28,32 @@ export const request = async (
     }
 };
 
-export const post = async (endpoint: string, headers: any, data?: any, params?: any): Promise<any> => {
+export const post = async (
+    endpoint: string,
+    headers: any,
+    data?: any,
+    params?: any,
+): Promise<any> => {
     const resp = await request(endpoint, POST, headers, data, params);
     return "error" in resp ? resp : resp.data;
 };
 
-export const get = async (endpoint: string, headers?: any, data?: any, params?: any): Promise<any> => {
+export const get = async (
+    endpoint: string,
+    headers?: any,
+    data?: any,
+    params?: any,
+): Promise<any> => {
     const resp = await request(endpoint, GET, headers, data, params);
     return "error" in resp ? resp : resp.data;
 };
 
-export const del = async (endpoint: string, headers?: any, data?: any, params?: any): Promise<any> => {
+export const del = async (
+    endpoint: string,
+    headers?: any,
+    data?: any,
+    params?: any,
+): Promise<any> => {
     const resp = await request(endpoint, DELETE, headers, data, params);
     return "error" in resp ? resp : resp.data;
 };

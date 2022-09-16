@@ -15,7 +15,11 @@ export class OrderBuilder {
     // If not provided, funderAddress is the signer address
     readonly funderAddress?: string;
 
-    constructor(signer: Wallet | JsonRpcSigner, signatureType?: SignatureType, funderAddress?: string) {
+    constructor(
+        signer: Wallet | JsonRpcSigner,
+        signatureType?: SignatureType,
+        funderAddress?: string,
+    ) {
         this.signer = signer;
         this.signatureType = signatureType === undefined ? SignatureType.EOA : signatureType;
         this.funderAddress = funderAddress;

@@ -1,7 +1,7 @@
 import { ethers } from "ethers";
 import { config as dotenvConfig } from "dotenv";
 import { resolve } from "path";
-import { ApiKeyCreds, ClobClient } from "../src";
+import { ClobClient } from "../src";
 
 dotenvConfig({ path: resolve(__dirname, "../.env") });
 
@@ -15,7 +15,9 @@ async function main() {
     const clobClient = new ClobClient(host, wallet);
 
     console.log(`Price: `);
-    const resp = await clobClient.getLastTradePrice("16678291189211314787145083999015737376658799626183230671758641503291735614088");
+    const resp = await clobClient.getLastTradePrice(
+        "16678291189211314787145083999015737376658799626183230671758641503291735614088",
+    );
     console.log(resp);
 }
 

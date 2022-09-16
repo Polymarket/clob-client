@@ -24,9 +24,8 @@ async function main() {
 
     // Filtered
     const filteredByMarket = await clobClient.getOpenOrders({
-            market: "16678291189211314787145083999015737376658799626183230671758641503291735614088",
-        }
-    );
+        market: "16678291189211314787145083999015737376658799626183230671758641503291735614088",
+    });
     console.log(filteredByMarket);
     console.log(`Done!`);
 }

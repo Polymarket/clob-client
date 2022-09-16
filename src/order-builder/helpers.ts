@@ -92,7 +92,11 @@ const buildOrder = async (
     const jsonRpcSigner = await getJsonRpcSigner(signer, chainId);
     const connector = new EthersProviderConnector(jsonRpcSigner);
     const address = await jsonRpcSigner.getAddress();
-    const cTFExchangeOrderBuilder = new CTFExchangeOrderBuilder(contractAddress, chainId, connector);
+    const cTFExchangeOrderBuilder = new CTFExchangeOrderBuilder(
+        contractAddress,
+        chainId,
+        connector,
+    );
 
     return cTFExchangeOrderBuilder.buildSignedOrder(address, orderData);
 };
