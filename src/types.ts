@@ -1,7 +1,3 @@
-import { MarketOrder, TimeInForce } from "@polymarket/order-utils";
-
-export * from "@polymarket/order-utils";
-
 export interface ApiKeyCreds {
     key: string;
     secret: string;
@@ -36,68 +32,32 @@ export enum Side {
     SELL = "sell",
 }
 
-// Simplified Limit order for users
-export interface UserLimitOrder {
+// Simplified order for users
+export interface UserOrder {
     // TokenID of the Conditional token asset being traded
     tokenID: string;
-    // Price used to create the limit order
+
+    // Price used to create the order
     price: number;
+
     // Size in terms of the ConditionalToken
     size: number;
-    // Side of the Limit order
-    side: Side;
-}
 
-// Simplified Market order for users
-export interface UserMarketOrder {
-    // TokenID of the Conditional token asset being traded
-    tokenID: string;
-    // Size
-    // If market buy, this is in terms of the Collateral( i.e USDC)
-    // If market sell, this is in terms of the Conditional token( i.e YES/NO token)
-    size: number;
-    // Side of the Market order
+    // Side of the order
     side: Side;
-    // (Optional) Worst price
-    // The worst price this market order can be executed at
-    worstPrice?: number;
-    // (Optional) FOK (fill or kill) / IOC (immediate or cancel)
-    // Default: FOK
-    timeInForce?: TimeInForce;
+
+    // Fee rate, in basis points, charged to the order maker, charged on proceeds
+    feeRateBps: string;
+
+    // Nonce used for onchain cancellations
+    nonce: number;
+
+    // Timestamp after which the order is expired.
+    expiration?: number;
 }
 
 export interface OrderPayload {
     orderID: string;
-}
-
-export interface OrderCreationArgs {
-    chainID: number;
-    exchange: string;
-    executor: string;
-    signer: string;
-    maker: string;
-    makerAsset: string;
-    makerAmount: string;
-    makerAssetID?: string;
-    takerAsset: string;
-    takerAmount: string;
-    takerAssetID?: string;
-    signatureType: number;
-}
-
-export interface MarketOrderCreationArgs {
-    chainID: number;
-    exchange: string;
-    signer: string;
-    maker: string;
-    makerAsset: string;
-    makerAmount: string;
-    makerAssetID?: string;
-    takerAsset: string;
-    takerAssetID?: string;
-    signatureType: number;
-    minAmountReceived: string;
-    timeInForce: TimeInForce;
 }
 
 export interface ApiKeysResponse {
@@ -137,6 +97,7 @@ export interface Trade {
     tradeID: string;
     market: string;
     timestamp: string;
+    // TODO: re-define
     marketOrderID: string;
     limitOrderIDs: string[];
     filledAmount: string;
@@ -151,10 +112,6 @@ export interface TradeHistory {
 
 export interface OrderHistory {
     history: Order[];
-}
-
-export interface MarketOrderHistory {
-    history: MarketOrder[];
 }
 
 export type OptionalParams = { [query: string]: string };

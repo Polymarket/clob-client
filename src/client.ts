@@ -1,13 +1,10 @@
 import { Wallet } from "@ethersproject/wallet";
 import { JsonRpcSigner } from "@ethersproject/providers";
-import { SignatureType } from "@polymarket/order-utils";
+import { SignatureType, SignedOrder } from "@polymarket/order-utils";
 import {
-    LimitOrderAndSignature,
-    MarketOrderAndSignature,
     ApiKeyCreds,
     OrderPayload,
-    UserLimitOrder,
-    UserMarketOrder,
+    UserOrder,
     OpenOrdersResponse,
     Order,
     ApiKeysResponse,
@@ -15,12 +12,11 @@ import {
     TradeHistory,
     OrderHistory,
     OptionalParams,
-    MarketOrderHistory,
 } from "./types";
 import { createL1Headers, createL2Headers } from "./headers";
 import { del, DELETE, GET, get, POST, post } from "./http_helpers";
 import { L1_AUTH_UNAVAILABLE_ERROR, L2_AUTH_NOT_AVAILABLE } from "./errors";
-import { marketOrderToJson, limitOrderToJson, addQueryParamsToUrl } from "./utilities";
+import { addQueryParamsToUrl, orderToJson } from "./utilities";
 import {
     CANCEL_ALL,
     CANCEL,
@@ -39,7 +35,6 @@ import {
     DERIVE_API_KEY,
     GET_LAST_TRADE_PRICE,
     GET_LARGE_ORDERS,
-    MARKET_ORDER_HISTORY,
 } from "./endpoints";
 import { OrderBuilder } from "./order-builder/builder";
 
@@ -99,7 +94,7 @@ export class ClobClient {
         return get(`${this.host}${GET_LAST_TRADE_PRICE}?market=${tokenID}`);
     }
 
-    public async getLargeOrders(minValue: string = ""): Promise<any> {
+    public async getLargeOrders(minValue = ""): Promise<any> {
         return get(`${this.host}${GET_LARGE_ORDERS}?min_value=${minValue}`);
     }
 
@@ -209,24 +204,6 @@ export class ClobClient {
         return get(url, headers);
     }
 
-    public async getMarketOrderHistory(params?: FilterParams): Promise<MarketOrderHistory> {
-        this.canL2Auth();
-        const endpoint = MARKET_ORDER_HISTORY;
-        const l2HeaderArgs = {
-            method: GET,
-            requestPath: endpoint,
-        };
-
-        const headers = await createL2Headers(
-            this.signer as Wallet | JsonRpcSigner,
-            this.creds as ApiKeyCreds,
-            l2HeaderArgs,
-        );
-
-        const url = addQueryParamsToUrl(`${this.host}${endpoint}`, params);
-        return get(url, headers);
-    }
-
     public async getTradeHistory(params?: FilterParams): Promise<TradeHistory> {
         this.canL2Auth();
 
@@ -246,18 +223,10 @@ export class ClobClient {
         return get(url, headers);
     }
 
-    public async createLimitOrder(userOrder: UserLimitOrder): Promise<LimitOrderAndSignature> {
+    public async createOrder(userOrder: UserOrder): Promise<SignedOrder> {
         this.canL1Auth();
 
-        const orderAndSig = await this.orderBuilder.buildLimitOrder(userOrder);
-        return orderAndSig;
-    }
-
-    public async createMarketOrder(userOrder: UserMarketOrder): Promise<MarketOrderAndSignature> {
-        this.canL1Auth();
-
-        const orderAndSig = await this.orderBuilder.buildMarketOrder(userOrder);
-        return orderAndSig;
+        return this.orderBuilder.buildOrder(userOrder);
     }
 
     public async getOpenOrders(params?: FilterParams): Promise<OpenOrdersResponse> {
@@ -278,16 +247,10 @@ export class ClobClient {
         return get(url, headers);
     }
 
-    public async postOrder(
-        order: LimitOrderAndSignature | MarketOrderAndSignature,
-        optionalParams?: OptionalParams,
-    ): Promise<any> {
+    public async postOrder(order: SignedOrder, optionalParams?: OptionalParams): Promise<any> {
         this.canL2Auth();
         const endpoint = POST_ORDER;
-        const orderPayload =
-            order.orderType === "limit"
-                ? limitOrderToJson(order as LimitOrderAndSignature)
-                : marketOrderToJson(order as MarketOrderAndSignature);
+        const orderPayload = orderToJson(order);
 
         const l2HeaderArgs = {
             method: POST,
