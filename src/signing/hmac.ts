@@ -12,13 +12,13 @@ function replaceAll(s: string, search: string, replace: string) {
  * @param passphrase
  * @returns string
  */
-export const buildPolyHmacSignature = async (
+export const buildPolyHmacSignature = (
     secret: string,
     timestamp: number,
     method: string,
     requestPath: string,
     body?: string,
-): Promise<string> => {
+): string => {
     let message = timestamp + method + requestPath;
     if (body !== undefined) {
         message += body;

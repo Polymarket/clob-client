@@ -1,7 +1,13 @@
-import { SignedOrder } from "@polymarket/order-utils";
+import { Side as UtilsSide, SignedOrder } from "@polymarket/order-utils";
 import { FilterParams } from "./types";
 
 export const orderToJson = (order: SignedOrder): any => {
+    let side = "";
+    if (order.side == UtilsSide.BUY) {
+        side = "buy";
+    } else {
+        side = "sell";
+    }
     return {
         salt: parseInt(order.salt, 10),
         maker: order.maker,
@@ -9,16 +15,16 @@ export const orderToJson = (order: SignedOrder): any => {
         tokenId: order.tokenId,
         makerAmount: order.makerAmount,
         takerAmount: order.takerAmount,
-        side: order.side.toString(),
+        side,
         expiration: order.expiration,
         nonce: order.nonce,
         feeRateBps: order.feeRateBps,
-        signatureType: order.signatureType.toString(),
+        signatureType: order.signatureType,
         signature: order.signature,
     };
 };
 
-const buildQueryParams = (url: string, param: string, value: string): string => {
+export const buildQueryParams = (url: string, param: string, value: string): string => {
     let urlWithParams = url;
     const last = url.charAt(url.length - 1);
     // Check the last char in the url string

@@ -82,13 +82,12 @@ export const buildOrderCreationArgs = async (
  * @param OrderData
  * @returns SignedOrder
  */
-const buildOrder = async (
+export const buildOrder = async (
     signer: Wallet | JsonRpcSigner,
     contractAddress: string,
     chainId: number,
     orderData: OrderData,
 ): Promise<SignedOrder> => {
-    console.log(`Building order signed by: ${orderData.makerAddress}...`);
     const jsonRpcSigner = await getJsonRpcSigner(signer, chainId);
     const connector = new EthersProviderConnector(jsonRpcSigner);
     const address = await jsonRpcSigner.getAddress();
@@ -101,7 +100,7 @@ const buildOrder = async (
     return cTFExchangeOrderBuilder.buildSignedOrder(address, orderData);
 };
 
-const getSigner = (eoa: string, sigType: number): string => {
+export const getSigner = (eoa: string, sigType: number): string => {
     switch (sigType) {
         case SignatureType.EOA:
             // signer is always the EOA address for EOA sigs
@@ -122,7 +121,7 @@ export const createOrder = async (
     signatureType: SignatureType,
     funderAddress: string | undefined,
     userOrder: UserOrder,
-): Promise<any> => {
+): Promise<SignedOrder> => {
     const chainId = await eoaSigner.getChainId();
     const eoaSignerAddress = await eoaSigner.getAddress();
 
@@ -134,9 +133,5 @@ export const createOrder = async (
     const ctfExchangecontractAddress = clobContracts.CTFExchange;
 
     const orderData = await buildOrderCreationArgs(signerAddress, maker, signatureType, userOrder);
-
-    const signedOrder = await buildOrder(eoaSigner, ctfExchangecontractAddress, chainId, orderData);
-    console.log(`Generated order!`);
-
-    return signedOrder;
+    return buildOrder(eoaSigner, ctfExchangecontractAddress, chainId, orderData);
 };

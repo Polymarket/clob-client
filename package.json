@@ -28,8 +28,7 @@
         "@ethersproject/providers": "^5.7.1",
         "@ethersproject/wallet": "^5.7.0",
         "@polymarket/order-utils": "https://github.com/Polymarket/clob-order-utils#8d89225d0c13b280f3c91ece76397b6b7f018ceb",
-        "axios": "^0.27.2",
-        "ethers": "^5.7.1"
+        "axios": "^0.27.2"
     },
     "devDependencies": {
         "@types/chai": "^4.3.3",
@@ -48,6 +47,7 @@
         "eslint-plugin-promise": "^6.0.1",
         "eslint-plugin-unused-imports": "^2.0.0",
         "esm": "^3.2.25",
+        "ethers": "^5.7.1",
         "jsdom": "^20.0.0",
         "jsdom-global": "^3.0.2",
         "mocha": "^10.0.0",
