@@ -2,8 +2,7 @@ import { JsonRpcSigner } from "@ethersproject/providers";
 import { Wallet } from "@ethersproject/wallet";
 import { parseUnits } from "ethers/lib/utils";
 import {
-    CTFExchangeOrderBuilder,
-    EthersProviderConnector,
+    ExchangeOrderBuilder,
     getContracts,
     OrderData,
     SignatureType,
@@ -12,7 +11,6 @@ import {
     COLLATERAL_TOKEN_DECIMALS,
     CONDITIONAL_TOKEN_DECIMALS,
 } from "@polymarket/order-utils";
-import { getJsonRpcSigner } from "./utils";
 import { UserOrder, Side } from "../types";
 import { roundDown } from "../utilities";
 
@@ -25,17 +23,12 @@ export const buildOrderCreationArgs = async (
     signatureType: SignatureType,
     userOrder: UserOrder,
 ): Promise<OrderData> => {
-    let makerAssetId: string | undefined;
-    let takerAssetId: string | undefined;
-
     let makerAmount: string;
     let takerAmount: string;
 
     let side: UtilsSide;
 
     if (userOrder.side === Side.BUY) {
-        makerAssetId = undefined;
-        takerAssetId = userOrder.tokenID;
         side = UtilsSide.BUY;
 
         // force 2 decimals places
@@ -46,8 +39,6 @@ export const buildOrderCreationArgs = async (
         makerAmount = parseUnits(rawMakerAmt.toString(), COLLATERAL_TOKEN_DECIMALS).toString();
         takerAmount = parseUnits(rawTakerAmt.toString(), CONDITIONAL_TOKEN_DECIMALS).toString();
     } else {
-        makerAssetId = userOrder.tokenID;
-        takerAssetId = undefined;
         side = UtilsSide.SELL;
 
         const rawMakerAmt = roundDown(userOrder.size, 2);
@@ -59,9 +50,8 @@ export const buildOrderCreationArgs = async (
     }
 
     return {
-        makerAddress: maker,
-        makerAssetId,
-        takerAssetId,
+        maker,
+        tokenId: userOrder.tokenID,
         makerAmount,
         takerAmount,
         side,
@@ -88,16 +78,9 @@ export const buildOrder = async (
     chainId: number,
     orderData: OrderData,
 ): Promise<SignedOrder> => {
-    const jsonRpcSigner = await getJsonRpcSigner(signer, chainId);
-    const connector = new EthersProviderConnector(jsonRpcSigner);
-    const address = await jsonRpcSigner.getAddress();
-    const cTFExchangeOrderBuilder = new CTFExchangeOrderBuilder(
-        contractAddress,
-        chainId,
-        connector,
-    );
+    const cTFExchangeOrderBuilder = new ExchangeOrderBuilder(contractAddress, chainId, signer);
 
-    return cTFExchangeOrderBuilder.buildSignedOrder(address, orderData);
+    return cTFExchangeOrderBuilder.buildSignedOrder(orderData);
 };
 
 export const getSigner = (eoa: string, sigType: number): string => {
@@ -130,8 +113,7 @@ export const createOrder = async (
     const signerAddress = getSigner(eoaSignerAddress, signatureType);
 
     const clobContracts = getContracts(chainId);
-    const ctfExchangecontractAddress = clobContracts.CTFExchange;
 
     const orderData = await buildOrderCreationArgs(signerAddress, maker, signatureType, userOrder);
-    return buildOrder(eoaSigner, ctfExchangecontractAddress, chainId, orderData);
+    return buildOrder(eoaSigner, clobContracts.Exchange, chainId, orderData);
 };

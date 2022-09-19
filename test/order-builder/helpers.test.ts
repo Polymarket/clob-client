@@ -1,7 +1,5 @@
 import "mocha";
 import { expect } from "chai";
-import { config as dotenvConfig } from "dotenv";
-import { resolve } from "path";
 import { UserOrder, Side } from "../../src/types";
 import {
     buildOrderCreationArgs,
@@ -16,18 +14,19 @@ import {
     Contracts,
     getContracts,
 } from "@polymarket/order-utils";
-import { Wallet, providers } from "ethers";
-
-dotenvConfig({ path: resolve(__dirname, "../../.env") });
+import { StaticJsonRpcProvider } from "@ethersproject/providers";
+import { Wallet } from "@ethersproject/wallet";
 
 describe("helpers", () => {
     const chainId = 80001;
     let wallet: Wallet;
     let contracts: Contracts;
     beforeEach(() => {
-        const provider = new providers.JsonRpcProvider(process.env.RPC_URL);
-        const pk = new Wallet(`${process.env.PK}`);
-        wallet = pk.connect(provider);
+        const provider = new StaticJsonRpcProvider("https://rpc-mumbai.maticvigil.com");
+
+        // publicly known private key
+        const privateKey = "0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80";
+        wallet = new Wallet(privateKey).connect(provider);
 
         contracts = getContracts(chainId);
     });
@@ -50,9 +49,8 @@ describe("helpers", () => {
                 order,
             );
             expect(orderData).deep.equal({
-                makerAddress: "0x0000000000000000000000000000000000000002",
-                takerAssetId: "123",
-                makerAssetId: undefined,
+                maker: "0x0000000000000000000000000000000000000002",
+                tokenId: "123",
                 makerAmount: "11782400",
                 takerAmount: "21040000",
                 side: UtilsSide.BUY,
@@ -80,9 +78,8 @@ describe("helpers", () => {
                 order,
             );
             expect(orderData).deep.equal({
-                makerAddress: "0x0000000000000000000000000000000000000002",
-                takerAssetId: undefined,
-                makerAssetId: "5",
+                maker: "0x0000000000000000000000000000000000000002",
+                tokenId: "5",
                 takerAmount: "11782400",
                 makerAmount: "21040000",
                 side: UtilsSide.SELL,
@@ -152,7 +149,7 @@ describe("helpers", () => {
             expect(orderData).not.null;
             expect(orderData).not.undefined;
 
-            const signedOrder = await buildOrder(wallet, contracts.CTFExchange, chainId, orderData);
+            const signedOrder = await buildOrder(wallet, contracts.Exchange, chainId, orderData);
             expect(signedOrder).not.null;
             expect(signedOrder).not.undefined;
 
@@ -188,7 +185,7 @@ describe("helpers", () => {
             expect(orderData).not.null;
             expect(orderData).not.undefined;
 
-            const signedOrder = await buildOrder(wallet, contracts.CTFExchange, chainId, orderData);
+            const signedOrder = await buildOrder(wallet, contracts.Exchange, chainId, orderData);
             expect(signedOrder).not.null;
             expect(signedOrder).not.undefined;
 
@@ -222,15 +219,15 @@ describe("helpers", () => {
             const signedOrder = await createOrder(
                 wallet,
                 SignatureType.EOA,
-                "0xEA5981CA48Dc40C950fC1B2496c4a0Ef900bB841",
+                "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
                 order,
             );
             expect(signedOrder).not.null;
             expect(signedOrder).not.undefined;
 
             expect(signedOrder.salt).not.empty;
-            expect(signedOrder.maker).equal("0xEA5981CA48Dc40C950fC1B2496c4a0Ef900bB841");
-            expect(signedOrder.signer).equal("0xEA5981CA48Dc40C950fC1B2496c4a0Ef900bB841");
+            expect(signedOrder.maker).equal("0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266");
+            expect(signedOrder.signer).equal("0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266");
             expect(signedOrder.tokenId).equal("123");
             expect(signedOrder.makerAmount).equal("11782400");
             expect(signedOrder.takerAmount).equal("21040000");
@@ -255,13 +252,13 @@ describe("helpers", () => {
             const signedOrder = await createOrder(
                 wallet,
                 SignatureType.POLY_GNOSIS_SAFE,
-                "0xEA5981CA48Dc40C950fC1B2496c4a0Ef900bB841",
+                "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
                 order,
             );
 
             expect(signedOrder.salt).not.empty;
-            expect(signedOrder.maker).equal("0xEA5981CA48Dc40C950fC1B2496c4a0Ef900bB841");
-            expect(signedOrder.signer).equal("0xEA5981CA48Dc40C950fC1B2496c4a0Ef900bB841");
+            expect(signedOrder.maker).equal("0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266");
+            expect(signedOrder.signer).equal("0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266");
             expect(signedOrder.tokenId).equal("5");
             expect(signedOrder.makerAmount).equal("21040000");
             expect(signedOrder.takerAmount).equal("11782400");
