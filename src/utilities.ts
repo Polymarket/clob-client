@@ -12,6 +12,7 @@ export const orderToJson = (order: SignedOrder): any => {
         salt: parseInt(order.salt, 10),
         maker: order.maker,
         signer: order.signer,
+        taker: order.taker,
         tokenId: order.tokenId,
         makerAmount: order.makerAmount,
         takerAmount: order.takerAmount,

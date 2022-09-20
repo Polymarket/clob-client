@@ -34,26 +34,45 @@ export enum Side {
 
 // Simplified order for users
 export interface UserOrder {
-    // TokenID of the Conditional token asset being traded
+    /**
+     * TokenID of the Conditional token asset being traded
+     */
     tokenID: string;
 
-    // Price used to create the order
+    /**
+     * Price used to create the order
+     */
     price: number;
 
-    // Size in terms of the ConditionalToken
+    /**
+     * Size in terms of the ConditionalToken
+     */
     size: number;
 
-    // Side of the order
+    /**
+     * Side of the order
+     */
     side: Side;
 
-    // Fee rate, in basis points, charged to the order maker, charged on proceeds
+    /**
+     * Fee rate, in basis points, charged to the order maker, charged on proceeds
+     */
     feeRateBps: string;
 
-    // Nonce used for onchain cancellations
+    /**
+     * Nonce used for onchain cancellations
+     */
     nonce: number;
 
-    // Timestamp after which the order is expired.
+    /**
+     * Timestamp after which the order is expired.
+     */
     expiration?: number;
+
+    /**
+     * Address of the order taker. The zero address is used to indicate a public order
+     */
+    taker?: string;
 }
 
 export interface OrderPayload {
@@ -97,7 +116,7 @@ export interface Trade {
     tradeID: string;
     market: string;
     timestamp: string;
-    // TODO: re-define
+    //  TODO: re-define
     marketOrderID: string;
     limitOrderIDs: string[];
     filledAmount: string;

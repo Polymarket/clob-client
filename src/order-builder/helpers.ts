@@ -49,8 +49,16 @@ export const buildOrderCreationArgs = async (
         takerAmount = parseUnits(rawTakerAmt.toString(), COLLATERAL_TOKEN_DECIMALS).toString();
     }
 
+    let taker;
+    if (typeof userOrder.taker !== "undefined" && userOrder.taker) {
+        taker = userOrder.taker;
+    } else {
+        taker = "0x0000000000000000000000000000000000000000";
+    }
+
     return {
         maker,
+        taker,
         tokenId: userOrder.tokenID,
         makerAmount,
         takerAmount,

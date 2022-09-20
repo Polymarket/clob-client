@@ -26,7 +26,7 @@
     },
     "dependencies": {
         "ethers": "^5.7.1",
-        "@polymarket/order-utils": "https://github.com/Polymarket/clob-order-utils#c2453bfabbb1ce25944b39f775d0245f58017576",
+        "@polymarket/order-utils": "https://github.com/Polymarket/clob-order-utils#a08fda2c51c7fa8b5d38fd6fab391ef9a5f9eb2a",
         "axios": "^0.27.2"
     },
     "devDependencies": {

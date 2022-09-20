@@ -50,6 +50,7 @@ describe("helpers", () => {
             );
             expect(orderData).deep.equal({
                 maker: "0x0000000000000000000000000000000000000002",
+                taker: "0x0000000000000000000000000000000000000000",
                 tokenId: "123",
                 makerAmount: "11782400",
                 takerAmount: "21040000",
@@ -70,6 +71,7 @@ describe("helpers", () => {
                 side: Side.SELL,
                 feeRateBps: "0",
                 nonce: 0,
+                taker: "0x000000000000000000000000000000000000000A",
             };
             const orderData: OrderData = await buildOrderCreationArgs(
                 "0x0000000000000000000000000000000000000001",
@@ -79,6 +81,7 @@ describe("helpers", () => {
             );
             expect(orderData).deep.equal({
                 maker: "0x0000000000000000000000000000000000000002",
+                taker: "0x000000000000000000000000000000000000000A",
                 tokenId: "5",
                 takerAmount: "11782400",
                 makerAmount: "21040000",
@@ -139,10 +142,11 @@ describe("helpers", () => {
                 feeRateBps: "111",
                 nonce: 123,
                 expiration: 50000,
+                taker: "0x0000000000000000000000000000000000000003",
             };
             const orderData: OrderData = await buildOrderCreationArgs(
-                "0x0000000000000000000000000000000000000001",
-                "0x0000000000000000000000000000000000000002",
+                "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+                "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
                 SignatureType.EOA,
                 order,
             );
@@ -154,8 +158,9 @@ describe("helpers", () => {
             expect(signedOrder).not.undefined;
 
             expect(signedOrder.salt).not.empty;
-            expect(signedOrder.maker).equal("0x0000000000000000000000000000000000000002");
-            expect(signedOrder.signer).equal("0x0000000000000000000000000000000000000001");
+            expect(signedOrder.maker).equal("0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266");
+            expect(signedOrder.signer).equal("0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266");
+            expect(signedOrder.taker).equal("0x0000000000000000000000000000000000000003");
             expect(signedOrder.tokenId).equal("123");
             expect(signedOrder.makerAmount).equal("11782400");
             expect(signedOrder.takerAmount).equal("21040000");
@@ -175,10 +180,11 @@ describe("helpers", () => {
                 side: Side.SELL,
                 feeRateBps: "0",
                 nonce: 0,
+                taker: "0x0000000000000000000000000000000000000003",
             };
             const orderData: OrderData = await buildOrderCreationArgs(
-                "0x0000000000000000000000000000000000000001",
-                "0x0000000000000000000000000000000000000002",
+                "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+                "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
                 SignatureType.POLY_PROXY,
                 order,
             );
@@ -190,8 +196,9 @@ describe("helpers", () => {
             expect(signedOrder).not.undefined;
 
             expect(signedOrder.salt).not.empty;
-            expect(signedOrder.maker).equal("0x0000000000000000000000000000000000000002");
-            expect(signedOrder.signer).equal("0x0000000000000000000000000000000000000001");
+            expect(signedOrder.maker).equal("0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266");
+            expect(signedOrder.signer).equal("0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266");
+            expect(signedOrder.taker).equal("0x0000000000000000000000000000000000000003");
             expect(signedOrder.tokenId).equal("5");
             expect(signedOrder.makerAmount).equal("21040000");
             expect(signedOrder.takerAmount).equal("11782400");
@@ -228,6 +235,7 @@ describe("helpers", () => {
             expect(signedOrder.salt).not.empty;
             expect(signedOrder.maker).equal("0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266");
             expect(signedOrder.signer).equal("0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266");
+            expect(signedOrder.taker).equal("0x0000000000000000000000000000000000000000");
             expect(signedOrder.tokenId).equal("123");
             expect(signedOrder.makerAmount).equal("11782400");
             expect(signedOrder.takerAmount).equal("21040000");
@@ -259,6 +267,7 @@ describe("helpers", () => {
             expect(signedOrder.salt).not.empty;
             expect(signedOrder.maker).equal("0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266");
             expect(signedOrder.signer).equal("0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266");
+            expect(signedOrder.taker).equal("0x0000000000000000000000000000000000000000");
             expect(signedOrder.tokenId).equal("5");
             expect(signedOrder.makerAmount).equal("21040000");
             expect(signedOrder.takerAmount).equal("11782400");
