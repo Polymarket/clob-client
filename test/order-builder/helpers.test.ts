@@ -1,12 +1,7 @@
 import "mocha";
 import { expect } from "chai";
-import { UserOrder, Side } from "../../src/types";
-import {
-    buildOrderCreationArgs,
-    buildOrder,
-    createOrder,
-    getSigner,
-} from "../../src/order-builder/helpers";
+import { UserOrder, Side, Chain } from "../../src/types";
+import { buildOrderCreationArgs, buildOrder, createOrder } from "../../src/order-builder/helpers";
 import {
     OrderData,
     SignatureType,
@@ -14,7 +9,6 @@ import {
     Contracts,
     getContracts,
 } from "@polymarket/order-utils";
-import { StaticJsonRpcProvider } from "@ethersproject/providers";
 import { Wallet } from "@ethersproject/wallet";
 
 describe("helpers", () => {
@@ -22,11 +16,9 @@ describe("helpers", () => {
     let wallet: Wallet;
     let contracts: Contracts;
     beforeEach(() => {
-        const provider = new StaticJsonRpcProvider("https://rpc-mumbai.maticvigil.com");
-
         // publicly known private key
         const privateKey = "0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80";
-        wallet = new Wallet(privateKey).connect(provider);
+        wallet = new Wallet(privateKey);
 
         contracts = getContracts(chainId);
     });
@@ -38,7 +30,7 @@ describe("helpers", () => {
                 price: 0.56,
                 size: 21.04,
                 side: Side.BUY,
-                feeRateBps: "111",
+                feeRateBps: 111,
                 nonce: 123,
                 expiration: 50000,
             };
@@ -69,7 +61,7 @@ describe("helpers", () => {
                 price: 0.56,
                 size: 21.04,
                 side: Side.SELL,
-                feeRateBps: "0",
+                feeRateBps: 0,
                 nonce: 0,
                 taker: "0x000000000000000000000000000000000000000A",
             };
@@ -100,7 +92,7 @@ describe("helpers", () => {
                 price: 0.56,
                 size: 21.04,
                 side: Side.BUY,
-                feeRateBps: "100",
+                feeRateBps: 100,
                 nonce: 0,
             };
             const orderData: OrderData = await buildOrderCreationArgs(
@@ -118,7 +110,7 @@ describe("helpers", () => {
                 price: 0.56,
                 size: 21.04,
                 side: Side.SELL,
-                feeRateBps: "100",
+                feeRateBps: 100,
                 nonce: 0,
             };
 
@@ -139,7 +131,7 @@ describe("helpers", () => {
                 price: 0.56,
                 size: 21.04,
                 side: Side.BUY,
-                feeRateBps: "111",
+                feeRateBps: 111,
                 nonce: 123,
                 expiration: 50000,
                 taker: "0x0000000000000000000000000000000000000003",
@@ -178,7 +170,7 @@ describe("helpers", () => {
                 price: 0.56,
                 size: 21.04,
                 side: Side.SELL,
-                feeRateBps: "0",
+                feeRateBps: 0,
                 nonce: 0,
                 taker: "0x0000000000000000000000000000000000000003",
             };
@@ -218,13 +210,14 @@ describe("helpers", () => {
                 price: 0.56,
                 size: 21.04,
                 side: Side.BUY,
-                feeRateBps: "111",
+                feeRateBps: 111,
                 nonce: 123,
                 expiration: 50000,
             };
 
             const signedOrder = await createOrder(
                 wallet,
+                Chain.MUMBAI,
                 SignatureType.EOA,
                 "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
                 order,
@@ -253,12 +246,13 @@ describe("helpers", () => {
                 price: 0.56,
                 size: 21.04,
                 side: Side.SELL,
-                feeRateBps: "0",
+                feeRateBps: 0,
                 nonce: 0,
             };
 
             const signedOrder = await createOrder(
                 wallet,
+                Chain.MUMBAI,
                 SignatureType.POLY_GNOSIS_SAFE,
                 "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
                 order,
@@ -277,43 +271,6 @@ describe("helpers", () => {
             expect(signedOrder.feeRateBps).equal("0");
             expect(signedOrder.signatureType).equal(SignatureType.POLY_GNOSIS_SAFE);
             expect(signedOrder.signature).not.empty;
-        });
-    });
-
-    describe("getSigner", () => {
-        const eoa = "0x00000ab000023000000aa000000ff00000000001";
-        it("EOA", () => {
-            const signer = getSigner(eoa, SignatureType.EOA);
-            expect(signer).not.null;
-            expect(signer).not.undefined;
-            expect(signer).not.empty;
-            expect(signer).equal(eoa);
-        });
-
-        it("POLY_PROXY", () => {
-            const signer = getSigner(eoa, SignatureType.POLY_PROXY);
-            expect(signer).not.null;
-            expect(signer).not.undefined;
-            expect(signer).not.empty;
-            expect(signer).equal(eoa);
-        });
-
-        it("POLY_GNOSIS_SAFE", () => {
-            const signer = getSigner(eoa, SignatureType.POLY_GNOSIS_SAFE);
-            expect(signer).not.null;
-            expect(signer).not.undefined;
-            expect(signer).not.empty;
-            expect(signer).equal(eoa);
-        });
-
-        it("invalid", () => {
-            try {
-                getSigner(eoa, 555);
-            } catch (e: any) {
-                expect(e).not.null;
-                expect(e).not.undefined;
-                expect(e.toString()).equal("Error: invalid signature type");
-            }
         });
     });
 });

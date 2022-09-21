@@ -11,7 +11,7 @@ import {
     COLLATERAL_TOKEN_DECIMALS,
     CONDITIONAL_TOKEN_DECIMALS,
 } from "@polymarket/order-utils";
-import { UserOrder, Side } from "../types";
+import { UserOrder, Side, Chain } from "../types";
 import { roundDown } from "../utilities";
 
 /**
@@ -56,6 +56,20 @@ export const buildOrderCreationArgs = async (
         taker = "0x0000000000000000000000000000000000000000";
     }
 
+    let feeRateBps;
+    if (typeof userOrder.feeRateBps !== "undefined" && userOrder.feeRateBps) {
+        feeRateBps = userOrder.feeRateBps.toString();
+    } else {
+        feeRateBps = "0";
+    }
+
+    let nonce;
+    if (typeof userOrder.nonce !== "undefined" && userOrder.nonce) {
+        nonce = userOrder.nonce.toString();
+    } else {
+        nonce = "0";
+    }
+
     return {
         maker,
         taker,
@@ -63,8 +77,8 @@ export const buildOrderCreationArgs = async (
         makerAmount,
         takerAmount,
         side,
-        feeRateBps: userOrder.feeRateBps,
-        nonce: userOrder.nonce.toString(),
+        feeRateBps,
+        nonce,
         signer,
         expiration: (userOrder.expiration || 0).toString(),
         signatureType,
@@ -91,37 +105,24 @@ export const buildOrder = async (
     return cTFExchangeOrderBuilder.buildSignedOrder(orderData);
 };
 
-export const getSigner = (eoa: string, sigType: number): string => {
-    switch (sigType) {
-        case SignatureType.EOA:
-            // signer is always the EOA address for EOA sigs
-            return eoa;
-        case SignatureType.POLY_PROXY:
-            // signer is the eoa
-            return eoa;
-        case SignatureType.POLY_GNOSIS_SAFE:
-            // signer is the eoa
-            return eoa;
-        default:
-            throw new Error("invalid signature type");
-    }
-};
-
 export const createOrder = async (
     eoaSigner: Wallet | JsonRpcSigner,
+    chainId: Chain,
     signatureType: SignatureType,
     funderAddress: string | undefined,
     userOrder: UserOrder,
 ): Promise<SignedOrder> => {
-    const chainId = await eoaSigner.getChainId();
     const eoaSignerAddress = await eoaSigner.getAddress();
 
     // If funder address is not given, use the signer address
     const maker = funderAddress === undefined ? eoaSignerAddress : funderAddress;
-    const signerAddress = getSigner(eoaSignerAddress, signatureType);
-
     const clobContracts = getContracts(chainId);
 
-    const orderData = await buildOrderCreationArgs(signerAddress, maker, signatureType, userOrder);
+    const orderData = await buildOrderCreationArgs(
+        eoaSignerAddress,
+        maker,
+        signatureType,
+        userOrder,
+    );
     return buildOrder(eoaSigner, clobContracts.Exchange, chainId, orderData);
 };

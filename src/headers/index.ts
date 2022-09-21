@@ -1,10 +1,11 @@
 import { JsonRpcSigner } from "@ethersproject/providers";
 import { Wallet } from "@ethersproject/wallet";
 import { buildClobEip712Signature, buildPolyHmacSignature } from "../signing";
-import { ApiKeyCreds, L1PolyHeader, L2HeaderArgs, L2PolyHeader } from "../types";
+import { ApiKeyCreds, Chain, L1PolyHeader, L2HeaderArgs, L2PolyHeader } from "../types";
 
 export const createL1Headers = async (
     signer: Wallet | JsonRpcSigner,
+    chainId: Chain,
     nonce?: number,
 ): Promise<L1PolyHeader> => {
     const now = Math.floor(Date.now() / 1000);
@@ -13,7 +14,7 @@ export const createL1Headers = async (
         n = nonce;
     }
 
-    const sig = await buildClobEip712Signature(signer, now, n);
+    const sig = await buildClobEip712Signature(signer, chainId, now, n);
     const address = await signer.getAddress();
 
     const headers = {

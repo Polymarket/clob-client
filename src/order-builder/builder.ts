@@ -2,10 +2,12 @@ import { Wallet } from "@ethersproject/wallet";
 import { JsonRpcSigner } from "@ethersproject/providers";
 import { SignedOrder, SignatureType } from "@polymarket/order-utils";
 import { createOrder } from "./helpers";
-import { UserOrder } from "../types";
+import { Chain, UserOrder } from "../types";
 
 export class OrderBuilder {
     readonly signer: Wallet | JsonRpcSigner;
+
+    readonly chainId: Chain;
 
     // Signature type used sign orders, defaults to EOA type
     readonly signatureType: SignatureType;
@@ -17,10 +19,12 @@ export class OrderBuilder {
 
     constructor(
         signer: Wallet | JsonRpcSigner,
+        chainId: Chain,
         signatureType?: SignatureType,
         funderAddress?: string,
     ) {
         this.signer = signer;
+        this.chainId = chainId;
         this.signatureType = signatureType === undefined ? SignatureType.EOA : signatureType;
         this.funderAddress = funderAddress;
     }
@@ -29,6 +33,12 @@ export class OrderBuilder {
      * Generate and sign a order
      */
     public async buildOrder(userOrder: UserOrder): Promise<SignedOrder> {
-        return createOrder(this.signer, this.signatureType, this.funderAddress, userOrder);
+        return createOrder(
+            this.signer,
+            this.chainId,
+            this.signatureType,
+            this.funderAddress,
+            userOrder,
+        );
     }
 }

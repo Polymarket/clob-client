@@ -15,9 +15,6 @@ jobs:
     - run: yarn lint
     - run: yarn build
     - run: yarn test
-      env:
-        PK: ${{ secrets.PK }}
-        RPC_URL: ${{ secrets.RPC_URL }}
 
   all-jobs-pass:
     name: All jobs pass

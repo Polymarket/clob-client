@@ -57,12 +57,12 @@ export interface UserOrder {
     /**
      * Fee rate, in basis points, charged to the order maker, charged on proceeds
      */
-    feeRateBps: string;
+    feeRateBps?: number;
 
     /**
      * Nonce used for onchain cancellations
      */
-    nonce: number;
+    nonce?: number;
 
     /**
      * Timestamp after which the order is expired.
@@ -134,3 +134,8 @@ export interface OrderHistory {
 }
 
 export type OptionalParams = { [query: string]: string };
+
+export enum Chain {
+    POLYGON = 137,
+    MUMBAI = 80001,
+}

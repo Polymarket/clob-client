@@ -1,20 +1,19 @@
 import "mocha";
 import { expect } from "chai";
 import { buildClobEip712Signature } from "../../src/signing/eip712";
-import { StaticJsonRpcProvider } from "@ethersproject/providers";
+import { Chain } from "../../src/types";
 import { Wallet } from "@ethersproject/wallet";
 
 describe("eip712", () => {
     let wallet: Wallet;
     beforeEach(() => {
-        const provider = new StaticJsonRpcProvider("https://rpc-mumbai.maticvigil.com");
         // publicly known private key
         const privateKey = "0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80";
-        wallet = new Wallet(privateKey).connect(provider);
+        wallet = new Wallet(privateKey);
     });
 
     it("buildClobEip712Signature", async () => {
-        const signature = await buildClobEip712Signature(wallet, 10000000, 23);
+        const signature = await buildClobEip712Signature(wallet, Chain.MUMBAI, 10000000, 23);
         expect(signature).not.null;
         expect(signature).not.undefined;
         expect(signature).not.empty;

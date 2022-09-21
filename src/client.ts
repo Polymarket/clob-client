@@ -12,6 +12,7 @@ import {
     TradeHistory,
     OrderHistory,
     OptionalParams,
+    Chain,
 } from "./types";
 import { createL1Headers, createL2Headers } from "./headers";
 import { del, DELETE, GET, get, POST, post } from "./http_helpers";
@@ -41,6 +42,8 @@ import { OrderBuilder } from "./order-builder/builder";
 export class ClobClient {
     readonly host: string;
 
+    readonly chainId: Chain;
+
     // Used to perform Level 1 authentication and sign orders
     readonly signer?: Wallet | JsonRpcSigner;
 
@@ -51,16 +54,16 @@ export class ClobClient {
 
     constructor(
         host: string,
+        chainId: Chain,
         signer?: Wallet | JsonRpcSigner,
         creds?: ApiKeyCreds,
         signatureType?: SignatureType,
         funderAddress?: string,
     ) {
         this.host = host.endsWith("/") ? host.slice(0, -1) : host;
+        this.chainId = chainId;
+
         if (signer !== undefined) {
-            if (signer.provider == null || !signer.provider._isProvider) {
-                throw new Error("signer not connected to a provider!");
-            }
             this.signer = signer;
         }
         if (creds !== undefined) {
@@ -68,6 +71,7 @@ export class ClobClient {
         }
         this.orderBuilder = new OrderBuilder(
             signer as Wallet | JsonRpcSigner,
+            chainId,
             signatureType,
             funderAddress,
         );
@@ -117,7 +121,11 @@ export class ClobClient {
         this.canL1Auth();
 
         const endpoint = `${this.host}${CREATE_API_KEY}`;
-        const headers = await createL1Headers(this.signer as Wallet | JsonRpcSigner, nonce);
+        const headers = await createL1Headers(
+            this.signer as Wallet | JsonRpcSigner,
+            this.chainId,
+            nonce,
+        );
 
         const resp = await post(endpoint, headers, undefined, optionalParams);
         return resp;
@@ -136,7 +144,11 @@ export class ClobClient {
         this.canL1Auth();
 
         const endpoint = `${this.host}${DERIVE_API_KEY}`;
-        const headers = await createL1Headers(this.signer as Wallet | JsonRpcSigner, nonce);
+        const headers = await createL1Headers(
+            this.signer as Wallet | JsonRpcSigner,
+            this.chainId,
+            nonce,
+        );
 
         const resp = await get(endpoint, headers, undefined, optionalParams);
         return resp;

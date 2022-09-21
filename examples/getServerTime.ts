@@ -1,12 +1,13 @@
 import { config as dotenvConfig } from "dotenv";
 import { resolve } from "path";
-import { ClobClient } from "../src";
+import { Chain, ClobClient } from "../src";
 
 dotenvConfig({ path: resolve(__dirname, "../.env") });
 
 async function main() {
     const host = process.env.CLOB_API_URL || "http://localhost:8080";
-    const clobClient = new ClobClient(host);
+    const chainId = parseInt(`${process.env.CHAIN_ID || Chain.MUMBAI}`) as Chain;
+    const clobClient = new ClobClient(host, chainId);
 
     console.log(`Server time: ${await clobClient.getServerTime()}`);
 }

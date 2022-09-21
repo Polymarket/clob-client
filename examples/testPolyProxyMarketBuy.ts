@@ -1,7 +1,7 @@
 import { ethers } from "ethers";
 import { config as dotenvConfig } from "dotenv";
 import { resolve } from "path";
-import { ApiKeyCreds, ClobClient, Side } from "../src";
+import { ApiKeyCreds, Chain, ClobClient, Side } from "../src";
 import { SignatureType } from "@polymarket/order-utils";
 
 dotenvConfig({ path: resolve(__dirname, "../.env") });
@@ -16,11 +16,12 @@ async function populateBook(client: ClobClient) {
     for (const newOrder of orders) {
         await client.postOrder(
             await client.createOrder({
-                tokenID: "16678291189211314787145083999015737376658799626183230671758641503291735614088",
+                tokenID:
+                    "16678291189211314787145083999015737376658799626183230671758641503291735614088",
                 side: newOrder.side,
                 price: newOrder.price,
                 size: newOrder.size,
-                feeRateBps: "100",
+                feeRateBps: 100,
                 nonce: i++,
             }),
         );
@@ -28,10 +29,9 @@ async function populateBook(client: ClobClient) {
 }
 
 async function main() {
-    const provider = new ethers.providers.JsonRpcProvider(process.env.RPC_URL);
-    const pk = new ethers.Wallet(`${process.env.PK}`);
-    const wallet = pk.connect(provider);
-    console.log(`Address: ${await wallet.getAddress()}`);
+    const wallet = new ethers.Wallet(`${process.env.PK}`);
+    const chainId = parseInt(`${process.env.CHAIN_ID || Chain.MUMBAI}`) as Chain;
+    console.log(`Address: ${await wallet.getAddress()}, chainId: ${chainId}`);
 
     const host = process.env.CLOB_API_URL || "http://localhost:8080";
     const creds: ApiKeyCreds = {
@@ -44,6 +44,7 @@ async function main() {
     // and providing the proxy address
     const clobPolyClient = new ClobClient(
         host,
+        chainId,
         wallet,
         creds,
         SignatureType.POLY_PROXY,
