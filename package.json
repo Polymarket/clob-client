@@ -6,6 +6,10 @@
         {
             "name": "Jonathan Amenechi",
             "url": "https://github.com/JonathanAmenechi"
+        },
+        {
+            "name": "Rodrigo Calvo",
+            "url": "https://github.com/poly-rodr"
         }
     ],
     "main": "dist/index.js",
