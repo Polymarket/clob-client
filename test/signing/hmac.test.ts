@@ -5,7 +5,7 @@ import { buildPolyHmacSignature } from "../../src/signing/hmac";
 describe("hmac", () => {
     it("buildPolyHmacSignature", () => {
         const signature = buildPolyHmacSignature(
-            "0x1",
+            "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=",
             1000000,
             "test-sign",
             "/orders",
@@ -14,6 +14,6 @@ describe("hmac", () => {
         expect(signature).not.null;
         expect(signature).not.undefined;
         expect(signature).not.empty;
-        expect(signature).equal("Gvl9jBKAtKIhY44ZeLiTe0YE9GuqmDD3Kupcliwl9V4=");
+        expect(signature).equal("ZwAdJKvoYRlEKDkNMwd5BuwNNtg93kNaR_oU2HrfVvc=");
     });
 });
