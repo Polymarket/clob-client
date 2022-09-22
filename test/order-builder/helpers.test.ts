@@ -12,7 +12,7 @@ import {
 import { Wallet } from "@ethersproject/wallet";
 
 describe("helpers", () => {
-    const chainId = 80001;
+    const chainId = Chain.MUMBAI;
     let wallet: Wallet;
     let contracts: Contracts;
     beforeEach(() => {

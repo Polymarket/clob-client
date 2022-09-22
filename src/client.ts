@@ -15,9 +15,9 @@ import {
     Chain,
 } from "./types";
 import { createL1Headers, createL2Headers } from "./headers";
-import { del, DELETE, GET, get, POST, post } from "./http_helpers";
+import { addQueryParamsToUrl, del, DELETE, GET, get, POST, post } from "./http-helpers";
 import { L1_AUTH_UNAVAILABLE_ERROR, L2_AUTH_NOT_AVAILABLE } from "./errors";
-import { addQueryParamsToUrl, orderToJson } from "./utilities";
+import { orderToJson } from "./utilities";
 import {
     CANCEL_ALL,
     CANCEL,
