@@ -8,10 +8,10 @@ build:
 test:
 	yarn nyc -a \
 		--reporter=html \
-		--reporter=text mocha './test' \
+		--reporter=text mocha './tests' \
 		--require esm \
 		--require jsdom-global/register \
-		--require ts-node/register 'test/**/*.test.ts' \
+		--require ts-node/register 'tests/**/*.test.ts' \
 		--require tsconfig-paths/register \
 		--timeout 10000 \
 		--exit

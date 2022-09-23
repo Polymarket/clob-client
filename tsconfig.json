@@ -2,7 +2,7 @@
     "include": ["src/**/*"],
     "exclude": [
         "src/**/*.test.ts", 
-        "test/*",
+        "tests/*",
         "node_modules",
         "./node_modules",
         "./node_modules/*",
