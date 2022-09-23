@@ -29,9 +29,9 @@
         "test": "make test"
     },
     "dependencies": {
-        "ethers": "^5.7.1",
-        "@polymarket/order-utils": "https://github.com/Polymarket/clob-order-utils#a08fda2c51c7fa8b5d38fd6fab391ef9a5f9eb2a",
-        "axios": "^0.27.2"
+        "@polymarket/order-utils": "^1.3.0",
+        "axios": "^0.27.2",
+        "ethers": "^5.7.1"
     },
     "devDependencies": {
         "@types/chai": "^4.3.3",
