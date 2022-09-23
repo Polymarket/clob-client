@@ -11,6 +11,7 @@ dist/
 node_modules/
 typechain/
 scripts/
+.nyc_output/
 
 # files
 .env

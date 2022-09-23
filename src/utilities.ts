@@ -1,89 +1,37 @@
-import { LimitOrderAndSignature, MarketOrderAndSignature } from "@polymarket/order-utils";
-import { FilterParams } from "./types";
+import { Side as UtilsSide, SignedOrder } from "@polymarket/order-utils";
 
-export const limitOrderToJson = (order: LimitOrderAndSignature): any => {
-    return {
-        order: {
-            salt: parseInt(order.order.salt, 10),
-            makerAsset: order.order.makerAsset,
-            takerAsset: order.order.takerAsset,
-            makerAssetData: order.order.makerAssetData,
-            takerAssetData: order.order.takerAssetData,
-            getMakerAmount: order.order.getMakerAmount,
-            getTakerAmount: order.order.getTakerAmount,
-            predicate: order.order.predicate,
-            permit: order.order.permit,
-            interaction: order.order.interaction,
-            signer: order.order.signer,
-            sigType: order.order.sigType,
-        },
-        signature: order.signature,
-        orderType: "limit",
-    };
-};
-
-export const marketOrderToJson = (mktOrder: MarketOrderAndSignature): any => {
-    return {
-        order: {
-            salt: parseInt(mktOrder.order.salt, 10),
-            maker: mktOrder.order.maker,
-            makerAsset: mktOrder.order.makerAsset,
-            makerAmount: mktOrder.order.makerAmount,
-            makerAssetID: mktOrder.order.makerAssetID,
-            takerAsset: mktOrder.order.takerAsset,
-            takerAssetID: mktOrder.order.takerAssetID,
-            signer: mktOrder.order.signer,
-            sigType: mktOrder.order.sigType,
-        },
-        signature: mktOrder.signature,
-        orderType: "market",
-        minAmountReceived: mktOrder.minAmountReceived,
-        timeInForce: mktOrder.timeInForce,
-    };
-};
-
-const buildQueryParams = (url: string, param: string, value: string): string => {
-    let urlWithParams = url;
-    const last = url.charAt(url.length - 1);
-    // Check the last char in the url string
-    // if ?, append the param directly: api.com?param=value
-    if (last === "?") {
-        urlWithParams = `${urlWithParams}${param}=${value}`;
+export const orderToJson = (order: SignedOrder): any => {
+    let side = "";
+    if (order.side == UtilsSide.BUY) {
+        side = "buy";
     } else {
-        // else append "&" then the param: api.com?param1=value1&param2=value2
-        urlWithParams = `${urlWithParams}&${param}=${value}`;
+        side = "sell";
     }
-    return urlWithParams;
-};
-
-export const addQueryParamsToUrl = (baseUrl: string, params?: FilterParams): string => {
-    let url = baseUrl;
-    if (params !== undefined) {
-        url = `${url}?`;
-        if (params.market !== undefined) {
-            url = buildQueryParams(url, "market", params.market as string);
-        }
-        if (params.max !== undefined) {
-            url = buildQueryParams(url, "max", `${params.max}`);
-        }
-        if (params.startTs !== undefined) {
-            url = buildQueryParams(url, "startTs", `${params.startTs}`);
-        }
-        if (params.endTs !== undefined) {
-            url = buildQueryParams(url, "endTs", `${params.endTs}`);
-        }
-    }
-    return url;
+    return {
+        salt: parseInt(order.salt, 10),
+        maker: order.maker,
+        signer: order.signer,
+        taker: order.taker,
+        tokenId: order.tokenId,
+        makerAmount: order.makerAmount,
+        takerAmount: order.takerAmount,
+        side,
+        expiration: order.expiration,
+        nonce: order.nonce,
+        feeRateBps: order.feeRateBps,
+        signatureType: order.signatureType,
+        signature: order.signature,
+    };
 };
 
 export const roundNormal = (num: number, decimals: number): number => {
-    return Math.round((num + Number.EPSILON) * (10**decimals)) / (10**decimals)
-}
+    return Math.round((num + Number.EPSILON) * 10 ** decimals) / 10 ** decimals;
+};
 
 export const roundDown = (num: number, decimals: number): number => {
-    return Math.floor(num * (10**decimals)) / (10**decimals)
-}
+    return Math.floor(num * 10 ** decimals) / 10 ** decimals;
+};
 
 export const roundUp = (num: number, decimals: number): number => {
-    return Math.ceil(num * (10**decimals)) / (10**decimals)
-}
+    return Math.ceil(num * 10 ** decimals) / 10 ** decimals;
+};

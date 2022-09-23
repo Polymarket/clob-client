@@ -1,0 +1,12 @@
+.editorconfig
+.eslintignore
+.eslintrc.js
+.github/workflows/workflow.yaml
+.prettierignore
+.prettierrc.json
+Makefile
+tsconfig.json
+
+src
+tests
+examples

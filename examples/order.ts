@@ -1,15 +1,14 @@
 import { ethers } from "ethers";
 import { config as dotenvConfig } from "dotenv";
 import { resolve } from "path";
-import { ApiKeyCreds, ClobClient, Side } from "../src";
+import { ApiKeyCreds, Chain, ClobClient, Side } from "../src";
 
 dotenvConfig({ path: resolve(__dirname, "../.env") });
 
 async function main() {
-    const provider = new ethers.providers.JsonRpcProvider(process.env.RPC_URL);
-    const pk = new ethers.Wallet(`${process.env.PK}`);
-    const wallet = pk.connect(provider);
-    console.log(`Address: ${await wallet.getAddress()}`);
+    const wallet = new ethers.Wallet(`${process.env.PK}`);
+    const chainId = parseInt(`${process.env.CHAIN_ID || Chain.MUMBAI}`) as Chain;
+    console.log(`Address: ${await wallet.getAddress()}, chainId: ${chainId}`);
 
     const host = process.env.CLOB_API_URL || "http://localhost:8080";
     const creds: ApiKeyCreds = {
@@ -17,24 +16,23 @@ async function main() {
         secret: `${process.env.CLOB_SECRET}`,
         passphrase: `${process.env.CLOB_PASS_PHRASE}`,
     };
-    const clobClient = new ClobClient(host, wallet, creds);
+    const clobClient = new ClobClient(host, chainId, wallet, creds);
 
+    // Create a buy order for 100 YES for 0.50c
     // YES: 16678291189211314787145083999015737376658799626183230671758641503291735614088
-    // Create a market buy order, using 100 USDC to buy as many tokens as possible
-    // Note: Size in market buy is the COLLATERAL size used to initiate the buy
-    // While in a market sell, size is the amount of YES/NO tokens used to initiate the sell
-    const order = await clobClient.createMarketOrder({
+    const order = await clobClient.createOrder({
         tokenID: "16678291189211314787145083999015737376658799626183230671758641503291735614088",
+        price: 0.5,
         side: Side.BUY,
         size: 100,
+        feeRateBps: 100,
+        nonce: 1,
     });
-    console.log(`Market order: `);
-    console.log(order);
+    console.log("Created Order", order);
 
     // Send it to the server
     const resp = await clobClient.postOrder(order);
     console.log(resp);
-    console.log(`Done!`);
 }
 
 main();

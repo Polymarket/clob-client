@@ -1,13 +1,15 @@
 import { Wallet } from "@ethersproject/wallet";
 import { JsonRpcSigner } from "@ethersproject/providers";
-import { LimitOrderAndSignature, MarketOrderAndSignature, SignatureType } from "@polymarket/order-utils";
-import { createLimitOrder, createMarketOrder } from "./helpers";
-import { UserLimitOrder, UserMarketOrder } from "../types";
+import { SignedOrder, SignatureType } from "@polymarket/order-utils";
+import { createOrder } from "./helpers";
+import { Chain, UserOrder } from "../types";
 
 export class OrderBuilder {
     readonly signer: Wallet | JsonRpcSigner;
 
-    // Signature type used sign Limit and Market orders, defaults to EOA type
+    readonly chainId: Chain;
+
+    // Signature type used sign orders, defaults to EOA type
     readonly signatureType: SignatureType;
 
     // Address which holds funds to be used.
@@ -15,23 +17,28 @@ export class OrderBuilder {
     // If not provided, funderAddress is the signer address
     readonly funderAddress?: string;
 
-    constructor(signer: Wallet | JsonRpcSigner, signatureType?: SignatureType, funderAddress?: string) {
+    constructor(
+        signer: Wallet | JsonRpcSigner,
+        chainId: Chain,
+        signatureType?: SignatureType,
+        funderAddress?: string,
+    ) {
         this.signer = signer;
+        this.chainId = chainId;
         this.signatureType = signatureType === undefined ? SignatureType.EOA : signatureType;
         this.funderAddress = funderAddress;
     }
 
     /**
-     * Generate and sign a limit order
+     * Generate and sign a order
      */
-    public async buildLimitOrder(userOrder: UserLimitOrder): Promise<LimitOrderAndSignature> {
-        return createLimitOrder(this.signer, this.signatureType, this.funderAddress, userOrder);
-    }
-
-    /**
-     *
-     */
-    public async buildMarketOrder(userOrder: UserMarketOrder): Promise<MarketOrderAndSignature> {
-        return createMarketOrder(this.signer, this.signatureType, this.funderAddress, userOrder);
+    public async buildOrder(userOrder: UserOrder): Promise<SignedOrder> {
+        return createOrder(
+            this.signer,
+            this.chainId,
+            this.signatureType,
+            this.funderAddress,
+            userOrder,
+        );
     }
 }

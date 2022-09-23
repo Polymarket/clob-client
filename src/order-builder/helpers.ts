@@ -1,359 +1,128 @@
 import { JsonRpcSigner } from "@ethersproject/providers";
 import { Wallet } from "@ethersproject/wallet";
+import { parseUnits } from "ethers/lib/utils";
 import {
-    ClobContracts,
-    EthersProviderConnector,
+    ExchangeOrderBuilder,
     getContracts,
-    LimitOrderAndSignature,
-    LimitOrderBuilder,
-    LimitOrderData,
-    MarketOrderAndSignature,
-    MarketOrderBuilder,
-    MarketOrderData,
+    OrderData,
     SignatureType,
-    TimeInForce,
+    SignedOrder,
+    Side as UtilsSide,
+    COLLATERAL_TOKEN_DECIMALS,
+    CONDITIONAL_TOKEN_DECIMALS,
 } from "@polymarket/order-utils";
-import { ethers } from "ethers";
-import { OrderCreationArgs, UserMarketOrder, UserLimitOrder, MarketOrderCreationArgs, Side } from "../types";
-import { COLLATERAL_TOKEN_DECIMALS, CONDITIONAL_TOKEN_DECIMALS } from "./constants";
-import { getJsonRpcSigner } from "./utils";
-import { roundDown, roundUp } from "../utilities"
+import { UserOrder, Side, Chain } from "../types";
+import { roundDown } from "../utilities";
 
 /**
- * Translate simple user order to args used to generate LimitOrders
+ * Translate simple user order to args used to generate Orders
  */
-export const buildLimitOrderCreationArgs = async (
+export const buildOrderCreationArgs = async (
     signer: string,
     maker: string,
-    chainID: number,
-    exchange: string,
-    executor: string,
-    collateral: string,
-    conditional: string,
     signatureType: SignatureType,
-    userOrder: UserLimitOrder,
-): Promise<OrderCreationArgs> => {
-    let makerAsset: string;
-    let takerAsset: string;
-
-    let makerAssetID: string | undefined;
-    let takerAssetID: string | undefined;
-
+    userOrder: UserOrder,
+): Promise<OrderData> => {
     let makerAmount: string;
     let takerAmount: string;
 
-    const price = userOrder.price as number;
+    let side: UtilsSide;
 
     if (userOrder.side === Side.BUY) {
-        makerAsset = collateral;
-        takerAsset = conditional;
-        makerAssetID = undefined;
-        takerAssetID = userOrder.tokenID;
+        side = UtilsSide.BUY;
 
         // force 2 decimals places
         const rawTakerAmt = roundDown(userOrder.size, 2);
         const rawPrice = roundDown(userOrder.price, 2);
-        const rawMakerAmt = roundDown(rawTakerAmt*rawPrice, 4)
-        makerAmount = ethers.utils.parseUnits(rawMakerAmt.toString(), COLLATERAL_TOKEN_DECIMALS).toString();
-        takerAmount = ethers.utils.parseUnits(rawTakerAmt.toString(), CONDITIONAL_TOKEN_DECIMALS).toString();
+        const rawMakerAmt = roundDown(rawTakerAmt * rawPrice, 4);
+
+        makerAmount = parseUnits(rawMakerAmt.toString(), COLLATERAL_TOKEN_DECIMALS).toString();
+        takerAmount = parseUnits(rawTakerAmt.toString(), CONDITIONAL_TOKEN_DECIMALS).toString();
     } else {
-        makerAsset = conditional;
-        takerAsset = collateral;
-        makerAssetID = userOrder.tokenID;
-        takerAssetID = undefined;
+        side = UtilsSide.SELL;
+
         const rawMakerAmt = roundDown(userOrder.size, 2);
-        makerAmount = ethers.utils.parseUnits(rawMakerAmt.toString(), CONDITIONAL_TOKEN_DECIMALS).toString();
         const rawPrice = roundDown(userOrder.price, 2);
         const rawTakerAmt = roundDown(rawPrice * rawMakerAmt, 4);
-        takerAmount = ethers.utils.parseUnits(rawTakerAmt.toString(), COLLATERAL_TOKEN_DECIMALS).toString();
+
+        makerAmount = parseUnits(rawMakerAmt.toString(), CONDITIONAL_TOKEN_DECIMALS).toString();
+        takerAmount = parseUnits(rawTakerAmt.toString(), COLLATERAL_TOKEN_DECIMALS).toString();
     }
 
-    return {
-        chainID,
-        exchange,
-        executor,
-        signer,
-        maker,
-        makerAsset,
-        makerAmount,
-        makerAssetID,
-        takerAsset,
-        takerAmount,
-        takerAssetID,
-        signatureType,
-    };
-};
-
-/**
- * Translate simple user order to args used to generate MarketOrders
- */
-export const buildMarketOrderCreationArgs = async (
-    signer: string,
-    maker: string,
-    chainID: number,
-    exchange: string,
-    collateral: string,
-    conditional: string,
-    signatureType: SignatureType,
-    userOrder: UserMarketOrder,
-): Promise<MarketOrderCreationArgs> => {
-    let makerAsset: string;
-    let takerAsset: string;
-
-    let makerAssetID: string | undefined;
-    let takerAssetID: string | undefined;
-
-    let makerAmount: string;
-
-    let minAmountReceived = "0"; // Default to 0
-
-    let timeInForce: TimeInForce = "FOK";
-    if (userOrder.timeInForce) {
-        timeInForce = userOrder.timeInForce;
-    }
-
-    if (userOrder.side === Side.BUY) {
-        // market buy
-        makerAsset = collateral; // Set maker asset to collateral if market buy
-        takerAsset = conditional; // taker Asset to ConditionalToken
-        makerAssetID = undefined;
-        takerAssetID = userOrder.tokenID;
-
-        if (timeInForce === "IOC") {
-            // force 2 decimals places
-            const rawMakerAmt = roundDown(roundDown(userOrder.size, 2) * roundUp(userOrder.worstPrice!, 2), 4); // here now
-            makerAmount = ethers.utils.parseUnits(rawMakerAmt.toString(), COLLATERAL_TOKEN_DECIMALS).toString();
-
-            // Calculate minimum amount received
-            const roundedSize = roundDown(userOrder.size, 2).toString();
-            minAmountReceived = ethers.utils.parseUnits(roundedSize, COLLATERAL_TOKEN_DECIMALS).toString();
-        } else {
-            const roundedMakerAmt = roundDown(userOrder.size, 2).toString();
-            makerAmount = ethers.utils.parseUnits(roundedMakerAmt, COLLATERAL_TOKEN_DECIMALS).toString();
-
-            // Calculate minimum amount received
-            if (userOrder.worstPrice !== undefined) {
-                const worstPrice = roundUp(userOrder.worstPrice as number, 2);
-                const minAmt = roundDown(roundDown(userOrder.size, 2) / worstPrice, 2);
-                minAmountReceived = ethers.utils.parseUnits(minAmt.toString(), COLLATERAL_TOKEN_DECIMALS).toString();
-            }
-        }
+    let taker;
+    if (typeof userOrder.taker !== "undefined" && userOrder.taker) {
+        taker = userOrder.taker;
     } else {
-        // market sell
-        makerAsset = conditional;
-        takerAsset = collateral;
-        makerAssetID = userOrder.tokenID;
-        takerAssetID = undefined;
-        const roundedMakerAmt = roundDown(userOrder.size, 2).toString();
-        makerAmount = ethers.utils.parseUnits(roundedMakerAmt, CONDITIONAL_TOKEN_DECIMALS).toString();
+        taker = "0x0000000000000000000000000000000000000000";
+    }
 
-        // Calculate minimum amount received
-        if (userOrder.worstPrice !== undefined) {
-            const worstPrice = userOrder.worstPrice as number;
-            const minAmt = roundDown((userOrder.size * worstPrice), 2);
-            minAmountReceived = ethers.utils.parseUnits(minAmt.toString(), COLLATERAL_TOKEN_DECIMALS).toString(); // think through rounding directions and make sure the are the correct direction
-        }
+    let feeRateBps;
+    if (typeof userOrder.feeRateBps !== "undefined" && userOrder.feeRateBps) {
+        feeRateBps = userOrder.feeRateBps.toString();
+    } else {
+        feeRateBps = "0";
+    }
+
+    let nonce;
+    if (typeof userOrder.nonce !== "undefined" && userOrder.nonce) {
+        nonce = userOrder.nonce.toString();
+    } else {
+        nonce = "0";
     }
 
     return {
-        chainID,
-        exchange,
-        signer,
         maker,
-        makerAsset,
+        taker,
+        tokenId: userOrder.tokenID,
         makerAmount,
-        makerAssetID,
-        takerAsset,
-        takerAssetID,
+        takerAmount,
+        side,
+        feeRateBps,
+        nonce,
+        signer,
+        expiration: (userOrder.expiration || 0).toString(),
         signatureType,
-        minAmountReceived,
-        timeInForce,
-    };
+    } as OrderData;
 };
 
 /**
- * Generate and sign a limit order
+ * Generate and sign a order
  *
  * @param signer
- * @param makerAmount
- * @param takerAmount
- * @param makerAssetType
- * @param takerAssetType
- * @param makerAssetID
- * @param takerAssetID
- * @returns
+ * @param contractAddress ctf exchange contract address
+ * @param chainId
+ * @param OrderData
+ * @returns SignedOrder
  */
-const buildOrder = async (signer: Wallet | JsonRpcSigner, args: OrderCreationArgs): Promise<any> => {
-    console.log(`Building Limit order signed by: ${args.maker}...`);
-    const jsonRpcSigner = await getJsonRpcSigner(signer, args.chainID);
-    const connector = new EthersProviderConnector(jsonRpcSigner);
+export const buildOrder = async (
+    signer: Wallet | JsonRpcSigner,
+    contractAddress: string,
+    chainId: number,
+    orderData: OrderData,
+): Promise<SignedOrder> => {
+    const cTFExchangeOrderBuilder = new ExchangeOrderBuilder(contractAddress, chainId, signer);
 
-    const limitOrderBuilder = new LimitOrderBuilder(args.exchange, args.chainID, connector);
-
-    const limitOrderData: LimitOrderData = {
-        exchangeAddress: args.exchange,
-        makerAssetAddress: args.makerAsset,
-        takerAssetAddress: args.takerAsset,
-        makerAddress: args.maker,
-        takerAddress: args.executor,
-        makerAmount: args.makerAmount,
-        takerAmount: args.takerAmount,
-        signer: args.signer,
-        sigType: args.signatureType,
-    };
-
-    if (args.makerAssetID !== undefined) {
-        limitOrderData.makerAssetID = args.makerAssetID;
-    }
-
-    if (args.takerAssetID !== undefined) {
-        limitOrderData.takerAssetID = args.takerAssetID;
-    }
-    // Create order
-    const limitOrder = limitOrderBuilder.buildLimitOrder(limitOrderData);
-
-    // And sign it with the maker address
-    const limitOrderTypedData = limitOrderBuilder.buildLimitOrderTypedData(limitOrder);
-    const address = await jsonRpcSigner.getAddress();
-    const limitOrderSignature = await limitOrderBuilder.buildOrderSignature(address, limitOrderTypedData);
-
-    const orderAndSignature: LimitOrderAndSignature = {
-        order: limitOrder,
-        signature: limitOrderSignature,
-        orderType: "limit",
-    };
-
-    return orderAndSignature;
-};
-/**
- *
- * @param signer
- * @param args
- */
-const buildMarketOrder = async (signer: Wallet | JsonRpcSigner, args: MarketOrderCreationArgs): Promise<any> => {
-    console.log(`Building Market order signed by: ${args.maker}...`);
-    const jsonRpcSigner = await getJsonRpcSigner(signer, args.chainID);
-    const connector = new EthersProviderConnector(jsonRpcSigner);
-
-    const marketOrderBuilder = new MarketOrderBuilder(args.exchange, args.chainID, connector);
-
-    const marketOrderData: MarketOrderData = {
-        exchangeAddress: args.exchange,
-        makerAssetAddress: args.makerAsset,
-        takerAssetAddress: args.takerAsset,
-        makerAddress: args.maker,
-        makerAmount: args.makerAmount,
-        signer: args.signer,
-        sigType: args.signatureType,
-    };
-
-    if (args.makerAssetID !== undefined) {
-        marketOrderData.makerAssetID = args.makerAssetID;
-    }
-
-    if (args.takerAssetID !== undefined) {
-        marketOrderData.takerAssetID = args.takerAssetID;
-    }
-    // Create order
-    const marketOrder = marketOrderBuilder.buildMarketOrder(marketOrderData);
-
-    // And sign it with the maker address
-    const typedData = marketOrderBuilder.buildOrderTypedData(marketOrder);
-    const address = await jsonRpcSigner.getAddress();
-    const sig = await marketOrderBuilder.buildOrderSignature(address, typedData);
-
-    const orderAndSignature: MarketOrderAndSignature = {
-        order: marketOrder,
-        signature: sig,
-        orderType: "market",
-        minAmountReceived: args.minAmountReceived,
-        timeInForce: args.timeInForce,
-    };
-    console.log(`Generated Market order!`);
-    return orderAndSignature;
+    return cTFExchangeOrderBuilder.buildSignedOrder(orderData);
 };
 
-const getSigner = (eoa: string, makerAddress: string, sigType: number): string => {
-    switch (sigType) {
-        case SignatureType.EOA:
-            // signer is always the EOA address for EOA sigs
-            return eoa;
-        case SignatureType.CONTRACT:
-            // signer is the contract address/ funder address
-            return makerAddress;
-        case SignatureType.POLY_PROXY:
-            // signer is the eoa
-            return eoa;
-        case SignatureType.POLY_GNOSIS_SAFE:
-            // signer is the eoa
-            return eoa;
-        default:
-            throw new Error("invalid signature type");
-    }
-};
-
-export const createLimitOrder = async (
+export const createOrder = async (
     eoaSigner: Wallet | JsonRpcSigner,
+    chainId: Chain,
     signatureType: SignatureType,
     funderAddress: string | undefined,
-    userOrder: UserLimitOrder,
-): Promise<any> => {
-    const chainID = await eoaSigner.getChainId();
+    userOrder: UserOrder,
+): Promise<SignedOrder> => {
     const eoaSignerAddress = await eoaSigner.getAddress();
+
     // If funder address is not given, use the signer address
     const maker = funderAddress === undefined ? eoaSignerAddress : funderAddress;
-    const signerAddress = getSigner(eoaSignerAddress, maker, signatureType);
+    const clobContracts = getContracts(chainId);
 
-    const clobContracts: ClobContracts = getContracts(chainID);
-    const exchange = clobContracts.Exchange;
-    const executor = clobContracts.Executor;
-    const collateral = clobContracts.Collateral;
-    const conditional = clobContracts.Conditional;
-
-    const orderArgs = await buildLimitOrderCreationArgs(
-        signerAddress,
+    const orderData = await buildOrderCreationArgs(
+        eoaSignerAddress,
         maker,
-        chainID,
-        exchange,
-        executor,
-        collateral,
-        conditional,
         signatureType,
         userOrder,
     );
-    const orderAndSig = await buildOrder(eoaSigner, orderArgs);
-    console.log(`Generated limit order!`);
-    return orderAndSig;
-};
-
-export const createMarketOrder = async (
-    eoaSigner: Wallet | JsonRpcSigner,
-    signatureType: SignatureType,
-    funderAddress: string | undefined,
-    userMarketOrder: UserMarketOrder,
-): Promise<any> => {
-    const chainID = await eoaSigner.getChainId();
-    const eoaSignerAddress = await eoaSigner.getAddress();
-    // If funder address is not given, use the signer address
-    const maker = funderAddress === undefined ? eoaSignerAddress : funderAddress;
-    const signerAddress = getSigner(eoaSignerAddress, maker, signatureType);
-
-    const clobContracts: ClobContracts = getContracts(chainID);
-    const exchange = clobContracts.Exchange;
-    const collateral = clobContracts.Collateral;
-    const conditional = clobContracts.Conditional;
-
-    const marketOrderArgs = await buildMarketOrderCreationArgs(
-        signerAddress,
-        maker,
-        chainID,
-        exchange,
-        collateral,
-        conditional,
-        signatureType,
-        userMarketOrder,
-    );
-
-    const marketOrderAndSig = await buildMarketOrder(eoaSigner, marketOrderArgs);
-    return marketOrderAndSig;
+    return buildOrder(eoaSigner, clobContracts.Exchange, chainId, orderData);
 };

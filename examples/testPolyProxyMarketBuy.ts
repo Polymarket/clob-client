@@ -1,7 +1,8 @@
 import { ethers } from "ethers";
 import { config as dotenvConfig } from "dotenv";
 import { resolve } from "path";
-import { ApiKeyCreds, ClobClient, Side, SignatureType } from "../src";
+import { ApiKeyCreds, Chain, ClobClient, Side } from "../src";
+import { SignatureType } from "@polymarket/order-utils";
 
 dotenvConfig({ path: resolve(__dirname, "../.env") });
 
@@ -11,33 +12,26 @@ async function populateBook(client: ClobClient) {
         { side: Side.BUY, price: 0.5, size: 100 }, // 50
     ];
 
+    let i = 0;
     for (const newOrder of orders) {
         await client.postOrder(
-            await client.createLimitOrder({
-                tokenID: "16678291189211314787145083999015737376658799626183230671758641503291735614088",
+            await client.createOrder({
+                tokenID:
+                    "16678291189211314787145083999015737376658799626183230671758641503291735614088",
                 side: newOrder.side,
                 price: newOrder.price,
                 size: newOrder.size,
+                feeRateBps: 100,
+                nonce: i++,
             }),
         );
     }
 }
 
-async function market(client: ClobClient) {
-    await client.postOrder(
-        await client.createMarketOrder({
-            tokenID: "16678291189211314787145083999015737376658799626183230671758641503291735614088",
-            side: Side.SELL,
-            size: 150,
-        }),
-    );
-}
-
 async function main() {
-    const provider = new ethers.providers.JsonRpcProvider(process.env.RPC_URL);
-    const pk = new ethers.Wallet(`${process.env.PK}`);
-    const wallet = pk.connect(provider);
-    console.log(`Address: ${await wallet.getAddress()}`);
+    const wallet = new ethers.Wallet(`${process.env.PK}`);
+    const chainId = parseInt(`${process.env.CHAIN_ID || Chain.MUMBAI}`) as Chain;
+    console.log(`Address: ${await wallet.getAddress()}, chainId: ${chainId}`);
 
     const host = process.env.CLOB_API_URL || "http://localhost:8080";
     const creds: ApiKeyCreds = {
@@ -50,6 +44,7 @@ async function main() {
     // and providing the proxy address
     const clobPolyClient = new ClobClient(
         host,
+        chainId,
         wallet,
         creds,
         SignatureType.POLY_PROXY,
@@ -57,7 +52,6 @@ async function main() {
     );
 
     await populateBook(clobPolyClient);
-    await market(clobPolyClient);
 
     console.log(`Done!`);
 }

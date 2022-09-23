@@ -1,0 +1,25 @@
+name: Build, Lint, and Test
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+
+jobs:
+  build-lint-test:
+    name: Build, Lint, and Test
+    runs-on: ubuntu-20.04
+    steps:
+    - uses: actions/checkout@v2
+    - run: yarn --frozen-lockfile
+    - run: yarn lint
+    - run: yarn build
+    - run: yarn test
+
+  all-jobs-pass:
+    name: All jobs pass
+    runs-on: ubuntu-20.04
+    needs:
+      - build-lint-test
+    steps:
+    - run: echo "success"
