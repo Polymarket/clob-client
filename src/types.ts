@@ -112,21 +112,33 @@ export interface FilterParams {
     endTs?: number;
 }
 
-export interface Trade {
-    tradeID: string;
+export interface TradeParams {
     market: string;
-    timestamp: string;
-    //  TODO: re-define
-    marketOrderID: string;
-    limitOrderIDs: string[];
-    filledAmount: string;
-    side: string;
-    owner: string;
-    avgPrice: string;
+    id?: string;
+    taker?: string;
+    maker?: string;
+    limit?: number;
+    before?: string;
+    after?: string;
 }
 
-export interface TradeHistory {
-    history: Trade[];
+export interface Trade {
+    id: string;
+    market_order: string;
+    market: string;
+    type: string;
+    side: string;
+    size: string;
+    price: string;
+    status: string;
+    match_time: string;
+    last_update: string;
+    outcome: string;
+    outcome_index: number;
+    owner: string;
+    bucket_index: number;
+    limit_orders: string[];
+    limit_order_sizes_prices: string[][];
 }
 
 export interface OrderHistory {

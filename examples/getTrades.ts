@@ -18,16 +18,13 @@ async function main() {
     };
     const clobClient = new ClobClient(host, chainId, wallet, creds);
 
-    console.log(`Response: `);
-    const resp = await clobClient.getTradeHistory();
-    console.log(resp);
-    // Filtered
-    const filteredResp = await clobClient.getTradeHistory({
+    const trades = await clobClient.getTrades({
         market: "16678291189211314787145083999015737376658799626183230671758641503291735614088",
-        max: 2,
+        maker: await wallet.getAddress(),
+        limit: 10,
     });
-    console.log(`Filtered: `);
-    console.log(filteredResp);
+    console.log(`trades: `);
+    console.log(trades);
 }
 
 main();

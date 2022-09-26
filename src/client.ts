@@ -9,13 +9,23 @@ import {
     Order,
     ApiKeysResponse,
     FilterParams,
-    TradeHistory,
     OrderHistory,
     OptionalParams,
     Chain,
+    TradeParams,
+    Trade,
 } from "./types";
 import { createL1Headers, createL2Headers } from "./headers";
-import { addQueryParamsToUrl, del, DELETE, GET, get, POST, post } from "./http-helpers";
+import {
+    addFilterParamsToUrl,
+    addTradeParamsToUrl,
+    del,
+    DELETE,
+    GET,
+    get,
+    POST,
+    post,
+} from "./http-helpers";
 import { L1_AUTH_UNAVAILABLE_ERROR, L2_AUTH_NOT_AVAILABLE } from "./errors";
 import { orderToJson } from "./utilities";
 import {
@@ -26,7 +36,7 @@ import {
     GET_ORDER,
     POST_ORDER,
     TIME,
-    TRADE_HISTORY,
+    TRADES,
     GET_ORDER_BOOK,
     DELETE_API_KEY,
     MIDPOINT,
@@ -222,14 +232,14 @@ export class ClobClient {
             l2HeaderArgs,
         );
 
-        const url = addQueryParamsToUrl(`${this.host}${endpoint}`, params);
+        const url = addFilterParamsToUrl(`${this.host}${endpoint}`, params);
         return get(url, headers);
     }
 
-    public async getTradeHistory(params?: FilterParams): Promise<TradeHistory> {
+    public async getTrades(params?: TradeParams): Promise<Trade[]> {
         this.canL2Auth();
 
-        const endpoint = TRADE_HISTORY;
+        const endpoint = TRADES;
         const headerArgs = {
             method: GET,
             requestPath: endpoint,
@@ -241,7 +251,7 @@ export class ClobClient {
             headerArgs,
         );
 
-        const url = addQueryParamsToUrl(`${this.host}${endpoint}`, params);
+        const url = addTradeParamsToUrl(`${this.host}${endpoint}`, params);
         return get(url, headers);
     }
 
@@ -265,7 +275,7 @@ export class ClobClient {
             l2HeaderArgs,
         );
 
-        const url = addQueryParamsToUrl(`${this.host}${endpoint}`, params);
+        const url = addFilterParamsToUrl(`${this.host}${endpoint}`, params);
         return get(url, headers);
     }
 
