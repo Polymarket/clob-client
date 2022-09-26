@@ -1,5 +1,5 @@
 import axios, { Method } from "axios";
-import { FilterParams } from "src/types";
+import { FilterParams, TradeParams } from "src/types";
 
 export const GET = "GET";
 export const POST = "POST";
@@ -73,7 +73,7 @@ export const buildQueryParams = (url: string, param: string, value: string): str
     return urlWithParams;
 };
 
-export const addQueryParamsToUrl = (baseUrl: string, params?: FilterParams): string => {
+export const addFilterParamsToUrl = (baseUrl: string, params?: FilterParams): string => {
     let url = baseUrl;
     if (params !== undefined) {
         url = `${url}?`;
@@ -88,6 +88,35 @@ export const addQueryParamsToUrl = (baseUrl: string, params?: FilterParams): str
         }
         if (params.endTs !== undefined) {
             url = buildQueryParams(url, "endTs", `${params.endTs}`);
+        }
+    }
+    return url;
+};
+
+export const addTradeParamsToUrl = (baseUrl: string, params?: TradeParams): string => {
+    let url = baseUrl;
+    if (params !== undefined) {
+        url = `${url}?`;
+        if (params.market !== undefined) {
+            url = buildQueryParams(url, "market", params.market as string);
+        }
+        if (params.maker !== undefined) {
+            url = buildQueryParams(url, "maker", `${params.maker}`);
+        }
+        if (params.taker !== undefined) {
+            url = buildQueryParams(url, "taker", `${params.taker}`);
+        }
+        if (params.id !== undefined) {
+            url = buildQueryParams(url, "id", `${params.id}`);
+        }
+        if (params.limit !== undefined) {
+            url = buildQueryParams(url, "limit", `${params.limit}`);
+        }
+        if (params.before !== undefined) {
+            url = buildQueryParams(url, "before", `${params.before}`);
+        }
+        if (params.after !== undefined) {
+            url = buildQueryParams(url, "after", `${params.after}`);
         }
     }
     return url;

@@ -14,7 +14,7 @@ export const DELETE_API_KEY = "/delete-api-key";
 
 export const DERIVE_API_KEY = "/derive-api-key";
 
-export const TRADE_HISTORY = "/trade-history";
+export const TRADES = "/trades";
 
 export const ORDER_HISTORY = "/order-history";
 
