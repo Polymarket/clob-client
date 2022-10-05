@@ -101,9 +101,20 @@ export interface Order {
     tokenID: string;
 }
 
-export interface OpenOrdersResponse {
-    orders: Order[];
+export interface OpenOrder {
+    associate_trades: null | Trade[];
+    id: string;
+    market: string;
+    original_size: string;
+    outcome: string;
+    outcome_index: number;
+    owner: string;
+    price: string;
+    side: string;
+    size_matched: string;
 }
+
+export type OpenOrdersResponse = OpenOrder[];
 
 export interface FilterParams {
     market?: string;
@@ -120,6 +131,12 @@ export interface TradeParams {
     limit?: number;
     before?: string;
     after?: string;
+}
+
+export interface OpenOrdersParams {
+    market: string;
+    owner: string;
+    id?: string;
 }
 
 export interface Trade {

@@ -20,7 +20,7 @@ export const ORDER_HISTORY = "/order-history";
 
 export const GET_ORDER = "/order/";
 
-export const OPEN_ORDERS = "/open-orders";
+export const OPEN_ORDERS = "/orders";
 
 export const POST_ORDER = "/order";
 
