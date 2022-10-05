@@ -3,21 +3,23 @@ import { JsonRpcSigner } from "@ethersproject/providers";
 import { SignatureType, SignedOrder } from "@polymarket/order-utils";
 import {
     ApiKeyCreds,
-    OrderPayload,
-    UserOrder,
-    OpenOrdersResponse,
-    Order,
     ApiKeysResponse,
-    FilterParams,
-    OrderHistory,
-    OptionalParams,
     Chain,
-    TradeParams,
+    FilterParams,
+    OpenOrdersParams,
+    OpenOrdersResponse,
+    OptionalParams,
+    Order,
+    OrderHistory,
+    OrderPayload,
     Trade,
+    TradeParams,
+    UserOrder,
 } from "./types";
 import { createL1Headers, createL2Headers } from "./headers";
 import {
     addFilterParamsToUrl,
+    addOpenOrderParamsToUrl,
     addTradeParamsToUrl,
     del,
     DELETE,
@@ -42,10 +44,10 @@ import {
     MIDPOINT,
     PRICE,
     OPEN_ORDERS,
-    ORDER_HISTORY,
     DERIVE_API_KEY,
     GET_LAST_TRADE_PRICE,
     GET_LARGE_ORDERS,
+    ORDER_HISTORY,
 } from "./endpoints";
 import { OrderBuilder } from "./order-builder/builder";
 
@@ -261,7 +263,7 @@ export class ClobClient {
         return this.orderBuilder.buildOrder(userOrder);
     }
 
-    public async getOpenOrders(params?: FilterParams): Promise<OpenOrdersResponse> {
+    public async getOpenOrders(params?: OpenOrdersParams): Promise<OpenOrdersResponse> {
         this.canL2Auth();
         const endpoint = OPEN_ORDERS;
         const l2HeaderArgs = {
@@ -275,7 +277,7 @@ export class ClobClient {
             l2HeaderArgs,
         );
 
-        const url = addFilterParamsToUrl(`${this.host}${endpoint}`, params);
+        const url = addOpenOrderParamsToUrl(`${this.host}${endpoint}`, params);
         return get(url, headers);
     }
 

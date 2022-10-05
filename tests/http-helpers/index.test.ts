@@ -4,8 +4,10 @@ import {
     buildQueryParams,
     addFilterParamsToUrl,
     addTradeParamsToUrl,
+    addOpenOrderParamsToUrl,
 } from "../../src/http-helpers/index";
 import { TradeParams } from "../../src";
+import { OpenOrdersParams } from "../../dist/types";
 
 describe("utilities", () => {
     describe("buildQueryParams", () => {
@@ -41,7 +43,7 @@ describe("utilities", () => {
         });
     });
 
-    describe("addFilterParamsToUrl", () => {
+    describe("addTradeParamsToUrl", () => {
         it("checking url + params", () => {
             const url = addTradeParamsToUrl("http://tracker", {
                 market: "10000",
@@ -58,6 +60,20 @@ describe("utilities", () => {
             expect(url).equal(
                 "http://tracker?market=10000&maker=0x2&taker=0x1&id=1&limit=5&before=200&after=100",
             );
+        });
+    });
+
+    describe("addOpenOrderParamsToUrl", () => {
+        it("checking url + params", () => {
+            const url = addOpenOrderParamsToUrl("http://tracker", {
+                market: "10000",
+                owner: "0x69",
+                id: "1",
+            } as OpenOrdersParams);
+            expect(url).not.null;
+            expect(url).not.undefined;
+            expect(url).not.empty;
+            expect(url).equal("http://tracker?market=10000&owner=0x69&id=1");
         });
     });
 });

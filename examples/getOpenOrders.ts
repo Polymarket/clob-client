@@ -18,14 +18,11 @@ async function main() {
     };
     const clobClient = new ClobClient(host, chainId, wallet, creds);
 
-    const resp = await clobClient.getOpenOrders();
-    console.log(resp);
-
-    // Filtered
-    const filteredByMarket = await clobClient.getOpenOrders({
+    const resp = await clobClient.getOpenOrders({
         market: "16678291189211314787145083999015737376658799626183230671758641503291735614088",
+        owner: creds.key,
     });
-    console.log(filteredByMarket);
+    console.log(resp);
     console.log(`Done!`);
 }
 
