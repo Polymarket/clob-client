@@ -636,7 +636,7 @@
     "@nodelib/fs.scandir" "2.1.5"
     fastq "^1.6.0"
 
-"@polymarket/order-utils@^1.2.15":
+"@polymarket/order-utils@1.2.15":
   version "1.2.15"
   resolved "https://registry.yarnpkg.com/@polymarket/order-utils/-/order-utils-1.2.15.tgz#c3993ee0df17e343b55c1e65f10584d109b8d541"
   integrity sha512-1Z78X5Wj74eHE1Ld36Fs6kDjDb0cDp8lg2XcBkqpRRLfjQ9t0Vc+BowuBpo5xJnYlRWX/ZMFTPFW1WDYUidGJw==

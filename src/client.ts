@@ -45,7 +45,7 @@ import {
     MIDPOINT,
     PRICE,
     OPEN_ORDERS,
-    ORDER_HISTORY,
+    ORDERS,
     DERIVE_API_KEY,
     GET_LAST_TRADE_PRICE,
     GET_LARGE_ORDERS,
@@ -251,6 +251,24 @@ export class ClobClient {
 
         const orderAndSig = await this.orderBuilder.buildMarketOrder(userOrder);
         return orderAndSig;
+    }
+
+    public async getOrders(params?: OpenOrdersParams): Promise<OpenOrdersResponse> {
+        this.canL2Auth();
+        const endpoint = ORDERS;
+        const l2HeaderArgs = {
+            method: GET,
+            requestPath: endpoint,
+        };
+
+        const headers = await createL2Headers(
+            this.signer as Wallet | JsonRpcSigner,
+            this.creds as ApiKeyCreds,
+            l2HeaderArgs,
+        );
+
+        const url = addOpenOrderParamsToUrl(`${this.host}${endpoint}`, params);
+        return get(url, headers);
     }
 
     public async getOpenOrders(params?: OpenOrdersParams): Promise<OpenOrdersResponse> {

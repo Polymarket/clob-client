@@ -22,7 +22,9 @@ export const MARKET_ORDER_HISTORY = "/market-order-history";
 
 export const GET_ORDER = "/order/";
 
-export const OPEN_ORDERS = "/orders";
+export const ORDERS = "/orders";
+
+export const OPEN_ORDERS = "/open-orders";
 
 export const POST_ORDER = "/order";
 

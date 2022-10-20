@@ -126,17 +126,25 @@ export async function setup() {
     return;
 }
 
-export async function createOrder(price: number, side: Side, size: number) {
+async function getApiKey(): Promise<any> {
     console.log("Getting API credentials, ignore errors...");
-    let clobClient = new ClobClient(HOST, adminWallet); // check version
+    let clobClient = new ClobClient(HOST, adminWallet);
 
     let creds;
+    try {
+        creds = (await clobClient.deriveApiKey()) as any;
+        if (creds["apiKey"] != null) {
+            creds["key"] = creds["apiKey"];
+            return creds;
+        }
+    } catch {}
     await clobClient.createApiKey(0);
-    creds = (await clobClient.deriveApiKey()) as any;
-    creds["key"] = creds["apiKey"];
-    clobClient = new ClobClient(HOST, adminWallet, creds);
+    return await getApiKey();
+}
 
-    console.log("API credentials set");
+export async function createOrder(price: number, side: Side, size: number) {
+    const creds = await getApiKey();
+    const clobClient = new ClobClient(HOST, adminWallet, creds);
 
     console.log(`Placing order...`);
 
@@ -154,15 +162,8 @@ export async function createOrder(price: number, side: Side, size: number) {
 }
 
 export async function makeTrade(side: Side, size: number) {
-    let clobClient = new ClobClient(HOST, adminWallet); // check version
-
-    let creds;
-    await clobClient.createApiKey(0);
-    creds = (await clobClient.deriveApiKey()) as any;
-    creds["key"] = creds["apiKey"];
-    clobClient = new ClobClient(HOST, adminWallet, creds);
-
-    console.log("API credentials set");
+    const creds = await getApiKey();
+    const clobClient = new ClobClient(HOST, adminWallet, creds);
 
     console.log(`Placing market order...`);
 
@@ -179,37 +180,31 @@ export async function makeTrade(side: Side, size: number) {
 }
 
 export async function getOpenOrders() {
-    const adminWallet = getWallet(BOT.ADMIN);
-    console.log("Getting API credentials, ignore errors...");
-    let clobClient = new ClobClient(HOST, adminWallet);
+    const creds = await getApiKey();
 
-    let creds;
-    try {
-        await clobClient.createApiKey(0);
-    } catch {}
-    creds = (await clobClient.deriveApiKey()) as any;
-    creds["key"] = creds["apiKey"];
-    clobClient = new ClobClient(HOST, adminWallet, creds);
+    const clobClient = new ClobClient(HOST, adminWallet, creds);
 
-    console.log("API credentials set");
     console.log("Getting open orders...");
     let orders;
     orders = await clobClient.getOpenOrders({ owner: creds["key"], market: yesTrump });
     console.log(orders);
 }
 
-export async function getTrades() {
-    const adminWallet = getWallet(BOT.ADMIN);
-    console.log("Getting API credentials, ignore errors...");
-    let clobClient = new ClobClient(HOST, adminWallet);
+export async function getOrders() {
+    const creds = await getApiKey();
 
-    let creds;
-    try {
-        await clobClient.createApiKey(0);
-    } catch {}
-    creds = (await clobClient.deriveApiKey()) as any;
-    creds["key"] = creds["apiKey"];
-    clobClient = new ClobClient(HOST, adminWallet, creds);
+    const clobClient = new ClobClient(HOST, adminWallet, creds);
+
+    console.log("Getting open orders...");
+    let orders;
+    orders = await clobClient.getOrders({ owner: creds["key"], market: yesTrump });
+    console.log(orders);
+}
+
+export async function getTrades() {
+    const creds = await getApiKey();
+
+    const clobClient = new ClobClient(HOST, adminWallet, creds);
 
     console.log("API credentials set");
     console.log("Getting trades");
@@ -225,28 +220,21 @@ export async function getTrades() {
 }
 
 export async function cancelAllOrders() {
-    const adminWallet = getWallet(BOT.ADMIN);
-    console.log("Getting API credentials, ignore errors...");
-    let clobClient = new ClobClient(HOST, adminWallet);
-
-    let creds;
-    try {
-        await clobClient.createApiKey(0);
-    } catch {}
-    creds = (await clobClient.deriveApiKey()) as any;
+    const creds = await getApiKey();
     creds["key"] = creds["apiKey"];
-    clobClient = new ClobClient(HOST, adminWallet, creds);
+    const clobClient = new ClobClient(HOST, adminWallet, creds);
 
     console.log("API credentials set");
     console.log("Cancelling open orders...");
     await clobClient.cancelAll();
 }
 //setup().then((r) => console.log(r));
-//createOrder(0.2, Side.BUY, 15).then((r) => console.log(r));
+createOrder(0.2, Side.BUY, 15).then();
 //getOpenOrders().then();
 //cancelAllOrders().then();
 //makeTrade(Side.SELL, 10).then();
-getTrades().then();
+//getTrades().then();
+//getOrders().then();
 
 // status empty in order post message:
 
@@ -262,23 +250,20 @@ getTrades().then();
 
 // status not empty in post market order message
 
-/*
-{
-  success: true,
-  errorMsg: '',
-  orderID: '0x25249782b559c1414eaca8be422d9b2d68aeb5cb23330b20cb9aaa9983e47784',
-  transactionHash: '',
-  status: 'matched' // why STATUS_PARTIAL_FILL? no associated trades
-}
-*/
-
-// check refactored endpoints
-// check get trades
-// check get orders
-
-// error: 'retrieving trades : rpc error: code = Internal desc = ERROR #22008 date/time field value out of range: "1666067902"'
-// ^^ trades
+// Todos:
 
 // remove old methods from client
 
-// orders returning old orders, want just live, what endpoint gives live?
+// create a branch without any blop changes, stay tagging and releasing there.
+
+// orders changes
+// remove open-orders endpoint
+// have orders only return open orders (LIVE)
+// have order statuses not be returned since they are live
+// not getting associated trades (all null)
+
+// trades
+// I can't seem to get trades, what am I doing wrong?
+// error: 'retrieving trades : rpc error: code = Internal desc = ERROR #22008 date/time field value out of range: "1666067902"' - getting this error when I add an "after" filter
+
+// prioritize these before any markets related changes.
