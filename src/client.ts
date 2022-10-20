@@ -9,18 +9,29 @@ import {
     UserLimitOrder,
     UserMarketOrder,
     OpenOrdersResponse,
-    Order,
+    OpenOrder,
     ApiKeysResponse,
     FilterParams,
-    TradeHistory,
-    OrderHistory,
     OptionalParams,
     MarketOrderHistory,
+    TradeParams,
+    Trade,
+    OpenOrdersParams,
 } from "./types";
 import { createL1Headers, createL2Headers } from "./headers";
-import { del, DELETE, GET, get, POST, post } from "./http_helpers";
+import {
+    del,
+    DELETE,
+    GET,
+    get,
+    POST,
+    post,
+    addFilterParamsToUrl,
+    addTradeParamsToUrl,
+    addOpenOrderParamsToUrl,
+} from "./http_helpers";
 import { L1_AUTH_UNAVAILABLE_ERROR, L2_AUTH_NOT_AVAILABLE } from "./errors";
-import { marketOrderToJson, limitOrderToJson, addQueryParamsToUrl } from "./utilities";
+import { marketOrderToJson, limitOrderToJson } from "./utilities";
 import {
     CANCEL_ALL,
     CANCEL,
@@ -29,7 +40,6 @@ import {
     GET_ORDER,
     POST_ORDER,
     TIME,
-    TRADE_HISTORY,
     GET_ORDER_BOOK,
     DELETE_API_KEY,
     MIDPOINT,
@@ -40,6 +50,7 @@ import {
     GET_LAST_TRADE_PRICE,
     GET_LARGE_ORDERS,
     MARKET_ORDER_HISTORY,
+    TRADES,
 } from "./endpoints";
 import { OrderBuilder } from "./order-builder/builder";
 
@@ -173,7 +184,7 @@ export class ClobClient {
         return del(`${this.host}${endpoint}`, headers);
     }
 
-    public async getOrder(orderID: string): Promise<Order> {
+    public async getOrder(orderID: string): Promise<OpenOrder> {
         this.canL2Auth();
 
         const endpoint = `${GET_ORDER}${orderID}`;
@@ -191,24 +202,6 @@ export class ClobClient {
         return get(`${this.host}${endpoint}`, headers);
     }
 
-    public async getOrderHistory(params?: FilterParams): Promise<OrderHistory> {
-        this.canL2Auth();
-        const endpoint = ORDER_HISTORY;
-        const l2HeaderArgs = {
-            method: GET,
-            requestPath: endpoint,
-        };
-
-        const headers = await createL2Headers(
-            this.signer as Wallet | JsonRpcSigner,
-            this.creds as ApiKeyCreds,
-            l2HeaderArgs,
-        );
-
-        const url = addQueryParamsToUrl(`${this.host}${endpoint}`, params);
-        return get(url, headers);
-    }
-
     public async getMarketOrderHistory(params?: FilterParams): Promise<MarketOrderHistory> {
         this.canL2Auth();
         const endpoint = MARKET_ORDER_HISTORY;
@@ -223,14 +216,14 @@ export class ClobClient {
             l2HeaderArgs,
         );
 
-        const url = addQueryParamsToUrl(`${this.host}${endpoint}`, params);
+        const url = addFilterParamsToUrl(`${this.host}${endpoint}`, params);
         return get(url, headers);
     }
 
-    public async getTradeHistory(params?: FilterParams): Promise<TradeHistory> {
+    public async getTrades(params?: TradeParams): Promise<Trade[]> {
         this.canL2Auth();
 
-        const endpoint = TRADE_HISTORY;
+        const endpoint = TRADES;
         const headerArgs = {
             method: GET,
             requestPath: endpoint,
@@ -242,7 +235,7 @@ export class ClobClient {
             headerArgs,
         );
 
-        const url = addQueryParamsToUrl(`${this.host}${endpoint}`, params);
+        const url = addTradeParamsToUrl(`${this.host}${endpoint}`, params);
         return get(url, headers);
     }
 
@@ -260,7 +253,7 @@ export class ClobClient {
         return orderAndSig;
     }
 
-    public async getOpenOrders(params?: FilterParams): Promise<OpenOrdersResponse> {
+    public async getOpenOrders(params?: OpenOrdersParams): Promise<OpenOrdersResponse> {
         this.canL2Auth();
         const endpoint = OPEN_ORDERS;
         const l2HeaderArgs = {
@@ -274,7 +267,7 @@ export class ClobClient {
             l2HeaderArgs,
         );
 
-        const url = addQueryParamsToUrl(`${this.host}${endpoint}`, params);
+        const url = addOpenOrderParamsToUrl(`${this.host}${endpoint}`, params);
         return get(url, headers);
     }
 

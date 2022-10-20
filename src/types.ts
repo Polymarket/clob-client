@@ -112,19 +112,20 @@ export interface OrderResponse {
     status: string;
 }
 
-export interface Order {
-    orderID: string;
+export interface OpenOrder {
+    associate_trades: null | Trade[];
+    id: string;
+    market: string;
+    original_size: string;
+    outcome: string;
+    outcome_index: number;
     owner: string;
-    timestamp: string;
     price: string;
-    size: string;
     side: string;
-    tokenID: string;
+    size_matched: string;
 }
 
-export interface OpenOrdersResponse {
-    orders: Order[];
-}
+export type OpenOrdersResponse = OpenOrder[];
 
 export interface FilterParams {
     market?: string;
@@ -145,16 +146,43 @@ export interface Trade {
     avgPrice: string;
 }
 
-export interface TradeHistory {
-    history: Trade[];
-}
-
-export interface OrderHistory {
-    history: Order[];
-}
-
 export interface MarketOrderHistory {
     history: MarketOrder[];
 }
 
 export type OptionalParams = { [query: string]: string };
+
+export interface TradeParams {
+    market: string;
+    id?: string;
+    taker?: string;
+    maker?: string;
+    limit?: number;
+    before?: string;
+    after?: string;
+}
+
+export interface Trade {
+    id: string;
+    market_order: string;
+    market: string;
+    type: string;
+    side: string;
+    size: string;
+    price: string;
+    status: string;
+    match_time: string;
+    last_update: string;
+    outcome: string;
+    outcome_index: number;
+    owner: string;
+    bucket_index: number;
+    limit_orders: string[];
+    limit_order_sizes_prices: string[][];
+}
+
+export interface OpenOrdersParams {
+    market: string;
+    owner: string;
+    id?: string;
+}
