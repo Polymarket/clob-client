@@ -179,17 +179,6 @@ export async function makeTrade(side: Side, size: number) {
     console.log(resp);
 }
 
-export async function getOpenOrders() {
-    const creds = await getApiKey();
-
-    const clobClient = new ClobClient(HOST, adminWallet, creds);
-
-    console.log("Getting open orders...");
-    let orders;
-    orders = await clobClient.getOpenOrders({ owner: creds["key"], market: yesTrump });
-    console.log(orders);
-}
-
 export async function getOrders() {
     const creds = await getApiKey();
 
@@ -211,10 +200,10 @@ export async function getTrades() {
     let trades;
     trades = await clobClient.getTrades({
         market: yesTrump,
-        taker: adminWallet.address.toLowerCase(),
-        //maker: creds["key"],
+        maker: adminWallet.address.toLowerCase(),
+        //taker: creds["key"],
         limit: 5,
-        //after: "1666067902",
+        after: "1666067902",
     });
     console.log(trades);
 }
@@ -229,32 +218,15 @@ export async function cancelAllOrders() {
     await clobClient.cancelAll();
 }
 //setup().then((r) => console.log(r));
-createOrder(0.2, Side.BUY, 15).then();
-//getOpenOrders().then();
+//createOrder(0.2, Side.BUY, 15).then();
 //cancelAllOrders().then();
 //makeTrade(Side.SELL, 10).then();
-//getTrades().then();
+getTrades().then();
 //getOrders().then();
-
-// status empty in order post message:
-
-/*
-{
-  success: true,
-  errorMsg: '',
-  orderID: '0x0d64bb64cd6c82a5410fff5483b5119b21e069d55f3173e7c055558f2fcb097c',
-  transactionHash: '',
-  status: ''
-}
-*/
-
-// status not empty in post market order message
 
 // Todos:
 
 // remove old methods from client
-
-// create a branch without any blop changes, stay tagging and releasing there.
 
 // orders changes
 // remove open-orders endpoint
@@ -266,4 +238,4 @@ createOrder(0.2, Side.BUY, 15).then();
 // I can't seem to get trades, what am I doing wrong?
 // error: 'retrieving trades : rpc error: code = Internal desc = ERROR #22008 date/time field value out of range: "1666067902"' - getting this error when I add an "after" filter
 
-// prioritize these before any markets related changes.
+// status empty in order post message; do we need this??

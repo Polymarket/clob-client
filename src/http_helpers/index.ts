@@ -1,6 +1,6 @@
 import axios, { Method } from "axios";
 
-import { FilterParams, TradeParams, OpenOrdersParams } from "../types";
+import { FilterParams, TradeParams, OrderParams } from "../types";
 
 export const GET = "GET";
 
@@ -161,7 +161,7 @@ export const addTradeParamsToUrl = (baseUrl: string, params?: TradeParams): stri
     return url;
 };
 
-export const addOpenOrderParamsToUrl = (baseUrl: string, params?: OpenOrdersParams): string => {
+export const addOpenOrderParamsToUrl = (baseUrl: string, params?: OrderParams): string => {
     let url = baseUrl;
     if (params !== undefined) {
         url = `${url}?`;

@@ -112,7 +112,7 @@ export interface OrderResponse {
     status: string;
 }
 
-export interface OpenOrder {
+export interface Order {
     associate_trades: null | Trade[];
     id: string;
     market: string;
@@ -125,7 +125,7 @@ export interface OpenOrder {
     size_matched: string;
 }
 
-export type OpenOrdersResponse = OpenOrder[];
+export type OrdersResponse = Order[];
 
 export interface FilterParams {
     market?: string;
@@ -181,7 +181,7 @@ export interface Trade {
     limit_order_sizes_prices: string[][];
 }
 
-export interface OpenOrdersParams {
+export interface OrderParams {
     market: string;
     owner: string;
     id?: string;

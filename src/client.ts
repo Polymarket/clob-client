@@ -8,15 +8,15 @@ import {
     OrderPayload,
     UserLimitOrder,
     UserMarketOrder,
-    OpenOrdersResponse,
-    OpenOrder,
+    OrdersResponse,
+    Order,
     ApiKeysResponse,
     FilterParams,
     OptionalParams,
     MarketOrderHistory,
     TradeParams,
     Trade,
-    OpenOrdersParams,
+    OrderParams,
 } from "./types";
 import { createL1Headers, createL2Headers } from "./headers";
 import {
@@ -44,7 +44,6 @@ import {
     DELETE_API_KEY,
     MIDPOINT,
     PRICE,
-    OPEN_ORDERS,
     ORDERS,
     DERIVE_API_KEY,
     GET_LAST_TRADE_PRICE,
@@ -184,7 +183,7 @@ export class ClobClient {
         return del(`${this.host}${endpoint}`, headers);
     }
 
-    public async getOrder(orderID: string): Promise<OpenOrder> {
+    public async getOrder(orderID: string): Promise<Order> {
         this.canL2Auth();
 
         const endpoint = `${GET_ORDER}${orderID}`;
@@ -236,6 +235,7 @@ export class ClobClient {
         );
 
         const url = addTradeParamsToUrl(`${this.host}${endpoint}`, params);
+        console.log(url);
         return get(url, headers);
     }
 
@@ -253,27 +253,9 @@ export class ClobClient {
         return orderAndSig;
     }
 
-    public async getOrders(params?: OpenOrdersParams): Promise<OpenOrdersResponse> {
+    public async getOrders(params?: OrderParams): Promise<OrdersResponse> {
         this.canL2Auth();
         const endpoint = ORDERS;
-        const l2HeaderArgs = {
-            method: GET,
-            requestPath: endpoint,
-        };
-
-        const headers = await createL2Headers(
-            this.signer as Wallet | JsonRpcSigner,
-            this.creds as ApiKeyCreds,
-            l2HeaderArgs,
-        );
-
-        const url = addOpenOrderParamsToUrl(`${this.host}${endpoint}`, params);
-        return get(url, headers);
-    }
-
-    public async getOpenOrders(params?: OpenOrdersParams): Promise<OpenOrdersResponse> {
-        this.canL2Auth();
-        const endpoint = OPEN_ORDERS;
         const l2HeaderArgs = {
             method: GET,
             requestPath: endpoint,
