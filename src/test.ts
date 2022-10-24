@@ -5,9 +5,9 @@ import { Side } from "./types";
 import { setup, createOrder, cancelAllOrders, makeTrade, getTrades, getOrders } from "./testUtils";
 //setup().then((r) => console.log(r));
 //createOrder(0.2, Side.BUY, 15).then();
-cancelAllOrders().then();
+//cancelAllOrders().then();
 //makeTrade(Side.SELL, 10).then();
-//getTrades().then();
+getTrades().then();
 //getOrders().then();
 
 // Todos:
@@ -41,3 +41,7 @@ cancelAllOrders().then();
 // when a trade is made against an order do we get an order update event?
 
 // can we get it so that we get a trade event for resting limit orders as well?
+
+// can't get trades
+// not getting any events after matched
+// validation removes the order, but I get an UPDATE not cancel event

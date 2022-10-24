@@ -183,9 +183,7 @@ export async function getTrades() {
     let trades;
     trades = await clobClient.getTrades({
         market: yesTrump,
-        //taker: adminWallet.address.toLowerCase(),
-        //maker: creds["key"],
-        maker: "0xbD8206e42B09f02D93Bb582485763cF35067e638",
+        taker: adminWallet.address.toLowerCase(),
         limit: 100,
         after: "1666057902",
     });
