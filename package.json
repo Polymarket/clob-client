@@ -24,6 +24,7 @@
         "@ethersproject/transactions": "^5.5.0",
         "@ethersproject/wallet": "^5.5.0",
         "@polymarket/order-utils": "1.2.15",
+        "@types/ws": "^8.5.3",
         "axios": "^0.21.1",
         "commitizen": "^4.2.1",
         "cz-conventional-changelog": "^3.3.0",
@@ -40,7 +41,8 @@
         "ts-generator": "^0.1.1",
         "ts-node": "^9.1.1",
         "typechain": "^4.0.2",
-        "typescript": "^3.9.7"
+        "typescript": "^3.9.7",
+        "ws": "^8.9.0"
     },
     "files": [
         "/dist"
