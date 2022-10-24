@@ -1,13 +1,14 @@
 import { config as dotenvConfig } from "dotenv";
 import { resolve } from "path";
 dotenvConfig({ path: resolve(__dirname, "../.env") });
+import { Side } from "./types";
 import { setup, createOrder, cancelAllOrders, makeTrade, getTrades, getOrders } from "./testUtils";
 //setup().then((r) => console.log(r));
 //createOrder(0.2, Side.BUY, 15).then();
-//cancelAllOrders().then();
+cancelAllOrders().then();
 //makeTrade(Side.SELL, 10).then();
 //getTrades().then();
-getOrders().then();
+//getOrders().then();
 
 // Todos:
 

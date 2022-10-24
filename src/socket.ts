@@ -7,7 +7,7 @@ import { getApiKey } from "./testUtils";
 const yesTrump = "65818619657568813474341868652308942079804919287380422192892211131408793125422";
 
 async function main() {
-    let ws = new WebSocket("wss://ws-subscriptions-clob.polymarket.com/ws/user");
+    let ws = new WebSocket("wss://ws-subscriptions-clob.polymarket.com/ws/market");
 
     let creds = await getApiKey();
 
@@ -18,10 +18,10 @@ async function main() {
             passphrase: creds["passphrase"],
         },
         market: yesTrump,
-        type: "user",
+        type: "market",
     };
 
-    ws.send(JSON.stringify(subscriptionMessage));
+    ws.send(JSON.stringify(subscriptionMessage)); // send sub message
 
     ws.onmessage = function (msg) {
         console.log(msg.data);
