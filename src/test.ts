@@ -6,10 +6,10 @@ import { setup, createOrder, cancelAllOrders, makeTrade, getTrades, getOrders, c
 //setup(false).then(r => console.log(r));
 //createOrder(true, 0.2, Side.BUY, 15).then();
 //cancelAllOrders(true).then();
-//makeTrade(false, Side.SELL, 10).then();
+//makeTrade(true, Side.SELL, 10).then();
 //getTrades(true).then();
-//getOrders(true).then();
-cancelOrder(true, "0x01b528478a01575ba34a82148e19483feb606115ee928f2bb99ab79446613573");
+getOrders(true).then();
+//cancelOrder(true, "0x01b528478a01575ba34a82148e19483feb606115ee928f2bb99ab79446613573");
 
 // Todos:
 
