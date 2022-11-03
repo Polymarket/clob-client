@@ -19,15 +19,9 @@ async function main() {
     const clobClient = new ClobClient(host, chainId, wallet, creds);
 
     console.log(`Response: `);
-    const resp = await clobClient.getOrderHistory();
+    const resp = await clobClient.deleteApiKey();
     console.log(resp);
-
-    // Filtered
-    const filteredResp = await clobClient.getOrderHistory({
-        market: "16678291189211314787145083999015737376658799626183230671758641503291735614088",
-    });
-    console.log(`Filtered: `);
-    console.log(filteredResp);
+    console.log(`Complete!`);
 }
 
 main();

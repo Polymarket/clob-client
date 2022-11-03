@@ -5,12 +5,10 @@ import {
     ApiKeyCreds,
     ApiKeysResponse,
     Chain,
-    FilterParams,
     OpenOrdersParams,
     OpenOrdersResponse,
     OptionalParams,
     Order,
-    OrderHistory,
     OrderPayload,
     Trade,
     TradeParams,
@@ -18,7 +16,6 @@ import {
 } from "./types";
 import { createL1Headers, createL2Headers } from "./headers";
 import {
-    addFilterParamsToUrl,
     addOpenOrderParamsToUrl,
     addTradeParamsToUrl,
     del,
@@ -47,7 +44,6 @@ import {
     DERIVE_API_KEY,
     GET_LAST_TRADE_PRICE,
     GET_LARGE_ORDERS,
-    ORDER_HISTORY,
 } from "./endpoints";
 import { OrderBuilder } from "./order-builder/builder";
 
@@ -99,19 +95,19 @@ export class ClobClient {
     }
 
     public async getOrderBook(tokenID: string): Promise<any> {
-        return get(`${this.host}${GET_ORDER_BOOK}?market=${tokenID}`);
+        return get(`${this.host}${GET_ORDER_BOOK}?token_id=${tokenID}`);
     }
 
     public async getMidpoint(tokenID: string): Promise<any> {
-        return get(`${this.host}${MIDPOINT}?market=${tokenID}`);
+        return get(`${this.host}${MIDPOINT}?token_id=${tokenID}`);
     }
 
     public async getPrice(tokenID: string, side: string): Promise<any> {
-        return get(`${this.host}${PRICE}?market=${tokenID}&side=${side}`);
+        return get(`${this.host}${PRICE}?token_id=${tokenID}&side=${side}`);
     }
 
     public async getLastTradePrice(tokenID: string): Promise<any> {
-        return get(`${this.host}${GET_LAST_TRADE_PRICE}?market=${tokenID}`);
+        return get(`${this.host}${GET_LAST_TRADE_PRICE}?token_id=${tokenID}`);
     }
 
     public async getLargeOrders(minValue = ""): Promise<any> {
@@ -218,24 +214,6 @@ export class ClobClient {
         );
 
         return get(`${this.host}${endpoint}`, headers);
-    }
-
-    public async getOrderHistory(params?: FilterParams): Promise<OrderHistory> {
-        this.canL2Auth();
-        const endpoint = ORDER_HISTORY;
-        const l2HeaderArgs = {
-            method: GET,
-            requestPath: endpoint,
-        };
-
-        const headers = await createL2Headers(
-            this.signer as Wallet | JsonRpcSigner,
-            this.creds as ApiKeyCreds,
-            l2HeaderArgs,
-        );
-
-        const url = addFilterParamsToUrl(`${this.host}${endpoint}`, params);
-        return get(url, headers);
     }
 
     public async getTrades(params?: TradeParams): Promise<Trade[]> {

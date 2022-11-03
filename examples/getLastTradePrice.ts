@@ -13,11 +13,16 @@ async function main() {
     const host = process.env.CLOB_API_URL || "http://localhost:8080";
     const clobClient = new ClobClient(host, chainId, wallet);
 
-    console.log(`Price: `);
-    const resp = await clobClient.getLastTradePrice(
-        "16678291189211314787145083999015737376658799626183230671758641503291735614088",
+    console.log(
+        await clobClient.getLastTradePrice(
+            "16678291189211314787145083999015737376658799626183230671758641503291735614088",
+        ),
     );
-    console.log(resp);
+    console.log(
+        await clobClient.getLastTradePrice(
+            "1343197538147866997676250008839231694243646439454152539053893078719042421992",
+        ),
+    );
 }
 
 main();

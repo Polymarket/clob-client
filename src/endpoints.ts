@@ -16,8 +16,6 @@ export const DERIVE_API_KEY = "/derive-api-key";
 
 export const TRADES = "/trades";
 
-export const ORDER_HISTORY = "/order-history";
-
 export const GET_ORDER = "/order/";
 
 export const OPEN_ORDERS = "/orders";
