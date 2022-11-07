@@ -124,7 +124,8 @@ export interface FilterParams {
 }
 
 export interface TradeParams {
-    market: string;
+    market?: string;
+    asset_id?: string;
     id?: string;
     taker?: string;
     maker?: string;
@@ -134,7 +135,8 @@ export interface TradeParams {
 }
 
 export interface OpenOrdersParams {
-    market: string;
+    market?: string;
+    asset_id?: string;
     owner: string;
     id?: string;
 }

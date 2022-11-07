@@ -18,9 +18,8 @@ async function main() {
     };
     const clobClient = new ClobClient(host, chainId, wallet, creds);
 
-    // Create a buy order for 100 YES for 0.50c
     // YES: 16678291189211314787145083999015737376658799626183230671758641503291735614088
-    const order = await clobClient.createOrder({
+    const yes_bid = await clobClient.createOrder({
         tokenID: "16678291189211314787145083999015737376658799626183230671758641503291735614088",
         price: 0.5,
         side: Side.BUY,
@@ -28,11 +27,21 @@ async function main() {
         feeRateBps: 0,
         nonce: 0,
     });
-    console.log("Created Order", order);
+    console.log("creating order", yes_bid);
+    await clobClient.postOrder(yes_bid);
 
-    // Send it to the server
-    const resp = await clobClient.postOrder(order);
-    console.log(resp);
+    const yes_ask = await clobClient.createOrder({
+        tokenID: "16678291189211314787145083999015737376658799626183230671758641503291735614088",
+        price: 0.5,
+        side: Side.SELL,
+        size: 100,
+        feeRateBps: 0,
+        nonce: 0,
+    });
+    console.log("creating order", yes_ask);
+    await clobClient.postOrder(yes_ask);
+
+    console.log(`Done!`);
 }
 
 main();

@@ -6,8 +6,7 @@ import {
     addTradeParamsToUrl,
     addOpenOrderParamsToUrl,
 } from "../../src/http-helpers/index";
-import { TradeParams } from "../../src";
-import { OpenOrdersParams } from "../../dist/types";
+import { OpenOrdersParams, TradeParams } from "../../src";
 
 describe("utilities", () => {
     describe("buildQueryParams", () => {
@@ -46,7 +45,8 @@ describe("utilities", () => {
     describe("addTradeParamsToUrl", () => {
         it("checking url + params", () => {
             const url = addTradeParamsToUrl("http://tracker", {
-                market: "10000",
+                market: "0xaabbccdd",
+                asset_id: "10000",
                 taker: "0x1",
                 maker: "0x2",
                 id: "1",
@@ -58,7 +58,7 @@ describe("utilities", () => {
             expect(url).not.undefined;
             expect(url).not.empty;
             expect(url).equal(
-                "http://tracker?market=10000&maker=0x2&taker=0x1&id=1&limit=5&before=200&after=100",
+                "http://tracker?market=0xaabbccdd&asset_id=10000&maker=0x2&taker=0x1&id=1&limit=5&before=200&after=100",
             );
         });
     });
@@ -66,14 +66,15 @@ describe("utilities", () => {
     describe("addOpenOrderParamsToUrl", () => {
         it("checking url + params", () => {
             const url = addOpenOrderParamsToUrl("http://tracker", {
-                market: "10000",
+                market: "0xaabbccdd",
+                asset_id: "10000",
                 owner: "0x69",
                 id: "1",
             } as OpenOrdersParams);
             expect(url).not.null;
             expect(url).not.undefined;
             expect(url).not.empty;
-            expect(url).equal("http://tracker?market=10000&owner=0x69&id=1");
+            expect(url).equal("http://tracker?market=0xaabbccdd&asset_id=10000&owner=0x69&id=1");
         });
     });
 });

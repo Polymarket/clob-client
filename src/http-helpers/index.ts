@@ -19,7 +19,6 @@ export const request = async (
         return response;
     } catch (err) {
         if (axios.isAxiosError(err)) {
-            console.error(err);
             console.error(err.response?.status);
             console.error(err.response?.statusText);
             console.error(err.response?.data);
@@ -101,6 +100,9 @@ export const addOpenOrderParamsToUrl = (baseUrl: string, params?: OpenOrdersPara
         if (params.market !== undefined) {
             url = buildQueryParams(url, "market", params.market);
         }
+        if (params.asset_id !== undefined) {
+            url = buildQueryParams(url, "asset_id", params.asset_id);
+        }
         if (params.owner !== undefined) {
             url = buildQueryParams(url, "owner", params.owner);
         }
@@ -117,6 +119,9 @@ export const addTradeParamsToUrl = (baseUrl: string, params?: TradeParams): stri
         url = `${url}?`;
         if (params.market !== undefined) {
             url = buildQueryParams(url, "market", params.market as string);
+        }
+        if (params.asset_id !== undefined) {
+            url = buildQueryParams(url, "asset_id", params.asset_id as string);
         }
         if (params.maker !== undefined) {
             url = buildQueryParams(url, "maker", `${params.maker}`);
