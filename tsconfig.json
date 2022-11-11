@@ -21,7 +21,7 @@
         "importHelpers": true,
         "strict": true,
         "noFallthroughCasesInSwitch": true,
-        "noUnusedLocals": true,
+        "noUnusedLocals": false,
         "noImplicitReturns": true,
         "noUnusedParameters": true,
         "resolveJsonModule": true,

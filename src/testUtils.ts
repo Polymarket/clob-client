@@ -1,20 +1,20 @@
-import { ethers } from "ethers";
+import { ethers, Wallet } from "ethers";
 import { BigNumber, constants, utils } from "ethers";
 import { usdcAbi } from "./usdcabi";
 import { ctfAbi } from "./ctfabi";
-//import { Side } from "./types";
+import { Side, ApiKeyCreds } from "./types";
 import {
     ZERO,
     MAINNET_CONTRACTS,
     MUMBAI_CONTRACTS,
-    //MAINNET_HOST,
-    //MUMBAI_HOST,
+    MAINNET_HOST,
+    MUMBAI_HOST,
     MAINNET_MARKET,
     MUMBAI_MARKET,
     Contracts,
     Market,
 } from "./testConstants";
-//import { ClobClient } from "./client";
+import { ClobClient } from "./client";
 
 export function getWallet(mainnetQ: boolean, adminQ: boolean): ethers.Wallet {
     let pk: string;
@@ -135,13 +135,20 @@ export async function setup(mainnetQ: boolean, adminQ: boolean) {
     return;
 }
 
-/*
+export async function getClobClient(mainnetQ: boolean, adminQ: boolean): Promise<ClobClient> {
+    const wallet = getWallet(mainnetQ, adminQ);
+    let host: string;
+    if (mainnetQ) {
+        host = MAINNET_HOST;
+    } else {
+        host = MUMBAI_HOST;
+    }
+    let clobClient = new ClobClient(host, await wallet.getChainId(), wallet);
+    return clobClient;
+}
 
-export async function getApiKey(adminQ: boolean): Promise<any> {
-    const wallet = getWallet(adminQ);
-    console.log("Getting API credentials...");
-    let clobClient = new ClobClient(HOST, wallet);
-
+export async function getApiKey(mainnetQ: boolean, adminQ: boolean): Promise<any> {
+    const clobClient = await getClobClient(mainnetQ, adminQ);
     let creds;
     try {
         creds = (await clobClient.deriveApiKey()) as any;
@@ -151,20 +158,41 @@ export async function getApiKey(adminQ: boolean): Promise<any> {
         }
     } catch {}
     await clobClient.createApiKey(0);
-    return await getApiKey(adminQ);
+    return await getApiKey(mainnetQ, adminQ);
 }
 
-export async function createOrder(adminQ: boolean, price: number, side: Side, size: number) {
-    const wallet = getWallet(adminQ);
-    const creds = await getApiKey(adminQ);
-    const clobClient = new ClobClient(HOST, wallet, creds);
+export async function getCredentialedClobClient(
+    mainnetQ: boolean,
+    adminQ: boolean,
+): Promise<ClobClient> {
+    const wallet = getWallet(mainnetQ, adminQ);
+    const creds = await getApiKey(mainnetQ, adminQ);
+    let host: string;
+    if (mainnetQ) {
+        host = MAINNET_HOST;
+    } else {
+        host = MUMBAI_HOST;
+    }
+    const clobClient = new ClobClient(host, await wallet.getChainId(), wallet, creds);
+    return clobClient;
+}
+
+export async function createOrder(
+    mainnetQ: boolean,
+    adminQ: boolean,
+    tokenID: string,
+    price: number,
+    side: Side,
+    size: number,
+) {
+    const clobClient = await getCredentialedClobClient(mainnetQ, adminQ);
 
     console.log(`Placing order...`);
 
     let limitOrder;
 
-    limitOrder = await clobClient.createLimitOrder({
-        tokenID: yesTrump,
+    limitOrder = await clobClient.createOrder({
+        tokenID: tokenID,
         price: price,
         side: side,
         size: size,
@@ -174,75 +202,65 @@ export async function createOrder(adminQ: boolean, price: number, side: Side, si
     console.log(resp);
 }
 
-export async function makeTrade(adminQ: boolean, side: Side, size: number) {
-    const wallet = getWallet(adminQ);
-    const creds = await getApiKey(adminQ);
-    const clobClient = new ClobClient(HOST, wallet, creds);
-
-    console.log(`Placing market order...`);
-
-    let marketOrder;
-
-    marketOrder = await clobClient.createMarketOrder({
-        tokenID: yesTrump,
-        side: side,
-        size: size,
-    });
-
-    const resp = await clobClient.postOrder(marketOrder);
-    console.log(resp);
-}
-
-export async function getOrders(adminQ: boolean) {
-    const wallet = getWallet(adminQ);
-    const creds = await getApiKey(adminQ);
-
-    const clobClient = new ClobClient(HOST, wallet, creds);
+export async function getOrders(mainnetQ: boolean, adminQ: boolean, market: string) {
+    const clobClient = await getCredentialedClobClient(mainnetQ, adminQ);
 
     console.log("Getting open orders...");
     let orders;
-    orders = await clobClient.getOrders({ owner: creds["key"], market: yesTrump });
+    orders = await clobClient.getOpenOrders({
+        owner: (clobClient.creds as ApiKeyCreds)["key"],
+        market: market,
+    });
     console.log(orders);
 }
 
-export async function getTrades(adminQ: boolean) {
-    const wallet = getWallet(adminQ);
-    const creds = await getApiKey(adminQ);
+export async function getOrder(mainnetQ: boolean, adminQ: boolean, orderID: string) {
+    const clobClient = await getCredentialedClobClient(mainnetQ, adminQ);
 
-    const clobClient = new ClobClient(HOST, wallet, creds);
+    let orders;
+    orders = await clobClient.getOrder(orderID);
+    console.log(orders);
+}
+
+export async function getTrades(
+    mainnetQ: boolean,
+    adminQ: boolean,
+    takerQ: boolean,
+    market: string,
+) {
+    const clobClient = await getCredentialedClobClient(mainnetQ, adminQ);
 
     console.log("API credentials set");
     console.log("Getting trades");
     let trades;
-    trades = await clobClient.getTrades({
-        market: yesTrump,
-        taker: wallet.address.toLowerCase(),
-        limit: 100,
-        after: "1666057902",
-    });
+    if (takerQ) {
+        trades = await clobClient.getTrades({
+            market: market,
+            taker: (clobClient.signer as Wallet).address.toLowerCase(),
+            limit: 100,
+            after: "1666057902",
+        });
+    } else {
+        trades = await clobClient.getTrades({
+            market: market,
+            maker: (clobClient.signer as Wallet).address.toLowerCase(),
+            limit: 100,
+            after: "1666057902",
+        });
+    }
     console.log(JSON.stringify(trades, null, 4));
-    //console.log(trades);
 }
 
-export async function cancelAllOrders(adminQ: boolean) {
-    const wallet = getWallet(adminQ);
-    const creds = await getApiKey(adminQ);
-    creds["key"] = creds["apiKey"];
-    const clobClient = new ClobClient(HOST, wallet, creds);
+export async function cancelAllOrders(mainnetQ: boolean, adminQ: boolean) {
+    const clobClient = await getCredentialedClobClient(mainnetQ, adminQ);
 
-    console.log("API credentials set");
     console.log("Cancelling open orders...");
     await clobClient.cancelAll();
 }
 
-export async function cancelOrder(adminQ: boolean, orderId: string) {
-    const wallet = getWallet(adminQ);
-    const creds = await getApiKey(adminQ);
-    creds["key"] = creds["apiKey"];
-    const clobClient = new ClobClient(HOST, wallet, creds);
+export async function cancelOrder(mainnetQ: boolean, adminQ: boolean, orderId: string) {
+    const clobClient = await getCredentialedClobClient(mainnetQ, adminQ);
 
-    console.log("API credentials set");
     console.log("Cancelling order...");
     await clobClient.cancelOrder({ orderID: orderId });
 }
-*/
