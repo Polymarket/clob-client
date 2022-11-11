@@ -1,7 +1,7 @@
 import { ethers } from "ethers";
 import { config as dotenvConfig } from "dotenv";
 import { resolve } from "path";
-import { ApiKeyCreds, Chain, ClobClient } from "../src";
+import { ApiKeyCreds, Chain, ClobClient, FilterParams } from "../src";
 
 dotenvConfig({ path: resolve(__dirname, "../.env") });
 
@@ -23,12 +23,21 @@ async function main() {
     const NO_TOKEN_ID =
         "16678291189211314787145083999015737376658799626183230671758641503291735614088";
 
-    clobClient.getPrice(YES_TOKEN_ID, "buy").then((price: any) => console.log("YES", "BUY", price));
-    clobClient
-        .getPrice(YES_TOKEN_ID, "sell")
-        .then((price: any) => console.log("YES", "SELL", price));
-    clobClient.getPrice(NO_TOKEN_ID, "buy").then((price: any) => console.log("NO", "BUY", price));
-    clobClient.getPrice(NO_TOKEN_ID, "sell").then((price: any) => console.log("NO", "SELL", price));
+    const yes_prices_history = await clobClient.getPricesHistory({
+        startTs: new Date().getTime() / 1000 - 1000,
+        endTs: new Date().getTime() / 1000,
+        market: YES_TOKEN_ID,
+    } as FilterParams);
+
+    console.log(yes_prices_history);
+
+    const no_prices_history = await clobClient.getPricesHistory({
+        startTs: new Date().getTime() / 1000 - 1000,
+        endTs: new Date().getTime() / 1000,
+        market: NO_TOKEN_ID,
+    } as FilterParams);
+
+    console.log(no_prices_history);
 }
 
 main();

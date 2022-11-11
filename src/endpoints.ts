@@ -1,31 +1,28 @@
+// Server Time
 export const TIME = "/time";
 
-export const GET_ORDER_BOOK = "/book";
-
-export const MIDPOINT = "/midpoint";
-
-export const PRICE = "/price";
-
+// API Key endpoints
 export const CREATE_API_KEY = "/create-api-key";
-
 export const GET_API_KEYS = "/get-api-keys";
-
 export const DELETE_API_KEY = "/delete-api-key";
-
 export const DERIVE_API_KEY = "/derive-api-key";
 
-export const TRADES = "/trades";
-
-export const GET_ORDER = "/order/";
-
-export const OPEN_ORDERS = "/orders";
-
-export const POST_ORDER = "/order";
-
-export const CANCEL = "/order";
-
-export const CANCEL_ALL = "/cancel-all";
-
+// Markets
+export const GET_MARKETS = "/markets";
+export const GET_MARKET = "/markets/";
+export const GET_ORDER_BOOK = "/book";
+export const GET_MIDPOINT = "/midpoint";
+export const GET_PRICE = "/price";
 export const GET_LAST_TRADE_PRICE = "/last-trade-price";
 
+// Order endpoints
+export const POST_ORDER = "/order";
+export const CANCEL_ORDER = "/order";
+export const GET_ORDER = "/order/";
+export const CANCEL_ALL = "/cancel-all";
 export const GET_LARGE_ORDERS = "/large-orders";
+export const GET_OPEN_ORDERS = "/orders";
+export const GET_TRADES = "/trades";
+
+// Price history
+export const GET_PRICES_HISTORY = "/prices-history";

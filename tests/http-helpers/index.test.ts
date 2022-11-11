@@ -6,7 +6,7 @@ import {
     addTradeParamsToUrl,
     addOpenOrderParamsToUrl,
 } from "../../src/http-helpers/index";
-import { OpenOrdersParams, TradeParams } from "../../src";
+import { OpenOrderParams, Side, TradeParams } from "../../src";
 
 describe("utilities", () => {
     describe("buildQueryParams", () => {
@@ -30,21 +30,28 @@ describe("utilities", () => {
     describe("addFilterParamsToUrl", () => {
         it("checking url + params", () => {
             const url = addFilterParamsToUrl("http://tracker", {
+                owner: "owner",
                 market: "10000",
                 max: 250,
+                side: Side.BUY,
                 startTs: 1450000,
                 endTs: 1460000,
+                minValue: "1",
+                fidelity: 15,
             });
             expect(url).not.null;
             expect(url).not.undefined;
             expect(url).not.empty;
-            expect(url).equal("http://tracker?market=10000&max=250&startTs=1450000&endTs=1460000");
+            expect(url).equal(
+                "http://tracker?owner=owner&max=250&market=10000&side=BUY&startTs=1450000&endTs=1460000&minValue=1&fidelity=15",
+            );
         });
     });
 
     describe("addTradeParamsToUrl", () => {
         it("checking url + params", () => {
             const url = addTradeParamsToUrl("http://tracker", {
+                owner: "owner",
                 market: "0xaabbccdd",
                 asset_id: "10000",
                 taker: "0x1",
@@ -58,7 +65,7 @@ describe("utilities", () => {
             expect(url).not.undefined;
             expect(url).not.empty;
             expect(url).equal(
-                "http://tracker?market=0xaabbccdd&asset_id=10000&maker=0x2&taker=0x1&id=1&limit=5&before=200&after=100",
+                "http://tracker?owner=owner&market=0xaabbccdd&asset_id=10000&maker=0x2&taker=0x1&id=1&limit=5&before=200&after=100",
             );
         });
     });
@@ -70,7 +77,7 @@ describe("utilities", () => {
                 asset_id: "10000",
                 owner: "0x69",
                 id: "1",
-            } as OpenOrdersParams);
+            } as OpenOrderParams);
             expect(url).not.null;
             expect(url).not.undefined;
             expect(url).not.empty;

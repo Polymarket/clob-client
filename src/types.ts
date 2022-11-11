@@ -28,8 +28,8 @@ export interface L2PolyHeader {
 }
 
 export enum Side {
-    BUY = "buy",
-    SELL = "sell",
+    BUY = "BUY",
+    SELL = "SELL",
 }
 
 // Simplified order for users
@@ -91,77 +91,84 @@ export interface OrderResponse {
     status: string;
 }
 
+// get order/{orderID} response
 export interface Order {
     orderID: string;
     owner: string;
     timestamp: string;
     price: string;
     size: string;
+    available_size: string;
     side: string;
-    tokenID: string;
+    status: string;
+    asset_id: string;
 }
 
 export interface OpenOrder {
-    associate_trades: null | Trade[];
     id: string;
+    owner: string;
     market: string;
+    asset_id: string;
+    side: string;
     original_size: string;
+    size_matched: string;
+    price: string;
+    associate_trades: Trade[];
     outcome: string;
     outcome_index: number;
-    owner: string;
-    price: string;
-    side: string;
-    size_matched: string;
 }
 
 export type OpenOrdersResponse = OpenOrder[];
 
 export interface FilterParams {
-    market?: string;
+    owner?: string;
     max?: number;
+    market?: string;
+    side?: Side;
     startTs?: number;
     endTs?: number;
+    minValue?: string;
+    fidelity?: number;
 }
 
 export interface TradeParams {
-    market?: string;
-    asset_id?: string;
     id?: string;
+    owner?: string;
     taker?: string;
     maker?: string;
+    market?: string;
+    asset_id?: string;
     limit?: number;
     before?: string;
     after?: string;
 }
 
-export interface OpenOrdersParams {
+export interface OpenOrderParams {
+    id?: string;
+    owner: string;
     market?: string;
     asset_id?: string;
-    owner: string;
-    id?: string;
 }
 
 export interface Trade {
     id: string;
-    market_order: string;
+
+    taker_order: string;
+
     market: string;
-    type: string;
-    side: string;
+    asset_id: string;
+    side: number | string;
     size: string;
-    price: string;
     status: string;
+    price: string;
     match_time: string;
     last_update: string;
     outcome: string;
     outcome_index: number;
-    owner: string;
     bucket_index: number;
-    limit_orders: string[];
-    limit_order_sizes_prices: string[][];
-}
-
-export interface OrderHistory {
-    history: Order[];
+    owner: string;
+    maker_orders: string[];
+    maker_orders_sizes_prices: string[][];
 }
 
 export type OptionalParams = { [query: string]: string };
@@ -169,4 +176,12 @@ export type OptionalParams = { [query: string]: string };
 export enum Chain {
     POLYGON = 137,
     MUMBAI = 80001,
+}
+
+export interface MarketPrice {
+    t: string; // timestamp
+    l: string; // liquidity
+    p: string; // price
+    v: string; // volume
+    ps: string; // positions
 }

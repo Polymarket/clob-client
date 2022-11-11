@@ -1,6 +1,6 @@
 import axios, { Method } from "axios";
 import { FilterParams, TradeParams } from "src/types";
-import { OpenOrdersParams } from "../types";
+import { OpenOrderParams } from "../types";
 
 export const GET = "GET";
 export const POST = "POST";
@@ -77,11 +77,17 @@ export const addFilterParamsToUrl = (baseUrl: string, params?: FilterParams): st
     let url = baseUrl;
     if (params !== undefined) {
         url = `${url}?`;
-        if (params.market !== undefined) {
-            url = buildQueryParams(url, "market", params.market as string);
+        if (params.owner !== undefined) {
+            url = buildQueryParams(url, "owner", params.owner as string);
         }
         if (params.max !== undefined) {
             url = buildQueryParams(url, "max", `${params.max}`);
+        }
+        if (params.market !== undefined) {
+            url = buildQueryParams(url, "market", params.market as string);
+        }
+        if (params.side !== undefined) {
+            url = buildQueryParams(url, "side", params.side as string);
         }
         if (params.startTs !== undefined) {
             url = buildQueryParams(url, "startTs", `${params.startTs}`);
@@ -89,11 +95,17 @@ export const addFilterParamsToUrl = (baseUrl: string, params?: FilterParams): st
         if (params.endTs !== undefined) {
             url = buildQueryParams(url, "endTs", `${params.endTs}`);
         }
+        if (params.minValue !== undefined) {
+            url = buildQueryParams(url, "minValue", `${params.minValue}`);
+        }
+        if (params.fidelity !== undefined) {
+            url = buildQueryParams(url, "fidelity", `${params.fidelity}`);
+        }
     }
     return url;
 };
 
-export const addOpenOrderParamsToUrl = (baseUrl: string, params?: OpenOrdersParams): string => {
+export const addOpenOrderParamsToUrl = (baseUrl: string, params?: OpenOrderParams): string => {
     let url = baseUrl;
     if (params !== undefined) {
         url = `${url}?`;
@@ -117,6 +129,9 @@ export const addTradeParamsToUrl = (baseUrl: string, params?: TradeParams): stri
     let url = baseUrl;
     if (params !== undefined) {
         url = `${url}?`;
+        if (params.owner !== undefined) {
+            url = buildQueryParams(url, "owner", params.owner as string);
+        }
         if (params.market !== undefined) {
             url = buildQueryParams(url, "market", params.market as string);
         }

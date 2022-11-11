@@ -21,7 +21,7 @@ const creds: ApiKeyCreds = {
 // NOTE: the signer must be approved on the CTFExchange contract
 const clobClient = new ClobClient(host, signer, creds);
 
-// Create a buy order for 100 YES for 0.50c
+// Create a buy order for 100 NO for 0.50c
 const order = await clobClient.createOrder({
     tokenId: "16678291189211314787145083999015737376658799626183230671758641503291735614088",
     price: 0.5,
