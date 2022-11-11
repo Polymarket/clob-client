@@ -20,9 +20,9 @@ import { MUMBAI_MARKET } from "./testConstants";
 //     .then(r => console.log(r))
 //     .catch(e => console.log(e));
 
-createOrder(false, true, MUMBAI_MARKET.No, 0.8, Side.BUY, 10).then();
+//createOrder(false, true, MUMBAI_MARKET.Yes, 0.5, Side.SELL, 10).then();
 //cancelAllOrders(false, true).then();
-//getTrades(false, true, true, MUMBAI_MARKET.Condition).then();
+getTrades(false, true, false, MUMBAI_MARKET.Condition).then(); // not correct (I was taker, should only be one maker_orders_sizes_prices)
 //getOrders(false, true, MUMBAI_MARKET.Condition).then();
 
 //getOrder(false, true, "0xce92e3bcafb10f4b8333560f8119dcb85ee66cc13572cb099656540f6ccf654f").then();

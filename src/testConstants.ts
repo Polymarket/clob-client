@@ -5,6 +5,9 @@ export const ZERO = BigNumber.from("0");
 export const MAINNET_HOST = "https://clob.polymarket.com";
 export const MUMBAI_HOST = "https://clob-staging.polymarket.com";
 
+export const MAINNET_WSS_HOST = "wss://ws-subscriptions-clob.polymarket.com/ws";
+export const MUMBAI_WSS_HOST = "wss://ws-subscriptions-clob-staging.polymarket.com/ws";
+
 export interface Contracts {
     Exchange: string;
     Collateral: string;
