@@ -1,21 +1,25 @@
 import { Wallet } from "@ethersproject/wallet";
 import { JsonRpcSigner } from "@ethersproject/providers";
-import { SignatureType, SignedOrder } from "@polymarket/order-utils";
+import { SignatureType, SignedOrder, Side as UtilsSide } from "@polymarket/order-utils";
 import {
     ApiKeyCreds,
     ApiKeysResponse,
     Chain,
-    OpenOrdersParams,
+    FilterParams,
+    MarketPrice,
+    OpenOrderParams,
     OpenOrdersResponse,
     OptionalParams,
     Order,
     OrderPayload,
+    Side,
     Trade,
     TradeParams,
     UserOrder,
 } from "./types";
 import { createL1Headers, createL2Headers } from "./headers";
 import {
+    addFilterParamsToUrl,
     addOpenOrderParamsToUrl,
     addTradeParamsToUrl,
     del,
@@ -29,21 +33,24 @@ import { L1_AUTH_UNAVAILABLE_ERROR, L2_AUTH_NOT_AVAILABLE } from "./errors";
 import { orderToJson } from "./utilities";
 import {
     CANCEL_ALL,
-    CANCEL,
+    CANCEL_ORDER,
     CREATE_API_KEY,
     GET_API_KEYS,
     GET_ORDER,
     POST_ORDER,
     TIME,
-    TRADES,
+    GET_TRADES,
     GET_ORDER_BOOK,
     DELETE_API_KEY,
-    MIDPOINT,
-    PRICE,
-    OPEN_ORDERS,
+    GET_MIDPOINT,
+    GET_PRICE,
+    GET_OPEN_ORDERS,
     DERIVE_API_KEY,
     GET_LAST_TRADE_PRICE,
     GET_LARGE_ORDERS,
+    GET_MARKETS,
+    GET_MARKET,
+    GET_PRICES_HISTORY,
 } from "./endpoints";
 import { OrderBuilder } from "./order-builder/builder";
 
@@ -94,16 +101,24 @@ export class ClobClient {
         return get(`${this.host}${TIME}`);
     }
 
+    public async getMarkets(): Promise<any[]> {
+        return get(`${this.host}${GET_MARKETS}`);
+    }
+
+    public async getMarket(conditionID: string): Promise<any> {
+        return get(`${this.host}${GET_MARKET}${conditionID}`);
+    }
+
     public async getOrderBook(tokenID: string): Promise<any> {
         return get(`${this.host}${GET_ORDER_BOOK}?token_id=${tokenID}`);
     }
 
     public async getMidpoint(tokenID: string): Promise<any> {
-        return get(`${this.host}${MIDPOINT}?token_id=${tokenID}`);
+        return get(`${this.host}${GET_MIDPOINT}?token_id=${tokenID}`);
     }
 
     public async getPrice(tokenID: string, side: string): Promise<any> {
-        return get(`${this.host}${PRICE}?token_id=${tokenID}&side=${side}`);
+        return get(`${this.host}${GET_PRICE}?token_id=${tokenID}&side=${side}`);
     }
 
     public async getLastTradePrice(tokenID: string): Promise<any> {
@@ -112,6 +127,11 @@ export class ClobClient {
 
     public async getLargeOrders(minValue = ""): Promise<any> {
         return get(`${this.host}${GET_LARGE_ORDERS}?min_value=${minValue}`);
+    }
+
+    public async getPricesHistory(params: FilterParams): Promise<MarketPrice[]> {
+        const url = addFilterParamsToUrl(`${this.host}${GET_PRICES_HISTORY}`, params);
+        return get(url);
     }
 
     // L1 Authed
@@ -219,7 +239,7 @@ export class ClobClient {
     public async getTrades(params?: TradeParams): Promise<Trade[]> {
         this.canL2Auth();
 
-        const endpoint = TRADES;
+        const endpoint = GET_TRADES;
         const headerArgs = {
             method: GET,
             requestPath: endpoint,
@@ -232,7 +252,17 @@ export class ClobClient {
         );
 
         const url = addTradeParamsToUrl(`${this.host}${endpoint}`, params);
-        return get(url, headers);
+        const trades = await get(url, headers);
+        if (trades && trades.length) {
+            trades.forEach((trade: Trade) => {
+                if (trade.side == UtilsSide.BUY) {
+                    trade.side = Side.BUY;
+                } else {
+                    trade.side = Side.SELL;
+                }
+            });
+        }
+        return trades;
     }
 
     public async createOrder(userOrder: UserOrder): Promise<SignedOrder> {
@@ -241,9 +271,9 @@ export class ClobClient {
         return this.orderBuilder.buildOrder(userOrder);
     }
 
-    public async getOpenOrders(params?: OpenOrdersParams): Promise<OpenOrdersResponse> {
+    public async getOpenOrders(params?: OpenOrderParams): Promise<OpenOrdersResponse> {
         this.canL2Auth();
-        const endpoint = OPEN_ORDERS;
+        const endpoint = GET_OPEN_ORDERS;
         const l2HeaderArgs = {
             method: GET,
             requestPath: endpoint,
@@ -281,7 +311,7 @@ export class ClobClient {
 
     public async cancelOrder(payload: OrderPayload): Promise<any> {
         this.canL2Auth();
-        const endpoint = CANCEL;
+        const endpoint = CANCEL_ORDER;
         const l2HeaderArgs = {
             method: DELETE,
             requestPath: endpoint,

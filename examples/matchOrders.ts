@@ -18,12 +18,12 @@ async function main() {
     };
     const clobClient = new ClobClient(host, chainId, wallet, creds);
 
-    // YES: 16678291189211314787145083999015737376658799626183230671758641503291735614088
+    const YES = "1343197538147866997676250008839231694243646439454152539053893078719042421992";
     const yes_bid = await clobClient.createOrder({
-        tokenID: "16678291189211314787145083999015737376658799626183230671758641503291735614088",
+        tokenID: YES,
         price: 0.5,
         side: Side.BUY,
-        size: 100,
+        size: 1000,
         feeRateBps: 0,
         nonce: 0,
     });
@@ -31,7 +31,7 @@ async function main() {
     await clobClient.postOrder(yes_bid);
 
     const yes_ask = await clobClient.createOrder({
-        tokenID: "16678291189211314787145083999015737376658799626183230671758641503291735614088",
+        tokenID: YES,
         price: 0.5,
         side: Side.SELL,
         size: 100,

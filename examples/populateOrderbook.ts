@@ -18,9 +18,9 @@ async function main() {
     };
     const clobClient = new ClobClient(host, chainId, wallet, creds);
 
-    // YES: 16678291189211314787145083999015737376658799626183230671758641503291735614088
+    const YES = "1343197538147866997676250008839231694243646439454152539053893078719042421992";
     const yes_bid = await clobClient.createOrder({
-        tokenID: "16678291189211314787145083999015737376658799626183230671758641503291735614088",
+        tokenID: YES,
         price: 0.4,
         side: Side.BUY,
         size: 100,
@@ -31,7 +31,7 @@ async function main() {
     await clobClient.postOrder(yes_bid);
 
     const yes_ask = await clobClient.createOrder({
-        tokenID: "16678291189211314787145083999015737376658799626183230671758641503291735614088",
+        tokenID: YES,
         price: 0.6,
         side: Side.SELL,
         size: 100,
@@ -41,9 +41,9 @@ async function main() {
     console.log("creating order", yes_ask);
     await clobClient.postOrder(yes_ask);
 
-    // NO: 1343197538147866997676250008839231694243646439454152539053893078719042421992
+    const NO = "16678291189211314787145083999015737376658799626183230671758641503291735614088";
     const no_bid = await clobClient.createOrder({
-        tokenID: "1343197538147866997676250008839231694243646439454152539053893078719042421992",
+        tokenID: NO,
         price: 0.4,
         side: Side.BUY,
         size: 100,
@@ -54,7 +54,7 @@ async function main() {
     await clobClient.postOrder(no_bid);
 
     const no_ask = await clobClient.createOrder({
-        tokenID: "1343197538147866997676250008839231694243646439454152539053893078719042421992",
+        tokenID: NO,
         price: 0.6,
         side: Side.SELL,
         size: 100,
