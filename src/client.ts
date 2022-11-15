@@ -1,6 +1,6 @@
 import { Wallet } from "@ethersproject/wallet";
 import { JsonRpcSigner } from "@ethersproject/providers";
-import { SignatureType, SignedOrder, Side as UtilsSide } from "@polymarket/order-utils";
+import { SignatureType, SignedOrder } from "@polymarket/order-utils";
 import {
     ApiKeyCreds,
     ApiKeysResponse,
@@ -12,7 +12,6 @@ import {
     OptionalParams,
     Order,
     OrderPayload,
-    Side,
     Trade,
     TradeParams,
     UserOrder,
@@ -252,17 +251,7 @@ export class ClobClient {
         );
 
         const url = addTradeParamsToUrl(`${this.host}${endpoint}`, params);
-        const trades = await get(url, headers);
-        if (trades && trades.length) {
-            trades.forEach((trade: Trade) => {
-                if (trade.side == UtilsSide.BUY) {
-                    trade.side = Side.BUY;
-                } else {
-                    trade.side = Side.SELL;
-                }
-            });
-        }
-        return trades;
+        return get(url, headers);
     }
 
     public async createOrder(userOrder: UserOrder): Promise<SignedOrder> {
