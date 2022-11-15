@@ -23,7 +23,7 @@ async function main() {
         tokenID: YES,
         price: 0.5,
         side: Side.BUY,
-        size: 1000,
+        size: 100,
         feeRateBps: 0,
         nonce: 0,
     });
