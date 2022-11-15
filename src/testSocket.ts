@@ -31,9 +31,8 @@ async function main(mainnetQ: boolean, adminQ: boolean, type: "user" | "market",
     if (type == "user") {
         subscriptionMessage["markets"] = [market.Condition];
     } else {
-        subscriptionMessage["assets_ids"] =
-            //[market.Yes, market.No];
-            [market.Yes];
+        subscriptionMessage["assets_ids"] = [market.Yes, market.No];
+        //[market.Yes];
     }
 
     ws.send(JSON.stringify(subscriptionMessage)); // send sub message
