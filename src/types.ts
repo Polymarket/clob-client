@@ -87,7 +87,7 @@ export interface OrderResponse {
     success: boolean;
     errorMsg: string;
     orderID: string;
-    transactionHash: string;
+    transactionsHashes: string[];
     status: string;
 }
 
