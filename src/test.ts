@@ -10,6 +10,7 @@ import {
     cancelAllOrders,
     getTrades,
     cancelOrder,
+    checkFundingAllowance,
 } from "./testUtils";
 import { MUMBAI_MARKET } from "./testConstants";
 
@@ -21,10 +22,14 @@ import { MUMBAI_MARKET } from "./testConstants";
 //     .then(r => console.log(r))
 //     .catch(e => console.log(e));
 
-//createOrder(false, false, MUMBAI_MARKET.Yes, 0.51, Side.SELL, 10).then();
+//createOrder(false, true, MUMBAI_MARKET.Yes, 0.52, Side.SELL, 20).then();
 //cancelAllOrders(false, true).then();
-getTrades(false, false, true, MUMBAI_MARKET.Condition).then(); // not correct (I was taker, should only be one maker_orders_sizes_prices)
+//getTrades(false, false, true, MUMBAI_MARKET.Condition).then(); // not correct (I was taker, should only be one maker_orders_sizes_prices)
 //getOrders(false, true, MUMBAI_MARKET.Condition).then();
 
 //getOrder(false, true, "0xce92e3bcafb10f4b8333560f8119dcb85ee66cc13572cb099656540f6ccf654f").then();
 //cancelOrder(false, true, "0x01b528478a01575ba34a82148e19483feb606115ee928f2bb99ab79446613573");
+
+//isOperator;
+
+checkFundingAllowance(false, "0x8208003B936d73694A90b2da579F85BFCf870Cc1").then();

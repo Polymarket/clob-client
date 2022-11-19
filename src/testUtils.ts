@@ -264,3 +264,31 @@ export async function cancelOrder(mainnetQ: boolean, adminQ: boolean, orderId: s
     console.log("Cancelling order...");
     await clobClient.cancelOrder({ orderID: orderId });
 }
+
+export async function checkFundingAllowance(mainnetQ: boolean, addressToCheck: string) {
+    const wallet = getWallet(mainnetQ, true);
+    const usdc = getUsdcContract(mainnetQ, wallet);
+
+    let contracts: Contracts;
+    let market: Market;
+
+    if (mainnetQ) {
+        contracts = MAINNET_CONTRACTS;
+        market = MAINNET_MARKET;
+    } else {
+        contracts = MUMBAI_CONTRACTS;
+        market = MUMBAI_MARKET;
+    }
+
+    const usdcAllowanceExchange = (await usdc.allowance(
+        addressToCheck,
+        contracts.Exchange,
+    )) as BigNumber;
+
+    if (usdcAllowanceExchange.gt(ZERO)) {
+        console.log("ADDRESS HAS USDC ALLOWANCE");
+        return;
+    }
+
+    console.log("ADDRESS DOESNT HAVE USDC ALLOWANCE");
+}
