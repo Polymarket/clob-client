@@ -1,3 +1,5 @@
+import { SignatureType } from "@polymarket/order-utils";
+
 export interface ApiKeyCreds {
     key: string;
     secret: string;
@@ -32,6 +34,31 @@ export enum Side {
     SELL = "SELL",
 }
 
+export enum OrderType {
+    IOC = "IOC",
+    FOK = "FOK",
+}
+
+export interface NewOrder {
+    readonly order: {
+        readonly salt: number;
+        readonly maker: string;
+        readonly signer: string;
+        readonly taker: string;
+        readonly tokenId: string;
+        readonly makerAmount: string;
+        readonly takerAmount: string;
+        readonly expiration: string;
+        readonly nonce: string;
+        readonly feeRateBps: string;
+        readonly side: Side; // string
+        readonly signatureType: SignatureType;
+        readonly signature: string;
+    };
+    readonly owner: string;
+    readonly orderType: OrderType;
+}
+
 // Simplified order for users
 export interface UserOrder {
     /**
@@ -53,6 +80,45 @@ export interface UserOrder {
      * Side of the order
      */
     side: Side;
+
+    /**
+     * Fee rate, in basis points, charged to the order maker, charged on proceeds
+     */
+    feeRateBps?: number;
+
+    /**
+     * Nonce used for onchain cancellations
+     */
+    nonce?: number;
+
+    /**
+     * Timestamp after which the order is expired.
+     */
+    expiration?: number;
+
+    /**
+     * Address of the order taker. The zero address is used to indicate a public order
+     */
+    taker?: string;
+}
+
+// Simplified market order for users
+export interface UserMarketOrder {
+    /**
+     * TokenID of the Conditional token asset being traded
+     */
+    tokenID: string;
+
+    /**
+     * Price used to create the order
+     * If it is not present the market price will be used.
+     */
+    price?: number;
+
+    /**
+     * Amount in terms of Collateral
+     */
+    amount: number;
 
     /**
      * Fee rate, in basis points, charged to the order maker, charged on proceeds

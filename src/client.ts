@@ -12,8 +12,11 @@ import {
     OptionalParams,
     Order,
     OrderPayload,
+    OrderType,
+    Side,
     Trade,
     TradeParams,
+    UserMarketOrder,
     UserOrder,
 } from "./types";
 import { createL1Headers, createL2Headers } from "./headers";
@@ -260,6 +263,18 @@ export class ClobClient {
         return this.orderBuilder.buildOrder(userOrder);
     }
 
+    public async createMarketOrder(userMarketOrder: UserMarketOrder): Promise<SignedOrder> {
+        this.canL1Auth();
+
+        if (!userMarketOrder.price) {
+            const { tokenID } = userMarketOrder;
+            const marketPrice = await this.getPrice(tokenID, Side.BUY);
+
+            userMarketOrder.price = parseFloat(marketPrice);
+        }
+        return this.orderBuilder.buildMarketOrder(userMarketOrder);
+    }
+
     public async getOpenOrders(params?: OpenOrderParams): Promise<OpenOrdersResponse> {
         this.canL2Auth();
         const endpoint = GET_OPEN_ORDERS;
@@ -278,10 +293,14 @@ export class ClobClient {
         return get(url, headers);
     }
 
-    public async postOrder(order: SignedOrder, optionalParams?: OptionalParams): Promise<any> {
+    public async postOrder(
+        order: SignedOrder,
+        orderType: OrderType = OrderType.IOC,
+        optionalParams?: OptionalParams,
+    ): Promise<any> {
         this.canL2Auth();
         const endpoint = POST_ORDER;
-        const orderPayload = orderToJson(order);
+        const orderPayload = orderToJson(order, this.creds?.key || "", orderType);
 
         const l2HeaderArgs = {
             method: POST,

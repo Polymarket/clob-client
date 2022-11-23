@@ -1,79 +1,513 @@
 import "mocha";
 import { expect } from "chai";
 import { orderToJson } from "../src/utilities";
-import { Side, SignatureType } from "@polymarket/order-utils";
+import { Side as UtilsSide, SignatureType } from "@polymarket/order-utils";
+import { Chain, OrderType, Side, UserMarketOrder, UserOrder } from "../src";
+import { Wallet } from "@ethersproject/wallet";
+import { createMarketOrder, createOrder } from "../src/order-builder/helpers";
 
 describe("utilities", () => {
     describe("orderToJson", () => {
-        it("buy", () => {
-            const jsonOrder = orderToJson({
-                salt: "1000",
-                maker: "0x0000000000000000000000000000000000000001",
-                signer: "0x0000000000000000000000000000000000000002",
-                taker: "0x0000000000000000000000000000000000000003",
-                tokenId: "1",
-                makerAmount: "100000000",
-                takerAmount: "50000000",
-                side: Side.BUY,
-                expiration: "0",
-                nonce: "1",
-                feeRateBps: "100",
-                signatureType: SignatureType.POLY_GNOSIS_SAFE,
-                signature: "0x",
-            });
+        it("IOC buy", () => {
+            const jsonOrder = orderToJson(
+                {
+                    salt: "1000",
+                    maker: "0x0000000000000000000000000000000000000001",
+                    signer: "0x0000000000000000000000000000000000000002",
+                    taker: "0x0000000000000000000000000000000000000003",
+                    tokenId: "1",
+                    makerAmount: "100000000",
+                    takerAmount: "50000000",
+                    side: UtilsSide.BUY,
+                    expiration: "0",
+                    nonce: "1",
+                    feeRateBps: "100",
+                    signatureType: SignatureType.POLY_GNOSIS_SAFE,
+                    signature: "0x",
+                },
+                "aaaa-bbbb-cccc-dddd",
+                OrderType.IOC,
+            );
             expect(jsonOrder).not.null;
             expect(jsonOrder).not.undefined;
 
             expect(jsonOrder).deep.equal({
-                salt: 1000,
-                maker: "0x0000000000000000000000000000000000000001",
-                signer: "0x0000000000000000000000000000000000000002",
-                taker: "0x0000000000000000000000000000000000000003",
-                tokenId: "1",
-                makerAmount: "100000000",
-                takerAmount: "50000000",
-                side: "buy",
-                expiration: "0",
-                nonce: "1",
-                feeRateBps: "100",
-                signatureType: 2,
-                signature: "0x",
+                order: {
+                    salt: 1000,
+                    maker: "0x0000000000000000000000000000000000000001",
+                    signer: "0x0000000000000000000000000000000000000002",
+                    taker: "0x0000000000000000000000000000000000000003",
+                    tokenId: "1",
+                    makerAmount: "100000000",
+                    takerAmount: "50000000",
+                    side: "BUY",
+                    expiration: "0",
+                    nonce: "1",
+                    feeRateBps: "100",
+                    signatureType: 2,
+                    signature: "0x",
+                },
+                owner: "aaaa-bbbb-cccc-dddd",
+                orderType: "IOC",
             });
         });
 
-        it("sell", () => {
-            const jsonOrder = orderToJson({
-                salt: "1000",
-                maker: "0x0000000000000000000000000000000000000001",
-                signer: "0x0000000000000000000000000000000000000002",
-                taker: "0x0000000000000000000000000000000000000003",
-                tokenId: "1",
-                makerAmount: "50000000",
-                takerAmount: "100000000",
-                side: Side.SELL,
-                expiration: "0",
-                nonce: "1",
-                feeRateBps: "100",
-                signatureType: SignatureType.POLY_PROXY,
-                signature: "0x",
-            });
+        it("IOC sell", () => {
+            const jsonOrder = orderToJson(
+                {
+                    salt: "1000",
+                    maker: "0x0000000000000000000000000000000000000001",
+                    signer: "0x0000000000000000000000000000000000000002",
+                    taker: "0x0000000000000000000000000000000000000003",
+                    tokenId: "1",
+                    makerAmount: "50000000",
+                    takerAmount: "100000000",
+                    side: UtilsSide.SELL,
+                    expiration: "0",
+                    nonce: "1",
+                    feeRateBps: "100",
+                    signatureType: SignatureType.POLY_PROXY,
+                    signature: "0x",
+                },
+                "aaaa-bbbb-cccc-dddd",
+                OrderType.IOC,
+            );
             expect(jsonOrder).not.null;
             expect(jsonOrder).not.undefined;
 
             expect(jsonOrder).deep.equal({
-                salt: 1000,
-                maker: "0x0000000000000000000000000000000000000001",
-                signer: "0x0000000000000000000000000000000000000002",
-                taker: "0x0000000000000000000000000000000000000003",
-                tokenId: "1",
-                makerAmount: "50000000",
-                takerAmount: "100000000",
-                side: "sell",
-                expiration: "0",
-                nonce: "1",
-                feeRateBps: "100",
-                signatureType: 1,
-                signature: "0x",
+                order: {
+                    salt: 1000,
+                    maker: "0x0000000000000000000000000000000000000001",
+                    signer: "0x0000000000000000000000000000000000000002",
+                    taker: "0x0000000000000000000000000000000000000003",
+                    tokenId: "1",
+                    makerAmount: "50000000",
+                    takerAmount: "100000000",
+                    side: "SELL",
+                    expiration: "0",
+                    nonce: "1",
+                    feeRateBps: "100",
+                    signatureType: 1,
+                    signature: "0x",
+                },
+                owner: "aaaa-bbbb-cccc-dddd",
+                orderType: "IOC",
+            });
+        });
+
+        it("FOK buy", () => {
+            const jsonOrder = orderToJson(
+                {
+                    salt: "1000",
+                    maker: "0x0000000000000000000000000000000000000001",
+                    signer: "0x0000000000000000000000000000000000000002",
+                    taker: "0x0000000000000000000000000000000000000003",
+                    tokenId: "1",
+                    makerAmount: "100000000",
+                    takerAmount: "200000000",
+                    side: UtilsSide.BUY,
+                    expiration: "0",
+                    nonce: "1",
+                    feeRateBps: "100",
+                    signatureType: SignatureType.POLY_GNOSIS_SAFE,
+                    signature: "0x",
+                },
+                "aaaa-bbbb-cccc-dddd",
+                OrderType.FOK,
+            );
+            expect(jsonOrder).not.null;
+            expect(jsonOrder).not.undefined;
+
+            expect(jsonOrder).deep.equal({
+                order: {
+                    salt: 1000,
+                    maker: "0x0000000000000000000000000000000000000001",
+                    signer: "0x0000000000000000000000000000000000000002",
+                    taker: "0x0000000000000000000000000000000000000003",
+                    tokenId: "1",
+                    makerAmount: "100000000",
+                    takerAmount: "200000000",
+                    side: "BUY",
+                    expiration: "0",
+                    nonce: "1",
+                    feeRateBps: "100",
+                    signatureType: 2,
+                    signature: "0x",
+                },
+                owner: "aaaa-bbbb-cccc-dddd",
+                orderType: "FOK",
+            });
+        });
+
+        it("All orders combinations", async () => {
+            // publicly known private key
+            const token =
+                "1343197538147866997676250008839231694243646439454152539053893078719042421992";
+            const privateKey = "0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80";
+            const address = "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266";
+            const wallet = new Wallet(privateKey);
+            const chainId = Chain.MUMBAI;
+            const owner = "f4f247b7-4ac7-ff29-a152-04fda0a8755a";
+
+            // IOC BUY EOA
+            let userOrder: UserOrder = {
+                tokenID: token,
+                price: 0.5,
+                side: Side.BUY,
+                size: 100,
+            };
+            let signedOrder = await createOrder(
+                wallet,
+                chainId,
+                SignatureType.EOA,
+                address,
+                userOrder,
+            );
+            expect(signedOrder).not.null;
+            expect(signedOrder).not.undefined;
+
+            let jsonOrder = orderToJson(signedOrder, owner, OrderType.IOC);
+            expect(jsonOrder).not.null;
+            expect(jsonOrder).not.undefined;
+
+            expect(jsonOrder).deep.equal({
+                order: {
+                    salt: parseInt(signedOrder.salt),
+                    maker: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+                    signer: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+                    taker: "0x0000000000000000000000000000000000000000",
+                    tokenId: token,
+                    makerAmount: "50000000",
+                    takerAmount: "100000000",
+                    side: "BUY",
+                    expiration: "0",
+                    nonce: "0",
+                    feeRateBps: "0",
+                    signatureType: 0,
+                    signature: signedOrder.signature,
+                },
+                owner: owner,
+                orderType: OrderType.IOC,
+            });
+
+            // IOC BUY POLY_PROXY
+            userOrder = {
+                tokenID: token,
+                price: 0.5,
+                side: Side.BUY,
+                size: 100,
+            };
+            signedOrder = await createOrder(
+                wallet,
+                chainId,
+                SignatureType.POLY_PROXY,
+                address,
+                userOrder,
+            );
+            expect(signedOrder).not.null;
+            expect(signedOrder).not.undefined;
+
+            jsonOrder = orderToJson(signedOrder, owner, OrderType.IOC);
+            expect(jsonOrder).not.null;
+            expect(jsonOrder).not.undefined;
+
+            expect(jsonOrder).deep.equal({
+                order: {
+                    salt: parseInt(signedOrder.salt),
+                    maker: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+                    signer: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+                    taker: "0x0000000000000000000000000000000000000000",
+                    tokenId: token,
+                    makerAmount: "50000000",
+                    takerAmount: "100000000",
+                    side: "BUY",
+                    expiration: "0",
+                    nonce: "0",
+                    feeRateBps: "0",
+                    signatureType: 1,
+                    signature: signedOrder.signature,
+                },
+                owner: owner,
+                orderType: OrderType.IOC,
+            });
+
+            // IOC BUY POLY_GNOSIS_SAFE
+            userOrder = {
+                tokenID: token,
+                price: 0.5,
+                side: Side.BUY,
+                size: 100,
+            };
+            signedOrder = await createOrder(
+                wallet,
+                chainId,
+                SignatureType.POLY_GNOSIS_SAFE,
+                address,
+                userOrder,
+            );
+            expect(signedOrder).not.null;
+            expect(signedOrder).not.undefined;
+
+            jsonOrder = orderToJson(signedOrder, owner, OrderType.IOC);
+            expect(jsonOrder).not.null;
+            expect(jsonOrder).not.undefined;
+
+            expect(jsonOrder).deep.equal({
+                order: {
+                    salt: parseInt(signedOrder.salt),
+                    maker: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+                    signer: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+                    taker: "0x0000000000000000000000000000000000000000",
+                    tokenId: token,
+                    makerAmount: "50000000",
+                    takerAmount: "100000000",
+                    side: "BUY",
+                    expiration: "0",
+                    nonce: "0",
+                    feeRateBps: "0",
+                    signatureType: 2,
+                    signature: signedOrder.signature,
+                },
+                owner: owner,
+                orderType: OrderType.IOC,
+            });
+
+            // IOC SELL EOA
+            userOrder = {
+                tokenID: token,
+                price: 0.5,
+                side: Side.SELL,
+                size: 100,
+            };
+            signedOrder = await createOrder(wallet, chainId, SignatureType.EOA, address, userOrder);
+            expect(signedOrder).not.null;
+            expect(signedOrder).not.undefined;
+
+            jsonOrder = orderToJson(signedOrder, owner, OrderType.IOC);
+            expect(jsonOrder).not.null;
+            expect(jsonOrder).not.undefined;
+
+            expect(jsonOrder).deep.equal({
+                order: {
+                    salt: parseInt(signedOrder.salt),
+                    maker: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+                    signer: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+                    taker: "0x0000000000000000000000000000000000000000",
+                    tokenId: token,
+                    makerAmount: "100000000",
+                    takerAmount: "50000000",
+                    side: "SELL",
+                    expiration: "0",
+                    nonce: "0",
+                    feeRateBps: "0",
+                    signatureType: 0,
+                    signature: signedOrder.signature,
+                },
+                owner: owner,
+                orderType: OrderType.IOC,
+            });
+
+            // IOC SELL POLY_PROXY
+            userOrder = {
+                tokenID: token,
+                price: 0.5,
+                side: Side.SELL,
+                size: 100,
+            };
+            signedOrder = await createOrder(
+                wallet,
+                chainId,
+                SignatureType.POLY_PROXY,
+                address,
+                userOrder,
+            );
+            expect(signedOrder).not.null;
+            expect(signedOrder).not.undefined;
+
+            jsonOrder = orderToJson(signedOrder, owner, OrderType.IOC);
+            expect(jsonOrder).not.null;
+            expect(jsonOrder).not.undefined;
+
+            expect(jsonOrder).deep.equal({
+                order: {
+                    salt: parseInt(signedOrder.salt),
+                    maker: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+                    signer: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+                    taker: "0x0000000000000000000000000000000000000000",
+                    tokenId: token,
+                    makerAmount: "100000000",
+                    takerAmount: "50000000",
+                    side: "SELL",
+                    expiration: "0",
+                    nonce: "0",
+                    feeRateBps: "0",
+                    signatureType: 1,
+                    signature: signedOrder.signature,
+                },
+                owner: owner,
+                orderType: OrderType.IOC,
+            });
+
+            // IOC SELL POLY_GNOSIS_SAFE
+            userOrder = {
+                tokenID: token,
+                price: 0.5,
+                side: Side.SELL,
+                size: 100,
+            };
+            signedOrder = await createOrder(
+                wallet,
+                chainId,
+                SignatureType.POLY_GNOSIS_SAFE,
+                address,
+                userOrder,
+            );
+            expect(signedOrder).not.null;
+            expect(signedOrder).not.undefined;
+
+            jsonOrder = orderToJson(signedOrder, owner, OrderType.IOC);
+            expect(jsonOrder).not.null;
+            expect(jsonOrder).not.undefined;
+
+            expect(jsonOrder).deep.equal({
+                order: {
+                    salt: parseInt(signedOrder.salt),
+                    maker: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+                    signer: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+                    taker: "0x0000000000000000000000000000000000000000",
+                    tokenId: token,
+                    makerAmount: "100000000",
+                    takerAmount: "50000000",
+                    side: "SELL",
+                    expiration: "0",
+                    nonce: "0",
+                    feeRateBps: "0",
+                    signatureType: 2,
+                    signature: signedOrder.signature,
+                },
+                owner: owner,
+                orderType: OrderType.IOC,
+            });
+
+            // FOK BUY EOA
+            let userMarketOrder: UserMarketOrder = {
+                tokenID: token,
+                price: 0.5,
+                amount: 100,
+            };
+            signedOrder = await createMarketOrder(
+                wallet,
+                chainId,
+                SignatureType.EOA,
+                address,
+                userMarketOrder,
+            );
+            expect(signedOrder).not.null;
+            expect(signedOrder).not.undefined;
+
+            jsonOrder = orderToJson(signedOrder, owner, OrderType.FOK);
+            expect(jsonOrder).not.null;
+            expect(jsonOrder).not.undefined;
+
+            expect(jsonOrder).deep.equal({
+                order: {
+                    salt: parseInt(signedOrder.salt),
+                    maker: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+                    signer: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+                    taker: "0x0000000000000000000000000000000000000000",
+                    tokenId: token,
+                    makerAmount: "100000000",
+                    takerAmount: "200000000",
+                    side: "BUY",
+                    expiration: "0",
+                    nonce: "0",
+                    feeRateBps: "0",
+                    signatureType: 0,
+                    signature: signedOrder.signature,
+                },
+                owner: owner,
+                orderType: OrderType.FOK,
+            });
+
+            // FOK BUY POLY_PROXY
+            userMarketOrder = {
+                tokenID: token,
+                price: 0.5,
+                amount: 100,
+            };
+            signedOrder = await createMarketOrder(
+                wallet,
+                chainId,
+                SignatureType.POLY_PROXY,
+                address,
+                userMarketOrder,
+            );
+            expect(signedOrder).not.null;
+            expect(signedOrder).not.undefined;
+
+            jsonOrder = orderToJson(signedOrder, owner, OrderType.FOK);
+            expect(jsonOrder).not.null;
+            expect(jsonOrder).not.undefined;
+
+            expect(jsonOrder).deep.equal({
+                order: {
+                    salt: parseInt(signedOrder.salt),
+                    maker: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+                    signer: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+                    taker: "0x0000000000000000000000000000000000000000",
+                    tokenId: token,
+                    makerAmount: "100000000",
+                    takerAmount: "200000000",
+                    side: "BUY",
+                    expiration: "0",
+                    nonce: "0",
+                    feeRateBps: "0",
+                    signatureType: 1,
+                    signature: signedOrder.signature,
+                },
+                owner: owner,
+                orderType: OrderType.FOK,
+            });
+
+            // FOK BUY POLY_GNOSIS_SAFE
+            userMarketOrder = {
+                tokenID: token,
+                price: 0.5,
+                amount: 100,
+            };
+            signedOrder = await createMarketOrder(
+                wallet,
+                chainId,
+                SignatureType.POLY_GNOSIS_SAFE,
+                address,
+                userMarketOrder,
+            );
+            expect(signedOrder).not.null;
+            expect(signedOrder).not.undefined;
+
+            jsonOrder = orderToJson(signedOrder, owner, OrderType.FOK);
+            expect(jsonOrder).not.null;
+            expect(jsonOrder).not.undefined;
+
+            expect(jsonOrder).deep.equal({
+                order: {
+                    salt: parseInt(signedOrder.salt),
+                    maker: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+                    signer: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+                    taker: "0x0000000000000000000000000000000000000000",
+                    tokenId: token,
+                    makerAmount: "100000000",
+                    takerAmount: "200000000",
+                    side: "BUY",
+                    expiration: "0",
+                    nonce: "0",
+                    feeRateBps: "0",
+                    signatureType: 2,
+                    signature: signedOrder.signature,
+                },
+                owner: owner,
+                orderType: OrderType.FOK,
             });
         });
     });

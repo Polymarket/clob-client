@@ -1,8 +1,8 @@
 import { Wallet } from "@ethersproject/wallet";
 import { JsonRpcSigner } from "@ethersproject/providers";
 import { SignedOrder, SignatureType } from "@polymarket/order-utils";
-import { createOrder } from "./helpers";
-import { Chain, UserOrder } from "../types";
+import { createMarketOrder, createOrder } from "./helpers";
+import { Chain, UserMarketOrder, UserOrder } from "../types";
 
 export class OrderBuilder {
     readonly signer: Wallet | JsonRpcSigner;
@@ -39,6 +39,19 @@ export class OrderBuilder {
             this.signatureType,
             this.funderAddress,
             userOrder,
+        );
+    }
+
+    /**
+     * Generate and sign a market order
+     */
+    public async buildMarketOrder(userMarketOrder: UserMarketOrder): Promise<SignedOrder> {
+        return createMarketOrder(
+            this.signer,
+            this.chainId,
+            this.signatureType,
+            this.funderAddress,
+            userMarketOrder,
         );
     }
 }

@@ -1,26 +1,31 @@
 import { Side as UtilsSide, SignedOrder } from "@polymarket/order-utils";
+import { NewOrder, OrderType, Side } from "./types";
 
-export const orderToJson = (order: SignedOrder): any => {
-    let side = "";
+export const orderToJson = (order: SignedOrder, owner: string, orderType: OrderType): NewOrder => {
+    let side = Side.BUY;
     if (order.side == UtilsSide.BUY) {
-        side = "buy";
+        side = Side.BUY;
     } else {
-        side = "sell";
+        side = Side.SELL;
     }
     return {
-        salt: parseInt(order.salt, 10),
-        maker: order.maker,
-        signer: order.signer,
-        taker: order.taker,
-        tokenId: order.tokenId,
-        makerAmount: order.makerAmount,
-        takerAmount: order.takerAmount,
-        side,
-        expiration: order.expiration,
-        nonce: order.nonce,
-        feeRateBps: order.feeRateBps,
-        signatureType: order.signatureType,
-        signature: order.signature,
+        order: {
+            salt: parseInt(order.salt, 10),
+            maker: order.maker,
+            signer: order.signer,
+            taker: order.taker,
+            tokenId: order.tokenId,
+            makerAmount: order.makerAmount,
+            takerAmount: order.takerAmount,
+            side,
+            expiration: order.expiration,
+            nonce: order.nonce,
+            feeRateBps: order.feeRateBps,
+            signatureType: order.signatureType,
+            signature: order.signature,
+        },
+        owner,
+        orderType,
     };
 };
 
