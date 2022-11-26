@@ -53,7 +53,7 @@ export const buildOrderCreationArgs = async (
         // force 2 decimals places
         const rawTakerAmt = roundDown(userOrder.size, 4);
         const rawPrice = roundDown(userOrder.price, 4);
-        const rawMakerAmt = roundDown(rawTakerAmt * rawPrice, 4);
+        const rawMakerAmt = roundDown(rawTakerAmt * rawPrice, 6);
 
         makerAmount = parseUnits(rawMakerAmt.toString(), COLLATERAL_TOKEN_DECIMALS).toString();
         takerAmount = parseUnits(rawTakerAmt.toString(), CONDITIONAL_TOKEN_DECIMALS).toString();
@@ -62,7 +62,7 @@ export const buildOrderCreationArgs = async (
 
         const rawMakerAmt = roundDown(userOrder.size, 4);
         const rawPrice = roundDown(userOrder.price, 4);
-        const rawTakerAmt = roundDown(rawPrice * rawMakerAmt, 4);
+        const rawTakerAmt = roundDown(rawPrice * rawMakerAmt, 6);
 
         makerAmount = parseUnits(rawMakerAmt.toString(), CONDITIONAL_TOKEN_DECIMALS).toString();
         takerAmount = parseUnits(rawTakerAmt.toString(), COLLATERAL_TOKEN_DECIMALS).toString();
@@ -138,7 +138,7 @@ export const buildMarketOrderCreationArgs = async (
     // force 2 decimals places
     const rawMakerAmt = roundDown(userMarketOrder.amount, 4);
     const rawPrice = roundDown(userMarketOrder.price || 1, 4);
-    const rawTakerAmt = roundDown(rawMakerAmt / rawPrice, 4);
+    const rawTakerAmt = roundDown(rawMakerAmt / rawPrice, 6);
 
     const makerAmount = parseUnits(rawMakerAmt.toString(), COLLATERAL_TOKEN_DECIMALS).toString();
     const takerAmount = parseUnits(rawTakerAmt.toString(), CONDITIONAL_TOKEN_DECIMALS).toString();
