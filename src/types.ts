@@ -35,7 +35,7 @@ export enum Side {
 }
 
 export enum OrderType {
-    IOC = "IOC",
+    GTC = "GTC",
     FOK = "FOK",
 }
 

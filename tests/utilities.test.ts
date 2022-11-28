@@ -8,7 +8,7 @@ import { createMarketOrder, createOrder } from "../src/order-builder/helpers";
 
 describe("utilities", () => {
     describe("orderToJson", () => {
-        it("IOC buy", () => {
+        it("GTC buy", () => {
             const jsonOrder = orderToJson(
                 {
                     salt: "1000",
@@ -26,7 +26,7 @@ describe("utilities", () => {
                     signature: "0x",
                 },
                 "aaaa-bbbb-cccc-dddd",
-                OrderType.IOC,
+                OrderType.GTC,
             );
             expect(jsonOrder).not.null;
             expect(jsonOrder).not.undefined;
@@ -48,11 +48,11 @@ describe("utilities", () => {
                     signature: "0x",
                 },
                 owner: "aaaa-bbbb-cccc-dddd",
-                orderType: "IOC",
+                orderType: "GTC",
             });
         });
 
-        it("IOC sell", () => {
+        it("GTC sell", () => {
             const jsonOrder = orderToJson(
                 {
                     salt: "1000",
@@ -70,7 +70,7 @@ describe("utilities", () => {
                     signature: "0x",
                 },
                 "aaaa-bbbb-cccc-dddd",
-                OrderType.IOC,
+                OrderType.GTC,
             );
             expect(jsonOrder).not.null;
             expect(jsonOrder).not.undefined;
@@ -92,7 +92,7 @@ describe("utilities", () => {
                     signature: "0x",
                 },
                 owner: "aaaa-bbbb-cccc-dddd",
-                orderType: "IOC",
+                orderType: "GTC",
             });
         });
 
@@ -150,7 +150,7 @@ describe("utilities", () => {
             const chainId = Chain.MUMBAI;
             const owner = "f4f247b7-4ac7-ff29-a152-04fda0a8755a";
 
-            // IOC BUY EOA
+            // GTC BUY EOA
             let userOrder: UserOrder = {
                 tokenID: token,
                 price: 0.5,
@@ -167,7 +167,7 @@ describe("utilities", () => {
             expect(signedOrder).not.null;
             expect(signedOrder).not.undefined;
 
-            let jsonOrder = orderToJson(signedOrder, owner, OrderType.IOC);
+            let jsonOrder = orderToJson(signedOrder, owner, OrderType.GTC);
             expect(jsonOrder).not.null;
             expect(jsonOrder).not.undefined;
 
@@ -188,10 +188,10 @@ describe("utilities", () => {
                     signature: signedOrder.signature,
                 },
                 owner: owner,
-                orderType: OrderType.IOC,
+                orderType: OrderType.GTC,
             });
 
-            // IOC BUY POLY_PROXY
+            // GTC BUY POLY_PROXY
             userOrder = {
                 tokenID: token,
                 price: 0.5,
@@ -208,7 +208,7 @@ describe("utilities", () => {
             expect(signedOrder).not.null;
             expect(signedOrder).not.undefined;
 
-            jsonOrder = orderToJson(signedOrder, owner, OrderType.IOC);
+            jsonOrder = orderToJson(signedOrder, owner, OrderType.GTC);
             expect(jsonOrder).not.null;
             expect(jsonOrder).not.undefined;
 
@@ -229,10 +229,10 @@ describe("utilities", () => {
                     signature: signedOrder.signature,
                 },
                 owner: owner,
-                orderType: OrderType.IOC,
+                orderType: OrderType.GTC,
             });
 
-            // IOC BUY POLY_GNOSIS_SAFE
+            // GTC BUY POLY_GNOSIS_SAFE
             userOrder = {
                 tokenID: token,
                 price: 0.5,
@@ -249,7 +249,7 @@ describe("utilities", () => {
             expect(signedOrder).not.null;
             expect(signedOrder).not.undefined;
 
-            jsonOrder = orderToJson(signedOrder, owner, OrderType.IOC);
+            jsonOrder = orderToJson(signedOrder, owner, OrderType.GTC);
             expect(jsonOrder).not.null;
             expect(jsonOrder).not.undefined;
 
@@ -270,10 +270,10 @@ describe("utilities", () => {
                     signature: signedOrder.signature,
                 },
                 owner: owner,
-                orderType: OrderType.IOC,
+                orderType: OrderType.GTC,
             });
 
-            // IOC SELL EOA
+            // GTC SELL EOA
             userOrder = {
                 tokenID: token,
                 price: 0.5,
@@ -284,7 +284,7 @@ describe("utilities", () => {
             expect(signedOrder).not.null;
             expect(signedOrder).not.undefined;
 
-            jsonOrder = orderToJson(signedOrder, owner, OrderType.IOC);
+            jsonOrder = orderToJson(signedOrder, owner, OrderType.GTC);
             expect(jsonOrder).not.null;
             expect(jsonOrder).not.undefined;
 
@@ -305,10 +305,10 @@ describe("utilities", () => {
                     signature: signedOrder.signature,
                 },
                 owner: owner,
-                orderType: OrderType.IOC,
+                orderType: OrderType.GTC,
             });
 
-            // IOC SELL POLY_PROXY
+            // GTC SELL POLY_PROXY
             userOrder = {
                 tokenID: token,
                 price: 0.5,
@@ -325,7 +325,7 @@ describe("utilities", () => {
             expect(signedOrder).not.null;
             expect(signedOrder).not.undefined;
 
-            jsonOrder = orderToJson(signedOrder, owner, OrderType.IOC);
+            jsonOrder = orderToJson(signedOrder, owner, OrderType.GTC);
             expect(jsonOrder).not.null;
             expect(jsonOrder).not.undefined;
 
@@ -346,10 +346,10 @@ describe("utilities", () => {
                     signature: signedOrder.signature,
                 },
                 owner: owner,
-                orderType: OrderType.IOC,
+                orderType: OrderType.GTC,
             });
 
-            // IOC SELL POLY_GNOSIS_SAFE
+            // GTC SELL POLY_GNOSIS_SAFE
             userOrder = {
                 tokenID: token,
                 price: 0.5,
@@ -366,7 +366,7 @@ describe("utilities", () => {
             expect(signedOrder).not.null;
             expect(signedOrder).not.undefined;
 
-            jsonOrder = orderToJson(signedOrder, owner, OrderType.IOC);
+            jsonOrder = orderToJson(signedOrder, owner, OrderType.GTC);
             expect(jsonOrder).not.null;
             expect(jsonOrder).not.undefined;
 
@@ -387,7 +387,7 @@ describe("utilities", () => {
                     signature: signedOrder.signature,
                 },
                 owner: owner,
-                orderType: OrderType.IOC,
+                orderType: OrderType.GTC,
             });
 
             // FOK BUY EOA
