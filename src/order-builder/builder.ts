@@ -1,7 +1,7 @@
 import { Wallet } from "@ethersproject/wallet";
 import { JsonRpcSigner } from "@ethersproject/providers";
 import { SignedOrder, SignatureType } from "@polymarket/order-utils";
-import { createMarketOrder, createOrder } from "./helpers";
+import { createMarketBuyOrder, createOrder } from "./helpers";
 import { Chain, UserMarketOrder, UserOrder } from "../types";
 
 export class OrderBuilder {
@@ -46,7 +46,7 @@ export class OrderBuilder {
      * Generate and sign a market order
      */
     public async buildMarketOrder(userMarketOrder: UserMarketOrder): Promise<SignedOrder> {
-        return createMarketOrder(
+        return createMarketBuyOrder(
             this.signer,
             this.chainId,
             this.signatureType,
