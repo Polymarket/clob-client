@@ -22,7 +22,7 @@ async function main() {
     const YES = "1343197538147866997676250008839231694243646439454152539053893078719042421992";
     const marketOrder = await clobClient.createMarketOrder({
         tokenID: YES,
-        amount: 5,
+        amount: 100,
         feeRateBps: 0,
         nonce: 0,
         price: 0.5,
