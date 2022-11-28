@@ -19,12 +19,15 @@ export const request = async (
         return response;
     } catch (err) {
         if (axios.isAxiosError(err)) {
-            console.error(err.response?.status);
-            console.error(err.response?.statusText);
-            console.error(err.response?.data);
+            console.error("request error", {
+                status: err.response?.status,
+                statusText: err.response?.statusText,
+                data: err.response?.data,
+            });
             return { error: err.response?.data };
         }
         console.error(err);
+
         return { error: err };
     }
 };
