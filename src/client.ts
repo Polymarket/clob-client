@@ -295,7 +295,7 @@ export class ClobClient {
 
     public async postOrder(
         order: SignedOrder,
-        orderType: OrderType = OrderType.IOC,
+        orderType: OrderType = OrderType.GTC,
         optionalParams?: OptionalParams,
     ): Promise<any> {
         this.canL2Auth();
