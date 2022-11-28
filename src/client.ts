@@ -263,7 +263,7 @@ export class ClobClient {
         return this.orderBuilder.buildOrder(userOrder);
     }
 
-    public async createMarketOrder(userMarketOrder: UserMarketOrder): Promise<SignedOrder> {
+    public async createMarketBuyOrder(userMarketOrder: UserMarketOrder): Promise<SignedOrder> {
         this.canL1Auth();
 
         if (!userMarketOrder.price) {

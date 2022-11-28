@@ -4,7 +4,7 @@ import { orderToJson } from "../src/utilities";
 import { Side as UtilsSide, SignatureType } from "@polymarket/order-utils";
 import { Chain, OrderType, Side, UserMarketOrder, UserOrder } from "../src";
 import { Wallet } from "@ethersproject/wallet";
-import { createMarketOrder, createOrder } from "../src/order-builder/helpers";
+import { createMarketBuyOrder, createOrder } from "../src/order-builder/helpers";
 
 describe("utilities", () => {
     describe("orderToJson", () => {
@@ -396,7 +396,7 @@ describe("utilities", () => {
                 price: 0.5,
                 amount: 100,
             };
-            signedOrder = await createMarketOrder(
+            signedOrder = await createMarketBuyOrder(
                 wallet,
                 chainId,
                 SignatureType.EOA,
@@ -436,7 +436,7 @@ describe("utilities", () => {
                 price: 0.5,
                 amount: 100,
             };
-            signedOrder = await createMarketOrder(
+            signedOrder = await createMarketBuyOrder(
                 wallet,
                 chainId,
                 SignatureType.POLY_PROXY,
@@ -476,7 +476,7 @@ describe("utilities", () => {
                 price: 0.5,
                 amount: 100,
             };
-            signedOrder = await createMarketOrder(
+            signedOrder = await createMarketBuyOrder(
                 wallet,
                 chainId,
                 SignatureType.POLY_GNOSIS_SAFE,

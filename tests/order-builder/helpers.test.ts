@@ -5,8 +5,8 @@ import {
     buildOrderCreationArgs,
     buildOrder,
     createOrder,
-    buildMarketOrderCreationArgs,
-    createMarketOrder,
+    buildMarketBuyOrderCreationArgs,
+    createMarketBuyOrder,
 } from "../../src/order-builder/helpers";
 import {
     OrderData,
@@ -280,7 +280,7 @@ describe("helpers", () => {
         });
     });
 
-    describe("buildMarketOrderCreationArgs", () => {
+    describe("buildMarketBuyOrderCreationArgs", () => {
         it("market buy order", async () => {
             const order: UserMarketOrder = {
                 tokenID: "123",
@@ -290,7 +290,7 @@ describe("helpers", () => {
                 nonce: 123,
                 expiration: 50000,
             };
-            const orderData: OrderData = await buildMarketOrderCreationArgs(
+            const orderData: OrderData = await buildMarketBuyOrderCreationArgs(
                 "0x0000000000000000000000000000000000000001",
                 "0x0000000000000000000000000000000000000002",
                 SignatureType.EOA,
@@ -320,7 +320,7 @@ describe("helpers", () => {
                 nonce: 123,
                 expiration: 50000,
             };
-            const orderData: OrderData = await buildMarketOrderCreationArgs(
+            const orderData: OrderData = await buildMarketBuyOrderCreationArgs(
                 "0x0000000000000000000000000000000000000001",
                 "0x0000000000000000000000000000000000000002",
                 SignatureType.EOA,
@@ -349,7 +349,7 @@ describe("helpers", () => {
                 feeRateBps: 100,
                 nonce: 0,
             };
-            const orderData: OrderData = await buildMarketOrderCreationArgs(
+            const orderData: OrderData = await buildMarketBuyOrderCreationArgs(
                 "",
                 "",
                 SignatureType.EOA,
@@ -367,7 +367,7 @@ describe("helpers", () => {
         });
     });
 
-    describe("createMarketOrder", () => {
+    describe("createMarketBuyOrder", () => {
         it("buy order", async () => {
             const order: UserMarketOrder = {
                 tokenID: "123",
@@ -378,7 +378,7 @@ describe("helpers", () => {
                 expiration: 50000,
             };
 
-            const signedOrder = await createMarketOrder(
+            const signedOrder = await createMarketBuyOrder(
                 wallet,
                 Chain.MUMBAI,
                 SignatureType.EOA,

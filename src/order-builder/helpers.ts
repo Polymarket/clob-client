@@ -129,7 +129,7 @@ export const createOrder = async (
 /**
  * Translate simple user market order to args used to generate Orders
  */
-export const buildMarketOrderCreationArgs = async (
+export const buildMarketBuyOrderCreationArgs = async (
     signer: string,
     maker: string,
     signatureType: SignatureType,
@@ -179,7 +179,7 @@ export const buildMarketOrderCreationArgs = async (
     } as OrderData;
 };
 
-export const createMarketOrder = async (
+export const createMarketBuyOrder = async (
     eoaSigner: Wallet | JsonRpcSigner,
     chainId: Chain,
     signatureType: SignatureType,
@@ -192,7 +192,7 @@ export const createMarketOrder = async (
     const maker = funderAddress === undefined ? eoaSignerAddress : funderAddress;
     const clobContracts = getContracts(chainId);
 
-    const orderData = await buildMarketOrderCreationArgs(
+    const orderData = await buildMarketBuyOrderCreationArgs(
         eoaSignerAddress,
         maker,
         signatureType,
