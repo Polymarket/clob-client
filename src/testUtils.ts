@@ -2,7 +2,8 @@ import { ethers, Wallet } from "ethers";
 import { BigNumber, constants, utils } from "ethers";
 import { usdcAbi } from "./usdcabi";
 import { ctfAbi } from "./ctfabi";
-import { Side, ApiKeyCreds } from "./types";
+import { Side, ApiKeyCreds, OrderType } from "./types";
+import { SignatureType } from "@polymarket/order-utils";
 import {
     ZERO,
     MAINNET_CONTRACTS,
@@ -202,6 +203,29 @@ export async function createOrder(
     console.log(resp);
 }
 
+export async function createMarketBuyOrder(
+    mainnetQ: boolean,
+    adminQ: boolean,
+    tokenID: string,
+    price: number,
+    amount: number,
+) {
+    const clobClient = await getCredentialedClobClient(mainnetQ, adminQ);
+
+    console.log(`Placing order...`);
+
+    let limitOrder;
+
+    limitOrder = await clobClient.createMarketBuyOrder({
+        tokenID: tokenID,
+        price: price,
+        amount: amount,
+    });
+
+    const resp = await clobClient.postOrder(limitOrder, OrderType.FOK);
+    console.log(resp);
+}
+
 export async function getOrders(mainnetQ: boolean, adminQ: boolean, market: string) {
     const clobClient = await getCredentialedClobClient(mainnetQ, adminQ);
 
@@ -244,6 +268,47 @@ export async function getTrades(
         trades = await clobClient.getTrades({
             market: market,
             maker: (clobClient.signer as Wallet).address.toLowerCase(),
+            limit: 100,
+            after: "1666057902",
+        });
+    }
+    console.log(JSON.stringify(trades, null, 4));
+}
+
+export async function getTradesForCreds(
+    mainnetQ: boolean,
+    takerQ: boolean,
+    creds: ApiKeyCreds,
+    address: string,
+    market: string,
+) {
+    const wallet = getWallet(mainnetQ, true);
+    let host: string;
+    if (mainnetQ) {
+        host = MAINNET_HOST;
+    } else {
+        host = MUMBAI_HOST;
+    }
+    const clobClient = new ClobClient(
+        host,
+        await wallet.getChainId(),
+        wallet,
+        creds,
+        SignatureType.POLY_GNOSIS_SAFE,
+        address,
+    );
+    let trades;
+    if (takerQ) {
+        trades = await clobClient.getTrades({
+            market: market,
+            taker: address,
+            limit: 100,
+            after: "1666057902",
+        });
+    } else {
+        trades = await clobClient.getTrades({
+            market: market,
+            maker: address,
             limit: 100,
             after: "1666057902",
         });

@@ -247,10 +247,18 @@ export class ClobClient {
             requestPath: endpoint,
         };
 
+        let address: string;
+        if (params!.maker) {
+            address = params!.maker;
+        } else {
+            address = params!.taker as string;
+        }
+
         const headers = await createL2Headers(
             this.signer as Wallet | JsonRpcSigner,
             this.creds as ApiKeyCreds,
             headerArgs,
+            address,
         );
 
         const url = addTradeParamsToUrl(`${this.host}${endpoint}`, params);

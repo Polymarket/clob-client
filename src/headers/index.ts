@@ -30,8 +30,12 @@ export const createL2Headers = async (
     signer: Wallet | JsonRpcSigner,
     creds: ApiKeyCreds,
     l2HeaderArgs: L2HeaderArgs,
+    address?: string,
 ): Promise<L2PolyHeader> => {
-    const address = await signer.getAddress();
+    if (!address) {
+        address = await signer.getAddress();
+    }
+    //const address = await signer.getAddress();
     const ts = Math.floor(Date.now() / 1000);
 
     const sig = buildPolyHmacSignature(
