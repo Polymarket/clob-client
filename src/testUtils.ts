@@ -357,3 +357,14 @@ export async function checkFundingAllowance(mainnetQ: boolean, addressToCheck: s
 
     console.log("ADDRESS DOESNT HAVE USDC ALLOWANCE");
 }
+
+export async function getLastestPriceHistoryDataPoint(mainnetQ: boolean, market: string) {
+    const clobClient = await getCredentialedClobClient(mainnetQ, true);
+    const history = await clobClient.getPricesHistory({
+        startTs: new Date().getTime() / 1000 - 1000,
+        endTs: new Date().getTime() / 1000,
+        market: market,
+    });
+
+    console.log((history as any)["history"].slice(-1)[0]["p"]);
+}

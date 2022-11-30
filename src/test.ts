@@ -13,6 +13,7 @@ import {
     checkFundingAllowance,
     createMarketBuyOrder,
     getTradesForCreds,
+    getLastestPriceHistoryDataPoint,
 } from "./testUtils";
 import { MUMBAI_MARKET, MAINNET_MARKET } from "./testConstants";
 
@@ -37,16 +38,18 @@ import { MUMBAI_MARKET, MAINNET_MARKET } from "./testConstants";
 
 //checkFundingAllowance(false, "0x8208003B936d73694A90b2da579F85BFCf870Cc1").then();
 
-const credsToUse: ApiKeyCreds = {
-    key: process.env.APIKEY as string,
-    secret: process.env.SECRET as string,
-    passphrase: process.env.PASSPHRASE as string,
-};
+// const credsToUse: ApiKeyCreds = {
+//     key: process.env.APIKEY as string,
+//     secret: process.env.SECRET as string,
+//     passphrase: process.env.PASSPHRASE as string,
+// };
 
-getTradesForCreds(
-    true,
-    false,
-    credsToUse,
-    "0x388911E52Bb2EB440B9f03eD24bcef13C93E1499".toLowerCase(),
-    "0x41190eb9336ae73949c04f4900f9865092e69a57cf9c942a6157abf6ae8d16c6",
-).then();
+// getTradesForCreds(
+//     true,
+//     false,
+//     credsToUse,
+//     "0x388911E52Bb2EB440B9f03eD24bcef13C93E1499".toLowerCase(),
+//     "0x41190eb9336ae73949c04f4900f9865092e69a57cf9c942a6157abf6ae8d16c6",
+// ).then();
+
+getLastestPriceHistoryDataPoint(true, MAINNET_MARKET.No).then();
