@@ -52,4 +52,4 @@ import { MUMBAI_MARKET, MAINNET_MARKET } from "./testConstants";
 //     "0x41190eb9336ae73949c04f4900f9865092e69a57cf9c942a6157abf6ae8d16c6",
 // ).then();
 
-getLastestPriceHistoryDataPoint(true, MAINNET_MARKET.No).then();
+getLastestPriceHistoryDataPoint(true, MAINNET_MARKET.Yes).then();
