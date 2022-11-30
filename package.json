@@ -1,7 +1,7 @@
 {
     "name": "@polymarket/clob-client",
     "description": "Typescript client for Polymarket's CLOB",
-    "version": "1.1.8",
+    "version": "1.1.9",
     "contributors": [
         {
             "name": "Jonathan Amenechi",
@@ -14,6 +14,10 @@
         {
             "name": "Matt Walker",
             "url": "https://github.com/mttwlkr"
+        },
+        {
+            "name": "Liam Kovatch",
+            "url": "https://github.com/l-kov"
         }
     ],
     "main": "dist/index.js",

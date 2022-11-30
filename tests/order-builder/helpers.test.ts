@@ -69,6 +69,45 @@ describe("helpers", () => {
             expect(signedOrder.signature).not.empty;
         });
 
+        it("buy order precision", async () => {
+            const order: UserOrder = {
+                tokenID: "123",
+                price: 0.82,
+                size: 20.0,
+                side: Side.BUY,
+                feeRateBps: 0,
+                nonce: 123,
+                expiration: 50000,
+                taker: "0x0000000000000000000000000000000000000003",
+            };
+            const orderData: OrderData = await buildOrderCreationArgs(
+                "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+                "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+                SignatureType.EOA,
+                order,
+            );
+            expect(orderData).not.null;
+            expect(orderData).not.undefined;
+
+            const signedOrder = await buildOrder(wallet, contracts.Exchange, chainId, orderData);
+            expect(signedOrder).not.null;
+            expect(signedOrder).not.undefined;
+
+            expect(signedOrder.salt).not.empty;
+            expect(signedOrder.maker).equal("0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266");
+            expect(signedOrder.signer).equal("0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266");
+            expect(signedOrder.taker).equal("0x0000000000000000000000000000000000000003");
+            expect(signedOrder.tokenId).equal("123");
+            expect(signedOrder.makerAmount).equal("16400000");
+            expect(signedOrder.takerAmount).equal("20000000");
+            expect(signedOrder.side).equal(UtilsSide.BUY);
+            expect(signedOrder.expiration).equal("50000");
+            expect(signedOrder.nonce).equal("123");
+            expect(signedOrder.feeRateBps).equal("0");
+            expect(signedOrder.signatureType).equal(SignatureType.EOA);
+            expect(signedOrder.signature).not.empty;
+        });
+
         it("sell order", async () => {
             const order: UserOrder = {
                 tokenID: "5",
