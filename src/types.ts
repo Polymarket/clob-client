@@ -216,6 +216,16 @@ export interface OpenOrderParams {
     asset_id?: string;
 }
 
+export interface MakerOrder {
+    order_id: string;
+    owner: string;
+    matched_amount: string;
+    price: string;
+    asset_id: string;
+    outcome: string;
+    outcome_index: string;
+}
+
 export interface Trade {
     id: string;
 
@@ -233,8 +243,7 @@ export interface Trade {
     outcome_index: number;
     bucket_index: number;
     owner: string;
-    maker_orders: string[];
-    maker_orders_sizes_prices: string[][];
+    maker_orders: MakerOrder[];
 }
 
 export type OptionalParams = { [query: string]: string };
