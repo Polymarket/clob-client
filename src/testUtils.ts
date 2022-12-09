@@ -261,14 +261,14 @@ export async function getTrades(
         trades = await clobClient.getTrades({
             market: market,
             taker: (clobClient.signer as Wallet).address.toLowerCase(),
-            limit: 100,
+            limit: 10,
             after: "1666057902",
         });
     } else {
         trades = await clobClient.getTrades({
             market: market,
             maker: (clobClient.signer as Wallet).address.toLowerCase(),
-            limit: 100,
+            limit: 10,
             after: "1666057902",
         });
     }

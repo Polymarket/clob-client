@@ -2,7 +2,14 @@ import { config as dotenvConfig } from "dotenv";
 import { resolve } from "path";
 dotenvConfig({ path: resolve(__dirname, "../.env") });
 import { WebSocket } from "ws";
-import { MAINNET_WSS_HOST, Market, MUMBAI_MARKET, MUMBAI_WSS_HOST } from "./testConstants";
+import {
+    MAINNET_MARKET,
+    MAINNET_WSS_HOST,
+    Market,
+    MUMBAI_MARKET,
+    MUMBAI_MARKET_TWO,
+    MUMBAI_WSS_HOST,
+} from "./testConstants";
 import { ApiKeyCreds } from "./types";
 import { getApiKey } from "./testUtils";
 
@@ -51,4 +58,4 @@ async function main(mainnetQ: boolean, adminQ: boolean, type: "user" | "market",
     }, 50000);
 }
 
-main(false, false, "user", MUMBAI_MARKET);
+main(true, false, "market", MAINNET_MARKET);

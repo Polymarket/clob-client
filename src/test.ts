@@ -15,7 +15,9 @@ import {
     getTradesForCreds,
     getLastestPriceHistoryDataPoint,
 } from "./testUtils";
-import { MUMBAI_MARKET, MAINNET_MARKET } from "./testConstants";
+
+import { buildOrderCreationArgs } from "./order-builder/helpers";
+import { MUMBAI_MARKET, MAINNET_MARKET, MUMBAI_MARKET_TWO } from "./testConstants";
 
 // setup(true, true)
 //     .then(r => console.log(r))
@@ -25,14 +27,14 @@ import { MUMBAI_MARKET, MAINNET_MARKET } from "./testConstants";
 //     .then(r => console.log(r))
 //     .catch(e => console.log(e));
 
-//createOrder(false, false, MUMBAI_MARKET.Yes, 0.52, Side.SELL, 30).then();
+//createOrder(false, false, MUMBAI_MARKET_TWO.Yes, 0.49, Side.BUY, 20).then();
 //createMarketBuyOrder(false, false, MUMBAI_MARKET.Yes, 0.52, 15);
 //cancelAllOrders(false, false).then();
 //getTrades(false, false, false, MUMBAI_MARKET.Condition).then(); // not correct (I was taker, should only be one maker_orders_sizes_prices)
 //getOrders(false, true, MUMBAI_MARKET.Condition).then();
 
 //getOrder(false, true, "0xce92e3bcafb10f4b8333560f8119dcb85ee66cc13572cb099656540f6ccf654f").then();
-//cancelOrder(false, true, "0x01b528478a01575ba34a82148e19483feb606115ee928f2bb99ab79446613573");
+//cancelOrder(false, false, "0x76bc0b40317772a916ea1de54a2d97115078decd792e8f3fc2b7a52ab8bec66b");
 
 //isOperator;
 
@@ -52,4 +54,10 @@ import { MUMBAI_MARKET, MAINNET_MARKET } from "./testConstants";
 //     "0x41190eb9336ae73949c04f4900f9865092e69a57cf9c942a6157abf6ae8d16c6",
 // ).then();
 
-getLastestPriceHistoryDataPoint(true, MAINNET_MARKET.Yes).then();
+//getLastestPriceHistoryDataPoint(true, MAINNET_MARKET.Yes).then();
+
+// buildOrderCreationArgs("", "", 0, { tokenID: "", price: 0.57, size: 10, side: Side.SELL }).then(r =>
+//     console.log(r),
+// );
+
+createOrder(false, false, MUMBAI_MARKET.Yes, 0.57, Side.SELL, 10).then();
