@@ -12,7 +12,7 @@ import {
     CONDITIONAL_TOKEN_DECIMALS,
 } from "@polymarket/order-utils";
 import { UserOrder, Side, Chain, UserMarketOrder } from "../types";
-import { roundDown, roundUp } from "../utilities";
+import { roundDown, roundUp, roundNormal } from "../utilities";
 
 /**
  * Generate and sign a order
@@ -52,7 +52,7 @@ export const buildOrderCreationArgs = async (
 
         // force 2 decimals places
         const rawTakerAmt = roundDown(userOrder.size, 4);
-        const rawPrice = roundDown(userOrder.price, 4);
+        const rawPrice = roundNormal(userOrder.price, 4); // prob can just round this normal
         const rawMakerAmt = roundUp(rawTakerAmt * rawPrice, 6);
 
         makerAmount = parseUnits(rawMakerAmt.toString(), COLLATERAL_TOKEN_DECIMALS).toString();
@@ -60,8 +60,8 @@ export const buildOrderCreationArgs = async (
     } else {
         side = UtilsSide.SELL;
 
-        const rawMakerAmt = roundDown(userOrder.size, 4);
-        const rawPrice = roundDown(userOrder.price, 4);
+        const rawMakerAmt = roundUp(userOrder.size, 4);
+        const rawPrice = roundNormal(userOrder.price, 4);
         const rawTakerAmt = roundDown(rawPrice * rawMakerAmt, 6);
 
         makerAmount = parseUnits(rawMakerAmt.toString(), CONDITIONAL_TOKEN_DECIMALS).toString();
