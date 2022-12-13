@@ -51,8 +51,8 @@ export const buildOrderCreationArgs = async (
         side = UtilsSide.BUY;
 
         // force 2 decimals places
-        const rawTakerAmt = roundDown(userOrder.size, 4);
-        const rawPrice = roundNormal(userOrder.price, 4); // prob can just round this normal
+        const rawTakerAmt = roundDown(userOrder.size, 2);
+        const rawPrice = roundNormal(userOrder.price, 2); // prob can just round this normal
         const rawMakerAmt = roundUp(rawTakerAmt * rawPrice, 6);
 
         makerAmount = parseUnits(rawMakerAmt.toString(), COLLATERAL_TOKEN_DECIMALS).toString();
@@ -60,8 +60,8 @@ export const buildOrderCreationArgs = async (
     } else {
         side = UtilsSide.SELL;
 
-        const rawMakerAmt = roundUp(userOrder.size, 4);
-        const rawPrice = roundNormal(userOrder.price, 4);
+        const rawMakerAmt = roundUp(userOrder.size, 2);
+        const rawPrice = roundNormal(userOrder.price, 2);
         const rawTakerAmt = roundDown(rawPrice * rawMakerAmt, 6);
 
         makerAmount = parseUnits(rawMakerAmt.toString(), CONDITIONAL_TOKEN_DECIMALS).toString();
@@ -136,8 +136,8 @@ export const buildMarketBuyOrderCreationArgs = async (
     userMarketOrder: UserMarketOrder,
 ): Promise<OrderData> => {
     // force 2 decimals places
-    const rawMakerAmt = roundDown(userMarketOrder.amount, 4);
-    const rawPrice = roundDown(userMarketOrder.price || 1, 4);
+    const rawMakerAmt = roundDown(userMarketOrder.amount, 2);
+    const rawPrice = roundDown(userMarketOrder.price || 1, 2);
     const rawTakerAmt = roundDown(rawMakerAmt / rawPrice, 4);
 
     const makerAmount = parseUnits(rawMakerAmt.toString(), COLLATERAL_TOKEN_DECIMALS).toString();
