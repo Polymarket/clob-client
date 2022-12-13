@@ -53,7 +53,7 @@ export const buildOrderCreationArgs = async (
         // force 2 decimals places
         const rawTakerAmt = roundDown(userOrder.size, 4);
         const rawPrice = roundNormal(userOrder.price, 4); // prob can just round this normal
-        const rawMakerAmt = roundUp(rawTakerAmt * rawPrice, 4);
+        const rawMakerAmt = roundUp(rawTakerAmt * rawPrice, 6);
 
         makerAmount = parseUnits(rawMakerAmt.toString(), COLLATERAL_TOKEN_DECIMALS).toString();
         takerAmount = parseUnits(rawTakerAmt.toString(), CONDITIONAL_TOKEN_DECIMALS).toString();
@@ -62,7 +62,7 @@ export const buildOrderCreationArgs = async (
 
         const rawMakerAmt = roundUp(userOrder.size, 4);
         const rawPrice = roundNormal(userOrder.price, 4);
-        const rawTakerAmt = roundDown(rawPrice * rawMakerAmt, 4);
+        const rawTakerAmt = roundDown(rawPrice * rawMakerAmt, 6);
 
         makerAmount = parseUnits(rawMakerAmt.toString(), CONDITIONAL_TOKEN_DECIMALS).toString();
         takerAmount = parseUnits(rawTakerAmt.toString(), COLLATERAL_TOKEN_DECIMALS).toString();
