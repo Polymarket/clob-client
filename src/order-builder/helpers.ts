@@ -12,7 +12,7 @@ import {
     CONDITIONAL_TOKEN_DECIMALS,
 } from "@polymarket/order-utils";
 import { UserOrder, Side, Chain, UserMarketOrder } from "../types";
-import { roundDown, roundUp, roundNormal } from "../utilities";
+import { roundDown, roundNormal } from "../utilities";
 
 /**
  * Generate and sign a order
@@ -51,18 +51,18 @@ export const buildOrderCreationArgs = async (
         side = UtilsSide.BUY;
 
         // force 2 decimals places
-        const rawTakerAmt = roundDown(userOrder.size, 4);
-        const rawPrice = roundNormal(userOrder.price, 4); // prob can just round this normal
-        const rawMakerAmt = roundUp(rawTakerAmt * rawPrice, 6);
+        const rawTakerAmt = roundDown(userOrder.size, 2);
+        const rawPrice = roundNormal(userOrder.price, 2); // prob can just round this normal
+        const rawMakerAmt = roundDown(roundNormal(rawTakerAmt * rawPrice, 8), 4);
 
         makerAmount = parseUnits(rawMakerAmt.toString(), COLLATERAL_TOKEN_DECIMALS).toString();
         takerAmount = parseUnits(rawTakerAmt.toString(), CONDITIONAL_TOKEN_DECIMALS).toString();
     } else {
         side = UtilsSide.SELL;
 
-        const rawMakerAmt = roundUp(userOrder.size, 4);
-        const rawPrice = roundNormal(userOrder.price, 4);
-        const rawTakerAmt = roundDown(rawPrice * rawMakerAmt, 6);
+        const rawMakerAmt = roundDown(userOrder.size, 2);
+        const rawPrice = roundNormal(userOrder.price, 2);
+        const rawTakerAmt = roundDown(roundNormal(rawPrice * rawMakerAmt, 8), 4);
 
         makerAmount = parseUnits(rawMakerAmt.toString(), CONDITIONAL_TOKEN_DECIMALS).toString();
         takerAmount = parseUnits(rawTakerAmt.toString(), COLLATERAL_TOKEN_DECIMALS).toString();
@@ -136,9 +136,9 @@ export const buildMarketBuyOrderCreationArgs = async (
     userMarketOrder: UserMarketOrder,
 ): Promise<OrderData> => {
     // force 2 decimals places
-    const rawMakerAmt = roundDown(userMarketOrder.amount, 4);
-    const rawPrice = roundDown(userMarketOrder.price || 1, 4);
-    const rawTakerAmt = roundDown(rawMakerAmt / rawPrice, 6);
+    const rawMakerAmt = roundDown(userMarketOrder.amount, 2);
+    const rawPrice = roundDown(userMarketOrder.price || 1, 2);
+    const rawTakerAmt = roundDown(roundNormal(rawMakerAmt / rawPrice, 8), 4);
 
     const makerAmount = parseUnits(rawMakerAmt.toString(), COLLATERAL_TOKEN_DECIMALS).toString();
     const takerAmount = parseUnits(rawTakerAmt.toString(), CONDITIONAL_TOKEN_DECIMALS).toString();
