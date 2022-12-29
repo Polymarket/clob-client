@@ -178,6 +178,42 @@ export async function getCredentialedClobClient(
     return clobClient;
 }
 
+export async function deleteZeroApiKey(mainnetQ: boolean, adminQ: boolean) {
+    const client = await getCredentialedClobClient(mainnetQ, adminQ);
+    const val = await client.deleteApiKey();
+    console.log(val);
+}
+
+export async function createZeroApiKey(mainnetQ: boolean, adminQ: boolean) {
+    const clobClient = await getClobClient(mainnetQ, adminQ);
+    const val = await clobClient.createApiKey(0);
+    console.log(val);
+}
+
+export async function deriveZeroApiKey(mainnetQ: boolean, adminQ: boolean) {
+    const clobClient = await getClobClient(mainnetQ, adminQ);
+    const val = await clobClient.deriveApiKey(0);
+    console.log(val);
+}
+
+export async function getApiKeysTest(mainnetQ: boolean, adminQ: boolean) {
+    const clobClient = await getCredentialedClobClient(mainnetQ, adminQ);
+    const val = await clobClient.getApiKeys();
+    console.log(val);
+}
+
+export async function getPrice(mainnetQ: boolean, adminQ: boolean, tokenId: string, side: Side) {
+    const clobClient = await getCredentialedClobClient(mainnetQ, adminQ);
+    const val = await clobClient.getPrice(tokenId, side);
+    console.log(val);
+}
+
+export async function getMidpoint(mainnetQ: boolean, adminQ: boolean, tokenId: string) {
+    const clobClient = await getCredentialedClobClient(mainnetQ, adminQ);
+    const val = await clobClient.getMidpoint(tokenId);
+    console.log(val);
+}
+
 export async function createOrder(
     mainnetQ: boolean,
     adminQ: boolean,
@@ -320,14 +356,16 @@ export async function cancelAllOrders(mainnetQ: boolean, adminQ: boolean) {
     const clobClient = await getCredentialedClobClient(mainnetQ, adminQ);
 
     console.log("Cancelling open orders...");
-    await clobClient.cancelAll();
+    const resp = await clobClient.cancelAll();
+    console.log(resp);
 }
 
 export async function cancelOrder(mainnetQ: boolean, adminQ: boolean, orderId: string) {
     const clobClient = await getCredentialedClobClient(mainnetQ, adminQ);
 
     console.log("Cancelling order...");
-    await clobClient.cancelOrder({ orderID: orderId });
+    const resp = await clobClient.cancelOrder({ orderID: orderId });
+    console.log(resp);
 }
 
 export async function checkFundingAllowance(mainnetQ: boolean, addressToCheck: string) {

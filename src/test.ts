@@ -14,6 +14,12 @@ import {
     createMarketBuyOrder,
     getTradesForCreds,
     getLastestPriceHistoryDataPoint,
+    deleteZeroApiKey,
+    createZeroApiKey,
+    deriveZeroApiKey,
+    getApiKeysTest,
+    getPrice,
+    getMidpoint,
 } from "./testUtils";
 
 import { buildOrderCreationArgs } from "./order-builder/helpers";
@@ -29,12 +35,13 @@ import { MUMBAI_MARKET, MAINNET_MARKET, MUMBAI_MARKET_TWO } from "./testConstant
 
 //createOrder(false, false, MUMBAI_MARKET_TWO.Yes, 0.49, Side.BUY, 20).then();
 //createMarketBuyOrder(false, false, MUMBAI_MARKET.Yes, 0.52, 15);
-//cancelAllOrders(false, false).then();
-//getTrades(false, false, false, MUMBAI_MARKET.Condition).then(); // not correct (I was taker, should only be one maker_orders_sizes_prices)
+//cancelAllOrders(false, true).then();
+//getTrades(false, true, false, MUMBAI_MARKET.Condition).then(); // not correct (I was taker, should only be one maker_orders_sizes_prices)
 //getOrders(false, true, MUMBAI_MARKET.Condition).then();
+//console.log(MUMBAI_MARKET.Condition);
 
-//getOrder(false, true, "0xce92e3bcafb10f4b8333560f8119dcb85ee66cc13572cb099656540f6ccf654f").then();
-//cancelOrder(false, false, "0x76bc0b40317772a916ea1de54a2d97115078decd792e8f3fc2b7a52ab8bec66b");
+//getOrder(false, true, "0x38a73eed1e6d177545e9ab027abddfb7e08dbe975fa777123b1752d203d6ac88").then();
+//cancelOrder(false, true, "0x38a73eed1e6d177545e9ab027abddfb7e08dbe975fa777123b1752d203d6ac88");
 
 //isOperator;
 
@@ -60,4 +67,12 @@ import { MUMBAI_MARKET, MAINNET_MARKET, MUMBAI_MARKET_TWO } from "./testConstant
 //     console.log(r),
 // );
 
-createOrder(false, false, MUMBAI_MARKET.Yes, 0.57, Side.SELL, 10).then();
+//deleteZeroApiKey(false, true);
+
+//deriveZeroApiKey(false, true).then();
+
+//getApiKeysTest(false, true).then();
+
+createOrder(false, true, MUMBAI_MARKET.Yes, 0.57, Side.BUY, 10).then();
+
+//getMidpoint(false, true, MUMBAI_MARKET.Yes);
