@@ -58,4 +58,4 @@ async function main(mainnetQ: boolean, adminQ: boolean, type: "user" | "market",
     }, 50000);
 }
 
-main(false, true, "market", MUMBAI_MARKET);
+main(false, true, "market", MUMBAI_MARKET_TWO);

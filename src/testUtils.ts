@@ -239,6 +239,34 @@ export async function createOrder(
     console.log(resp);
 }
 
+export async function createOrderWithCreds(
+    mainnetQ: boolean,
+    creds: ApiKeyCreds,
+    tokenID: string,
+    price: number,
+    side: Side,
+    size: number,
+) {
+    const wallet = getWallet(mainnetQ, true);
+    let host: string;
+    if (mainnetQ) {
+        host = MAINNET_HOST;
+    } else {
+        host = MUMBAI_HOST;
+    }
+    const clobClient = new ClobClient(host, await wallet.getChainId(), wallet, creds);
+
+    const limitOrder = await clobClient.createOrder({
+        tokenID: tokenID,
+        price: price,
+        side: side,
+        size: size,
+    });
+
+    const resp = await clobClient.postOrder(limitOrder);
+    console.log(resp);
+}
+
 export async function createMarketBuyOrder(
     mainnetQ: boolean,
     adminQ: boolean,

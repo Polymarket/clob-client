@@ -20,6 +20,8 @@ import {
     getApiKeysTest,
     getPrice,
     getMidpoint,
+    getApiKey,
+    createOrderWithCreds,
 } from "./testUtils";
 
 import { buildOrderCreationArgs } from "./order-builder/helpers";
@@ -29,11 +31,12 @@ import { MUMBAI_MARKET, MAINNET_MARKET, MUMBAI_MARKET_TWO } from "./testConstant
 //     .then(r => console.log(r))
 //     .catch(e => console.log(e));
 
-// getApiKey(false, true)
+// getApiKey(true, true)
 //     .then(r => console.log(r))
 //     .catch(e => console.log(e));
 
 //createOrder(false, false, MUMBAI_MARKET_TWO.Yes, 0.49, Side.BUY, 20).then();
+//createOrder(false, true, MUMBAI_MARKET_TWO.Yes, 0.49, Side.BUY, 20).then();
 //createMarketBuyOrder(false, false, MUMBAI_MARKET.Yes, 0.52, 15);
 //cancelAllOrders(false, true).then();
 //getTrades(false, true, false, MUMBAI_MARKET.Condition).then(); // not correct (I was taker, should only be one maker_orders_sizes_prices)
@@ -41,17 +44,19 @@ import { MUMBAI_MARKET, MAINNET_MARKET, MUMBAI_MARKET_TWO } from "./testConstant
 //console.log(MUMBAI_MARKET.Condition);
 
 //getOrder(false, true, "0x38a73eed1e6d177545e9ab027abddfb7e08dbe975fa777123b1752d203d6ac88").then();
-//cancelOrder(false, true, "0x38a73eed1e6d177545e9ab027abddfb7e08dbe975fa777123b1752d203d6ac88");
+//cancelOrder(false, true, "0xe2c550fc5035349d64fc42302cdf0eaf33b13be30d8426f0ebb774f863b017c6");
 
 //isOperator;
 
 //checkFundingAllowance(false, "0x8208003B936d73694A90b2da579F85BFCf870Cc1").then();
 
-// const credsToUse: ApiKeyCreds = {
-//     key: process.env.APIKEY as string,
-//     secret: process.env.SECRET as string,
-//     passphrase: process.env.PASSPHRASE as string,
-// };
+const credsToUse: ApiKeyCreds = {
+    key: process.env.APIKEY as string,
+    secret: process.env.SECRET as string,
+    passphrase: process.env.PASSPHRASE as string,
+};
+
+createOrderWithCreds(true, credsToUse, MAINNET_MARKET.Yes, 0.49, Side.BUY, 20).then();
 
 // getTradesForCreds(
 //     true,
@@ -73,6 +78,6 @@ import { MUMBAI_MARKET, MAINNET_MARKET, MUMBAI_MARKET_TWO } from "./testConstant
 
 //getApiKeysTest(false, true).then();
 
-createOrder(false, true, MUMBAI_MARKET.Yes, 0.57, Side.BUY, 10).then();
+//createOrder(false, true, MUMBAI_MARKET.Yes, 0.57, Side.BUY, 10).then();
 
 //getMidpoint(false, true, MUMBAI_MARKET.Yes);
