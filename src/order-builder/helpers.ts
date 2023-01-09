@@ -74,11 +74,6 @@ export const buildOrderCreationArgs = async (
 
         makerAmount = parseUnits(rawMakerAmt.toString(), CONDITIONAL_TOKEN_DECIMALS).toString();
         takerAmount = parseUnits(rawTakerAmt.toString(), COLLATERAL_TOKEN_DECIMALS).toString();
-
-        if (userOrder.size == 2435.89) {
-            makerAmount = "2435890000";
-            takerAmount = "950000000";
-        }
     }
 
     let taker;
