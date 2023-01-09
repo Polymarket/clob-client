@@ -40,3 +40,20 @@ export const roundDown = (num: number, decimals: number): number => {
 export const roundUp = (num: number, decimals: number): number => {
     return Math.ceil(num * 10 ** decimals) / 10 ** decimals;
 };
+
+export const decimalPlaces = (n: number): number => {
+    const isInt = (n: number) => {
+        return (
+            typeof n === "number" &&
+            parseFloat(n.toString()) == parseInt(n.toString(), 10) &&
+            !isNaN(n)
+        );
+    };
+
+    let c = n,
+        count = 1;
+    while (!isInt(c) && isFinite(c)) {
+        c = n * Math.pow(10, count++);
+    }
+    return count - 1;
+};
