@@ -12,7 +12,7 @@ import {
     CONDITIONAL_TOKEN_DECIMALS,
 } from "@polymarket/order-utils";
 import { UserOrder, Side, Chain, UserMarketOrder } from "../types";
-import { decimalPlaces, roundDown, roundNormal } from "../utilities";
+import { decimalPlaces, roundDown, roundNormal, roundUp } from "../utilities";
 
 /**
  * Generate and sign a order
@@ -56,7 +56,10 @@ export const buildOrderCreationArgs = async (
 
         let rawMakerAmt = rawTakerAmt * rawPrice;
         if (decimalPlaces(rawMakerAmt) > 4) {
-            rawMakerAmt = roundDown(roundNormal(rawMakerAmt, 8), 4);
+            rawMakerAmt = roundUp(rawMakerAmt, 8);
+            if (decimalPlaces(rawMakerAmt) > 4) {
+                rawMakerAmt = roundDown(rawMakerAmt, 4);
+            }
         }
 
         makerAmount = parseUnits(rawMakerAmt.toString(), COLLATERAL_TOKEN_DECIMALS).toString();
@@ -69,7 +72,10 @@ export const buildOrderCreationArgs = async (
 
         let rawTakerAmt = rawMakerAmt * rawPrice;
         if (decimalPlaces(rawTakerAmt) > 4) {
-            rawTakerAmt = roundDown(roundNormal(rawTakerAmt, 8), 4);
+            rawTakerAmt = roundUp(rawTakerAmt, 8);
+            if (decimalPlaces(rawTakerAmt) > 4) {
+                rawTakerAmt = roundDown(rawTakerAmt, 4);
+            }
         }
 
         makerAmount = parseUnits(rawMakerAmt.toString(), CONDITIONAL_TOKEN_DECIMALS).toString();
@@ -149,7 +155,10 @@ export const buildMarketBuyOrderCreationArgs = async (
 
     let rawTakerAmt = rawMakerAmt / rawPrice;
     if (decimalPlaces(rawTakerAmt) > 4) {
-        rawTakerAmt = roundDown(roundNormal(rawTakerAmt, 8), 4);
+        rawTakerAmt = roundUp(rawTakerAmt, 8);
+        if (decimalPlaces(rawTakerAmt) > 4) {
+            rawTakerAmt = roundDown(rawTakerAmt, 4);
+        }
     }
 
     const makerAmount = parseUnits(rawMakerAmt.toString(), COLLATERAL_TOKEN_DECIMALS).toString();
