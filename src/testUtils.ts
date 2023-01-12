@@ -136,6 +136,44 @@ export async function setup(mainnetQ: boolean, adminQ: boolean) {
     return;
 }
 
+export async function mergeMax(mainnetQ: boolean, adminQ: boolean) {
+    const wallet = getWallet(mainnetQ, adminQ);
+    console.log(`Wallet Address: ${wallet.address}`);
+
+    const usdc = getUsdcContract(mainnetQ, wallet);
+    const ctf = getCtfContract(mainnetQ, wallet);
+
+    let contracts: Contracts;
+    let market: Market;
+
+    if (mainnetQ) {
+        contracts = MAINNET_CONTRACTS;
+        market = MAINNET_MARKET;
+    } else {
+        contracts = MUMBAI_CONTRACTS;
+        market = MUMBAI_MARKET;
+    }
+
+    const valueOne = await ctf.balanceOf(wallet.address, MAINNET_MARKET.Yes);
+    const valueTwo = await ctf.balanceOf(wallet.address, MAINNET_MARKET.No);
+
+    const amountToMerge = valueOne < valueTwo ? valueOne : valueTwo;
+
+    const txn = await ctf.mergePositions(
+        usdc.address,
+        constants.HashZero,
+        MAINNET_MARKET.Condition,
+        [1, 2],
+        amountToMerge.toNumber(),
+        {
+            gasPrice: 100_000_000_000,
+            gasLimit: 200_000,
+        },
+    );
+
+    console.log(`Merging ${amountToMerge.toNumber()} sets with transaction: ${txn.hash}`);
+}
+
 export async function getClobClient(mainnetQ: boolean, adminQ: boolean): Promise<ClobClient> {
     const wallet = getWallet(mainnetQ, adminQ);
     let host: string;
