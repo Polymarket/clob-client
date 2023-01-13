@@ -152,7 +152,7 @@ export const createOrder = async (
     return buildOrder(eoaSigner, clobContracts.Exchange, chainId, orderData);
 };
 
-export const getMarketOrderRawAmounts = (
+export const getMarketBuyOrderRawAmounts = (
     amount: number,
     price: number,
 ): { rawMakerAmt: number; rawTakerAmt: number } => {
@@ -183,7 +183,7 @@ export const buildMarketBuyOrderCreationArgs = async (
     signatureType: SignatureType,
     userMarketOrder: UserMarketOrder,
 ): Promise<OrderData> => {
-    const { rawMakerAmt, rawTakerAmt } = getMarketOrderRawAmounts(
+    const { rawMakerAmt, rawTakerAmt } = getMarketBuyOrderRawAmounts(
         userMarketOrder.amount,
         userMarketOrder.price || 1,
     );

@@ -8,7 +8,7 @@ import {
     buildMarketBuyOrderCreationArgs,
     createMarketBuyOrder,
     getOrderAmounts,
-    getMarketOrderRawAmounts,
+    getMarketBuyOrderRawAmounts,
 } from "../../src/order-builder/helpers";
 import {
     OrderData,
@@ -149,8 +149,8 @@ describe("helpers", () => {
         });
     });
 
-    describe("getOrderAmounts", () => {
-        it("buy", () => {
+    describe("getOrderAmounts", async () => {
+        it("buy", async () => {
             const delta = 0.01;
             let size = 0.01;
 
@@ -168,7 +168,7 @@ describe("helpers", () => {
             }
         });
 
-        it("sell", () => {
+        it("sell", async () => {
             const delta = 0.01;
             let size = 0.01;
 
@@ -503,15 +503,15 @@ describe("helpers", () => {
         });
     });
 
-    describe("getMarketOrderAmounts", () => {
-        it("market buy", () => {
+    describe("getMarketBuyOrderRawAmounts", async () => {
+        it("market buy", async () => {
             const delta = 0.01;
             let size = 0.01;
 
             for (; size <= 100; ) {
                 let price = 0.01;
                 for (; price <= 1; ) {
-                    const { rawMakerAmt, rawTakerAmt } = getMarketOrderRawAmounts(size, price);
+                    const { rawMakerAmt, rawTakerAmt } = getMarketBuyOrderRawAmounts(size, price);
 
                     expect(decimalPlaces(rawMakerAmt)).to.lte(2);
                     expect(decimalPlaces(rawTakerAmt)).to.lte(4);
