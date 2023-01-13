@@ -41,19 +41,10 @@ export const roundUp = (num: number, decimals: number): number => {
     return Math.ceil(num * 10 ** decimals) / 10 ** decimals;
 };
 
-export const decimalPlaces = (n: number): number => {
-    const isInt = (n: number) => {
-        return (
-            typeof n === "number" &&
-            parseFloat(n.toString()) == parseInt(n.toString(), 10) &&
-            !isNaN(n)
-        );
-    };
-
-    let c = n;
-    let count = 1;
-    while (!isInt(c) && isFinite(c)) {
-        c = n * Math.pow(10, count++);
+export const decimalPlaces = (num: number): number => {
+    if (Number.isInteger(num)) {
+        return 0;
     }
-    return count - 1;
+    const arr = num.toString().split(".");
+    return arr[1].length;
 };
