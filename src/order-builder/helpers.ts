@@ -33,26 +33,16 @@ export const buildOrder = async (
     return cTFExchangeOrderBuilder.buildSignedOrder(orderData);
 };
 
-/**
- * Translate simple user order to args used to generate Orders
- */
-export const buildOrderCreationArgs = async (
-    signer: string,
-    maker: string,
-    signatureType: SignatureType,
-    userOrder: UserOrder,
-): Promise<OrderData> => {
-    let makerAmount: string;
-    let takerAmount: string;
+export const getOrderAmounts = (
+    side: Side,
+    size: number,
+    price: number,
+): { side: UtilsSide; rawMakerAmt: number; rawTakerAmt: number } => {
+    const rawPrice = roundNormal(price, 2);
 
-    let side: UtilsSide;
-
-    if (userOrder.side === Side.BUY) {
-        side = UtilsSide.BUY;
-
+    if (side === Side.BUY) {
         // force 2 decimals places
-        const rawTakerAmt = roundDown(userOrder.size, 2);
-        const rawPrice = roundNormal(userOrder.price, 2); // prob can just round this normal
+        const rawTakerAmt = roundDown(size, 2);
 
         let rawMakerAmt = rawTakerAmt * rawPrice;
         if (decimalPlaces(rawMakerAmt) > 4) {
@@ -62,13 +52,13 @@ export const buildOrderCreationArgs = async (
             }
         }
 
-        makerAmount = parseUnits(rawMakerAmt.toString(), COLLATERAL_TOKEN_DECIMALS).toString();
-        takerAmount = parseUnits(rawTakerAmt.toString(), CONDITIONAL_TOKEN_DECIMALS).toString();
+        return {
+            side: UtilsSide.BUY,
+            rawMakerAmt,
+            rawTakerAmt,
+        };
     } else {
-        side = UtilsSide.SELL;
-
-        const rawMakerAmt = roundDown(userOrder.size, 2);
-        const rawPrice = roundNormal(userOrder.price, 2);
+        const rawMakerAmt = roundDown(size, 2);
 
         let rawTakerAmt = rawMakerAmt * rawPrice;
         if (decimalPlaces(rawTakerAmt) > 4) {
@@ -78,9 +68,31 @@ export const buildOrderCreationArgs = async (
             }
         }
 
-        makerAmount = parseUnits(rawMakerAmt.toString(), CONDITIONAL_TOKEN_DECIMALS).toString();
-        takerAmount = parseUnits(rawTakerAmt.toString(), COLLATERAL_TOKEN_DECIMALS).toString();
+        return {
+            side: UtilsSide.SELL,
+            rawMakerAmt,
+            rawTakerAmt,
+        };
     }
+};
+
+/**
+ * Translate simple user order to args used to generate Orders
+ */
+export const buildOrderCreationArgs = async (
+    signer: string,
+    maker: string,
+    signatureType: SignatureType,
+    userOrder: UserOrder,
+): Promise<OrderData> => {
+    const { side, rawMakerAmt, rawTakerAmt } = getOrderAmounts(
+        userOrder.side,
+        userOrder.size,
+        userOrder.price,
+    );
+
+    const makerAmount = parseUnits(rawMakerAmt.toString(), COLLATERAL_TOKEN_DECIMALS).toString();
+    const takerAmount = parseUnits(rawTakerAmt.toString(), CONDITIONAL_TOKEN_DECIMALS).toString();
 
     let taker;
     if (typeof userOrder.taker !== "undefined" && userOrder.taker) {
@@ -140,6 +152,28 @@ export const createOrder = async (
     return buildOrder(eoaSigner, clobContracts.Exchange, chainId, orderData);
 };
 
+export const getMarketOrderRawAmounts = (
+    amount: number,
+    price: number,
+): { rawMakerAmt: number; rawTakerAmt: number } => {
+    // force 2 decimals places
+    const rawMakerAmt = roundDown(amount, 2);
+    const rawPrice = roundDown(price, 2);
+
+    let rawTakerAmt = rawMakerAmt / rawPrice;
+    if (decimalPlaces(rawTakerAmt) > 4) {
+        rawTakerAmt = roundUp(rawTakerAmt, 8);
+        if (decimalPlaces(rawTakerAmt) > 4) {
+            rawTakerAmt = roundDown(rawTakerAmt, 4);
+        }
+    }
+
+    return {
+        rawMakerAmt,
+        rawTakerAmt,
+    };
+};
+
 /**
  * Translate simple user market order to args used to generate Orders
  */
@@ -149,17 +183,10 @@ export const buildMarketBuyOrderCreationArgs = async (
     signatureType: SignatureType,
     userMarketOrder: UserMarketOrder,
 ): Promise<OrderData> => {
-    // force 2 decimals places
-    const rawMakerAmt = roundDown(userMarketOrder.amount, 2);
-    const rawPrice = roundDown(userMarketOrder.price || 1, 2);
-
-    let rawTakerAmt = rawMakerAmt / rawPrice;
-    if (decimalPlaces(rawTakerAmt) > 4) {
-        rawTakerAmt = roundUp(rawTakerAmt, 8);
-        if (decimalPlaces(rawTakerAmt) > 4) {
-            rawTakerAmt = roundDown(rawTakerAmt, 4);
-        }
-    }
+    const { rawMakerAmt, rawTakerAmt } = getMarketOrderRawAmounts(
+        userMarketOrder.amount,
+        userMarketOrder.price || 1,
+    );
 
     const makerAmount = parseUnits(rawMakerAmt.toString(), COLLATERAL_TOKEN_DECIMALS).toString();
     const takerAmount = parseUnits(rawTakerAmt.toString(), CONDITIONAL_TOKEN_DECIMALS).toString();
