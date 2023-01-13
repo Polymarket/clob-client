@@ -1,0 +1,17 @@
+{
+    "editor.formatOnSave": true,
+    "files.eol": "\n",
+    "mochaExplorer.files": "tests/**/*.test.ts",
+    "mochaExplorer.require": [
+        "ts-node/register",
+        "tsconfig-paths/register",
+        "jsdom-global/register"
+    ],
+    "mochaExplorer.monkeyPatch": false,
+    "mochaExplorer.timeout": 60000,
+    "mochaExplorer.env": {
+        "TS_NODE_PROJECT": "tsconfig.json",
+        "TS_NODE_COMPILER_OPTIONS": "{\"module\": \"commonjs\" }"
+    },
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+}

@@ -1,6 +1,6 @@
 import "mocha";
 import { expect } from "chai";
-import { orderToJson } from "../src/utilities";
+import { decimalPlaces, orderToJson } from "../src/utilities";
 import { Side as UtilsSide, SignatureType } from "@polymarket/order-utils";
 import { Chain, OrderType, Side, UserMarketOrder, UserOrder } from "../src";
 import { Wallet } from "@ethersproject/wallet";
@@ -510,5 +510,9 @@ describe("utilities", () => {
                 orderType: OrderType.FOK,
             });
         });
+    });
+
+    it("decimalPlaces", () => {
+        expect(decimalPlaces(949.9970999999999)).to.equal(13);
     });
 });
