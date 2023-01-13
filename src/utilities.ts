@@ -45,6 +45,11 @@ export const decimalPlaces = (num: number): number => {
     if (Number.isInteger(num)) {
         return 0;
     }
+
     const arr = num.toString().split(".");
+    if (arr.length <= 1) {
+        return 0;
+    }
+
     return arr[1].length;
 };

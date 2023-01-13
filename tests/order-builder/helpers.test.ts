@@ -7,6 +7,8 @@ import {
     createOrder,
     buildMarketBuyOrderCreationArgs,
     createMarketBuyOrder,
+    getOrderAmounts,
+    getMarketBuyOrderRawAmounts,
 } from "../../src/order-builder/helpers";
 import {
     OrderData,
@@ -16,7 +18,7 @@ import {
     getContracts,
 } from "@polymarket/order-utils";
 import { Wallet } from "@ethersproject/wallet";
-import { roundDown } from "../../src/utilities";
+import { decimalPlaces, roundDown } from "../../src/utilities";
 
 describe("helpers", () => {
     const chainId = Chain.MUMBAI;
@@ -144,6 +146,44 @@ describe("helpers", () => {
             expect(signedOrder.feeRateBps).equal("0");
             expect(signedOrder.signatureType).equal(SignatureType.POLY_PROXY);
             expect(signedOrder.signature).not.empty;
+        });
+    });
+
+    describe("getOrderAmounts", async () => {
+        it("buy", async () => {
+            const delta = 0.01;
+            let size = 0.01;
+
+            for (; size <= 100; ) {
+                let price = 0.01;
+                for (; price <= 1; ) {
+                    const { rawMakerAmt, rawTakerAmt } = getOrderAmounts(Side.BUY, size, price);
+
+                    expect(decimalPlaces(rawMakerAmt)).to.lte(4);
+                    expect(decimalPlaces(rawTakerAmt)).to.lte(2);
+
+                    price += delta;
+                }
+                size += delta;
+            }
+        });
+
+        it("sell", async () => {
+            const delta = 0.01;
+            let size = 0.01;
+
+            for (; size <= 100; ) {
+                let price = 0.01;
+                for (; price <= 1; ) {
+                    const { rawMakerAmt, rawTakerAmt } = getOrderAmounts(Side.SELL, size, price);
+
+                    expect(decimalPlaces(rawMakerAmt)).to.lte(2);
+                    expect(decimalPlaces(rawTakerAmt)).to.lte(4);
+
+                    price += delta;
+                }
+                size += delta;
+            }
         });
     });
 
@@ -460,6 +500,26 @@ describe("helpers", () => {
             expect(signedOrder.feeRateBps).equal("0");
             expect(signedOrder.signatureType).equal(SignatureType.POLY_GNOSIS_SAFE);
             expect(signedOrder.signature).not.empty;
+        });
+    });
+
+    describe("getMarketBuyOrderRawAmounts", async () => {
+        it("market buy", async () => {
+            const delta = 0.01;
+            let size = 0.01;
+
+            for (; size <= 100; ) {
+                let price = 0.01;
+                for (; price <= 1; ) {
+                    const { rawMakerAmt, rawTakerAmt } = getMarketBuyOrderRawAmounts(size, price);
+
+                    expect(decimalPlaces(rawMakerAmt)).to.lte(2);
+                    expect(decimalPlaces(rawTakerAmt)).to.lte(4);
+
+                    price += delta;
+                }
+                size += delta;
+            }
         });
     });
 

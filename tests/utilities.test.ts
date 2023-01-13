@@ -514,5 +514,6 @@ describe("utilities", () => {
 
     it("decimalPlaces", () => {
         expect(decimalPlaces(949.9970999999999)).to.equal(13);
+        expect(decimalPlaces(949)).to.equal(0);
     });
 });
