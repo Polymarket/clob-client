@@ -264,6 +264,24 @@ describe("helpers", () => {
             expect(Number(orderData.makerAmount) / Number(orderData.takerAmount)).to.gte(0.82);
         });
 
+        it("correctly rounds price amounts for validity buy - 4", async () => {
+            const order: UserOrder = {
+                tokenID: "123",
+                size: 12.8205,
+                price: 0.78,
+                side: Side.BUY,
+            };
+            const orderData: OrderData = await buildOrderCreationArgs(
+                "",
+                "",
+                SignatureType.EOA,
+                order,
+            );
+            expect(orderData.makerAmount).to.equal("9999600");
+            expect(orderData.takerAmount).to.equal("12820000");
+            expect(Number(orderData.makerAmount) / Number(orderData.takerAmount)).to.gte(0.78);
+        });
+
         it("correctly rounds price amounts for validity sell", async () => {
             const order: UserOrder = {
                 tokenID: "123",
@@ -317,6 +335,24 @@ describe("helpers", () => {
             expect(orderData.makerAmount).to.equal("101000000");
             expect(orderData.takerAmount).to.equal("82820000");
             expect(Number(orderData.makerAmount) / Number(orderData.takerAmount)).to.gte(0.82);
+        });
+
+        it("correctly rounds price amounts for validity sell - 4", async () => {
+            const order: UserOrder = {
+                tokenID: "123",
+                size: 12.8205,
+                price: 0.78,
+                side: Side.SELL,
+            };
+            const orderData: OrderData = await buildOrderCreationArgs(
+                "",
+                "",
+                SignatureType.EOA,
+                order,
+            );
+            expect(orderData.makerAmount).to.equal("12820000");
+            expect(orderData.takerAmount).to.equal("9999600");
+            expect(Number(orderData.takerAmount) / Number(orderData.makerAmount)).to.gte(0.78);
         });
     });
 
@@ -516,6 +552,23 @@ describe("helpers", () => {
             expect(orderData.makerAmount).to.equal("82820000");
             expect(orderData.takerAmount).to.equal("101000000");
             expect(Number(orderData.makerAmount) / Number(orderData.takerAmount)).to.gte(0.82);
+        });
+
+        it("correctly rounds price amounts for validity buy - 4", async () => {
+            const order: UserMarketOrder = {
+                tokenID: "123",
+                price: 0.78,
+                amount: 9.9996,
+            };
+            const orderData: OrderData = await buildMarketBuyOrderCreationArgs(
+                "",
+                "",
+                SignatureType.EOA,
+                order,
+            );
+            expect(orderData.makerAmount).to.equal("9990000");
+            expect(orderData.takerAmount).to.equal("12807600");
+            expect(Number(orderData.makerAmount) / Number(orderData.takerAmount)).to.gte(0.78);
         });
     });
 

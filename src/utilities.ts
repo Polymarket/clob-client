@@ -50,8 +50,8 @@ export const decimalPlaces = (n: number): number => {
         );
     };
 
-    let c = n,
-        count = 1;
+    let c = n;
+    let count = 1;
     while (!isInt(c) && isFinite(c)) {
         c = n * Math.pow(10, count++);
     }
