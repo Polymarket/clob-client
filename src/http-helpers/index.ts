@@ -24,7 +24,7 @@ export const request = async (
                 statusText: err.response?.statusText,
                 data: err.response?.data,
             });
-            return { error: err.response?.data };
+            return err.response?.data;
         }
         console.error(err);
 
