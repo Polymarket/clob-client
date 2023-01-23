@@ -182,6 +182,7 @@ export interface OpenOrder {
     associate_trades: Trade[];
     outcome: string;
     outcome_index: number;
+    created_at: number;
 }
 
 export type OpenOrdersResponse = OpenOrder[];
