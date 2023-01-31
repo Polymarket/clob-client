@@ -11,6 +11,7 @@ import {
     OpenOrdersResponse,
     OptionalParams,
     Order,
+    OrderBookSummary,
     OrderPayload,
     OrderType,
     Side,
@@ -32,7 +33,7 @@ import {
     post,
 } from "./http-helpers";
 import { L1_AUTH_UNAVAILABLE_ERROR, L2_AUTH_NOT_AVAILABLE } from "./errors";
-import { orderToJson } from "./utilities";
+import { generateOrderBookSummaryHash, orderToJson } from "./utilities";
 import {
     CANCEL_ALL,
     CANCEL_ORDER,
@@ -111,8 +112,17 @@ export class ClobClient {
         return get(`${this.host}${GET_MARKET}${conditionID}`);
     }
 
-    public async getOrderBook(tokenID: string): Promise<any> {
+    public async getOrderBook(tokenID: string): Promise<OrderBookSummary> {
         return get(`${this.host}${GET_ORDER_BOOK}?token_id=${tokenID}`);
+    }
+
+    /**
+     * Calculates the hash for the given orderbook
+     * @param orderbook
+     * @returns
+     */
+    public getOrderBookHash(orderbook: OrderBookSummary): string {
+        return generateOrderBookSummaryHash(orderbook);
     }
 
     public async getMidpoint(tokenID: string): Promise<any> {

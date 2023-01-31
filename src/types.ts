@@ -261,3 +261,16 @@ export interface MarketPrice {
     v: string; // volume
     ps: string; // positions
 }
+
+export interface OrderBookSummary {
+    market: string;
+    asset_id: string;
+    bids: OrderSummary[];
+    asks: OrderSummary[];
+    hash: string;
+}
+
+export interface OrderSummary {
+    price: string;
+    size: string;
+}
