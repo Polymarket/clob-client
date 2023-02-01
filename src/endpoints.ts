@@ -26,3 +26,7 @@ export const GET_TRADES = "/trades";
 
 // Price history
 export const GET_PRICES_HISTORY = "/prices-history";
+
+// Notifications
+export const GET_TRADE_NOTIFICATIONS = "/trade-notifications";
+export const DROP_TRADE_NOTIFICATIONS = "/drop-trade-notifications";

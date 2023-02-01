@@ -1,5 +1,5 @@
 import axios, { Method } from "axios";
-import { FilterParams, TradeParams } from "src/types";
+import { FilterParams, TradeNotificationParams, TradeParams } from "src/types";
 import { OpenOrderParams } from "../types";
 
 export const GET = "GET";
@@ -158,6 +158,20 @@ export const addTradeParamsToUrl = (baseUrl: string, params?: TradeParams): stri
         }
         if (params.after !== undefined) {
             url = buildQueryParams(url, "after", `${params.after}`);
+        }
+    }
+    return url;
+};
+
+export const addTradeNotificationParamsToUrl = (
+    baseUrl: string,
+    params?: TradeNotificationParams,
+): string => {
+    let url = baseUrl;
+    if (params !== undefined) {
+        url = `${url}?`;
+        if (params.index !== undefined) {
+            url = buildQueryParams(url, "index", params.index.toString());
         }
     }
     return url;
