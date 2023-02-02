@@ -276,6 +276,7 @@ export interface TradeNotification {
     price: string;
     original_size: string;
     matched_size: string;
+    remaining_size: string;
     outcome: string;
     outcome_index: number;
     action: string;
