@@ -31,14 +31,23 @@ export const orderToJson = (order: SignedOrder, owner: string, orderType: OrderT
 };
 
 export const roundNormal = (num: number, decimals: number): number => {
+    if (decimalPlaces(num) <= decimals) {
+        return num;
+    }
     return Math.round((num + Number.EPSILON) * 10 ** decimals) / 10 ** decimals;
 };
 
 export const roundDown = (num: number, decimals: number): number => {
+    if (decimalPlaces(num) <= decimals) {
+        return num;
+    }
     return Math.floor(num * 10 ** decimals) / 10 ** decimals;
 };
 
 export const roundUp = (num: number, decimals: number): number => {
+    if (decimalPlaces(num) <= decimals) {
+        return num;
+    }
     return Math.ceil(num * 10 ** decimals) / 10 ** decimals;
 };
 
