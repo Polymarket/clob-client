@@ -16,6 +16,8 @@ import {
     OrderType,
     Side,
     Trade,
+    TradeNotification,
+    TradeNotificationParams,
     TradeParams,
     UserMarketOrder,
     UserOrder,
@@ -24,6 +26,7 @@ import { createL1Headers, createL2Headers } from "./headers";
 import {
     addFilterParamsToUrl,
     addOpenOrderParamsToUrl,
+    addTradeNotificationParamsToUrl,
     addTradeParamsToUrl,
     del,
     DELETE,
@@ -54,6 +57,8 @@ import {
     GET_MARKETS,
     GET_MARKET,
     GET_PRICES_HISTORY,
+    GET_TRADE_NOTIFICATIONS,
+    DROP_TRADE_NOTIFICATIONS,
 } from "./endpoints";
 import { OrderBuilder } from "./order-builder/builder";
 
@@ -265,6 +270,46 @@ export class ClobClient {
 
         const url = addTradeParamsToUrl(`${this.host}${endpoint}`, params);
         return get(url, headers);
+    }
+
+    public async getTradeNotifications(
+        params?: TradeNotificationParams,
+    ): Promise<TradeNotification[]> {
+        this.canL2Auth();
+
+        const endpoint = GET_TRADE_NOTIFICATIONS;
+        const headerArgs = {
+            method: GET,
+            requestPath: endpoint,
+        };
+
+        const headers = await createL2Headers(
+            this.signer as Wallet | JsonRpcSigner,
+            this.creds as ApiKeyCreds,
+            headerArgs,
+        );
+
+        const url = addTradeNotificationParamsToUrl(`${this.host}${endpoint}`, params);
+        return get(url, headers);
+    }
+
+    public async dropTradeNotifications(params?: TradeNotificationParams): Promise<void> {
+        this.canL2Auth();
+
+        const endpoint = DROP_TRADE_NOTIFICATIONS;
+        const l2HeaderArgs = {
+            method: DELETE,
+            requestPath: endpoint,
+        };
+
+        const headers = await createL2Headers(
+            this.signer as Wallet | JsonRpcSigner,
+            this.creds as ApiKeyCreds,
+            l2HeaderArgs,
+        );
+
+        const url = addTradeNotificationParamsToUrl(`${this.host}${endpoint}`, params);
+        return del(url, headers);
     }
 
     public async createOrder(userOrder: UserOrder): Promise<SignedOrder> {

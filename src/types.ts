@@ -262,6 +262,27 @@ export interface MarketPrice {
     ps: string; // positions
 }
 
+export interface TradeNotificationParams {
+    index: number;
+}
+
+export interface TradeNotification {
+    id: number;
+    owner: string;
+    order_id: string;
+    market: string;
+    asset_id: string;
+    side: string;
+    price: string;
+    original_size: string;
+    matched_size: string;
+    remaining_size: string;
+    outcome: string;
+    outcome_index: number;
+    action: string;
+    timestamp: number;
+}
+
 export interface OrderBookSummary {
     market: string;
     asset_id: string;

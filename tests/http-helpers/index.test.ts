@@ -5,8 +5,9 @@ import {
     addFilterParamsToUrl,
     addTradeParamsToUrl,
     addOpenOrderParamsToUrl,
+    addTradeNotificationParamsToUrl,
 } from "../../src/http-helpers/index";
-import { OpenOrderParams, Side, TradeParams } from "../../src";
+import { OpenOrderParams, Side, TradeNotificationParams, TradeParams } from "../../src";
 
 describe("utilities", () => {
     describe("buildQueryParams", () => {
@@ -82,6 +83,18 @@ describe("utilities", () => {
             expect(url).not.undefined;
             expect(url).not.empty;
             expect(url).equal("http://tracker?market=0xaabbccdd&asset_id=10000&owner=0x69&id=1");
+        });
+    });
+
+    describe("addTradeNotificationParamsToUrl", () => {
+        it("checking url + params", () => {
+            const url = addTradeNotificationParamsToUrl("http://tracker", {
+                index: 1234,
+            } as TradeNotificationParams);
+            expect(url).not.null;
+            expect(url).not.undefined;
+            expect(url).not.empty;
+            expect(url).equal("http://tracker?index=1234");
         });
     });
 });
