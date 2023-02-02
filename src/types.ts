@@ -212,7 +212,7 @@ export interface TradeParams {
 
 export interface OpenOrderParams {
     id?: string;
-    owner: string;
+    owner?: string;
     market?: string;
     asset_id?: string;
 }
