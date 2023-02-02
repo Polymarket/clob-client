@@ -36,7 +36,7 @@ import { MUMBAI_MARKET, MAINNET_MARKET, MUMBAI_MARKET_TWO } from "./testConstant
 //     .then(r => console.log(r))
 //     .catch(e => console.log(e));
 
-//createOrder(true, true, MAINNET_MARKET.Yes, 0.2, Side.BUY, 100).then();
+//createOrder(true, true, MAINNET_MARKET.Yes, 0.01, Side.BUY, 100).then();
 //mergeMax(true, true).then();
 //createOrder(false, true, MUMBAI_MARKET_TWO.Yes, 0.49, Side.BUY, 20).then();
 //createMarketBuyOrder(false, false, MUMBAI_MARKET.Yes, 0.52, 15);
@@ -44,7 +44,7 @@ import { MUMBAI_MARKET, MAINNET_MARKET, MUMBAI_MARKET_TWO } from "./testConstant
 //cancelAllOrders(true, true).then();
 
 //getTrades(false, true, false, MUMBAI_MARKET.Condition).then(); // not correct (I was taker, should only be one maker_orders_sizes_prices)
-//getOrders(false, true, MUMBAI_MARKET.Condition).then();
+getOrders(true, true, MAINNET_MARKET.Condition).then();
 //console.log(MUMBAI_MARKET.Condition);
 
 //getOrder(false, true, "0x38a73eed1e6d177545e9ab027abddfb7e08dbe975fa777123b1752d203d6ac88").then();
