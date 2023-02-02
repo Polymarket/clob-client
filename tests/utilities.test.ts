@@ -1,6 +1,6 @@
 import "mocha";
 import { expect } from "chai";
-import { decimalPlaces, orderToJson } from "../src/utilities";
+import { decimalPlaces, orderToJson, roundDown } from "../src/utilities";
 import { Side as UtilsSide, SignatureType } from "@polymarket/order-utils";
 import { Chain, OrderType, Side, UserMarketOrder, UserOrder } from "../src";
 import { Wallet } from "@ethersproject/wallet";
@@ -515,5 +515,11 @@ describe("utilities", () => {
     it("decimalPlaces", () => {
         expect(decimalPlaces(949.9970999999999)).to.equal(13);
         expect(decimalPlaces(949)).to.equal(0);
+    });
+
+    it("roundDown", () => {
+        expect(roundDown(0.55, 2)).to.equal(0.55);
+        expect(roundDown(0.56, 2)).to.equal(0.56);
+        expect(roundDown(0.57, 2)).to.equal(0.57);
     });
 });
