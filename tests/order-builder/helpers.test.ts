@@ -18,7 +18,7 @@ import {
     getContracts,
 } from "@polymarket/order-utils";
 import { Wallet } from "@ethersproject/wallet";
-import { decimalPlaces, roundDown } from "../../src/utilities";
+import { decimalPlaces, roundDown, roundNormal } from "../../src/utilities";
 
 describe("helpers", () => {
     const chainId = Chain.MUMBAI;
@@ -161,7 +161,7 @@ describe("helpers", () => {
 
                     expect(decimalPlaces(rawMakerAmt)).to.lte(4);
                     expect(decimalPlaces(rawTakerAmt)).to.lte(2);
-                    expect(decimalPlaces(rawMakerAmt / rawTakerAmt)).to.gte(price);
+                    expect(roundNormal(rawMakerAmt / rawTakerAmt, 6)).to.gte(roundNormal(price, 6));
 
                     price += delta;
                 }
@@ -180,7 +180,7 @@ describe("helpers", () => {
 
                     expect(decimalPlaces(rawMakerAmt)).to.lte(2);
                     expect(decimalPlaces(rawTakerAmt)).to.lte(4);
-                    expect(decimalPlaces(rawTakerAmt / rawMakerAmt)).to.gte(price);
+                    expect(roundNormal(rawTakerAmt / rawMakerAmt, 6)).to.lte(roundNormal(price, 6));
 
                     price += delta;
                 }
@@ -513,11 +513,12 @@ describe("helpers", () => {
             for (; size <= 100; ) {
                 let price = 0.01;
                 for (; price <= 1; ) {
+                    price = roundNormal(price, 8);
                     const { rawMakerAmt, rawTakerAmt } = getMarketBuyOrderRawAmounts(size, price);
 
                     expect(decimalPlaces(rawMakerAmt)).to.lte(2);
                     expect(decimalPlaces(rawTakerAmt)).to.lte(4);
-                    expect(decimalPlaces(rawMakerAmt / rawTakerAmt)).to.gte(price);
+                    expect(roundNormal(rawMakerAmt / rawTakerAmt, 4)).to.gte(roundNormal(price, 4));
 
                     price += delta;
                 }
