@@ -161,6 +161,7 @@ describe("helpers", () => {
 
                     expect(decimalPlaces(rawMakerAmt)).to.lte(4);
                     expect(decimalPlaces(rawTakerAmt)).to.lte(2);
+                    expect(decimalPlaces(rawMakerAmt / rawTakerAmt)).to.gte(price);
 
                     price += delta;
                 }
@@ -179,6 +180,7 @@ describe("helpers", () => {
 
                     expect(decimalPlaces(rawMakerAmt)).to.lte(2);
                     expect(decimalPlaces(rawTakerAmt)).to.lte(4);
+                    expect(decimalPlaces(rawTakerAmt / rawMakerAmt)).to.gte(price);
 
                     price += delta;
                 }
@@ -515,6 +517,7 @@ describe("helpers", () => {
 
                     expect(decimalPlaces(rawMakerAmt)).to.lte(2);
                     expect(decimalPlaces(rawTakerAmt)).to.lte(4);
+                    expect(decimalPlaces(rawMakerAmt / rawTakerAmt)).to.gte(price);
 
                     price += delta;
                 }
