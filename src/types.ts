@@ -283,6 +283,11 @@ export interface TradeNotification {
     timestamp: number;
 }
 
+export interface OrderMarketCancelParams {
+    market?: string;
+    asset_id?: string;
+}
+
 export interface OrderBookSummary {
     market: string;
     asset_id: string;

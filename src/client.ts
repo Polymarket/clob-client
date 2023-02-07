@@ -11,6 +11,7 @@ import {
     OpenOrdersResponse,
     OptionalParams,
     Order,
+    OrderMarketCancelParams,
     OrderBookSummary,
     OrderPayload,
     OrderType,
@@ -59,6 +60,8 @@ import {
     GET_PRICES_HISTORY,
     GET_TRADE_NOTIFICATIONS,
     DROP_TRADE_NOTIFICATIONS,
+    CANCEL_ORDERS,
+    CANCEL_MARKET_ORDERS,
 } from "./endpoints";
 import { OrderBuilder } from "./order-builder/builder";
 
@@ -389,6 +392,23 @@ export class ClobClient {
         return del(`${this.host}${endpoint}`, headers, payload);
     }
 
+    public async cancelOrders(ordersHashes: string[]): Promise<any> {
+        this.canL2Auth();
+        const endpoint = CANCEL_ORDERS;
+        const l2HeaderArgs = {
+            method: DELETE,
+            requestPath: endpoint,
+            body: JSON.stringify(ordersHashes),
+        };
+
+        const headers = await createL2Headers(
+            this.signer as Wallet | JsonRpcSigner,
+            this.creds as ApiKeyCreds,
+            l2HeaderArgs,
+        );
+        return del(`${this.host}${endpoint}`, headers, ordersHashes);
+    }
+
     public async cancelAll(): Promise<any> {
         this.canL2Auth();
         const endpoint = CANCEL_ALL;
@@ -403,6 +423,23 @@ export class ClobClient {
             l2HeaderArgs,
         );
         return del(`${this.host}${endpoint}`, headers);
+    }
+
+    public async cancelMarketOrders(payload: OrderMarketCancelParams): Promise<any> {
+        this.canL2Auth();
+        const endpoint = CANCEL_MARKET_ORDERS;
+        const l2HeaderArgs = {
+            method: DELETE,
+            requestPath: endpoint,
+            body: JSON.stringify(payload),
+        };
+
+        const headers = await createL2Headers(
+            this.signer as Wallet | JsonRpcSigner,
+            this.creds as ApiKeyCreds,
+            l2HeaderArgs,
+        );
+        return del(`${this.host}${endpoint}`, headers, payload);
     }
 
     private canL1Auth(): void {
