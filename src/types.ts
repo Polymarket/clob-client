@@ -282,3 +282,8 @@ export interface TradeNotification {
     action: string;
     timestamp: number;
 }
+
+export interface OrderMarketCancelParams {
+    market?: string;
+    asset_id?: string;
+}
