@@ -1,5 +1,6 @@
 import { Side as UtilsSide, SignedOrder } from "@polymarket/order-utils";
-import { NewOrder, OrderType, Side } from "./types";
+import { createHash } from "crypto";
+import { NewOrder, OrderBookSummary, OrderType, Side } from "./types";
 
 export const orderToJson = (order: SignedOrder, owner: string, orderType: OrderType): NewOrder => {
     let side = Side.BUY;
@@ -61,4 +62,16 @@ export const decimalPlaces = (num: number): number => {
     }
 
     return arr[1].length;
+};
+
+/**
+ * Calculates the hash for the given orderbook
+ * @param orderbook
+ * @returns
+ */
+export const generateOrderBookSummaryHash = (orderbook: OrderBookSummary): string => {
+    orderbook.hash = "";
+    const hash = createHash("sha1").update(JSON.stringify(orderbook)).digest("hex");
+    orderbook.hash = hash;
+    return hash;
 };
