@@ -27,8 +27,7 @@ const order = await clobClient.createOrder({
     price: 0.5,
     side: Side.Buy,
     size: 100,
-    feeRateBps: "100",
-    nonce: 1,    
+    feeRateBps: "0",
 });
 
 // Send it to the server
