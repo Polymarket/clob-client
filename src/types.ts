@@ -220,6 +220,7 @@ export interface OpenOrderParams {
 export interface MakerOrder {
     order_id: string;
     owner: string;
+    maker_address: string;
     matched_amount: string;
     price: string;
     asset_id: string;
@@ -244,6 +245,7 @@ export interface Trade {
     outcome_index: number;
     bucket_index: number;
     owner: string;
+    maker_address: string;
     maker_orders: MakerOrder[];
 }
 
