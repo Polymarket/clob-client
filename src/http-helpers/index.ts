@@ -1,11 +1,26 @@
 import axios, { Method } from "axios";
 import { FilterParams, TradeNotificationParams, TradeParams } from "src/types";
 import { OpenOrderParams } from "../types";
+import { name, version } from "./../../package.json";
 
 export const GET = "GET";
 export const POST = "POST";
 export const DELETE = "DELETE";
 export const PUT = "PUT";
+
+const overloadHeaders = (method: Method, headers?: Record<string, string | number | boolean>) => {
+    if (!headers || typeof headers === undefined) {
+        headers = {};
+    }
+    headers!["User-Agent"] = `${name}@${version}`;
+    headers!["Accept"] = "*/*";
+    headers!["Connection"] = "keep-alive";
+    headers!["Content-Type"] = "application/json";
+
+    if (method === GET) {
+        headers!["Accept-Encoding"] = "gzip";
+    }
+};
 
 export const request = async (
     endpoint: string,
@@ -15,6 +30,7 @@ export const request = async (
     params?: any,
 ): Promise<any> => {
     try {
+        overloadHeaders(method, headers);
         const response = await axios({ method, url: endpoint, headers, data, params });
         return response;
     } catch (err) {
