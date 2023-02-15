@@ -8,14 +8,17 @@ export const POST = "POST";
 export const DELETE = "DELETE";
 export const PUT = "PUT";
 
-const overloadHeaders = (method: Method, headers: Record<string, string | number | boolean>) => {
-    headers["User-Agent"] = `${name}@${version}`;
-    headers["Accept"] = "*/*";
-    headers["Connection"] = "keep-alive";
-    headers["Content-Type"] = "application/json";
+const overloadHeaders = (method: Method, headers?: Record<string, string | number | boolean>) => {
+    if (!headers || typeof headers === undefined) {
+        headers = {};
+    }
+    headers!["User-Agent"] = `${name}@${version}`;
+    headers!["Accept"] = "*/*";
+    headers!["Connection"] = "keep-alive";
+    headers!["Content-Type"] = "application/json";
 
     if (method === GET) {
-        headers["Accept-Encoding"] = "gzip";
+        headers!["Accept-Encoding"] = "gzip";
     }
 };
 
