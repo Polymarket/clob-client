@@ -1,7 +1,6 @@
 import axios, { Method } from "axios";
 import { FilterParams, TradeNotificationParams, TradeParams } from "src/types";
 import { OpenOrderParams } from "../types";
-import { name, version } from "./../../package.json";
 
 export const GET = "GET";
 export const POST = "POST";
@@ -12,7 +11,7 @@ const overloadHeaders = (method: Method, headers?: Record<string, string | numbe
     if (!headers || typeof headers === undefined) {
         headers = {};
     }
-    headers!["User-Agent"] = `${name}@${version}`;
+    headers!["User-Agent"] = `@polymarket/clob-client`;
     headers!["Accept"] = "*/*";
     headers!["Connection"] = "keep-alive";
     headers!["Content-Type"] = "application/json";
