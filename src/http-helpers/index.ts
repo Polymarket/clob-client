@@ -1,11 +1,25 @@
 import axios, { Method } from "axios";
-import { FilterParams, TradeParams } from "src/types";
+import { FilterParams, TradeNotificationParams, TradeParams } from "src/types";
 import { OpenOrderParams } from "../types";
 
 export const GET = "GET";
 export const POST = "POST";
 export const DELETE = "DELETE";
 export const PUT = "PUT";
+
+const overloadHeaders = (method: Method, headers?: Record<string, string | number | boolean>) => {
+    if (!headers || typeof headers === undefined) {
+        headers = {};
+    }
+    headers!["User-Agent"] = `@polymarket/clob-client`;
+    headers!["Accept"] = "*/*";
+    headers!["Connection"] = "keep-alive";
+    headers!["Content-Type"] = "application/json";
+
+    if (method === GET) {
+        headers!["Accept-Encoding"] = "gzip";
+    }
+};
 
 export const request = async (
     endpoint: string,
@@ -15,6 +29,7 @@ export const request = async (
     params?: any,
 ): Promise<any> => {
     try {
+        overloadHeaders(method, headers);
         const response = await axios({ method, url: endpoint, headers, data, params });
         return response;
     } catch (err) {
@@ -24,7 +39,7 @@ export const request = async (
                 statusText: err.response?.statusText,
                 data: err.response?.data,
             });
-            return { error: err.response?.data };
+            return err.response?.data;
         }
         console.error(err);
 
@@ -158,6 +173,20 @@ export const addTradeParamsToUrl = (baseUrl: string, params?: TradeParams): stri
         }
         if (params.after !== undefined) {
             url = buildQueryParams(url, "after", `${params.after}`);
+        }
+    }
+    return url;
+};
+
+export const addTradeNotificationParamsToUrl = (
+    baseUrl: string,
+    params?: TradeNotificationParams,
+): string => {
+    let url = baseUrl;
+    if (params !== undefined) {
+        url = `${url}?`;
+        if (params.index !== undefined) {
+            url = buildQueryParams(url, "index", params.index.toString());
         }
     }
     return url;

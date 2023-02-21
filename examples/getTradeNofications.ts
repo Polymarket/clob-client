@@ -18,12 +18,11 @@ async function main() {
     };
     const clobClient = new ClobClient(host, chainId, wallet, creds);
 
-    // Send it to the server
-    const resp = await clobClient.cancelOrder({
-        orderID: "0x920cb5fc73e8cce1d8ee00c90beca3d7cc4195adc82a8c94ea96134eaefefe39", // Order ID
-    });
-    console.log(resp);
-    console.log(`Done!`);
+    console.log(
+        await clobClient.getTradeNotifications({
+            index: 0,
+        }),
+    );
 }
 
 main();

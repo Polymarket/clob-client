@@ -18,11 +18,17 @@ export const GET_LAST_TRADE_PRICE = "/last-trade-price";
 // Order endpoints
 export const POST_ORDER = "/order";
 export const CANCEL_ORDER = "/order";
+export const CANCEL_ORDERS = "/orders";
 export const GET_ORDER = "/order/";
 export const CANCEL_ALL = "/cancel-all";
+export const CANCEL_MARKET_ORDERS = "/cancel-market-orders";
 export const GET_LARGE_ORDERS = "/large-orders";
 export const GET_OPEN_ORDERS = "/orders";
 export const GET_TRADES = "/trades";
 
 // Price history
 export const GET_PRICES_HISTORY = "/prices-history";
+
+// Notifications
+export const GET_TRADE_NOTIFICATIONS = "/trade-notifications";
+export const DROP_TRADE_NOTIFICATIONS = "/drop-trade-notifications";

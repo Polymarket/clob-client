@@ -12,7 +12,7 @@ import {
     CONDITIONAL_TOKEN_DECIMALS,
 } from "@polymarket/order-utils";
 import { UserOrder, Side, Chain, UserMarketOrder } from "../types";
-import { roundDown, roundNormal } from "../utilities";
+import { decimalPlaces, roundDown, roundNormal, roundUp } from "../utilities";
 
 /**
  * Generate and sign a order
@@ -33,6 +33,49 @@ export const buildOrder = async (
     return cTFExchangeOrderBuilder.buildSignedOrder(orderData);
 };
 
+export const getOrderAmounts = (
+    side: Side,
+    size: number,
+    price: number,
+): { side: UtilsSide; rawMakerAmt: number; rawTakerAmt: number } => {
+    const rawPrice = roundNormal(price, 2);
+
+    if (side === Side.BUY) {
+        // force 2 decimals places
+        const rawTakerAmt = roundDown(size, 2);
+
+        let rawMakerAmt = rawTakerAmt * rawPrice;
+        if (decimalPlaces(rawMakerAmt) > 4) {
+            rawMakerAmt = roundUp(rawMakerAmt, 8);
+            if (decimalPlaces(rawMakerAmt) > 4) {
+                rawMakerAmt = roundDown(rawMakerAmt, 4);
+            }
+        }
+
+        return {
+            side: UtilsSide.BUY,
+            rawMakerAmt,
+            rawTakerAmt,
+        };
+    } else {
+        const rawMakerAmt = roundDown(size, 2);
+
+        let rawTakerAmt = rawMakerAmt * rawPrice;
+        if (decimalPlaces(rawTakerAmt) > 4) {
+            rawTakerAmt = roundUp(rawTakerAmt, 8);
+            if (decimalPlaces(rawTakerAmt) > 4) {
+                rawTakerAmt = roundDown(rawTakerAmt, 4);
+            }
+        }
+
+        return {
+            side: UtilsSide.SELL,
+            rawMakerAmt,
+            rawTakerAmt,
+        };
+    }
+};
+
 /**
  * Translate simple user order to args used to generate Orders
  */
@@ -42,31 +85,14 @@ export const buildOrderCreationArgs = async (
     signatureType: SignatureType,
     userOrder: UserOrder,
 ): Promise<OrderData> => {
-    let makerAmount: string;
-    let takerAmount: string;
+    const { side, rawMakerAmt, rawTakerAmt } = getOrderAmounts(
+        userOrder.side,
+        userOrder.size,
+        userOrder.price,
+    );
 
-    let side: UtilsSide;
-
-    if (userOrder.side === Side.BUY) {
-        side = UtilsSide.BUY;
-
-        // force 2 decimals places
-        const rawTakerAmt = roundDown(userOrder.size, 2);
-        const rawPrice = roundNormal(userOrder.price, 2); // prob can just round this normal
-        const rawMakerAmt = roundDown(roundNormal(rawTakerAmt * rawPrice, 8), 4);
-
-        makerAmount = parseUnits(rawMakerAmt.toString(), COLLATERAL_TOKEN_DECIMALS).toString();
-        takerAmount = parseUnits(rawTakerAmt.toString(), CONDITIONAL_TOKEN_DECIMALS).toString();
-    } else {
-        side = UtilsSide.SELL;
-
-        const rawMakerAmt = roundDown(userOrder.size, 2);
-        const rawPrice = roundNormal(userOrder.price, 2);
-        const rawTakerAmt = roundDown(roundNormal(rawPrice * rawMakerAmt, 8), 4);
-
-        makerAmount = parseUnits(rawMakerAmt.toString(), CONDITIONAL_TOKEN_DECIMALS).toString();
-        takerAmount = parseUnits(rawTakerAmt.toString(), COLLATERAL_TOKEN_DECIMALS).toString();
-    }
+    const makerAmount = parseUnits(rawMakerAmt.toString(), COLLATERAL_TOKEN_DECIMALS).toString();
+    const takerAmount = parseUnits(rawTakerAmt.toString(), CONDITIONAL_TOKEN_DECIMALS).toString();
 
     let taker;
     if (typeof userOrder.taker !== "undefined" && userOrder.taker) {
@@ -126,6 +152,28 @@ export const createOrder = async (
     return buildOrder(eoaSigner, clobContracts.Exchange, chainId, orderData);
 };
 
+export const getMarketBuyOrderRawAmounts = (
+    amount: number,
+    price: number,
+): { rawMakerAmt: number; rawTakerAmt: number } => {
+    // force 2 decimals places
+    const rawMakerAmt = roundDown(amount, 2);
+    const rawPrice = roundDown(price, 2);
+
+    let rawTakerAmt = rawMakerAmt / rawPrice;
+    if (decimalPlaces(rawTakerAmt) > 4) {
+        rawTakerAmt = roundUp(rawTakerAmt, 8);
+        if (decimalPlaces(rawTakerAmt) > 4) {
+            rawTakerAmt = roundDown(rawTakerAmt, 4);
+        }
+    }
+
+    return {
+        rawMakerAmt,
+        rawTakerAmt,
+    };
+};
+
 /**
  * Translate simple user market order to args used to generate Orders
  */
@@ -135,10 +183,10 @@ export const buildMarketBuyOrderCreationArgs = async (
     signatureType: SignatureType,
     userMarketOrder: UserMarketOrder,
 ): Promise<OrderData> => {
-    // force 2 decimals places
-    const rawMakerAmt = roundDown(userMarketOrder.amount, 2);
-    const rawPrice = roundDown(userMarketOrder.price || 1, 2);
-    const rawTakerAmt = roundDown(roundNormal(rawMakerAmt / rawPrice, 8), 4);
+    const { rawMakerAmt, rawTakerAmt } = getMarketBuyOrderRawAmounts(
+        userMarketOrder.amount,
+        userMarketOrder.price || 1,
+    );
 
     const makerAmount = parseUnits(rawMakerAmt.toString(), COLLATERAL_TOKEN_DECIMALS).toString();
     const takerAmount = parseUnits(rawTakerAmt.toString(), CONDITIONAL_TOKEN_DECIMALS).toString();

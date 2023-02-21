@@ -11,10 +11,14 @@ import {
     OpenOrdersResponse,
     OptionalParams,
     Order,
+    OrderMarketCancelParams,
+    OrderBookSummary,
     OrderPayload,
     OrderType,
     Side,
     Trade,
+    TradeNotification,
+    TradeNotificationParams,
     TradeParams,
     UserMarketOrder,
     UserOrder,
@@ -23,6 +27,7 @@ import { createL1Headers, createL2Headers } from "./headers";
 import {
     addFilterParamsToUrl,
     addOpenOrderParamsToUrl,
+    addTradeNotificationParamsToUrl,
     addTradeParamsToUrl,
     del,
     DELETE,
@@ -32,7 +37,7 @@ import {
     post,
 } from "./http-helpers";
 import { L1_AUTH_UNAVAILABLE_ERROR, L2_AUTH_NOT_AVAILABLE } from "./errors";
-import { orderToJson } from "./utilities";
+import { generateOrderBookSummaryHash, orderToJson } from "./utilities";
 import {
     CANCEL_ALL,
     CANCEL_ORDER,
@@ -53,6 +58,10 @@ import {
     GET_MARKETS,
     GET_MARKET,
     GET_PRICES_HISTORY,
+    GET_TRADE_NOTIFICATIONS,
+    DROP_TRADE_NOTIFICATIONS,
+    CANCEL_ORDERS,
+    CANCEL_MARKET_ORDERS,
 } from "./endpoints";
 import { OrderBuilder } from "./order-builder/builder";
 
@@ -111,8 +120,17 @@ export class ClobClient {
         return get(`${this.host}${GET_MARKET}${conditionID}`);
     }
 
-    public async getOrderBook(tokenID: string): Promise<any> {
+    public async getOrderBook(tokenID: string): Promise<OrderBookSummary> {
         return get(`${this.host}${GET_ORDER_BOOK}?token_id=${tokenID}`);
+    }
+
+    /**
+     * Calculates the hash for the given orderbook
+     * @param orderbook
+     * @returns
+     */
+    public getOrderBookHash(orderbook: OrderBookSummary): string {
+        return generateOrderBookSummaryHash(orderbook);
     }
 
     public async getMidpoint(tokenID: string): Promise<any> {
@@ -265,6 +283,46 @@ export class ClobClient {
         return get(url, headers);
     }
 
+    public async getTradeNotifications(
+        params?: TradeNotificationParams,
+    ): Promise<TradeNotification[]> {
+        this.canL2Auth();
+
+        const endpoint = GET_TRADE_NOTIFICATIONS;
+        const headerArgs = {
+            method: GET,
+            requestPath: endpoint,
+        };
+
+        const headers = await createL2Headers(
+            this.signer as Wallet | JsonRpcSigner,
+            this.creds as ApiKeyCreds,
+            headerArgs,
+        );
+
+        const url = addTradeNotificationParamsToUrl(`${this.host}${endpoint}`, params);
+        return get(url, headers);
+    }
+
+    public async dropTradeNotifications(params?: TradeNotificationParams): Promise<void> {
+        this.canL2Auth();
+
+        const endpoint = DROP_TRADE_NOTIFICATIONS;
+        const l2HeaderArgs = {
+            method: DELETE,
+            requestPath: endpoint,
+        };
+
+        const headers = await createL2Headers(
+            this.signer as Wallet | JsonRpcSigner,
+            this.creds as ApiKeyCreds,
+            l2HeaderArgs,
+        );
+
+        const url = addTradeNotificationParamsToUrl(`${this.host}${endpoint}`, params);
+        return del(url, headers);
+    }
+
     public async createOrder(userOrder: UserOrder): Promise<SignedOrder> {
         this.canL1Auth();
 
@@ -342,6 +400,23 @@ export class ClobClient {
         return del(`${this.host}${endpoint}`, headers, payload);
     }
 
+    public async cancelOrders(ordersHashes: string[]): Promise<any> {
+        this.canL2Auth();
+        const endpoint = CANCEL_ORDERS;
+        const l2HeaderArgs = {
+            method: DELETE,
+            requestPath: endpoint,
+            body: JSON.stringify(ordersHashes),
+        };
+
+        const headers = await createL2Headers(
+            this.signer as Wallet | JsonRpcSigner,
+            this.creds as ApiKeyCreds,
+            l2HeaderArgs,
+        );
+        return del(`${this.host}${endpoint}`, headers, ordersHashes);
+    }
+
     public async cancelAll(): Promise<any> {
         this.canL2Auth();
         const endpoint = CANCEL_ALL;
@@ -356,6 +431,23 @@ export class ClobClient {
             l2HeaderArgs,
         );
         return del(`${this.host}${endpoint}`, headers);
+    }
+
+    public async cancelMarketOrders(payload: OrderMarketCancelParams): Promise<any> {
+        this.canL2Auth();
+        const endpoint = CANCEL_MARKET_ORDERS;
+        const l2HeaderArgs = {
+            method: DELETE,
+            requestPath: endpoint,
+            body: JSON.stringify(payload),
+        };
+
+        const headers = await createL2Headers(
+            this.signer as Wallet | JsonRpcSigner,
+            this.creds as ApiKeyCreds,
+            l2HeaderArgs,
+        );
+        return del(`${this.host}${endpoint}`, headers, payload);
     }
 
     private canL1Auth(): void {

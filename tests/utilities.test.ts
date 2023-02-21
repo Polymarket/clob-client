@@ -1,8 +1,8 @@
 import "mocha";
 import { expect } from "chai";
-import { orderToJson } from "../src/utilities";
+import { decimalPlaces, generateOrderBookSummaryHash, orderToJson, roundDown } from "../src/utilities";
 import { Side as UtilsSide, SignatureType } from "@polymarket/order-utils";
-import { Chain, OrderType, Side, UserMarketOrder, UserOrder } from "../src";
+import { Chain, OrderBookSummary, OrderType, Side, UserMarketOrder, UserOrder } from "../src";
 import { Wallet } from "@ethersproject/wallet";
 import { createMarketBuyOrder, createOrder } from "../src/order-builder/helpers";
 
@@ -510,5 +510,75 @@ describe("utilities", () => {
                 orderType: OrderType.FOK,
             });
         });
+    });
+
+    it("decimalPlaces", () => {
+        expect(decimalPlaces(949.9970999999999)).to.equal(13);
+        expect(decimalPlaces(949)).to.equal(0);
+    });
+
+    it("roundDown", () => {
+        expect(roundDown(0.55, 2)).to.equal(0.55);
+        expect(roundDown(0.56, 2)).to.equal(0.56);
+        expect(roundDown(0.57, 2)).to.equal(0.57);
+
+        expect(roundDown(0.55, 4)).to.equal(0.55);
+        expect(roundDown(0.56, 4)).to.equal(0.56);
+        expect(roundDown(0.57, 4)).to.equal(0.57);
+	});
+
+    it("generateOrderBookSummaryHash", () => {
+        let orderbook = {
+            market: "0xaabbcc",
+            asset_id: "100",
+            bids: [
+                { price: "0.3", size: "100" },
+                { price: "0.4", size: "100" },
+            ],
+            asks: [
+                { price: "0.6", size: "100" },
+                { price: "0.7", size: "100" },
+            ],
+            hash: "",
+        } as OrderBookSummary;
+
+        expect(generateOrderBookSummaryHash(orderbook)).to.equal(
+            "b8b72c72c6534d1b3a4e7fb47b81672d0e94d5a5",
+        );
+        expect(orderbook.hash).to.equal("b8b72c72c6534d1b3a4e7fb47b81672d0e94d5a5");
+
+        // -
+        orderbook = {
+            market: "0xaabbcc",
+            asset_id: "100",
+            bids: [
+                { price: "0.3", size: "100" },
+                { price: "0.4", size: "100" },
+            ],
+            asks: [
+                { price: "0.6", size: "100" },
+                { price: "0.7", size: "100" },
+            ],
+            hash: "b8b72c72c6534d1b3a4e7fb47b81672d0e94d5a5",
+        } as OrderBookSummary;
+
+        expect(generateOrderBookSummaryHash(orderbook)).to.equal(
+            "b8b72c72c6534d1b3a4e7fb47b81672d0e94d5a5",
+        );
+        expect(orderbook.hash).to.equal("b8b72c72c6534d1b3a4e7fb47b81672d0e94d5a5");
+
+        // -
+        orderbook = {
+            market: "0xaabbcc",
+            asset_id: "100",
+            bids: [],
+            asks: [],
+            hash: "",
+        } as OrderBookSummary;
+
+        expect(generateOrderBookSummaryHash(orderbook)).to.equal(
+            "7f81a35a09e1933a96b05edb51ac4be4a6163146",
+        );
+        expect(orderbook.hash).to.equal("7f81a35a09e1933a96b05edb51ac4be4a6163146");
     });
 });

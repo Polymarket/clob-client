@@ -18,12 +18,24 @@ async function main() {
     };
     const clobClient = new ClobClient(host, chainId, wallet, creds);
 
+    const YES_TOKEN_ID =
+        "1343197538147866997676250008839231694243646439454152539053893078719042421992";
+    const NO_TOKEN_ID =
+        "16678291189211314787145083999015737376658799626183230671758641503291735614088";
+    const CONDITION_ID = "0xbd31dc8a20211944f6b70f31557f1001557b59905b7738480ca09bd4532f84af";
+
     // Send it to the server
-    const resp = await clobClient.cancelOrder({
-        orderID: "0x920cb5fc73e8cce1d8ee00c90beca3d7cc4195adc82a8c94ea96134eaefefe39", // Order ID
-    });
-    console.log(resp);
-    console.log(`Done!`);
+    console.log(await clobClient.cancelMarketOrders({ market: CONDITION_ID }));
+    console.log(
+        await clobClient.cancelMarketOrders({
+            asset_id: YES_TOKEN_ID,
+        }),
+    );
+    console.log(
+        await clobClient.cancelMarketOrders({
+            asset_id: NO_TOKEN_ID,
+        }),
+    );
 }
 
 main();

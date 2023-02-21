@@ -182,6 +182,7 @@ export interface OpenOrder {
     associate_trades: Trade[];
     outcome: string;
     outcome_index: number;
+    created_at: number;
 }
 
 export type OpenOrdersResponse = OpenOrder[];
@@ -211,7 +212,7 @@ export interface TradeParams {
 
 export interface OpenOrderParams {
     id?: string;
-    owner: string;
+    owner?: string;
     market?: string;
     asset_id?: string;
 }
@@ -219,6 +220,7 @@ export interface OpenOrderParams {
 export interface MakerOrder {
     order_id: string;
     owner: string;
+    maker_address: string;
     matched_amount: string;
     price: string;
     asset_id: string;
@@ -243,6 +245,7 @@ export interface Trade {
     outcome_index: number;
     bucket_index: number;
     owner: string;
+    maker_address: string;
     maker_orders: MakerOrder[];
 }
 
@@ -259,4 +262,43 @@ export interface MarketPrice {
     p: string; // price
     v: string; // volume
     ps: string; // positions
+}
+
+export interface TradeNotificationParams {
+    index: number;
+}
+
+export interface TradeNotification {
+    id: number;
+    owner: string;
+    order_id: string;
+    market: string;
+    asset_id: string;
+    side: string;
+    price: string;
+    original_size: string;
+    matched_size: string;
+    remaining_size: string;
+    outcome: string;
+    outcome_index: number;
+    action: string;
+    timestamp: number;
+}
+
+export interface OrderMarketCancelParams {
+    market?: string;
+    asset_id?: string;
+}
+
+export interface OrderBookSummary {
+    market: string;
+    asset_id: string;
+    bids: OrderSummary[];
+    asks: OrderSummary[];
+    hash: string;
+}
+
+export interface OrderSummary {
+    price: string;
+    size: string;
 }

@@ -19,9 +19,9 @@ async function main() {
     const clobClient = new ClobClient(host, chainId, wallet, creds);
 
     // Send it to the server
-    const resp = await clobClient.cancelOrder({
-        orderID: "0x920cb5fc73e8cce1d8ee00c90beca3d7cc4195adc82a8c94ea96134eaefefe39", // Order ID
-    });
+    const resp = await clobClient.cancelOrders([
+        "0xd4f32972ee7fbf7f8e666bd63e02ad0cc8a23596f72ba5f0f1b3e437b8cc6459",
+    ]);
     console.log(resp);
     console.log(`Done!`);
 }
