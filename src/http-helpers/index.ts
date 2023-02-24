@@ -1,5 +1,10 @@
 import axios, { Method } from "axios";
-import { FilterParams, TradeNotificationParams, TradeParams } from "src/types";
+import {
+    BalanceAllowanceParams,
+    FilterParams,
+    TradeNotificationParams,
+    TradeParams,
+} from "src/types";
 import { OpenOrderParams } from "../types";
 
 export const GET = "GET";
@@ -187,6 +192,23 @@ export const addTradeNotificationParamsToUrl = (
         url = `${url}?`;
         if (params.index !== undefined) {
             url = buildQueryParams(url, "index", params.index.toString());
+        }
+    }
+    return url;
+};
+
+export const addBalanceAllowanceParamsToUrl = (
+    baseUrl: string,
+    params?: BalanceAllowanceParams,
+): string => {
+    let url = baseUrl;
+    if (params !== undefined) {
+        url = `${url}?`;
+        if (params.asset_type !== undefined) {
+            url = buildQueryParams(url, "asset_type", params.asset_type.toString());
+        }
+        if (params.token_id && params.token_id !== undefined) {
+            url = buildQueryParams(url, "token_id", params.token_id.toString());
         }
     }
     return url;

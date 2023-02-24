@@ -302,3 +302,18 @@ export interface OrderSummary {
     price: string;
     size: string;
 }
+
+export enum AssetType {
+    COLLATERAL = "COLLATERAL",
+    CONDITIONAL = "CONDITIONAL",
+}
+
+export interface BalanceAllowanceParams {
+    asset_type: AssetType;
+    token_id?: string;
+}
+
+export interface BalanceAllowanceResponse {
+    balance: string;
+    allowance: string;
+}

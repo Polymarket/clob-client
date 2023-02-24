@@ -22,9 +22,12 @@ import {
     TradeParams,
     UserMarketOrder,
     UserOrder,
+    BalanceAllowanceParams,
+    BalanceAllowanceResponse,
 } from "./types";
 import { createL1Headers, createL2Headers } from "./headers";
 import {
+    addBalanceAllowanceParamsToUrl,
     addFilterParamsToUrl,
     addOpenOrderParamsToUrl,
     addTradeNotificationParamsToUrl,
@@ -62,6 +65,7 @@ import {
     DROP_TRADE_NOTIFICATIONS,
     CANCEL_ORDERS,
     CANCEL_MARKET_ORDERS,
+    GET_BALANCE_ALLOWANCE,
 } from "./endpoints";
 import { OrderBuilder } from "./order-builder/builder";
 
@@ -313,6 +317,27 @@ export class ClobClient {
 
         const url = addTradeNotificationParamsToUrl(`${this.host}${endpoint}`, params);
         return del(url, headers);
+    }
+
+    public async getBalanceAllowance(
+        params?: BalanceAllowanceParams,
+    ): Promise<BalanceAllowanceResponse> {
+        this.canL2Auth();
+
+        const endpoint = GET_BALANCE_ALLOWANCE;
+        const headerArgs = {
+            method: GET,
+            requestPath: endpoint,
+        };
+
+        const headers = await createL2Headers(
+            this.signer as Wallet | JsonRpcSigner,
+            this.creds as ApiKeyCreds,
+            headerArgs,
+        );
+
+        const url = addBalanceAllowanceParamsToUrl(`${this.host}${endpoint}`, params);
+        return get(url, headers);
     }
 
     public async createOrder(userOrder: UserOrder): Promise<SignedOrder> {

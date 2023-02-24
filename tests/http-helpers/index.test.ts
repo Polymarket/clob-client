@@ -6,8 +6,16 @@ import {
     addTradeParamsToUrl,
     addOpenOrderParamsToUrl,
     addTradeNotificationParamsToUrl,
+    addBalanceAllowanceParamsToUrl,
 } from "../../src/http-helpers/index";
-import { OpenOrderParams, Side, TradeNotificationParams, TradeParams } from "../../src";
+import {
+    AssetType,
+    BalanceAllowanceParams,
+    OpenOrderParams,
+    Side,
+    TradeNotificationParams,
+    TradeParams,
+} from "../../src";
 
 describe("utilities", () => {
     describe("buildQueryParams", () => {
@@ -95,6 +103,28 @@ describe("utilities", () => {
             expect(url).not.undefined;
             expect(url).not.empty;
             expect(url).equal("http://tracker?index=1234");
+        });
+    });
+
+    describe("addBalanceAllowanceParamsToUrl", () => {
+        it("checking url + params - COLLATERAL", () => {
+            const url = addBalanceAllowanceParamsToUrl("http://tracker", {
+                asset_type: AssetType.COLLATERAL,
+            } as BalanceAllowanceParams);
+            expect(url).not.null;
+            expect(url).not.undefined;
+            expect(url).not.empty;
+            expect(url).equal("http://tracker?asset_type=COLLATERAL");
+        });
+        it("checking url + params - CONDITIONAL", () => {
+            const url = addBalanceAllowanceParamsToUrl("http://tracker", {
+                asset_type: AssetType.CONDITIONAL,
+                token_id: "111111",
+            } as BalanceAllowanceParams);
+            expect(url).not.null;
+            expect(url).not.undefined;
+            expect(url).not.empty;
+            expect(url).equal("http://tracker?asset_type=CONDITIONAL&token_id=111111");
         });
     });
 });

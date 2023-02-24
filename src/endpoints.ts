@@ -32,3 +32,6 @@ export const GET_PRICES_HISTORY = "/prices-history";
 // Notifications
 export const GET_TRADE_NOTIFICATIONS = "/trade-notifications";
 export const DROP_TRADE_NOTIFICATIONS = "/drop-trade-notifications";
+
+// Balance
+export const GET_BALANCE_ALLOWANCE = "/balance-allowance";
