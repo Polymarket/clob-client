@@ -4,20 +4,9 @@ import { resolve } from "path";
 import { Chain } from "../src";
 import { usdcAbi } from "./abi/usdcAbi";
 import { ctfAbi } from "./abi/ctfAbi";
+import { getContracts } from "@polymarket/order-utils";
 
 dotenvConfig({ path: resolve(__dirname, "../.env") });
-
-export const MUMBAI_CONTRACTS = {
-    Exchange: "0x4bFb41d5B3570DeFd03C39a9A4D8dE6Bd8B8982E",
-    Collateral: "0x2E8DCfE708D44ae2e406a1c02DFE2Fa13012f961",
-    Conditional: "0x7D8610E9567d2a6C9FBf66a5A13E9Ba8bb120d43",
-};
-
-export const MAINNET_CONTRACTS = {
-    Exchange: "0x4bFb41d5B3570DeFd03C39a9A4D8dE6Bd8B8982E",
-    Collateral: "0x2791Bca1f2de4661ED88A30C99A7a9449Aa84174",
-    Conditional: "0x4D97DCd97eC945f40cF65F87097ACe5EA0476045",
-};
 
 export function getWallet(mainnetQ: boolean): ethers.Wallet {
     const pk = process.env.PK as string;
@@ -36,16 +25,20 @@ export function getWallet(mainnetQ: boolean): ethers.Wallet {
 
 export function getUsdcContract(mainnetQ: boolean, wallet: ethers.Wallet): ethers.Contract {
     if (mainnetQ) {
-        return new ethers.Contract(MAINNET_CONTRACTS.Collateral, usdcAbi, wallet);
+        const mainnetContracts = getContracts(137);
+        return new ethers.Contract(mainnetContracts.Collateral, usdcAbi, wallet);
     }
-    return new ethers.Contract(MUMBAI_CONTRACTS.Collateral, usdcAbi, wallet);
+    const mumbaiContracts = getContracts(80001);
+    return new ethers.Contract(mumbaiContracts.Collateral, usdcAbi, wallet);
 }
 
 export function getCtfContract(mainnetQ: boolean, wallet: ethers.Wallet): ethers.Contract {
     if (mainnetQ) {
-        return new ethers.Contract(MAINNET_CONTRACTS.Conditional, ctfAbi, wallet);
+        const mainnetContracts = getContracts(137);
+        return new ethers.Contract(mainnetContracts.Conditional, ctfAbi, wallet);
     }
-    return new ethers.Contract(MUMBAI_CONTRACTS.Conditional, ctfAbi, wallet);
+    const mumbaiContracts = getContracts(80001);
+    return new ethers.Contract(mumbaiContracts.Conditional, ctfAbi, wallet);
 }
 
 async function main() {
@@ -57,7 +50,7 @@ async function main() {
     const chainId = parseInt(`${process.env.CHAIN_ID || Chain.MUMBAI}`) as Chain;
     console.log(`Address: ${await wallet.getAddress()}, chainId: ${chainId}`);
 
-    const contracts = isMainnet ? MAINNET_CONTRACTS : MUMBAI_CONTRACTS;
+    const contracts = getContracts(isMainnet ? 137 : 80001);
     const usdc = getUsdcContract(isMainnet, wallet);
     const ctf = getCtfContract(isMainnet, wallet);
 
