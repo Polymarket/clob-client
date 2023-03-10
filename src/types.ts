@@ -37,9 +37,10 @@ export enum Side {
 export enum OrderType {
     GTC = "GTC",
     FOK = "FOK",
+    GTD = "GTD",
 }
 
-export interface NewOrder {
+export interface NewOrder<T extends OrderType> {
     readonly order: {
         readonly salt: number;
         readonly maker: string;
@@ -56,7 +57,7 @@ export interface NewOrder {
         readonly signature: string;
     };
     readonly owner: string;
-    readonly orderType: OrderType;
+    readonly orderType: T;
 }
 
 // Simplified order for users

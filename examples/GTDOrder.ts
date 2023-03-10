@@ -1,7 +1,7 @@
 import { ethers } from "ethers";
 import { config as dotenvConfig } from "dotenv";
 import { resolve } from "path";
-import { ApiKeyCreds, Chain, ClobClient, Side } from "../src";
+import { ApiKeyCreds, Chain, ClobClient, OrderType, Side } from "../src";
 
 dotenvConfig({ path: resolve(__dirname, "../.env") });
 
@@ -18,21 +18,22 @@ async function main() {
     };
     const clobClient = new ClobClient(host, chainId, wallet, creds);
 
-    // Create a buy order for 100 YES for 0.50c
+    // Create a buy order for 100 YES for 0.50c with an expiration of 1 minute
+    // We add an extra 10s because Clob has a security threshold of 10 seconds before canceling it.
     const YES = "1343197538147866997676250008839231694243646439454152539053893078719042421992";
+    const oneMinute = parseInt(((new Date().getTime() + 60 * 1000 + 10 * 1000) / 1000).toString());
+
     const order = await clobClient.createOrder({
         tokenID: YES,
         price: 0.5,
         side: Side.SELL,
-        size: 100,
-        feeRateBps: 0,
-        nonce: 0,
-        expiration: 0,
+        size: 1000,
+        expiration: oneMinute,
     });
     console.log("Created Order", order);
 
     // Send it to the server
-    const resp = await clobClient.postOrder(order);
+    const resp = await clobClient.postOrder(order, OrderType.GTD);
     console.log(resp);
 }
 
