@@ -24,6 +24,7 @@ import {
     UserOrder,
     BalanceAllowanceParams,
     BalanceAllowanceResponse,
+    ApiKeyRaw,
 } from "./types";
 import { createL1Headers, createL2Headers } from "./headers";
 import {
@@ -202,8 +203,16 @@ export class ClobClient {
             nonce,
         );
 
-        const resp = await get(endpoint, headers, undefined, optionalParams);
-        return resp;
+        return await get(endpoint, headers, undefined, optionalParams).then(
+            (apiKeyRaw: ApiKeyRaw) => {
+                const apiKey: ApiKeyCreds = {
+                    key: apiKeyRaw.apiKey,
+                    secret: apiKeyRaw.secret,
+                    passphrase: apiKeyRaw.passphrase,
+                };
+                return apiKey;
+            },
+        );
     }
 
     public async getApiKeys(): Promise<ApiKeysResponse> {
@@ -221,7 +230,14 @@ export class ClobClient {
             headerArgs,
         );
 
-        return get(`${this.host}${endpoint}`, headers);
+        return get(`${this.host}${endpoint}`, headers).then((apiKeyRaw: ApiKeyRaw) => {
+            const apiKey: ApiKeyCreds = {
+                key: apiKeyRaw.apiKey,
+                secret: apiKeyRaw.secret,
+                passphrase: apiKeyRaw.passphrase,
+            };
+            return { apiKeys: [apiKey] };
+        });
     }
 
     public async deleteApiKey(): Promise<any> {

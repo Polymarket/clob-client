@@ -6,6 +6,12 @@ export interface ApiKeyCreds {
     passphrase: string;
 }
 
+export interface ApiKeyRaw {
+    apiKey: string;
+    secret: string;
+    passphrase: string;
+}
+
 export interface L2HeaderArgs {
     method: string;
     requestPath: string;
