@@ -41,7 +41,14 @@ async function main(type: "user" | "market") {
         // subscriptionMessage["assets_ids"] = [NO_TOKEN_ID];
     }
 
-    ws.send(JSON.stringify(subscriptionMessage)); // send sub message
+    ws.on("open", function (ev: any) {
+        ws.send(JSON.stringify(subscriptionMessage)); // send sub message
+
+        setInterval(() => {
+            console.log("PINGING");
+            ws.send("PING");
+        }, 50000);
+    });
 
     ws.onmessage = function (msg: any) {
         console.log(msg.data);
@@ -50,11 +57,6 @@ async function main(type: "user" | "market") {
     ws.on("close", function (ev: any) {
         console.log("disconnected SOCKET - PORT : 5000, reason: " + ev);
     });
-
-    setInterval(() => {
-        console.log("PINGING");
-        ws.send("PING");
-    }, 50000);
 }
 
-main("user");
+main("market");
