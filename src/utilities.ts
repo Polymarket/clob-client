@@ -2,13 +2,18 @@ import { Side as UtilsSide, SignedOrder } from "@polymarket/order-utils";
 import { createHash } from "crypto";
 import { NewOrder, OrderBookSummary, OrderType, Side } from "./types";
 
-export const orderToJson = (order: SignedOrder, owner: string, orderType: OrderType): NewOrder => {
+export function orderToJson<T extends OrderType>(
+    order: SignedOrder,
+    owner: string,
+    orderType: T,
+): NewOrder<T> {
     let side = Side.BUY;
     if (order.side == UtilsSide.BUY) {
         side = Side.BUY;
     } else {
         side = Side.SELL;
     }
+
     return {
         order: {
             salt: parseInt(order.salt, 10),
@@ -27,8 +32,8 @@ export const orderToJson = (order: SignedOrder, owner: string, orderType: OrderT
         },
         owner,
         orderType,
-    };
-};
+    } as NewOrder<T>;
+}
 
 export const roundNormal = (num: number, decimals: number): number => {
     if (decimalPlaces(num) <= decimals) {

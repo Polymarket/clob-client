@@ -16,13 +16,16 @@ const overloadHeaders = (method: Method, headers?: Record<string, string | numbe
     if (!headers || typeof headers === undefined) {
         headers = {};
     }
-    headers!["User-Agent"] = `@polymarket/clob-client`;
-    headers!["Accept"] = "*/*";
-    headers!["Connection"] = "keep-alive";
-    headers!["Content-Type"] = "application/json";
 
-    if (method === GET) {
-        headers!["Accept-Encoding"] = "gzip";
+    if (headers) {
+        headers["User-Agent"] = `@polymarket/clob-client`;
+        headers["Accept"] = "*/*";
+        headers["Connection"] = "keep-alive";
+        headers["Content-Type"] = "application/json";
+
+        if (method === GET) {
+            headers["Accept-Encoding"] = "gzip";
+        }
     }
 };
 
