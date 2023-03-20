@@ -24,12 +24,15 @@ import {
     UserOrder,
     BalanceAllowanceParams,
     BalanceAllowanceResponse,
+    OrderScoringParams,
+    OrderScoring,
 } from "./types";
 import { createL1Headers, createL2Headers } from "./headers";
 import {
     addBalanceAllowanceParamsToUrl,
     addFilterParamsToUrl,
     addOpenOrderParamsToUrl,
+    addOrderScoringParamsToUrl,
     addTradeNotificationParamsToUrl,
     addTradeParamsToUrl,
     del,
@@ -66,6 +69,7 @@ import {
     CANCEL_ORDERS,
     CANCEL_MARKET_ORDERS,
     GET_BALANCE_ALLOWANCE,
+    IS_ORDER_SCORING,
 } from "./endpoints";
 import { OrderBuilder } from "./order-builder/builder";
 
@@ -465,6 +469,25 @@ export class ClobClient {
             l2HeaderArgs,
         );
         return del(`${this.host}${endpoint}`, headers, payload);
+    }
+
+    public async isOrderScoring(params?: OrderScoringParams): Promise<OrderScoring> {
+        this.canL2Auth();
+
+        const endpoint = IS_ORDER_SCORING;
+        const headerArgs = {
+            method: GET,
+            requestPath: endpoint,
+        };
+
+        const headers = await createL2Headers(
+            this.signer as Wallet | JsonRpcSigner,
+            this.creds as ApiKeyCreds,
+            headerArgs,
+        );
+
+        const url = addOrderScoringParamsToUrl(`${this.host}${endpoint}`, params);
+        return get(url, headers);
     }
 
     private canL1Auth(): void {

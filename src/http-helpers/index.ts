@@ -2,6 +2,7 @@ import axios, { Method } from "axios";
 import {
     BalanceAllowanceParams,
     FilterParams,
+    OrderScoringParams,
     TradeNotificationParams,
     TradeParams,
 } from "src/types";
@@ -212,6 +213,20 @@ export const addBalanceAllowanceParamsToUrl = (
         }
         if (params.token_id && params.token_id !== undefined) {
             url = buildQueryParams(url, "token_id", params.token_id.toString());
+        }
+    }
+    return url;
+};
+
+export const addOrderScoringParamsToUrl = (
+    baseUrl: string,
+    params?: OrderScoringParams,
+): string => {
+    let url = baseUrl;
+    if (params !== undefined) {
+        url = `${url}?`;
+        if (params.orderId !== undefined) {
+            url = buildQueryParams(url, "order_id", params.orderId.toString());
         }
     }
     return url;
