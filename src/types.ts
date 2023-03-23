@@ -286,7 +286,7 @@ export interface TradeNotification {
     outcome_index: number;
     action: string;
     timestamp: number;
-    transaction_hash: string;
+    transaction_hash: OrderType;
 }
 
 export interface OrderMarketCancelParams {
