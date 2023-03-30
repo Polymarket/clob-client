@@ -248,6 +248,7 @@ export interface Trade {
     owner: string;
     maker_address: string;
     maker_orders: MakerOrder[];
+    transaction_hash: string;
 }
 
 export type OptionalParams = { [query: string]: string };
@@ -276,6 +277,7 @@ export interface TradeNotification {
     market: string;
     asset_id: string;
     side: string;
+    type: string;
     price: string;
     original_size: string;
     matched_size: string;
@@ -284,6 +286,7 @@ export interface TradeNotification {
     outcome_index: number;
     action: string;
     timestamp: number;
+    transaction_hash: OrderType;
 }
 
 export interface OrderMarketCancelParams {
