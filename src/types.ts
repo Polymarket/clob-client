@@ -321,3 +321,11 @@ export interface BalanceAllowanceResponse {
     balance: string;
     allowance: string;
 }
+
+export interface OrderScoringParams {
+    orderId: string;
+}
+
+export interface OrderScoring {
+    scoring: boolean;
+}
