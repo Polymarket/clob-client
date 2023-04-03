@@ -43,14 +43,17 @@ export const request = async (
         return response;
     } catch (err) {
         if (axios.isAxiosError(err)) {
-            console.error("request error", {
-                status: err.response?.status,
-                statusText: err.response?.statusText,
-                data: err.response?.data,
-            });
-            return err.response?.data;
+            if (err.response) {
+                console.error("request error", {
+                    status: err.response?.status,
+                    statusText: err.response?.statusText,
+                    data: err.response?.data,
+                });
+                return err.response?.data;
+            } else {
+                return { error: "connection error" };
+            }
         }
-        console.error(err);
 
         return { error: err };
     }

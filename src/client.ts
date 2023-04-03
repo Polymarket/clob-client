@@ -10,7 +10,6 @@ import {
     OpenOrderParams,
     OpenOrdersResponse,
     OptionalParams,
-    Order,
     OrderMarketCancelParams,
     OrderBookSummary,
     OrderPayload,
@@ -26,6 +25,7 @@ import {
     BalanceAllowanceResponse,
     OrderScoringParams,
     OrderScoring,
+    OpenOrder,
 } from "./types";
 import { createL1Headers, createL2Headers } from "./headers";
 import {
@@ -246,7 +246,7 @@ export class ClobClient {
         return del(`${this.host}${endpoint}`, headers);
     }
 
-    public async getOrder(orderID: string): Promise<Order> {
+    public async getOrder(orderID: string): Promise<OpenOrder> {
         this.canL2Auth();
 
         const endpoint = `${GET_ORDER}${orderID}`;
