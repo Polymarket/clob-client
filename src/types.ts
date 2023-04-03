@@ -172,6 +172,7 @@ export interface OpenOrder {
     outcome: string;
     outcome_index: number;
     created_at: number;
+    expiration: string;
     type: string;
 }
 
