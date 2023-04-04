@@ -158,21 +158,9 @@ export interface OrderResponse {
     status: string;
 }
 
-// get order/{orderID} response
-export interface Order {
-    orderID: string;
-    owner: string;
-    timestamp: string;
-    price: string;
-    size: string;
-    available_size: string;
-    side: string;
-    status: string;
-    asset_id: string;
-}
-
 export interface OpenOrder {
     id: string;
+    status: string;
     owner: string;
     market: string;
     asset_id: string;
@@ -184,6 +172,8 @@ export interface OpenOrder {
     outcome: string;
     outcome_index: number;
     created_at: number;
+    expiration: string;
+    type: string;
 }
 
 export type OpenOrdersResponse = OpenOrder[];
