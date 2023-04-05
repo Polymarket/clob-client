@@ -26,6 +26,8 @@ import {
     OrderScoringParams,
     OrderScoring,
     OpenOrder,
+    TickSizes,
+    TickSize,
 } from "./types";
 import { createL1Headers, createL2Headers } from "./headers";
 import {
@@ -70,6 +72,7 @@ import {
     CANCEL_MARKET_ORDERS,
     GET_BALANCE_ALLOWANCE,
     IS_ORDER_SCORING,
+    GET_TICK_SIZE,
 } from "./endpoints";
 import { OrderBuilder } from "./order-builder/builder";
 
@@ -85,6 +88,8 @@ export class ClobClient {
     readonly creds?: ApiKeyCreds;
 
     readonly orderBuilder: OrderBuilder;
+
+    readonly tickSizes: TickSizes;
 
     constructor(
         host: string,
@@ -109,6 +114,7 @@ export class ClobClient {
             signatureType,
             funderAddress,
         );
+        this.tickSizes = {};
     }
 
     // Public endpoints
@@ -130,6 +136,17 @@ export class ClobClient {
 
     public async getOrderBook(tokenID: string): Promise<OrderBookSummary> {
         return get(`${this.host}${GET_ORDER_BOOK}?token_id=${tokenID}`);
+    }
+
+    public async getTickSize(tokenID: string): Promise<TickSize> {
+        if (tokenID in this.tickSizes) {
+            return this.tickSizes[tokenID];
+        }
+
+        const result = await get(`${this.host}${GET_TICK_SIZE}?token_id=${tokenID}`);
+        this.tickSizes[tokenID] = result.minimum_tick_size as TickSize;
+
+        return this.tickSizes[tokenID];
     }
 
     /**
@@ -347,19 +364,23 @@ export class ClobClient {
     public async createOrder(userOrder: UserOrder): Promise<SignedOrder> {
         this.canL1Auth();
 
-        return this.orderBuilder.buildOrder(userOrder);
+        const tickSize = await this.getTickSize(userOrder.tokenID);
+
+        return this.orderBuilder.buildOrder(userOrder, tickSize);
     }
 
     public async createMarketBuyOrder(userMarketOrder: UserMarketOrder): Promise<SignedOrder> {
         this.canL1Auth();
 
-        if (!userMarketOrder.price) {
-            const { tokenID } = userMarketOrder;
-            const marketPrice = await this.getPrice(tokenID, Side.BUY);
+        const { tokenID } = userMarketOrder;
+        const tickSize = await this.getTickSize(tokenID);
 
+        if (!userMarketOrder.price) {
+            const marketPrice = await this.getPrice(tokenID, Side.BUY);
             userMarketOrder.price = parseFloat(marketPrice);
         }
-        return this.orderBuilder.buildMarketOrder(userMarketOrder);
+
+        return this.orderBuilder.buildMarketOrder(userMarketOrder, tickSize);
     }
 
     public async getOpenOrders(params?: OpenOrderParams): Promise<OpenOrdersResponse> {
