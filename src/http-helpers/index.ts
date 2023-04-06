@@ -7,6 +7,7 @@ import {
     TradeParams,
 } from "src/types";
 import { OpenOrderParams } from "../types";
+import { isBrowser } from "browser-or-node";
 
 export const GET = "GET";
 export const POST = "POST";
@@ -14,6 +15,10 @@ export const DELETE = "DELETE";
 export const PUT = "PUT";
 
 const overloadHeaders = (method: Method, headers?: Record<string, string | number | boolean>) => {
+    if (isBrowser) {
+        return;
+    }
+
     if (!headers || typeof headers === undefined) {
         headers = {};
     }
