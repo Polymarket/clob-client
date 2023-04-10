@@ -25,6 +25,7 @@ export const CANCEL_MARKET_ORDERS = "/cancel-market-orders";
 export const GET_LARGE_ORDERS = "/large-orders";
 export const GET_OPEN_ORDERS = "/orders";
 export const GET_TRADES = "/trades";
+export const IS_ORDER_SCORING = "/order-scoring";
 
 // Price history
 export const GET_PRICES_HISTORY = "/prices-history";

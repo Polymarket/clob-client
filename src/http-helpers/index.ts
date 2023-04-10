@@ -2,10 +2,12 @@ import axios, { Method } from "axios";
 import {
     BalanceAllowanceParams,
     FilterParams,
+    OrderScoringParams,
     TradeNotificationParams,
     TradeParams,
 } from "src/types";
 import { OpenOrderParams } from "../types";
+import { isBrowser } from "browser-or-node";
 
 export const GET = "GET";
 export const POST = "POST";
@@ -13,16 +15,23 @@ export const DELETE = "DELETE";
 export const PUT = "PUT";
 
 const overloadHeaders = (method: Method, headers?: Record<string, string | number | boolean>) => {
+    if (isBrowser) {
+        return;
+    }
+
     if (!headers || typeof headers === undefined) {
         headers = {};
     }
-    headers!["User-Agent"] = `@polymarket/clob-client`;
-    headers!["Accept"] = "*/*";
-    headers!["Connection"] = "keep-alive";
-    headers!["Content-Type"] = "application/json";
 
-    if (method === GET) {
-        headers!["Accept-Encoding"] = "gzip";
+    if (headers) {
+        headers["User-Agent"] = `@polymarket/clob-client`;
+        headers["Accept"] = "*/*";
+        headers["Connection"] = "keep-alive";
+        headers["Content-Type"] = "application/json";
+
+        if (method === GET) {
+            headers["Accept-Encoding"] = "gzip";
+        }
     }
 };
 
@@ -39,14 +48,17 @@ export const request = async (
         return response;
     } catch (err) {
         if (axios.isAxiosError(err)) {
-            console.error("request error", {
-                status: err.response?.status,
-                statusText: err.response?.statusText,
-                data: err.response?.data,
-            });
-            return err.response?.data;
+            if (err.response) {
+                console.error("request error", {
+                    status: err.response?.status,
+                    statusText: err.response?.statusText,
+                    data: err.response?.data,
+                });
+                return err.response?.data;
+            } else {
+                return { error: "connection error" };
+            }
         }
-        console.error(err);
 
         return { error: err };
     }
@@ -209,6 +221,20 @@ export const addBalanceAllowanceParamsToUrl = (
         }
         if (params.token_id && params.token_id !== undefined) {
             url = buildQueryParams(url, "token_id", params.token_id.toString());
+        }
+    }
+    return url;
+};
+
+export const addOrderScoringParamsToUrl = (
+    baseUrl: string,
+    params?: OrderScoringParams,
+): string => {
+    let url = baseUrl;
+    if (params !== undefined) {
+        url = `${url}?`;
+        if (params.orderId !== undefined) {
+            url = buildQueryParams(url, "order_id", params.orderId.toString());
         }
     }
     return url;

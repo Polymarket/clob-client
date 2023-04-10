@@ -10,7 +10,6 @@ import {
     OpenOrderParams,
     OpenOrdersResponse,
     OptionalParams,
-    Order,
     OrderMarketCancelParams,
     OrderBookSummary,
     OrderPayload,
@@ -25,12 +24,16 @@ import {
     BalanceAllowanceParams,
     BalanceAllowanceResponse,
     ApiKeyRaw,
+    OrderScoringParams,
+    OrderScoring,
+    OpenOrder,
 } from "./types";
 import { createL1Headers, createL2Headers } from "./headers";
 import {
     addBalanceAllowanceParamsToUrl,
     addFilterParamsToUrl,
     addOpenOrderParamsToUrl,
+    addOrderScoringParamsToUrl,
     addTradeNotificationParamsToUrl,
     addTradeParamsToUrl,
     del,
@@ -67,6 +70,7 @@ import {
     CANCEL_ORDERS,
     CANCEL_MARKET_ORDERS,
     GET_BALANCE_ALLOWANCE,
+    IS_ORDER_SCORING,
 } from "./endpoints";
 import { OrderBuilder } from "./order-builder/builder";
 
@@ -278,7 +282,7 @@ export class ClobClient {
         return del(`${this.host}${endpoint}`, headers);
     }
 
-    public async getOrder(orderID: string): Promise<Order> {
+    public async getOrder(orderID: string): Promise<OpenOrder> {
         this.canL2Auth();
 
         const endpoint = `${GET_ORDER}${orderID}`;
@@ -412,9 +416,9 @@ export class ClobClient {
         return get(url, headers);
     }
 
-    public async postOrder(
+    public async postOrder<T extends OrderType = OrderType.GTC>(
         order: SignedOrder,
-        orderType: OrderType = OrderType.GTC,
+        orderType: T = OrderType.GTC as T,
         optionalParams?: OptionalParams,
     ): Promise<any> {
         this.canL2Auth();
@@ -501,6 +505,25 @@ export class ClobClient {
             l2HeaderArgs,
         );
         return del(`${this.host}${endpoint}`, headers, payload);
+    }
+
+    public async isOrderScoring(params?: OrderScoringParams): Promise<OrderScoring> {
+        this.canL2Auth();
+
+        const endpoint = IS_ORDER_SCORING;
+        const headerArgs = {
+            method: GET,
+            requestPath: endpoint,
+        };
+
+        const headers = await createL2Headers(
+            this.signer as Wallet | JsonRpcSigner,
+            this.creds as ApiKeyCreds,
+            headerArgs,
+        );
+
+        const url = addOrderScoringParamsToUrl(`${this.host}${endpoint}`, params);
+        return get(url, headers);
     }
 
     private canL1Auth(): void {

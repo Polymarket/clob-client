@@ -43,9 +43,10 @@ export enum Side {
 export enum OrderType {
     GTC = "GTC",
     FOK = "FOK",
+    GTD = "GTD",
 }
 
-export interface NewOrder {
+export interface NewOrder<T extends OrderType> {
     readonly order: {
         readonly salt: number;
         readonly maker: string;
@@ -62,7 +63,7 @@ export interface NewOrder {
         readonly signature: string;
     };
     readonly owner: string;
-    readonly orderType: OrderType;
+    readonly orderType: T;
 }
 
 // Simplified order for users
@@ -163,21 +164,9 @@ export interface OrderResponse {
     status: string;
 }
 
-// get order/{orderID} response
-export interface Order {
-    orderID: string;
-    owner: string;
-    timestamp: string;
-    price: string;
-    size: string;
-    available_size: string;
-    side: string;
-    status: string;
-    asset_id: string;
-}
-
 export interface OpenOrder {
     id: string;
+    status: string;
     owner: string;
     market: string;
     asset_id: string;
@@ -189,6 +178,8 @@ export interface OpenOrder {
     outcome: string;
     outcome_index: number;
     created_at: number;
+    expiration: string;
+    type: string;
 }
 
 export type OpenOrdersResponse = OpenOrder[];
@@ -253,6 +244,7 @@ export interface Trade {
     owner: string;
     maker_address: string;
     maker_orders: MakerOrder[];
+    transaction_hash: string;
 }
 
 export type OptionalParams = { [query: string]: string };
@@ -281,6 +273,7 @@ export interface TradeNotification {
     market: string;
     asset_id: string;
     side: string;
+    type: string;
     price: string;
     original_size: string;
     matched_size: string;
@@ -289,6 +282,7 @@ export interface TradeNotification {
     outcome_index: number;
     action: string;
     timestamp: number;
+    transaction_hash: OrderType;
 }
 
 export interface OrderMarketCancelParams {
@@ -322,4 +316,12 @@ export interface BalanceAllowanceParams {
 export interface BalanceAllowanceResponse {
     balance: string;
     allowance: string;
+}
+
+export interface OrderScoringParams {
+    orderId: string;
+}
+
+export interface OrderScoring {
+    scoring: boolean;
 }

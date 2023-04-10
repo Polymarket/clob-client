@@ -1,6 +1,6 @@
 import { JsonRpcSigner } from "@ethersproject/providers";
 import { Wallet } from "@ethersproject/wallet";
-import { parseUnits } from "ethers/lib/utils";
+import { parseUnits } from "@ethersproject/units";
 import {
     ExchangeOrderBuilder,
     getContracts,
