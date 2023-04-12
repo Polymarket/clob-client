@@ -23,6 +23,7 @@ import {
     UserOrder,
     BalanceAllowanceParams,
     BalanceAllowanceResponse,
+    ApiKeyRaw,
     OrderScoringParams,
     OrderScoring,
     OpenOrder,
@@ -200,8 +201,16 @@ export class ClobClient {
             nonce,
         );
 
-        const resp = await post(endpoint, headers, undefined, optionalParams);
-        return resp;
+        return await post(endpoint, headers, undefined, optionalParams).then(
+            (apiKeyRaw: ApiKeyRaw) => {
+                const apiKey: ApiKeyCreds = {
+                    key: apiKeyRaw.apiKey,
+                    secret: apiKeyRaw.secret,
+                    passphrase: apiKeyRaw.passphrase,
+                };
+                return apiKey;
+            },
+        );
     }
 
     /**
@@ -223,8 +232,28 @@ export class ClobClient {
             nonce,
         );
 
-        const resp = await get(endpoint, headers, undefined, optionalParams);
-        return resp;
+        return await get(endpoint, headers, undefined, optionalParams).then(
+            (apiKeyRaw: ApiKeyRaw) => {
+                const apiKey: ApiKeyCreds = {
+                    key: apiKeyRaw.apiKey,
+                    secret: apiKeyRaw.secret,
+                    passphrase: apiKeyRaw.passphrase,
+                };
+                return apiKey;
+            },
+        );
+    }
+
+    public async createOrDeriveApiKey(
+        nonce?: number,
+        optionalParams?: OptionalParams,
+    ): Promise<ApiKeyCreds> {
+        return this.createApiKey(nonce, optionalParams).then(response => {
+            if (!response.key) {
+                return this.deriveApiKey(nonce, optionalParams);
+            }
+            return response;
+        });
     }
 
     public async getApiKeys(): Promise<ApiKeysResponse> {
@@ -242,7 +271,14 @@ export class ClobClient {
             headerArgs,
         );
 
-        return get(`${this.host}${endpoint}`, headers);
+        return get(`${this.host}${endpoint}`, headers).then((apiKeyRaw: ApiKeyRaw) => {
+            const apiKey: ApiKeyCreds = {
+                key: apiKeyRaw.apiKey,
+                secret: apiKeyRaw.secret,
+                passphrase: apiKeyRaw.passphrase,
+            };
+            return { apiKeys: [apiKey] };
+        });
     }
 
     public async deleteApiKey(): Promise<any> {
