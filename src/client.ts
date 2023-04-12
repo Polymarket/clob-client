@@ -45,7 +45,7 @@ import {
     post,
 } from "./http-helpers";
 import { L1_AUTH_UNAVAILABLE_ERROR, L2_AUTH_NOT_AVAILABLE } from "./errors";
-import { generateOrderBookSummaryHash, orderToJson } from "./utilities";
+import { generateOrderBookSummaryHash, isTickSizeSmaller, orderToJson } from "./utilities";
 import {
     CANCEL_ALL,
     CANCEL_ORDER,
@@ -361,19 +361,23 @@ export class ClobClient {
         return get(url, headers);
     }
 
-    public async createOrder(userOrder: UserOrder): Promise<SignedOrder> {
+    public async createOrder(userOrder: UserOrder, tickSize?: TickSize): Promise<SignedOrder> {
         this.canL1Auth();
 
-        const tickSize = await this.getTickSize(userOrder.tokenID);
+        const { tokenID } = userOrder;
+        tickSize = await this._resolveTickSize(tokenID, tickSize);
 
         return this.orderBuilder.buildOrder(userOrder, tickSize);
     }
 
-    public async createMarketBuyOrder(userMarketOrder: UserMarketOrder): Promise<SignedOrder> {
+    public async createMarketBuyOrder(
+        userMarketOrder: UserMarketOrder,
+        tickSize?: TickSize,
+    ): Promise<SignedOrder> {
         this.canL1Auth();
 
         const { tokenID } = userMarketOrder;
-        const tickSize = await this.getTickSize(tokenID);
+        tickSize = await this._resolveTickSize(tokenID, tickSize);
 
         if (!userMarketOrder.price) {
             const marketPrice = await this.getPrice(tokenID, Side.BUY);
@@ -525,5 +529,19 @@ export class ClobClient {
         if (this.creds === undefined) {
             throw L2_AUTH_NOT_AVAILABLE;
         }
+    }
+
+    private async _resolveTickSize(tokenID: string, tickSize?: TickSize): Promise<TickSize> {
+        const minTickSize = await this.getTickSize(tokenID);
+        if (tickSize) {
+            if (isTickSizeSmaller(tickSize, minTickSize)) {
+                throw new Error(
+                    `invalid tick size (${tickSize}), minimum for the market is ${minTickSize}`,
+                );
+            }
+        } else {
+            tickSize = minTickSize;
+        }
+        return tickSize;
     }
 }

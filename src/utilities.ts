@@ -1,6 +1,6 @@
 import { Side as UtilsSide, SignedOrder } from "@polymarket/order-utils";
 import { createHash } from "crypto";
-import { NewOrder, OrderBookSummary, OrderType, Side } from "./types";
+import { NewOrder, OrderBookSummary, OrderType, Side, TickSize } from "./types";
 
 export function orderToJson<T extends OrderType>(
     order: SignedOrder,
@@ -79,4 +79,8 @@ export const generateOrderBookSummaryHash = (orderbook: OrderBookSummary): strin
     const hash = createHash("sha1").update(JSON.stringify(orderbook)).digest("hex");
     orderbook.hash = hash;
     return hash;
+};
+
+export const isTickSizeSmaller = (a: TickSize, b: TickSize): boolean => {
+    return parseFloat(a) < parseFloat(b);
 };

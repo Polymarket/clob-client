@@ -3,6 +3,7 @@ import { expect } from "chai";
 import {
     decimalPlaces,
     generateOrderBookSummaryHash,
+    isTickSizeSmaller,
     orderToJson,
     roundDown,
 } from "../src/utilities";
@@ -2944,5 +2945,31 @@ describe("utilities", () => {
             "7f81a35a09e1933a96b05edb51ac4be4a6163146",
         );
         expect(orderbook.hash).to.equal("7f81a35a09e1933a96b05edb51ac4be4a6163146");
+    });
+
+    it("isTickSizeSmaller", () => {
+        // 0.1
+        expect(isTickSizeSmaller("0.1", "0.1")).to.be.false;
+        expect(isTickSizeSmaller("0.1", "0.01")).to.be.false;
+        expect(isTickSizeSmaller("0.1", "0.001")).to.be.false;
+        expect(isTickSizeSmaller("0.1", "0.0001")).to.be.false;
+
+        // 0.01
+        expect(isTickSizeSmaller("0.01", "0.1")).to.be.true;
+        expect(isTickSizeSmaller("0.01", "0.01")).to.be.false;
+        expect(isTickSizeSmaller("0.01", "0.001")).to.be.false;
+        expect(isTickSizeSmaller("0.01", "0.0001")).to.be.false;
+
+        // 0.001
+        expect(isTickSizeSmaller("0.001", "0.1")).to.be.true;
+        expect(isTickSizeSmaller("0.001", "0.01")).to.be.true;
+        expect(isTickSizeSmaller("0.001", "0.001")).to.be.false;
+        expect(isTickSizeSmaller("0.001", "0.0001")).to.be.false;
+
+        // 0.0001
+        expect(isTickSizeSmaller("0.0001", "0.1")).to.be.true;
+        expect(isTickSizeSmaller("0.0001", "0.01")).to.be.true;
+        expect(isTickSizeSmaller("0.0001", "0.001")).to.be.true;
+        expect(isTickSizeSmaller("0.0001", "0.0001")).to.be.false;
     });
 });
