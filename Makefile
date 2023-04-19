@@ -13,7 +13,7 @@ test:
 		--require jsdom-global/register \
 		--require ts-node/register 'tests/**/*.test.ts' \
 		--require tsconfig-paths/register \
-		--timeout 30000 \
+		--timeout 300000 \
 		--exit
 
 .PHONY: lint

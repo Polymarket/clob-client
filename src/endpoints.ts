@@ -14,6 +14,7 @@ export const GET_ORDER_BOOK = "/book";
 export const GET_MIDPOINT = "/midpoint";
 export const GET_PRICE = "/price";
 export const GET_LAST_TRADE_PRICE = "/last-trade-price";
+export const GET_TICK_SIZE = "/tick-size";
 
 // Order endpoints
 export const POST_ORDER = "/order";

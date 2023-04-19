@@ -27,6 +27,8 @@ import {
     OrderScoringParams,
     OrderScoring,
     OpenOrder,
+    TickSizes,
+    TickSize,
 } from "./types";
 import { createL1Headers, createL2Headers } from "./headers";
 import {
@@ -44,7 +46,7 @@ import {
     post,
 } from "./http-helpers";
 import { L1_AUTH_UNAVAILABLE_ERROR, L2_AUTH_NOT_AVAILABLE } from "./errors";
-import { generateOrderBookSummaryHash, orderToJson } from "./utilities";
+import { generateOrderBookSummaryHash, isTickSizeSmaller, orderToJson } from "./utilities";
 import {
     CANCEL_ALL,
     CANCEL_ORDER,
@@ -71,6 +73,7 @@ import {
     CANCEL_MARKET_ORDERS,
     GET_BALANCE_ALLOWANCE,
     IS_ORDER_SCORING,
+    GET_TICK_SIZE,
 } from "./endpoints";
 import { OrderBuilder } from "./order-builder/builder";
 
@@ -86,6 +89,8 @@ export class ClobClient {
     readonly creds?: ApiKeyCreds;
 
     readonly orderBuilder: OrderBuilder;
+
+    readonly tickSizes: TickSizes;
 
     constructor(
         host: string,
@@ -110,6 +115,7 @@ export class ClobClient {
             signatureType,
             funderAddress,
         );
+        this.tickSizes = {};
     }
 
     // Public endpoints
@@ -131,6 +137,17 @@ export class ClobClient {
 
     public async getOrderBook(tokenID: string): Promise<OrderBookSummary> {
         return get(`${this.host}${GET_ORDER_BOOK}?token_id=${tokenID}`);
+    }
+
+    public async getTickSize(tokenID: string): Promise<TickSize> {
+        if (tokenID in this.tickSizes) {
+            return this.tickSizes[tokenID];
+        }
+
+        const result = await get(`${this.host}${GET_TICK_SIZE}?token_id=${tokenID}`);
+        this.tickSizes[tokenID] = result.minimum_tick_size as TickSize;
+
+        return this.tickSizes[tokenID];
     }
 
     /**
@@ -380,22 +397,30 @@ export class ClobClient {
         return get(url, headers);
     }
 
-    public async createOrder(userOrder: UserOrder): Promise<SignedOrder> {
+    public async createOrder(userOrder: UserOrder, tickSize?: TickSize): Promise<SignedOrder> {
         this.canL1Auth();
 
-        return this.orderBuilder.buildOrder(userOrder);
+        const { tokenID } = userOrder;
+        tickSize = await this._resolveTickSize(tokenID, tickSize);
+
+        return this.orderBuilder.buildOrder(userOrder, tickSize);
     }
 
-    public async createMarketBuyOrder(userMarketOrder: UserMarketOrder): Promise<SignedOrder> {
+    public async createMarketBuyOrder(
+        userMarketOrder: UserMarketOrder,
+        tickSize?: TickSize,
+    ): Promise<SignedOrder> {
         this.canL1Auth();
 
-        if (!userMarketOrder.price) {
-            const { tokenID } = userMarketOrder;
-            const marketPrice = await this.getPrice(tokenID, Side.BUY);
+        const { tokenID } = userMarketOrder;
+        tickSize = await this._resolveTickSize(tokenID, tickSize);
 
+        if (!userMarketOrder.price) {
+            const marketPrice = await this.getPrice(tokenID, Side.BUY);
             userMarketOrder.price = parseFloat(marketPrice);
         }
-        return this.orderBuilder.buildMarketOrder(userMarketOrder);
+
+        return this.orderBuilder.buildMarketOrder(userMarketOrder, tickSize);
     }
 
     public async getOpenOrders(params?: OpenOrderParams): Promise<OpenOrdersResponse> {
@@ -540,5 +565,19 @@ export class ClobClient {
         if (this.creds === undefined) {
             throw L2_AUTH_NOT_AVAILABLE;
         }
+    }
+
+    private async _resolveTickSize(tokenID: string, tickSize?: TickSize): Promise<TickSize> {
+        const minTickSize = await this.getTickSize(tokenID);
+        if (tickSize) {
+            if (isTickSizeSmaller(tickSize, minTickSize)) {
+                throw new Error(
+                    `invalid tick size (${tickSize}), minimum for the market is ${minTickSize}`,
+                );
+            }
+        } else {
+            tickSize = minTickSize;
+        }
+        return tickSize;
     }
 }

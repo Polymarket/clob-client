@@ -325,3 +325,15 @@ export interface OrderScoringParams {
 export interface OrderScoring {
     scoring: boolean;
 }
+
+export type TickSize = "0.1" | "0.01" | "0.001" | "0.0001";
+
+export interface RoundConfig {
+    readonly price: number;
+    readonly size: number;
+    readonly amount: number;
+}
+
+export interface TickSizes {
+    [tokenId: string]: TickSize;
+}
