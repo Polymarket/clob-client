@@ -29,6 +29,7 @@ import {
     OpenOrder,
     TickSizes,
     TickSize,
+    OrdersScoringParams,
 } from "./types";
 import { createL1Headers, createL2Headers } from "./headers";
 import {
@@ -36,6 +37,7 @@ import {
     addFilterParamsToUrl,
     addOpenOrderParamsToUrl,
     addOrderScoringParamsToUrl,
+    addOrdersScoringParamsToUrl,
     addTradeNotificationParamsToUrl,
     addTradeParamsToUrl,
     del,
@@ -74,6 +76,7 @@ import {
     GET_BALANCE_ALLOWANCE,
     IS_ORDER_SCORING,
     GET_TICK_SIZE,
+    ARE_ORDERS_SCORING,
 } from "./endpoints";
 import { OrderBuilder } from "./order-builder/builder";
 
@@ -548,6 +551,25 @@ export class ClobClient {
         );
 
         const url = addOrderScoringParamsToUrl(`${this.host}${endpoint}`, params);
+        return get(url, headers);
+    }
+
+    public async areOrdersScoring(params?: OrdersScoringParams): Promise<OrderScoring> {
+        this.canL2Auth();
+
+        const endpoint = ARE_ORDERS_SCORING;
+        const headerArgs = {
+            method: GET,
+            requestPath: endpoint,
+        };
+
+        const headers = await createL2Headers(
+            this.signer as Wallet | JsonRpcSigner,
+            this.creds as ApiKeyCreds,
+            headerArgs,
+        );
+
+        const url = addOrdersScoringParamsToUrl(`${this.host}${endpoint}`, params);
         return get(url, headers);
     }
 

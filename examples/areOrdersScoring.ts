@@ -18,8 +18,11 @@ async function main() {
     };
     const clobClient = new ClobClient(host, chainId, wallet, creds);
 
-    const scoring = await clobClient.isOrderScoring({
-        orderId: "0x69509d1a8b98ce5c87c2c84beb9355d9ab9f7b2c29dc7346fd4fca64b5e8584d",
+    const scoring = await clobClient.areOrdersScoring({
+        orderIds: [
+            "0x9355abd8ac2f9144ec19d31756ca92a8738a20c5ad65125cc2e8ea3f58d589aa",
+            "0xde0c7c616190e34a81ce05adb3414d7f1e865bfea1f1cc40f6cc1d6fbd7b6345",
+        ],
     });
     console.log(scoring);
 }
