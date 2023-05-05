@@ -27,6 +27,7 @@ export const GET_LARGE_ORDERS = "/large-orders";
 export const GET_OPEN_ORDERS = "/orders";
 export const GET_TRADES = "/trades";
 export const IS_ORDER_SCORING = "/order-scoring";
+export const ARE_ORDERS_SCORING = "/orders-scoring";
 
 // Price history
 export const GET_PRICES_HISTORY = "/prices-history";

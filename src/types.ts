@@ -326,6 +326,12 @@ export interface OrderScoring {
     scoring: boolean;
 }
 
+export interface OrdersScoringParams {
+    orderIds: string[];
+}
+
+export type OrdersScoring = { [orderId in string]: boolean };
+
 export type TickSize = "0.1" | "0.01" | "0.001" | "0.0001";
 
 export interface RoundConfig {

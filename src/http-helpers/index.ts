@@ -3,6 +3,7 @@ import {
     BalanceAllowanceParams,
     FilterParams,
     OrderScoringParams,
+    OrdersScoringParams,
     TradeNotificationParams,
     TradeParams,
 } from "src/types";
@@ -235,6 +236,20 @@ export const addOrderScoringParamsToUrl = (
         url = `${url}?`;
         if (params.orderId !== undefined) {
             url = buildQueryParams(url, "order_id", params.orderId.toString());
+        }
+    }
+    return url;
+};
+
+export const addOrdersScoringParamsToUrl = (
+    baseUrl: string,
+    params?: OrdersScoringParams,
+): string => {
+    let url = baseUrl;
+    if (params !== undefined) {
+        url = `${url}?`;
+        if (params.orderIds !== undefined) {
+            url = buildQueryParams(url, "order_ids", params.orderIds.join(","));
         }
     }
     return url;

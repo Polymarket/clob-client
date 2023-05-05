@@ -8,12 +8,14 @@ import {
     addTradeNotificationParamsToUrl,
     addBalanceAllowanceParamsToUrl,
     addOrderScoringParamsToUrl,
+    addOrdersScoringParamsToUrl,
 } from "../../src/http-helpers/index";
 import {
     AssetType,
     BalanceAllowanceParams,
     OpenOrderParams,
     OrderScoringParams,
+    OrdersScoringParams,
     Side,
     TradeNotificationParams,
     TradeParams,
@@ -139,6 +141,18 @@ describe("utilities", () => {
             expect(url).not.undefined;
             expect(url).not.empty;
             expect(url).equal("http://tracker?order_id=0x0123abc");
+        });
+    });
+
+    describe("addOrdersScoringParamsToUrl", () => {
+        it("checking url + params", () => {
+            const url = addOrdersScoringParamsToUrl("http://tracker", {
+                orderIds: ["0x0", "0x1", "0x2"],
+            } as OrdersScoringParams);
+            expect(url).not.null;
+            expect(url).not.undefined;
+            expect(url).not.empty;
+            expect(url).equal("http://tracker?order_ids=0x0,0x1,0x2");
         });
     });
 });
