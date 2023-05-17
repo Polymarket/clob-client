@@ -255,8 +255,8 @@ export enum Chain {
 }
 
 export interface MarketPrice {
-    t: string; // timestamp
-    p: string; // price
+    t: number; // timestamp
+    p: number; // price
 }
 
 export interface PriceHistoryFilterParams {
