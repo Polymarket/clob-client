@@ -9,6 +9,7 @@ import {
     addBalanceAllowanceParamsToUrl,
     addOrderScoringParamsToUrl,
     addOrdersScoringParamsToUrl,
+    addPriceHistoryFilterParamsToUrl,
 } from "../../src/http-helpers/index";
 import {
     AssetType,
@@ -16,6 +17,7 @@ import {
     OpenOrderParams,
     OrderScoringParams,
     OrdersScoringParams,
+    PriceHistoryInterval,
     Side,
     TradeNotificationParams,
     TradeParams,
@@ -153,6 +155,24 @@ describe("utilities", () => {
             expect(url).not.undefined;
             expect(url).not.empty;
             expect(url).equal("http://tracker?order_ids=0x0,0x1,0x2");
+        });
+    });
+
+    describe("addPriceHistoryFilterParamsToUrl", () => {
+        it("checking url + params", () => {
+            const url = addPriceHistoryFilterParamsToUrl("http://tracker", {
+                market: "10000",
+                startTs: 1450000,
+                endTs: 1460000,
+                fidelity: 15,
+                interval: PriceHistoryInterval.SIX_HOURS,
+            });
+            expect(url).not.null;
+            expect(url).not.undefined;
+            expect(url).not.empty;
+            expect(url).equal(
+                "http://tracker?market=10000&startTs=1450000&endTs=1460000&fidelity=15&interval=6h",
+            );
         });
     });
 });

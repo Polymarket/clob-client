@@ -5,7 +5,6 @@ import {
     ApiKeyCreds,
     ApiKeysResponse,
     Chain,
-    FilterParams,
     MarketPrice,
     OpenOrderParams,
     OpenOrdersResponse,
@@ -30,14 +29,15 @@ import {
     TickSizes,
     TickSize,
     OrdersScoringParams,
+    PriceHistoryFilterParams,
 } from "./types";
 import { createL1Headers, createL2Headers } from "./headers";
 import {
     addBalanceAllowanceParamsToUrl,
-    addFilterParamsToUrl,
     addOpenOrderParamsToUrl,
     addOrderScoringParamsToUrl,
     addOrdersScoringParamsToUrl,
+    addPriceHistoryFilterParamsToUrl,
     addTradeNotificationParamsToUrl,
     addTradeParamsToUrl,
     del,
@@ -178,8 +178,8 @@ export class ClobClient {
         return get(`${this.host}${GET_LARGE_ORDERS}?min_value=${minValue}`);
     }
 
-    public async getPricesHistory(params: FilterParams): Promise<MarketPrice[]> {
-        const url = addFilterParamsToUrl(`${this.host}${GET_PRICES_HISTORY}`, params);
+    public async getPricesHistory(params: PriceHistoryFilterParams): Promise<MarketPrice[]> {
+        const url = addPriceHistoryFilterParamsToUrl(`${this.host}${GET_PRICES_HISTORY}`, params);
         return get(url);
     }
 

@@ -4,6 +4,7 @@ import {
     FilterParams,
     OrderScoringParams,
     OrdersScoringParams,
+    PriceHistoryFilterParams,
     TradeNotificationParams,
     TradeParams,
 } from "src/types";
@@ -250,6 +251,32 @@ export const addOrdersScoringParamsToUrl = (
         url = `${url}?`;
         if (params.orderIds !== undefined) {
             url = buildQueryParams(url, "order_ids", params.orderIds.join(","));
+        }
+    }
+    return url;
+};
+
+export const addPriceHistoryFilterParamsToUrl = (
+    baseUrl: string,
+    params?: PriceHistoryFilterParams,
+): string => {
+    let url = baseUrl;
+    if (params !== undefined) {
+        url = `${url}?`;
+        if (params.market !== undefined) {
+            url = buildQueryParams(url, "market", params.market as string);
+        }
+        if (params.startTs !== undefined) {
+            url = buildQueryParams(url, "startTs", `${params.startTs}`);
+        }
+        if (params.endTs !== undefined) {
+            url = buildQueryParams(url, "endTs", `${params.endTs}`);
+        }
+        if (params.fidelity !== undefined) {
+            url = buildQueryParams(url, "fidelity", `${params.fidelity}`);
+        }
+        if (params.interval !== undefined) {
+            url = buildQueryParams(url, "interval", `${params.interval}`);
         }
     }
     return url;
