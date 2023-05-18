@@ -255,11 +255,24 @@ export enum Chain {
 }
 
 export interface MarketPrice {
-    t: string; // timestamp
-    l: string; // liquidity
-    p: string; // price
-    v: string; // volume
-    ps: string; // positions
+    t: number; // timestamp
+    p: number; // price
+}
+
+export interface PriceHistoryFilterParams {
+    market?: string;
+    startTs?: number;
+    endTs?: number;
+    fidelity?: number;
+    interval?: PriceHistoryInterval;
+}
+
+export enum PriceHistoryInterval {
+    MAX = "max",
+    ONE_WEEK = "1w",
+    ONE_DAY = "1d",
+    SIX_HOURS = "6h",
+    ONE_HOUR = "1h",
 }
 
 export interface TradeNotificationParams {

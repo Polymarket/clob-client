@@ -1,7 +1,13 @@
 import { ethers } from "ethers";
 import { config as dotenvConfig } from "dotenv";
 import { resolve } from "path";
-import { ApiKeyCreds, Chain, ClobClient, FilterParams } from "../src";
+import {
+    ApiKeyCreds,
+    Chain,
+    ClobClient,
+    PriceHistoryFilterParams,
+    PriceHistoryInterval,
+} from "../src";
 
 dotenvConfig({ path: resolve(__dirname, "../.env") });
 
@@ -27,7 +33,7 @@ async function main() {
         startTs: new Date().getTime() / 1000 - 1000,
         endTs: new Date().getTime() / 1000,
         market: YES_TOKEN_ID,
-    } as FilterParams);
+    } as PriceHistoryFilterParams);
 
     console.log(yes_prices_history);
 
@@ -35,9 +41,46 @@ async function main() {
         startTs: new Date().getTime() / 1000 - 1000,
         endTs: new Date().getTime() / 1000,
         market: NO_TOKEN_ID,
-    } as FilterParams);
+    } as PriceHistoryFilterParams);
 
     console.log(no_prices_history);
+
+    // intervals
+    // ONE HOUR
+    const one_hour_history = await clobClient.getPricesHistory({
+        market: YES_TOKEN_ID,
+        interval: PriceHistoryInterval.ONE_HOUR,
+        fidelity: 1,
+    } as PriceHistoryFilterParams);
+
+    console.log(one_hour_history);
+
+    // SIX HOURS
+    const six_hours_history = await clobClient.getPricesHistory({
+        market: YES_TOKEN_ID,
+        interval: PriceHistoryInterval.SIX_HOURS,
+        fidelity: 3,
+    } as PriceHistoryFilterParams);
+
+    console.log(six_hours_history);
+
+    // ONE DAY
+    const one_day_history = await clobClient.getPricesHistory({
+        market: YES_TOKEN_ID,
+        interval: PriceHistoryInterval.ONE_DAY,
+        fidelity: 5,
+    } as PriceHistoryFilterParams);
+
+    console.log(one_day_history);
+
+    // ONE WEEK
+    const one_week_history = await clobClient.getPricesHistory({
+        market: YES_TOKEN_ID,
+        interval: PriceHistoryInterval.ONE_WEEK,
+        fidelity: 10,
+    } as PriceHistoryFilterParams);
+
+    console.log(one_week_history);
 }
 
 main();
