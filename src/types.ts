@@ -220,6 +220,7 @@ export interface MakerOrder {
     maker_address: string;
     matched_amount: string;
     price: string;
+    fee_rate_bps: string;
     asset_id: string;
     outcome: string;
     outcome_index: string;
@@ -234,6 +235,7 @@ export interface Trade {
     asset_id: string;
     side: number | string;
     size: string;
+    fee_rate_bps: string;
     status: string;
     price: string;
     match_time: string;
