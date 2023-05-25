@@ -41,7 +41,7 @@ async function main(type: "user" | "market") {
         // subscriptionMessage["assets_ids"] = [NO_TOKEN_ID];
     }
 
-    ws.on("open", function (ev: any) {
+    ws.on("open", function () {
         ws.send(JSON.stringify(subscriptionMessage)); // send sub message
 
         setInterval(() => {
