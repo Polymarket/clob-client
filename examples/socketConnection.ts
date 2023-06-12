@@ -8,37 +8,48 @@ const YES_TOKEN_ID = "1343197538147866997676250008839231694243646439454152539053
 // const NO_TOKEN_ID = "16678291189211314787145083999015737376658799626183230671758641503291735614088";
 const CONDITION_ID = "0xbd31dc8a20211944f6b70f31557f1001557b59905b7738480ca09bd4532f84af";
 
+interface subscriptionMessage {
+    auth: { apiKey: string; secret: string; passphrase: string };
+    type: string;
+    markets: string[];
+    assets_ids: string[];
+}
+
 /**
  *
  * @param type user | market
  */
-async function main(type: "user" | "market") {
+async function main(type: "user" | "market" | "live-activity") {
     const host = process.env.WS_URL || "ws://localhost:8081";
     console.log(`${host}/ws/${type}`);
     let ws = new WebSocket(`${host}/ws/${type}`); // change to market for market, user for user
 
-    const creds: ApiKeyCreds = {
-        key: `${process.env.CLOB_API_KEY}`,
-        secret: `${process.env.CLOB_SECRET}`,
-        passphrase: `${process.env.CLOB_PASS_PHRASE}`,
-    };
+    let subscriptionMessage: subscriptionMessage = {} as subscriptionMessage;
 
-    let subscriptionMessage = {
-        auth: {
-            apiKey: creds.key,
-            secret: creds.secret,
-            passphrase: creds.passphrase,
-        },
-        type, // change to market for market, user for user
-        markets: [] as string[],
-        assets_ids: [] as string[],
-    };
+    if (type != "live-activity") {
+        const creds: ApiKeyCreds = {
+            key: `${process.env.CLOB_API_KEY}`,
+            secret: `${process.env.CLOB_SECRET}`,
+            passphrase: `${process.env.CLOB_PASS_PHRASE}`,
+        };
 
-    if (type == "user") {
-        subscriptionMessage["markets"] = [CONDITION_ID];
-    } else {
-        subscriptionMessage["assets_ids"] = [YES_TOKEN_ID];
-        // subscriptionMessage["assets_ids"] = [NO_TOKEN_ID];
+        subscriptionMessage = {
+            auth: {
+                apiKey: creds.key,
+                secret: creds.secret,
+                passphrase: creds.passphrase,
+            },
+            type, // change to market for market, user for user
+            markets: [] as string[],
+            assets_ids: [] as string[],
+        };
+
+        if (type == "user") {
+            subscriptionMessage["markets"] = [CONDITION_ID];
+        } else {
+            subscriptionMessage["assets_ids"] = [YES_TOKEN_ID];
+            // subscriptionMessage["assets_ids"] = [NO_TOKEN_ID];
+        }
     }
 
     ws.on("open", function () {
@@ -59,4 +70,4 @@ async function main(type: "user" | "market") {
     });
 }
 
-main("market");
+main("live-activity");
