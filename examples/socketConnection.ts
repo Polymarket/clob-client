@@ -26,7 +26,7 @@ async function main(type: "user" | "market" | "live-activity") {
 
     let subscriptionMessage: subscriptionMessage = {} as subscriptionMessage;
 
-    if (type != "live-activity") {
+    if (type !== "live-activity") {
         const creds: ApiKeyCreds = {
             key: `${process.env.CLOB_API_KEY}`,
             secret: `${process.env.CLOB_SECRET}`,
@@ -53,7 +53,9 @@ async function main(type: "user" | "market" | "live-activity") {
     }
 
     ws.on("open", function () {
-        ws.send(JSON.stringify(subscriptionMessage)); // send sub message
+        if (type !== "live-activity") {
+            ws.send(JSON.stringify(subscriptionMessage)); // send sub message
+        }
 
         setInterval(() => {
             console.log("PINGING");
