@@ -14,6 +14,10 @@ async function main() {
     console.log("markets", await clobClient.getMarkets());
 
     console.log("simplified markets", await clobClient.getSimplifiedMarkets());
+
+    console.log("sampling markets", await clobClient.getSamplingMarkets());
+
+    console.log("sampling simplified markets", await clobClient.getSamplingSimplifiedMarkets());
 }
 
 main();

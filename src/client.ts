@@ -79,6 +79,8 @@ import {
     GET_TICK_SIZE,
     ARE_ORDERS_SCORING,
     GET_SIMPLIFIED_MARKETS,
+    GET_SAMPLING_SIMPLIFIED_MARKETS,
+    GET_SAMPLING_MARKETS,
 } from "./endpoints";
 import { OrderBuilder } from "./order-builder/builder";
 
@@ -130,6 +132,14 @@ export class ClobClient {
 
     public async getServerTime(): Promise<any> {
         return get(`${this.host}${TIME}`);
+    }
+
+    public async getSamplingSimplifiedMarkets(next_cursor = "MA=="): Promise<PaginationPayload> {
+        return get(`${this.host}${GET_SAMPLING_SIMPLIFIED_MARKETS}?next_cursor=${next_cursor}`);
+    }
+
+    public async getSamplingMarkets(next_cursor = "MA=="): Promise<PaginationPayload> {
+        return get(`${this.host}${GET_SAMPLING_MARKETS}?next_cursor=${next_cursor}`);
     }
 
     public async getSimplifiedMarkets(next_cursor = "MA=="): Promise<PaginationPayload> {
