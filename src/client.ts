@@ -30,6 +30,7 @@ import {
     TickSize,
     OrdersScoringParams,
     PriceHistoryFilterParams,
+    PaginationPayload,
 } from "./types";
 import { createL1Headers, createL2Headers } from "./headers";
 import {
@@ -77,6 +78,7 @@ import {
     IS_ORDER_SCORING,
     GET_TICK_SIZE,
     ARE_ORDERS_SCORING,
+    GET_SIMPLIFIED_MARKETS,
 } from "./endpoints";
 import { OrderBuilder } from "./order-builder/builder";
 
@@ -130,8 +132,12 @@ export class ClobClient {
         return get(`${this.host}${TIME}`);
     }
 
-    public async getMarkets(): Promise<any[]> {
-        return get(`${this.host}${GET_MARKETS}`);
+    public async getSimplifiedMarkets(next_cursor = "MA=="): Promise<PaginationPayload> {
+        return get(`${this.host}${GET_SIMPLIFIED_MARKETS}?next_cursor=${next_cursor}`);
+    }
+
+    public async getMarkets(next_cursor = "MA=="): Promise<PaginationPayload> {
+        return get(`${this.host}${GET_MARKETS}?next_cursor=${next_cursor}`);
     }
 
     public async getMarket(conditionID: string): Promise<any> {

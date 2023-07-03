@@ -8,6 +8,7 @@ export const DELETE_API_KEY = "/delete-api-key";
 export const DERIVE_API_KEY = "/derive-api-key";
 
 // Markets
+export const GET_SIMPLIFIED_MARKETS = "/simplified-markets";
 export const GET_MARKETS = "/markets";
 export const GET_MARKET = "/markets/";
 export const GET_ORDER_BOOK = "/book";
