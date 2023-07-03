@@ -9,6 +9,8 @@ async function main() {
     const chainId = parseInt(`${process.env.CHAIN_ID || Chain.MUMBAI}`) as Chain;
     const clobClient = new ClobClient(host, chainId);
 
+    console.log("market", await clobClient.getMarket("condition_id"));
+
     console.log("markets", await clobClient.getMarkets());
 
     console.log("simplified markets", await clobClient.getSimplifiedMarkets());
