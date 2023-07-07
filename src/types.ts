@@ -358,3 +358,10 @@ export interface RoundConfig {
 export interface TickSizes {
     [tokenId: string]: TickSize;
 }
+
+export interface PaginationPayload {
+    readonly limit: number;
+    readonly count: number;
+    readonly next_cursor: string;
+    readonly data: any[];
+}
