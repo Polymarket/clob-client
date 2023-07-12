@@ -365,3 +365,27 @@ export interface PaginationPayload {
     readonly next_cursor: string;
     readonly data: any[];
 }
+
+export interface MarketTradeEvent {
+    event_type: string;
+    market: {
+        condition_id: string;
+        asset_id: string;
+        question: string;
+        icon: string;
+        slug: string;
+    };
+    user: {
+        address: string;
+        username: string;
+        profile_picture: string;
+        optimized_profile_picture: string;
+    };
+    side: Side;
+    size: string;
+    fee_rate_bps: string;
+    price: string;
+    outcome: string;
+    transaction_hash: string;
+    timestamp: string;
+}
