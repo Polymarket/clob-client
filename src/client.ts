@@ -31,6 +31,7 @@ import {
     OrdersScoringParams,
     PriceHistoryFilterParams,
     PaginationPayload,
+    MarketTradeEvent,
 } from "./types";
 import { createL1Headers, createL2Headers } from "./headers";
 import {
@@ -81,6 +82,7 @@ import {
     GET_SIMPLIFIED_MARKETS,
     GET_SAMPLING_SIMPLIFIED_MARKETS,
     GET_SAMPLING_MARKETS,
+    GET_MARKET_TRADES_EVENTS,
 } from "./endpoints";
 import { OrderBuilder } from "./order-builder/builder";
 
@@ -587,6 +589,10 @@ export class ClobClient {
 
         const url = addOrdersScoringParamsToUrl(`${this.host}${endpoint}`, params);
         return get(url, headers);
+    }
+
+    public async getMarketTradesEvents(conditionID: string): Promise<MarketTradeEvent[]> {
+        return get(`${this.host}${GET_MARKET_TRADES_EVENTS}${conditionID}`);
     }
 
     private canL1Auth(): void {
