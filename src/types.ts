@@ -380,12 +380,14 @@ export interface MarketTradeEvent {
         username: string;
         profile_picture: string;
         optimized_profile_picture: string;
+        pseudonym: string;
     };
     side: Side;
     size: string;
     fee_rate_bps: string;
     price: string;
     outcome: string;
+    outcome_index: number;
     transaction_hash: string;
     timestamp: string;
 }
