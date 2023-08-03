@@ -1,4 +1,5 @@
 import { SignatureType } from "@polymarket/order-utils";
+import { AxiosRequestHeaders } from "axios";
 
 export interface ApiKeyCreds {
     key: string;
@@ -19,7 +20,7 @@ export interface L2HeaderArgs {
 }
 
 // EIP712 sig verification
-export interface L1PolyHeader {
+export interface L1PolyHeader extends AxiosRequestHeaders {
     POLY_ADDRESS: string;
     POLY_SIGNATURE: string;
     POLY_TIMESTAMP: string;
@@ -27,7 +28,7 @@ export interface L1PolyHeader {
 }
 
 // API key verification
-export interface L2PolyHeader {
+export interface L2PolyHeader extends AxiosRequestHeaders {
     POLY_ADDRESS: string;
     POLY_SIGNATURE: string;
     POLY_TIMESTAMP: string;
@@ -249,8 +250,6 @@ export interface Trade {
     transaction_hash: string;
 }
 
-export type OptionalParams = { [query: string]: string };
-
 export enum Chain {
     POLYGON = 137,
     MUMBAI = 80001,
@@ -334,7 +333,7 @@ export interface BalanceAllowanceResponse {
 }
 
 export interface OrderScoringParams {
-    orderId: string;
+    order_id: string;
 }
 
 export interface OrderScoring {

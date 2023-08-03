@@ -19,7 +19,7 @@ async function main() {
     const clobClient = new ClobClient(host, chainId, wallet, creds);
 
     const scoring = await clobClient.isOrderScoring({
-        orderId: "0x69509d1a8b98ce5c87c2c84beb9355d9ab9f7b2c29dc7346fd4fca64b5e8584d",
+        order_id: "0x69509d1a8b98ce5c87c2c84beb9355d9ab9f7b2c29dc7346fd4fca64b5e8584d",
     });
     console.log(scoring);
 }
