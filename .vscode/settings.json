@@ -13,5 +13,7 @@
         "TS_NODE_PROJECT": "tsconfig.json",
         "TS_NODE_COMPILER_OPTIONS": "{\"module\": \"commonjs\" }"
     },
-    "editor.defaultFormatter": "esbenp.prettier-vscode"
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "javascript.suggestionActions.enabled": false,
+    "typescript.suggestionActions.enabled": false
 }

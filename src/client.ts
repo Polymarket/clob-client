@@ -8,7 +8,6 @@ import {
     MarketPrice,
     OpenOrderParams,
     OpenOrdersResponse,
-    OptionalParams,
     OrderMarketCancelParams,
     OrderBookSummary,
     OrderPayload,
@@ -35,19 +34,14 @@ import {
 } from "./types";
 import { createL1Headers, createL2Headers } from "./headers";
 import {
-    addBalanceAllowanceParamsToUrl,
-    addOpenOrderParamsToUrl,
-    addOrderScoringParamsToUrl,
-    addOrdersScoringParamsToUrl,
-    addPriceHistoryFilterParamsToUrl,
-    addTradeNotificationParamsToUrl,
-    addTradeParamsToUrl,
     del,
     DELETE,
     GET,
     get,
+    parseOrdersScoringParams,
     POST,
     post,
+    RequestOptions,
 } from "./http-helpers";
 import { L1_AUTH_UNAVAILABLE_ERROR, L2_AUTH_NOT_AVAILABLE } from "./errors";
 import { generateOrderBookSummaryHash, isTickSizeSmaller, orderToJson } from "./utilities";
@@ -101,6 +95,8 @@ export class ClobClient {
 
     readonly tickSizes: TickSizes;
 
+    readonly geoBlockToken?: string;
+
     constructor(
         host: string,
         chainId: Chain,
@@ -108,6 +104,7 @@ export class ClobClient {
         creds?: ApiKeyCreds,
         signatureType?: SignatureType,
         funderAddress?: string,
+        geoBlockToken?: string,
     ) {
         this.host = host.endsWith("/") ? host.slice(0, -1) : host;
         this.chainId = chainId;
@@ -125,39 +122,50 @@ export class ClobClient {
             funderAddress,
         );
         this.tickSizes = {};
+        this.geoBlockToken = geoBlockToken;
     }
 
     // Public endpoints
     public async getOk(): Promise<any> {
-        return get(`${this.host}/`);
+        return this.get(`${this.host}/`);
     }
 
     public async getServerTime(): Promise<any> {
-        return get(`${this.host}${TIME}`);
+        return this.get(`${this.host}${TIME}`);
     }
 
     public async getSamplingSimplifiedMarkets(next_cursor = "MA=="): Promise<PaginationPayload> {
-        return get(`${this.host}${GET_SAMPLING_SIMPLIFIED_MARKETS}?next_cursor=${next_cursor}`);
+        return this.get(`${this.host}${GET_SAMPLING_SIMPLIFIED_MARKETS}`, {
+            params: { next_cursor },
+        });
     }
 
     public async getSamplingMarkets(next_cursor = "MA=="): Promise<PaginationPayload> {
-        return get(`${this.host}${GET_SAMPLING_MARKETS}?next_cursor=${next_cursor}`);
+        return this.get(`${this.host}${GET_SAMPLING_MARKETS}`, {
+            params: { next_cursor },
+        });
     }
 
     public async getSimplifiedMarkets(next_cursor = "MA=="): Promise<PaginationPayload> {
-        return get(`${this.host}${GET_SIMPLIFIED_MARKETS}?next_cursor=${next_cursor}`);
+        return this.get(`${this.host}${GET_SIMPLIFIED_MARKETS}`, {
+            params: { next_cursor },
+        });
     }
 
     public async getMarkets(next_cursor = "MA=="): Promise<PaginationPayload> {
-        return get(`${this.host}${GET_MARKETS}?next_cursor=${next_cursor}`);
+        return this.get(`${this.host}${GET_MARKETS}`, {
+            params: { next_cursor },
+        });
     }
 
     public async getMarket(conditionID: string): Promise<any> {
-        return get(`${this.host}${GET_MARKET}${conditionID}`);
+        return this.get(`${this.host}${GET_MARKET}${conditionID}`);
     }
 
     public async getOrderBook(tokenID: string): Promise<OrderBookSummary> {
-        return get(`${this.host}${GET_ORDER_BOOK}?token_id=${tokenID}`);
+        return this.get(`${this.host}${GET_ORDER_BOOK}`, {
+            params: { token_id: tokenID },
+        });
     }
 
     public async getTickSize(tokenID: string): Promise<TickSize> {
@@ -165,7 +173,9 @@ export class ClobClient {
             return this.tickSizes[tokenID];
         }
 
-        const result = await get(`${this.host}${GET_TICK_SIZE}?token_id=${tokenID}`);
+        const result = await this.get(`${this.host}${GET_TICK_SIZE}`, {
+            params: { token_id: tokenID },
+        });
         this.tickSizes[tokenID] = result.minimum_tick_size as TickSize;
 
         return this.tickSizes[tokenID];
@@ -181,24 +191,33 @@ export class ClobClient {
     }
 
     public async getMidpoint(tokenID: string): Promise<any> {
-        return get(`${this.host}${GET_MIDPOINT}?token_id=${tokenID}`);
+        return this.get(`${this.host}${GET_MIDPOINT}`, {
+            params: { token_id: tokenID },
+        });
     }
 
     public async getPrice(tokenID: string, side: string): Promise<any> {
-        return get(`${this.host}${GET_PRICE}?token_id=${tokenID}&side=${side}`);
+        return this.get(`${this.host}${GET_PRICE}`, {
+            params: { token_id: tokenID, side: side },
+        });
     }
 
     public async getLastTradePrice(tokenID: string): Promise<any> {
-        return get(`${this.host}${GET_LAST_TRADE_PRICE}?token_id=${tokenID}`);
+        return this.get(`${this.host}${GET_LAST_TRADE_PRICE}`, {
+            params: { token_id: tokenID },
+        });
     }
 
     public async getLargeOrders(minValue = ""): Promise<any> {
-        return get(`${this.host}${GET_LARGE_ORDERS}?min_value=${minValue}`);
+        return this.get(`${this.host}${GET_LARGE_ORDERS}`, {
+            params: { min_value: minValue },
+        });
     }
 
     public async getPricesHistory(params: PriceHistoryFilterParams): Promise<MarketPrice[]> {
-        const url = addPriceHistoryFilterParamsToUrl(`${this.host}${GET_PRICES_HISTORY}`, params);
-        return get(url);
+        return this.get(`${this.host}${GET_PRICES_HISTORY}`, {
+            params,
+        });
     }
 
     // L1 Authed
@@ -206,13 +225,9 @@ export class ClobClient {
     /**
      * Creates a new API key for a user
      * @param nonce
-     * @param optionalParams - query parameters
      * @returns ApiKeyCreds
      */
-    public async createApiKey(
-        nonce?: number,
-        optionalParams?: OptionalParams,
-    ): Promise<ApiKeyCreds> {
+    public async createApiKey(nonce?: number): Promise<ApiKeyCreds> {
         this.canL1Auth();
 
         const endpoint = `${this.host}${CREATE_API_KEY}`;
@@ -222,28 +237,22 @@ export class ClobClient {
             nonce,
         );
 
-        return await post(endpoint, headers, undefined, optionalParams).then(
-            (apiKeyRaw: ApiKeyRaw) => {
-                const apiKey: ApiKeyCreds = {
-                    key: apiKeyRaw.apiKey,
-                    secret: apiKeyRaw.secret,
-                    passphrase: apiKeyRaw.passphrase,
-                };
-                return apiKey;
-            },
-        );
+        return await this.post(endpoint, { headers }).then((apiKeyRaw: ApiKeyRaw) => {
+            const apiKey: ApiKeyCreds = {
+                key: apiKeyRaw.apiKey,
+                secret: apiKeyRaw.secret,
+                passphrase: apiKeyRaw.passphrase,
+            };
+            return apiKey;
+        });
     }
 
     /**
      * Derives an existing API key for a user
      * @param nonce
-     * @param optionalParams - query parameters
      * @returns ApiKeyCreds
      */
-    public async deriveApiKey(
-        nonce?: number,
-        optionalParams?: OptionalParams,
-    ): Promise<ApiKeyCreds> {
+    public async deriveApiKey(nonce?: number): Promise<ApiKeyCreds> {
         this.canL1Auth();
 
         const endpoint = `${this.host}${DERIVE_API_KEY}`;
@@ -253,25 +262,20 @@ export class ClobClient {
             nonce,
         );
 
-        return await get(endpoint, headers, undefined, optionalParams).then(
-            (apiKeyRaw: ApiKeyRaw) => {
-                const apiKey: ApiKeyCreds = {
-                    key: apiKeyRaw.apiKey,
-                    secret: apiKeyRaw.secret,
-                    passphrase: apiKeyRaw.passphrase,
-                };
-                return apiKey;
-            },
-        );
+        return await this.get(endpoint, { headers }).then((apiKeyRaw: ApiKeyRaw) => {
+            const apiKey: ApiKeyCreds = {
+                key: apiKeyRaw.apiKey,
+                secret: apiKeyRaw.secret,
+                passphrase: apiKeyRaw.passphrase,
+            };
+            return apiKey;
+        });
     }
 
-    public async createOrDeriveApiKey(
-        nonce?: number,
-        optionalParams?: OptionalParams,
-    ): Promise<ApiKeyCreds> {
-        return this.createApiKey(nonce, optionalParams).then(response => {
+    public async createOrDeriveApiKey(nonce?: number): Promise<ApiKeyCreds> {
+        return this.createApiKey(nonce).then(response => {
             if (!response.key) {
-                return this.deriveApiKey(nonce, optionalParams);
+                return this.deriveApiKey(nonce);
             }
             return response;
         });
@@ -292,14 +296,7 @@ export class ClobClient {
             headerArgs,
         );
 
-        return get(`${this.host}${endpoint}`, headers).then((apiKeyRaw: ApiKeyRaw) => {
-            const apiKey: ApiKeyCreds = {
-                key: apiKeyRaw.apiKey,
-                secret: apiKeyRaw.secret,
-                passphrase: apiKeyRaw.passphrase,
-            };
-            return { apiKeys: [apiKey] };
-        });
+        return this.get(`${this.host}${endpoint}`, { headers });
     }
 
     public async deleteApiKey(): Promise<any> {
@@ -317,7 +314,7 @@ export class ClobClient {
             headerArgs,
         );
 
-        return del(`${this.host}${endpoint}`, headers);
+        return this.del(`${this.host}${endpoint}`, { headers });
     }
 
     public async getOrder(orderID: string): Promise<OpenOrder> {
@@ -335,7 +332,7 @@ export class ClobClient {
             headerArgs,
         );
 
-        return get(`${this.host}${endpoint}`, headers);
+        return this.get(`${this.host}${endpoint}`, { headers });
     }
 
     public async getTrades(params?: TradeParams): Promise<Trade[]> {
@@ -353,8 +350,7 @@ export class ClobClient {
             headerArgs,
         );
 
-        const url = addTradeParamsToUrl(`${this.host}${endpoint}`, params);
-        return get(url, headers);
+        return this.get(`${this.host}${endpoint}`, { headers, params });
     }
 
     public async getTradeNotifications(
@@ -374,8 +370,7 @@ export class ClobClient {
             headerArgs,
         );
 
-        const url = addTradeNotificationParamsToUrl(`${this.host}${endpoint}`, params);
-        return get(url, headers);
+        return this.get(`${this.host}${endpoint}`, { headers, params });
     }
 
     public async dropTradeNotifications(params?: TradeNotificationParams): Promise<void> {
@@ -393,8 +388,7 @@ export class ClobClient {
             l2HeaderArgs,
         );
 
-        const url = addTradeNotificationParamsToUrl(`${this.host}${endpoint}`, params);
-        return del(url, headers);
+        return this.del(`${this.host}${endpoint}`, { headers, params });
     }
 
     public async getBalanceAllowance(
@@ -414,8 +408,7 @@ export class ClobClient {
             headerArgs,
         );
 
-        const url = addBalanceAllowanceParamsToUrl(`${this.host}${endpoint}`, params);
-        return get(url, headers);
+        return this.get(`${this.host}${endpoint}`, { headers, params });
     }
 
     public async createOrder(userOrder: UserOrder, tickSize?: TickSize): Promise<SignedOrder> {
@@ -458,14 +451,12 @@ export class ClobClient {
             l2HeaderArgs,
         );
 
-        const url = addOpenOrderParamsToUrl(`${this.host}${endpoint}`, params);
-        return get(url, headers);
+        return this.get(`${this.host}${endpoint}`, { headers, params });
     }
 
     public async postOrder<T extends OrderType = OrderType.GTC>(
         order: SignedOrder,
         orderType: T = OrderType.GTC as T,
-        optionalParams?: OptionalParams,
     ): Promise<any> {
         this.canL2Auth();
         const endpoint = POST_ORDER;
@@ -483,7 +474,7 @@ export class ClobClient {
             l2HeaderArgs,
         );
 
-        return post(`${this.host}${endpoint}`, headers, orderPayload, optionalParams);
+        return this.post(`${this.host}${endpoint}`, { headers, data: orderPayload });
     }
 
     public async cancelOrder(payload: OrderPayload): Promise<any> {
@@ -500,7 +491,7 @@ export class ClobClient {
             this.creds as ApiKeyCreds,
             l2HeaderArgs,
         );
-        return del(`${this.host}${endpoint}`, headers, payload);
+        return this.del(`${this.host}${endpoint}`, { headers, data: payload });
     }
 
     public async cancelOrders(ordersHashes: string[]): Promise<any> {
@@ -517,7 +508,7 @@ export class ClobClient {
             this.creds as ApiKeyCreds,
             l2HeaderArgs,
         );
-        return del(`${this.host}${endpoint}`, headers, ordersHashes);
+        return this.del(`${this.host}${endpoint}`, { headers, data: ordersHashes });
     }
 
     public async cancelAll(): Promise<any> {
@@ -533,7 +524,7 @@ export class ClobClient {
             this.creds as ApiKeyCreds,
             l2HeaderArgs,
         );
-        return del(`${this.host}${endpoint}`, headers);
+        return this.del(`${this.host}${endpoint}`, { headers });
     }
 
     public async cancelMarketOrders(payload: OrderMarketCancelParams): Promise<any> {
@@ -550,7 +541,7 @@ export class ClobClient {
             this.creds as ApiKeyCreds,
             l2HeaderArgs,
         );
-        return del(`${this.host}${endpoint}`, headers, payload);
+        return this.del(`${this.host}${endpoint}`, { headers, data: payload });
     }
 
     public async isOrderScoring(params?: OrderScoringParams): Promise<OrderScoring> {
@@ -568,8 +559,7 @@ export class ClobClient {
             headerArgs,
         );
 
-        const url = addOrderScoringParamsToUrl(`${this.host}${endpoint}`, params);
-        return get(url, headers);
+        return this.get(`${this.host}${endpoint}`, { headers, params });
     }
 
     public async areOrdersScoring(params?: OrdersScoringParams): Promise<OrderScoring> {
@@ -587,12 +577,14 @@ export class ClobClient {
             headerArgs,
         );
 
-        const url = addOrdersScoringParamsToUrl(`${this.host}${endpoint}`, params);
-        return get(url, headers);
+        return this.get(`${this.host}${endpoint}`, {
+            headers,
+            params: parseOrdersScoringParams(params),
+        });
     }
 
     public async getMarketTradesEvents(conditionID: string): Promise<MarketTradeEvent[]> {
-        return get(`${this.host}${GET_MARKET_TRADES_EVENTS}${conditionID}`);
+        return this.get(`${this.host}${GET_MARKET_TRADES_EVENTS}${conditionID}`);
     }
 
     private canL1Auth(): void {
@@ -623,5 +615,27 @@ export class ClobClient {
             tickSize = minTickSize;
         }
         return tickSize;
+    }
+
+    // http methods
+    private async get(endpoint: string, options?: RequestOptions) {
+        return get(endpoint, {
+            ...options,
+            params: { ...options?.params, geo_block_token: this.geoBlockToken },
+        });
+    }
+
+    private async post(endpoint: string, options?: RequestOptions) {
+        return post(endpoint, {
+            ...options,
+            params: { ...options?.params, geo_block_token: this.geoBlockToken },
+        });
+    }
+
+    private async del(endpoint: string, options?: RequestOptions) {
+        return del(endpoint, {
+            ...options,
+            params: { ...options?.params, geo_block_token: this.geoBlockToken },
+        });
     }
 }
