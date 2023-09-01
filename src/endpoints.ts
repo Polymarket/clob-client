@@ -2,10 +2,10 @@
 export const TIME = "/time";
 
 // API Key endpoints
-export const CREATE_API_KEY = "/create-api-key";
-export const GET_API_KEYS = "/get-api-keys";
-export const DELETE_API_KEY = "/delete-api-key";
-export const DERIVE_API_KEY = "/derive-api-key";
+export const CREATE_API_KEY = "/auth/api-key";
+export const GET_API_KEYS = "/auth/api-keys";
+export const DELETE_API_KEY = "/auth/api-key";
+export const DERIVE_API_KEY = "/auth/derive-api-key";
 
 // Markets
 export const GET_SAMPLING_SIMPLIFIED_MARKETS = "/sampling-simplified-markets";
