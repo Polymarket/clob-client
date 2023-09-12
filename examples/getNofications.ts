@@ -18,11 +18,7 @@ async function main() {
     };
     const clobClient = new ClobClient(host, chainId, wallet, creds);
 
-    console.log(
-        await clobClient.getTradeNotifications({
-            index: 0,
-        }),
-    );
+    console.log(await clobClient.getNotifications());
 }
 
 main();

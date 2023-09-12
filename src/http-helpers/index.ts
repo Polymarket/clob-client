@@ -1,5 +1,5 @@
 import axios, { AxiosRequestHeaders, Method } from "axios";
-import { OrdersScoringParams } from "src/types";
+import { DropNotificationParams, OrdersScoringParams } from "src/types";
 import { isBrowser } from "browser-or-node";
 
 export const GET = "GET";
@@ -85,6 +85,18 @@ export const parseOrdersScoringParams = (orderScoringParams?: OrdersScoringParam
     if (orderScoringParams !== undefined) {
         if (orderScoringParams.orderIds !== undefined) {
             params["order_ids"] = orderScoringParams?.orderIds.join(",");
+        }
+    }
+    return params;
+};
+
+export const parseDropNotificationParams = (
+    dropNotificationParams?: DropNotificationParams,
+): QueryParams => {
+    const params: QueryParams = {};
+    if (dropNotificationParams !== undefined) {
+        if (dropNotificationParams.ids !== undefined) {
+            params["ids"] = dropNotificationParams?.ids.join(",");
         }
     }
     return params;
