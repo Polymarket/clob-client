@@ -369,13 +369,10 @@ export class ClobClient {
             headerArgs,
         );
 
-        const eoaSignerAddress = await this.signer?.getAddress();
-        const proxy_address =
-            this.orderBuilder.funderAddress === undefined
-                ? eoaSignerAddress
-                : this.orderBuilder.funderAddress;
-
-        return this.get(`${this.host}${endpoint}`, { headers, params: { proxy_address } });
+        return this.get(`${this.host}${endpoint}`, {
+            headers,
+            params: { signature_type: this.orderBuilder.signatureType },
+        });
     }
 
     public async dropNotifications(params?: DropNotificationParams): Promise<void> {
