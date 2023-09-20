@@ -14,8 +14,7 @@ import {
     OrderType,
     Side,
     Trade,
-    TradeNotification,
-    TradeNotificationParams,
+    Notification,
     TradeParams,
     UserMarketOrder,
     UserOrder,
@@ -31,6 +30,7 @@ import {
     PriceHistoryFilterParams,
     PaginationPayload,
     MarketTradeEvent,
+    DropNotificationParams,
 } from "./types";
 import { createL1Headers, createL2Headers } from "./headers";
 import {
@@ -38,6 +38,7 @@ import {
     DELETE,
     GET,
     get,
+    parseDropNotificationParams,
     parseOrdersScoringParams,
     POST,
     post,
@@ -65,8 +66,8 @@ import {
     GET_MARKETS,
     GET_MARKET,
     GET_PRICES_HISTORY,
-    GET_TRADE_NOTIFICATIONS,
-    DROP_TRADE_NOTIFICATIONS,
+    GET_NOTIFICATIONS,
+    DROP_NOTIFICATIONS,
     CANCEL_ORDERS,
     CANCEL_MARKET_ORDERS,
     GET_BALANCE_ALLOWANCE,
@@ -353,12 +354,10 @@ export class ClobClient {
         return this.get(`${this.host}${endpoint}`, { headers, params });
     }
 
-    public async getTradeNotifications(
-        params?: TradeNotificationParams,
-    ): Promise<TradeNotification[]> {
+    public async getNotifications(): Promise<Notification[]> {
         this.canL2Auth();
 
-        const endpoint = GET_TRADE_NOTIFICATIONS;
+        const endpoint = GET_NOTIFICATIONS;
         const headerArgs = {
             method: GET,
             requestPath: endpoint,
@@ -370,13 +369,16 @@ export class ClobClient {
             headerArgs,
         );
 
-        return this.get(`${this.host}${endpoint}`, { headers, params });
+        return this.get(`${this.host}${endpoint}`, {
+            headers,
+            params: { signature_type: this.orderBuilder.signatureType },
+        });
     }
 
-    public async dropTradeNotifications(params?: TradeNotificationParams): Promise<void> {
+    public async dropNotifications(params?: DropNotificationParams): Promise<void> {
         this.canL2Auth();
 
-        const endpoint = DROP_TRADE_NOTIFICATIONS;
+        const endpoint = DROP_NOTIFICATIONS;
         const l2HeaderArgs = {
             method: DELETE,
             requestPath: endpoint,
@@ -388,7 +390,10 @@ export class ClobClient {
             l2HeaderArgs,
         );
 
-        return this.del(`${this.host}${endpoint}`, { headers, params });
+        return this.del(`${this.host}${endpoint}`, {
+            headers,
+            params: parseDropNotificationParams(params),
+        });
     }
 
     public async getBalanceAllowance(

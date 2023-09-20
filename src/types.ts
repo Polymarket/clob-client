@@ -276,27 +276,15 @@ export enum PriceHistoryInterval {
     ONE_HOUR = "1h",
 }
 
-export interface TradeNotificationParams {
-    index: number;
+export interface DropNotificationParams {
+    ids: string[];
 }
 
-export interface TradeNotification {
-    id: number;
+export interface Notification {
+    type: number;
     owner: string;
-    order_id: string;
-    market: string;
-    asset_id: string;
-    side: string;
-    type: string;
-    price: string;
-    original_size: string;
-    matched_size: string;
-    remaining_size: string;
-    outcome: string;
-    outcome_index: number;
-    action: string;
-    timestamp: number;
-    transaction_hash: OrderType;
+
+    payload: any;
 }
 
 export interface OrderMarketCancelParams {

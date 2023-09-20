@@ -19,8 +19,8 @@ async function main() {
     const clobClient = new ClobClient(host, chainId, wallet, creds);
 
     console.log(
-        await clobClient.dropTradeNotifications({
-            index: 0,
+        await clobClient.dropNotifications({
+            ids: ["3"],
         }),
     );
 }
