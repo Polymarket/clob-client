@@ -10,6 +10,7 @@ import {
     OpenOrdersResponse,
     OrderMarketCancelParams,
     OrderBookSummary,
+    OrderOptions,
     OrderPayload,
     OrderType,
     Side,
@@ -416,13 +417,21 @@ export class ClobClient {
         return this.get(`${this.host}${endpoint}`, { headers, params });
     }
 
-    public async createOrder(userOrder: UserOrder, tickSize?: TickSize): Promise<SignedOrder> {
+    public async createOrder(
+        userOrder: UserOrder,
+        orderOptions?: Partial<OrderOptions>,
+    ): Promise<SignedOrder> {
         this.canL1Auth();
 
         const { tokenID } = userOrder;
-        tickSize = await this._resolveTickSize(tokenID, tickSize);
 
-        return this.orderBuilder.buildOrder(userOrder, tickSize);
+        const tickSize = await this._resolveTickSize(tokenID, orderOptions?.tickSize);
+        const negRisk = orderOptions?.negRisk ?? false;
+
+        return this.orderBuilder.buildOrder(userOrder, {
+            tickSize,
+            negRisk,
+        });
     }
 
     public async createMarketBuyOrder(

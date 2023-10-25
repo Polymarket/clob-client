@@ -11,8 +11,17 @@ import {
     COLLATERAL_TOKEN_DECIMALS,
     CONDITIONAL_TOKEN_DECIMALS,
 } from "@polymarket/order-utils";
-import { UserOrder, Side, Chain, UserMarketOrder, TickSize, RoundConfig } from "../types";
+import {
+    UserOrder,
+    Side,
+    Chain,
+    UserMarketOrder,
+    TickSize,
+    RoundConfig,
+    OrderOptions,
+} from "../types";
 import { decimalPlaces, roundDown, roundNormal, roundUp } from "../utilities";
+import { getContractConfig } from "src/config";
 
 export const ROUNDING_CONFIG: Record<TickSize, RoundConfig> = {
     "0.1": {
@@ -41,18 +50,18 @@ export const ROUNDING_CONFIG: Record<TickSize, RoundConfig> = {
  * Generate and sign a order
  *
  * @param signer
- * @param contractAddress ctf exchange contract address
+ * @param exchangeAddress ctf exchange contract address
  * @param chainId
  * @param OrderData
  * @returns SignedOrder
  */
 export const buildOrder = async (
     signer: Wallet | JsonRpcSigner,
-    contractAddress: string,
+    exchangeAddress: string,
     chainId: number,
     orderData: OrderData,
 ): Promise<SignedOrder> => {
-    const cTFExchangeOrderBuilder = new ExchangeOrderBuilder(contractAddress, chainId, signer);
+    const cTFExchangeOrderBuilder = new ExchangeOrderBuilder(exchangeAddress, chainId, signer);
     return cTFExchangeOrderBuilder.buildSignedOrder(orderData);
 };
 
@@ -162,22 +171,22 @@ export const createOrder = async (
     signatureType: SignatureType,
     funderAddress: string | undefined,
     userOrder: UserOrder,
-    tickSize: TickSize,
+    orderOptions: OrderOptions,
 ): Promise<SignedOrder> => {
     const eoaSignerAddress = await eoaSigner.getAddress();
 
     // If funder address is not given, use the signer address
     const maker = funderAddress === undefined ? eoaSignerAddress : funderAddress;
-    const clobContracts = getContracts(chainId);
+    const contractConfig = getContractConfig(chainId, orderOptions.negRisk);
 
     const orderData = await buildOrderCreationArgs(
         eoaSignerAddress,
         maker,
         signatureType,
         userOrder,
-        ROUNDING_CONFIG[tickSize],
+        ROUNDING_CONFIG[orderOptions.tickSize],
     );
-    return buildOrder(eoaSigner, clobContracts.Exchange, chainId, orderData);
+    return buildOrder(eoaSigner, contractConfig.exchange, chainId, orderData);
 };
 
 export const getMarketBuyOrderRawAmounts = (
