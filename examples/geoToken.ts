@@ -37,7 +37,7 @@ async function main() {
             side: Side.BUY,
             size: 100,
         },
-        "0.01",
+        { tickSize: "0.01" },
     );
     console.log("Created Order", order);
 
