@@ -336,7 +336,7 @@ export type OrdersScoring = { [orderId in string]: boolean };
 
 export type OrderOptions = {
     tickSize: TickSize;
-    negRisk: boolean;
+    negRisk?: boolean;
 };
 
 export type TickSize = "0.1" | "0.01" | "0.001" | "0.0001";

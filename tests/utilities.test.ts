@@ -260,7 +260,7 @@ describe("utilities", () => {
                         SignatureType.EOA,
                         address,
                         userOrder,
-                        "0.1",
+                        { tickSize: "0.1" },
                     );
                     expect(signedOrder).not.null;
                     expect(signedOrder).not.undefined;
@@ -304,7 +304,7 @@ describe("utilities", () => {
                         SignatureType.POLY_PROXY,
                         address,
                         userOrder,
-                        "0.1",
+                        { tickSize: "0.1" },
                     );
                     expect(signedOrder).not.null;
                     expect(signedOrder).not.undefined;
@@ -348,7 +348,7 @@ describe("utilities", () => {
                         SignatureType.POLY_GNOSIS_SAFE,
                         address,
                         userOrder,
-                        "0.1",
+                        { tickSize: "0.1" },
                     );
                     expect(signedOrder).not.null;
                     expect(signedOrder).not.undefined;
@@ -392,7 +392,7 @@ describe("utilities", () => {
                         SignatureType.EOA,
                         address,
                         userOrder,
-                        "0.1",
+                        { tickSize: "0.1" },
                     );
                     expect(signedOrder).not.null;
                     expect(signedOrder).not.undefined;
@@ -436,7 +436,7 @@ describe("utilities", () => {
                         SignatureType.POLY_PROXY,
                         address,
                         userOrder,
-                        "0.1",
+                        { tickSize: "0.1" },
                     );
                     expect(signedOrder).not.null;
                     expect(signedOrder).not.undefined;
@@ -480,7 +480,7 @@ describe("utilities", () => {
                         SignatureType.POLY_GNOSIS_SAFE,
                         address,
                         userOrder,
-                        "0.1",
+                        { tickSize: "0.1" },
                     );
                     expect(signedOrder).not.null;
                     expect(signedOrder).not.undefined;
@@ -523,7 +523,7 @@ describe("utilities", () => {
                         SignatureType.EOA,
                         address,
                         userOrder,
-                        "0.1",
+                        { tickSize: "0.1" },
                     );
                     expect(signedOrder).not.null;
                     expect(signedOrder).not.undefined;
@@ -566,7 +566,7 @@ describe("utilities", () => {
                         SignatureType.POLY_PROXY,
                         address,
                         userOrder,
-                        "0.1",
+                        { tickSize: "0.1" },
                     );
                     expect(signedOrder).not.null;
                     expect(signedOrder).not.undefined;
@@ -609,7 +609,7 @@ describe("utilities", () => {
                         SignatureType.POLY_GNOSIS_SAFE,
                         address,
                         userOrder,
-                        "0.1",
+                        { tickSize: "0.1" },
                     );
                     expect(signedOrder).not.null;
                     expect(signedOrder).not.undefined;
@@ -652,7 +652,7 @@ describe("utilities", () => {
                         SignatureType.EOA,
                         address,
                         userOrder,
-                        "0.1",
+                        { tickSize: "0.1" },
                     );
                     expect(signedOrder).not.null;
                     expect(signedOrder).not.undefined;
@@ -695,7 +695,7 @@ describe("utilities", () => {
                         SignatureType.POLY_PROXY,
                         address,
                         userOrder,
-                        "0.1",
+                        { tickSize: "0.1" },
                     );
                     expect(signedOrder).not.null;
                     expect(signedOrder).not.undefined;
@@ -738,7 +738,7 @@ describe("utilities", () => {
                         SignatureType.POLY_GNOSIS_SAFE,
                         address,
                         userOrder,
-                        "0.1",
+                        { tickSize: "0.1" },
                     );
                     expect(signedOrder).not.null;
                     expect(signedOrder).not.undefined;
@@ -780,7 +780,7 @@ describe("utilities", () => {
                         SignatureType.EOA,
                         address,
                         userMarketOrder,
-                        "0.1",
+                        { tickSize: "0.1" },
                     );
                     expect(signedOrder).not.null;
                     expect(signedOrder).not.undefined;
@@ -822,7 +822,7 @@ describe("utilities", () => {
                         SignatureType.POLY_PROXY,
                         address,
                         userMarketOrder,
-                        "0.1",
+                        { tickSize: "0.1" },
                     );
                     expect(signedOrder).not.null;
                     expect(signedOrder).not.undefined;
@@ -864,7 +864,7 @@ describe("utilities", () => {
                         SignatureType.POLY_GNOSIS_SAFE,
                         address,
                         userMarketOrder,
-                        "0.1",
+                        { tickSize: "0.1" },
                     );
                     expect(signedOrder).not.null;
                     expect(signedOrder).not.undefined;
@@ -920,7 +920,7 @@ describe("utilities", () => {
                         SignatureType.EOA,
                         address,
                         userOrder,
-                        "0.01",
+                        { tickSize: "0.01" },
                     );
                     expect(signedOrder).not.null;
                     expect(signedOrder).not.undefined;
@@ -964,7 +964,7 @@ describe("utilities", () => {
                         SignatureType.POLY_PROXY,
                         address,
                         userOrder,
-                        "0.01",
+                        { tickSize: "0.01" },
                     );
                     expect(signedOrder).not.null;
                     expect(signedOrder).not.undefined;
@@ -1008,7 +1008,7 @@ describe("utilities", () => {
                         SignatureType.POLY_GNOSIS_SAFE,
                         address,
                         userOrder,
-                        "0.01",
+                        { tickSize: "0.01" },
                     );
                     expect(signedOrder).not.null;
                     expect(signedOrder).not.undefined;
@@ -1052,7 +1052,7 @@ describe("utilities", () => {
                         SignatureType.EOA,
                         address,
                         userOrder,
-                        "0.01",
+                        { tickSize: "0.01" },
                     );
                     expect(signedOrder).not.null;
                     expect(signedOrder).not.undefined;
@@ -1096,7 +1096,7 @@ describe("utilities", () => {
                         SignatureType.POLY_PROXY,
                         address,
                         userOrder,
-                        "0.01",
+                        { tickSize: "0.01" },
                     );
                     expect(signedOrder).not.null;
                     expect(signedOrder).not.undefined;
@@ -1140,7 +1140,7 @@ describe("utilities", () => {
                         SignatureType.POLY_GNOSIS_SAFE,
                         address,
                         userOrder,
-                        "0.01",
+                        { tickSize: "0.01" },
                     );
                     expect(signedOrder).not.null;
                     expect(signedOrder).not.undefined;
@@ -1183,7 +1183,7 @@ describe("utilities", () => {
                         SignatureType.EOA,
                         address,
                         userOrder,
-                        "0.01",
+                        { tickSize: "0.01" },
                     );
                     expect(signedOrder).not.null;
                     expect(signedOrder).not.undefined;
@@ -1226,7 +1226,7 @@ describe("utilities", () => {
                         SignatureType.POLY_PROXY,
                         address,
                         userOrder,
-                        "0.01",
+                        { tickSize: "0.01" },
                     );
                     expect(signedOrder).not.null;
                     expect(signedOrder).not.undefined;
@@ -1269,7 +1269,7 @@ describe("utilities", () => {
                         SignatureType.POLY_GNOSIS_SAFE,
                         address,
                         userOrder,
-                        "0.01",
+                        { tickSize: "0.01" },
                     );
                     expect(signedOrder).not.null;
                     expect(signedOrder).not.undefined;
@@ -1312,7 +1312,7 @@ describe("utilities", () => {
                         SignatureType.EOA,
                         address,
                         userOrder,
-                        "0.01",
+                        { tickSize: "0.01" },
                     );
                     expect(signedOrder).not.null;
                     expect(signedOrder).not.undefined;
@@ -1355,7 +1355,7 @@ describe("utilities", () => {
                         SignatureType.POLY_PROXY,
                         address,
                         userOrder,
-                        "0.01",
+                        { tickSize: "0.01" },
                     );
                     expect(signedOrder).not.null;
                     expect(signedOrder).not.undefined;
@@ -1398,7 +1398,7 @@ describe("utilities", () => {
                         SignatureType.POLY_GNOSIS_SAFE,
                         address,
                         userOrder,
-                        "0.01",
+                        { tickSize: "0.01" },
                     );
                     expect(signedOrder).not.null;
                     expect(signedOrder).not.undefined;
@@ -1440,7 +1440,7 @@ describe("utilities", () => {
                         SignatureType.EOA,
                         address,
                         userMarketOrder,
-                        "0.01",
+                        { tickSize: "0.01" },
                     );
                     expect(signedOrder).not.null;
                     expect(signedOrder).not.undefined;
@@ -1482,7 +1482,7 @@ describe("utilities", () => {
                         SignatureType.POLY_PROXY,
                         address,
                         userMarketOrder,
-                        "0.01",
+                        { tickSize: "0.01" },
                     );
                     expect(signedOrder).not.null;
                     expect(signedOrder).not.undefined;
@@ -1524,7 +1524,7 @@ describe("utilities", () => {
                         SignatureType.POLY_GNOSIS_SAFE,
                         address,
                         userMarketOrder,
-                        "0.01",
+                        { tickSize: "0.01" },
                     );
                     expect(signedOrder).not.null;
                     expect(signedOrder).not.undefined;
@@ -1580,7 +1580,7 @@ describe("utilities", () => {
                         SignatureType.EOA,
                         address,
                         userOrder,
-                        "0.001",
+                        { tickSize: "0.001" },
                     );
                     expect(signedOrder).not.null;
                     expect(signedOrder).not.undefined;
@@ -1624,7 +1624,7 @@ describe("utilities", () => {
                         SignatureType.POLY_PROXY,
                         address,
                         userOrder,
-                        "0.001",
+                        { tickSize: "0.001" },
                     );
                     expect(signedOrder).not.null;
                     expect(signedOrder).not.undefined;
@@ -1668,7 +1668,7 @@ describe("utilities", () => {
                         SignatureType.POLY_GNOSIS_SAFE,
                         address,
                         userOrder,
-                        "0.001",
+                        { tickSize: "0.001" },
                     );
                     expect(signedOrder).not.null;
                     expect(signedOrder).not.undefined;
@@ -1712,7 +1712,7 @@ describe("utilities", () => {
                         SignatureType.EOA,
                         address,
                         userOrder,
-                        "0.001",
+                        { tickSize: "0.001" },
                     );
                     expect(signedOrder).not.null;
                     expect(signedOrder).not.undefined;
@@ -1756,7 +1756,7 @@ describe("utilities", () => {
                         SignatureType.POLY_PROXY,
                         address,
                         userOrder,
-                        "0.001",
+                        { tickSize: "0.001" },
                     );
                     expect(signedOrder).not.null;
                     expect(signedOrder).not.undefined;
@@ -1800,7 +1800,7 @@ describe("utilities", () => {
                         SignatureType.POLY_GNOSIS_SAFE,
                         address,
                         userOrder,
-                        "0.001",
+                        { tickSize: "0.001" },
                     );
                     expect(signedOrder).not.null;
                     expect(signedOrder).not.undefined;
@@ -1843,7 +1843,7 @@ describe("utilities", () => {
                         SignatureType.EOA,
                         address,
                         userOrder,
-                        "0.001",
+                        { tickSize: "0.001" },
                     );
                     expect(signedOrder).not.null;
                     expect(signedOrder).not.undefined;
@@ -1886,7 +1886,7 @@ describe("utilities", () => {
                         SignatureType.POLY_PROXY,
                         address,
                         userOrder,
-                        "0.001",
+                        { tickSize: "0.001" },
                     );
                     expect(signedOrder).not.null;
                     expect(signedOrder).not.undefined;
@@ -1929,7 +1929,7 @@ describe("utilities", () => {
                         SignatureType.POLY_GNOSIS_SAFE,
                         address,
                         userOrder,
-                        "0.001",
+                        { tickSize: "0.001" },
                     );
                     expect(signedOrder).not.null;
                     expect(signedOrder).not.undefined;
@@ -1972,7 +1972,7 @@ describe("utilities", () => {
                         SignatureType.EOA,
                         address,
                         userOrder,
-                        "0.001",
+                        { tickSize: "0.001" },
                     );
                     expect(signedOrder).not.null;
                     expect(signedOrder).not.undefined;
@@ -2015,7 +2015,7 @@ describe("utilities", () => {
                         SignatureType.POLY_PROXY,
                         address,
                         userOrder,
-                        "0.001",
+                        { tickSize: "0.001" },
                     );
                     expect(signedOrder).not.null;
                     expect(signedOrder).not.undefined;
@@ -2058,7 +2058,7 @@ describe("utilities", () => {
                         SignatureType.POLY_GNOSIS_SAFE,
                         address,
                         userOrder,
-                        "0.001",
+                        { tickSize: "0.001" },
                     );
                     expect(signedOrder).not.null;
                     expect(signedOrder).not.undefined;
@@ -2100,7 +2100,7 @@ describe("utilities", () => {
                         SignatureType.EOA,
                         address,
                         userMarketOrder,
-                        "0.001",
+                        { tickSize: "0.001" },
                     );
                     expect(signedOrder).not.null;
                     expect(signedOrder).not.undefined;
@@ -2142,7 +2142,7 @@ describe("utilities", () => {
                         SignatureType.POLY_PROXY,
                         address,
                         userMarketOrder,
-                        "0.001",
+                        { tickSize: "0.001" },
                     );
                     expect(signedOrder).not.null;
                     expect(signedOrder).not.undefined;
@@ -2184,7 +2184,7 @@ describe("utilities", () => {
                         SignatureType.POLY_GNOSIS_SAFE,
                         address,
                         userMarketOrder,
-                        "0.001",
+                        { tickSize: "0.001" },
                     );
                     expect(signedOrder).not.null;
                     expect(signedOrder).not.undefined;
@@ -2240,7 +2240,7 @@ describe("utilities", () => {
                         SignatureType.EOA,
                         address,
                         userOrder,
-                        "0.0001",
+                        { tickSize: "0.0001" },
                     );
                     expect(signedOrder).not.null;
                     expect(signedOrder).not.undefined;
@@ -2284,7 +2284,7 @@ describe("utilities", () => {
                         SignatureType.POLY_PROXY,
                         address,
                         userOrder,
-                        "0.0001",
+                        { tickSize: "0.0001" },
                     );
                     expect(signedOrder).not.null;
                     expect(signedOrder).not.undefined;
@@ -2328,7 +2328,7 @@ describe("utilities", () => {
                         SignatureType.POLY_GNOSIS_SAFE,
                         address,
                         userOrder,
-                        "0.0001",
+                        { tickSize: "0.0001" },
                     );
                     expect(signedOrder).not.null;
                     expect(signedOrder).not.undefined;
@@ -2372,7 +2372,7 @@ describe("utilities", () => {
                         SignatureType.EOA,
                         address,
                         userOrder,
-                        "0.0001",
+                        { tickSize: "0.0001" },
                     );
                     expect(signedOrder).not.null;
                     expect(signedOrder).not.undefined;
@@ -2416,7 +2416,7 @@ describe("utilities", () => {
                         SignatureType.POLY_PROXY,
                         address,
                         userOrder,
-                        "0.0001",
+                        { tickSize: "0.0001" },
                     );
                     expect(signedOrder).not.null;
                     expect(signedOrder).not.undefined;
@@ -2460,7 +2460,7 @@ describe("utilities", () => {
                         SignatureType.POLY_GNOSIS_SAFE,
                         address,
                         userOrder,
-                        "0.0001",
+                        { tickSize: "0.0001" },
                     );
                     expect(signedOrder).not.null;
                     expect(signedOrder).not.undefined;
@@ -2503,7 +2503,7 @@ describe("utilities", () => {
                         SignatureType.EOA,
                         address,
                         userOrder,
-                        "0.0001",
+                        { tickSize: "0.0001" },
                     );
                     expect(signedOrder).not.null;
                     expect(signedOrder).not.undefined;
@@ -2546,7 +2546,7 @@ describe("utilities", () => {
                         SignatureType.POLY_PROXY,
                         address,
                         userOrder,
-                        "0.0001",
+                        { tickSize: "0.0001" },
                     );
                     expect(signedOrder).not.null;
                     expect(signedOrder).not.undefined;
@@ -2589,7 +2589,7 @@ describe("utilities", () => {
                         SignatureType.POLY_GNOSIS_SAFE,
                         address,
                         userOrder,
-                        "0.0001",
+                        { tickSize: "0.0001" },
                     );
                     expect(signedOrder).not.null;
                     expect(signedOrder).not.undefined;
@@ -2632,7 +2632,7 @@ describe("utilities", () => {
                         SignatureType.EOA,
                         address,
                         userOrder,
-                        "0.0001",
+                        { tickSize: "0.0001" },
                     );
                     expect(signedOrder).not.null;
                     expect(signedOrder).not.undefined;
@@ -2675,7 +2675,7 @@ describe("utilities", () => {
                         SignatureType.POLY_PROXY,
                         address,
                         userOrder,
-                        "0.0001",
+                        { tickSize: "0.0001" },
                     );
                     expect(signedOrder).not.null;
                     expect(signedOrder).not.undefined;
@@ -2718,7 +2718,7 @@ describe("utilities", () => {
                         SignatureType.POLY_GNOSIS_SAFE,
                         address,
                         userOrder,
-                        "0.0001",
+                        { tickSize: "0.0001" },
                     );
                     expect(signedOrder).not.null;
                     expect(signedOrder).not.undefined;
@@ -2760,7 +2760,7 @@ describe("utilities", () => {
                         SignatureType.EOA,
                         address,
                         userMarketOrder,
-                        "0.0001",
+                        { tickSize: "0.0001" },
                     );
                     expect(signedOrder).not.null;
                     expect(signedOrder).not.undefined;
@@ -2802,7 +2802,7 @@ describe("utilities", () => {
                         SignatureType.POLY_PROXY,
                         address,
                         userMarketOrder,
-                        "0.0001",
+                        { tickSize: "0.0001" },
                     );
                     expect(signedOrder).not.null;
                     expect(signedOrder).not.undefined;
@@ -2844,7 +2844,7 @@ describe("utilities", () => {
                         SignatureType.POLY_GNOSIS_SAFE,
                         address,
                         userMarketOrder,
-                        "0.0001",
+                        { tickSize: "0.0001" },
                     );
                     expect(signedOrder).not.null;
                     expect(signedOrder).not.undefined;

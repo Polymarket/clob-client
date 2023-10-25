@@ -1796,7 +1796,7 @@ describe("helpers", () => {
                     SignatureType.EOA,
                     "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
                     order,
-                    "0.1",
+                    { tickSize: "0.1" },
                 );
                 expect(signedOrder).not.null;
                 expect(signedOrder).not.undefined;
@@ -1833,7 +1833,7 @@ describe("helpers", () => {
                     SignatureType.EOA,
                     "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
                     order,
-                    "0.01",
+                    { tickSize: "0.01" },
                 );
                 expect(signedOrder).not.null;
                 expect(signedOrder).not.undefined;
@@ -1870,7 +1870,7 @@ describe("helpers", () => {
                     SignatureType.EOA,
                     "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
                     order,
-                    "0.001",
+                    { tickSize: "0.001" },
                 );
                 expect(signedOrder).not.null;
                 expect(signedOrder).not.undefined;
@@ -1907,7 +1907,7 @@ describe("helpers", () => {
                     SignatureType.EOA,
                     "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
                     order,
-                    "0.0001",
+                    { tickSize: "0.0001" },
                 );
                 expect(signedOrder).not.null;
                 expect(signedOrder).not.undefined;
@@ -1945,7 +1945,7 @@ describe("helpers", () => {
                     SignatureType.POLY_GNOSIS_SAFE,
                     "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
                     order,
-                    "0.1",
+                    { tickSize: "0.1" },
                 );
 
                 expect(signedOrder.salt).not.empty;
@@ -1979,7 +1979,7 @@ describe("helpers", () => {
                     SignatureType.POLY_GNOSIS_SAFE,
                     "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
                     order,
-                    "0.01",
+                    { tickSize: "0.01" },
                 );
 
                 expect(signedOrder.salt).not.empty;
@@ -2013,7 +2013,7 @@ describe("helpers", () => {
                     SignatureType.POLY_GNOSIS_SAFE,
                     "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
                     order,
-                    "0.001",
+                    { tickSize: "0.001" },
                 );
 
                 expect(signedOrder.salt).not.empty;
@@ -2047,7 +2047,7 @@ describe("helpers", () => {
                     SignatureType.POLY_GNOSIS_SAFE,
                     "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
                     order,
-                    "0.0001",
+                    { tickSize: "0.0001" },
                 );
 
                 expect(signedOrder.salt).not.empty;
@@ -3071,7 +3071,7 @@ describe("helpers", () => {
                     SignatureType.EOA,
                     "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
                     order,
-                    "0.1",
+                    { tickSize: "0.1" },
                 );
                 expect(signedOrder).not.null;
                 expect(signedOrder).not.undefined;
@@ -3107,7 +3107,7 @@ describe("helpers", () => {
                     SignatureType.EOA,
                     "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
                     order,
-                    "0.01",
+                    { tickSize: "0.01" },
                 );
                 expect(signedOrder).not.null;
                 expect(signedOrder).not.undefined;
@@ -3143,7 +3143,7 @@ describe("helpers", () => {
                     SignatureType.EOA,
                     "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
                     order,
-                    "0.001",
+                    { tickSize: "0.001" },
                 );
                 expect(signedOrder).not.null;
                 expect(signedOrder).not.undefined;
@@ -3179,7 +3179,7 @@ describe("helpers", () => {
                     SignatureType.EOA,
                     "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
                     order,
-                    "0.0001",
+                    { tickSize: "0.0001" },
                 );
                 expect(signedOrder).not.null;
                 expect(signedOrder).not.undefined;

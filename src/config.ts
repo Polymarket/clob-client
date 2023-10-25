@@ -28,9 +28,8 @@ const NEG_RISK_MATIC_CONTRACTS: ContractConfig = {
     conditionalTokens: "0x4D97DCd97eC945f40cF65F87097ACe5EA0476045",
 };
 
-// potentially unneeded
-// const COLLATERAL_TOKEN_DECIMALS = 6;
-// const CONDITIONAL_TOKEN_DECIMALS = 6;
+const COLLATERAL_TOKEN_DECIMALS = 6;
+const CONDITIONAL_TOKEN_DECIMALS = 6;
 
 const getContractConfig = (chainID: number, negRisk = false): ContractConfig => {
     switch (chainID) {
@@ -50,4 +49,4 @@ const getContractConfig = (chainID: number, negRisk = false): ContractConfig => 
 };
 
 export type { ContractConfig };
-export { getContractConfig };
+export { getContractConfig, COLLATERAL_TOKEN_DECIMALS, CONDITIONAL_TOKEN_DECIMALS };

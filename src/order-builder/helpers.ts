@@ -3,13 +3,10 @@ import { Wallet } from "@ethersproject/wallet";
 import { parseUnits } from "@ethersproject/units";
 import {
     ExchangeOrderBuilder,
-    getContracts,
     OrderData,
     SignatureType,
     SignedOrder,
     Side as UtilsSide,
-    COLLATERAL_TOKEN_DECIMALS,
-    CONDITIONAL_TOKEN_DECIMALS,
 } from "@polymarket/order-utils";
 import {
     UserOrder,
@@ -21,7 +18,11 @@ import {
     OrderOptions,
 } from "../types";
 import { decimalPlaces, roundDown, roundNormal, roundUp } from "../utilities";
-import { getContractConfig } from "src/config";
+import {
+    COLLATERAL_TOKEN_DECIMALS,
+    CONDITIONAL_TOKEN_DECIMALS,
+    getContractConfig,
+} from "src/config";
 
 export const ROUNDING_CONFIG: Record<TickSize, RoundConfig> = {
     "0.1": {
@@ -273,20 +274,20 @@ export const createMarketBuyOrder = async (
     signatureType: SignatureType,
     funderAddress: string | undefined,
     userMarketOrder: UserMarketOrder,
-    tickSize: TickSize,
+    orderOptions: OrderOptions,
 ): Promise<SignedOrder> => {
     const eoaSignerAddress = await eoaSigner.getAddress();
 
     // If funder address is not given, use the signer address
     const maker = funderAddress === undefined ? eoaSignerAddress : funderAddress;
-    const clobContracts = getContracts(chainId);
+    const contractConfig = getContractConfig(chainId, orderOptions.negRisk);
 
     const orderData = await buildMarketBuyOrderCreationArgs(
         eoaSignerAddress,
         maker,
         signatureType,
         userMarketOrder,
-        ROUNDING_CONFIG[tickSize],
+        ROUNDING_CONFIG[orderOptions.tickSize],
     );
-    return buildOrder(eoaSigner, clobContracts.Exchange, chainId, orderData);
+    return buildOrder(eoaSigner, contractConfig.exchange, chainId, orderData);
 };

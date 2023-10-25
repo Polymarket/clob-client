@@ -18,6 +18,10 @@
         {
             "name": "Liam Kovatch",
             "url": "https://github.com/l-kov"
+        },
+        {
+            "name": "Mike Shrieve",
+            "url": "https://github.com/mshrieve"
         }
     ],
     "main": "dist/index.js",
