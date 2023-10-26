@@ -5,12 +5,12 @@ import {
     ApiKeyCreds,
     ApiKeysResponse,
     Chain,
+    CreateOrderOptions,
     MarketPrice,
     OpenOrderParams,
     OpenOrdersResponse,
     OrderMarketCancelParams,
     OrderBookSummary,
-    OrderOptions,
     OrderPayload,
     OrderType,
     Side,
@@ -419,14 +419,14 @@ export class ClobClient {
 
     public async createOrder(
         userOrder: UserOrder,
-        orderOptions?: Partial<OrderOptions>,
+        options?: Partial<CreateOrderOptions>,
     ): Promise<SignedOrder> {
         this.canL1Auth();
 
         const { tokenID } = userOrder;
 
-        const tickSize = await this._resolveTickSize(tokenID, orderOptions?.tickSize);
-        const negRisk = orderOptions?.negRisk ?? false;
+        const tickSize = await this._resolveTickSize(tokenID, options?.tickSize);
+        const negRisk = options?.negRisk ?? false;
 
         return this.orderBuilder.buildOrder(userOrder, {
             tickSize,
@@ -436,14 +436,14 @@ export class ClobClient {
 
     public async createMarketBuyOrder(
         userMarketOrder: UserMarketOrder,
-        orderOptions?: OrderOptions,
+        options?: CreateOrderOptions,
     ): Promise<SignedOrder> {
         this.canL1Auth();
 
         const { tokenID } = userMarketOrder;
 
-        const tickSize = await this._resolveTickSize(tokenID, orderOptions?.tickSize);
-        const negRisk = orderOptions?.negRisk ?? false;
+        const tickSize = await this._resolveTickSize(tokenID, options?.tickSize);
+        const negRisk = options?.negRisk ?? false;
 
         if (!userMarketOrder.price) {
             const marketPrice = await this.getPrice(tokenID, Side.BUY);

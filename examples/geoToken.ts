@@ -1,7 +1,7 @@
 import { ethers } from "ethers";
 import { config as dotenvConfig } from "dotenv";
 import { resolve } from "path";
-import { ApiKeyCreds, Chain, ClobClient, PriceHistoryInterval, Side } from "../src";
+import { ApiKeyCreds, Chain, ClobClient, Side } from "../src";
 
 dotenvConfig({ path: resolve(__dirname, "../.env") });
 

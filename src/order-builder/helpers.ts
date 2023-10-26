@@ -15,9 +15,9 @@ import {
     UserMarketOrder,
     TickSize,
     RoundConfig,
-    OrderOptions,
-} from "../types";
-import { decimalPlaces, roundDown, roundNormal, roundUp } from "../utilities";
+    CreateOrderOptions,
+} from "src/types";
+import { decimalPlaces, roundDown, roundNormal, roundUp } from "src/utilities";
 import {
     COLLATERAL_TOKEN_DECIMALS,
     CONDITIONAL_TOKEN_DECIMALS,
@@ -172,20 +172,20 @@ export const createOrder = async (
     signatureType: SignatureType,
     funderAddress: string | undefined,
     userOrder: UserOrder,
-    orderOptions: OrderOptions,
+    options: CreateOrderOptions,
 ): Promise<SignedOrder> => {
     const eoaSignerAddress = await eoaSigner.getAddress();
 
     // If funder address is not given, use the signer address
     const maker = funderAddress === undefined ? eoaSignerAddress : funderAddress;
-    const contractConfig = getContractConfig(chainId, orderOptions.negRisk);
+    const contractConfig = getContractConfig(chainId, options.negRisk);
 
     const orderData = await buildOrderCreationArgs(
         eoaSignerAddress,
         maker,
         signatureType,
         userOrder,
-        ROUNDING_CONFIG[orderOptions.tickSize],
+        ROUNDING_CONFIG[options.tickSize],
     );
     return buildOrder(eoaSigner, contractConfig.exchange, chainId, orderData);
 };
@@ -274,20 +274,20 @@ export const createMarketBuyOrder = async (
     signatureType: SignatureType,
     funderAddress: string | undefined,
     userMarketOrder: UserMarketOrder,
-    orderOptions: OrderOptions,
+    options: CreateOrderOptions,
 ): Promise<SignedOrder> => {
     const eoaSignerAddress = await eoaSigner.getAddress();
 
     // If funder address is not given, use the signer address
     const maker = funderAddress === undefined ? eoaSignerAddress : funderAddress;
-    const contractConfig = getContractConfig(chainId, orderOptions.negRisk);
+    const contractConfig = getContractConfig(chainId, options.negRisk);
 
     const orderData = await buildMarketBuyOrderCreationArgs(
         eoaSignerAddress,
         maker,
         signatureType,
         userMarketOrder,
-        ROUNDING_CONFIG[orderOptions.tickSize],
+        ROUNDING_CONFIG[options.tickSize],
     );
     return buildOrder(eoaSigner, contractConfig.exchange, chainId, orderData);
 };

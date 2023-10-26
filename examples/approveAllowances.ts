@@ -11,7 +11,7 @@ dotenvConfig({ path: resolve(__dirname, "../.env") });
 export function getWallet(mainnetQ: boolean): ethers.Wallet {
     const pk = process.env.PK as string;
     const rpcToken: string = process.env.RPC_TOKEN as string;
-    let rpcUrl: string = "";
+    let rpcUrl = "";
     if (mainnetQ) {
         rpcUrl = `https://polygon-mainnet.g.alchemy.com/v2/${rpcToken}`;
     } else {

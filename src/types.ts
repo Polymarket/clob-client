@@ -334,7 +334,7 @@ export interface OrdersScoringParams {
 
 export type OrdersScoring = { [orderId in string]: boolean };
 
-export type OrderOptions = {
+export type CreateOrderOptions = {
     tickSize: TickSize;
     negRisk?: boolean;
 };
