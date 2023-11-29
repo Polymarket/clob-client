@@ -697,10 +697,10 @@
     "@nodelib/fs.scandir" "2.1.5"
     fastq "^1.6.0"
 
-"@polymarket/order-utils@^1.3.1":
-  version "1.3.1"
-  resolved "https://registry.npmjs.org/@polymarket/order-utils/-/order-utils-1.3.1.tgz#786ac15b50dbff8289675615bce4dad9dfcfe6a6"
-  integrity sha512-+ml9tjIYvpEoWO98MAZwlq0V3fHDAW8oXOEJL0oj58CidFDTzgLGflhhzhDOs4DTEbjaUGD8mbFcuIN4OEzBBQ==
+"@polymarket/order-utils@^2.0.0":
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/@polymarket/order-utils/-/order-utils-2.0.0.tgz#26e2e8311248c19556f5e14d65a8f69f5bc1a98c"
+  integrity sha512-Ttb/m9bi1kR4ZUkdmtRxM7P7F+gfkseOiM2adAX/wXsebjn1owzZITg34pmRTwDsv89tgLEIkM6aSIDySsa/Gg==
   dependencies:
     "@metamask/eth-sig-util" "^5.0.0"
     ethers "^5.7.1"
