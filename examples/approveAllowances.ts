@@ -2,9 +2,9 @@ import { BigNumber, constants, ethers } from "ethers";
 import { config as dotenvConfig } from "dotenv";
 import { resolve } from "path";
 import { Chain } from "../src";
+import { getContractConfig } from "../src/config";
 import { usdcAbi } from "./abi/usdcAbi";
 import { ctfAbi } from "./abi/ctfAbi";
-import { getContracts } from "@polymarket/order-utils";
 
 dotenvConfig({ path: resolve(__dirname, "../.env") });
 
@@ -24,21 +24,15 @@ export function getWallet(mainnetQ: boolean): ethers.Wallet {
 }
 
 export function getUsdcContract(mainnetQ: boolean, wallet: ethers.Wallet): ethers.Contract {
-    if (mainnetQ) {
-        const mainnetContracts = getContracts(137);
-        return new ethers.Contract(mainnetContracts.Collateral, usdcAbi, wallet);
-    }
-    const mumbaiContracts = getContracts(80001);
-    return new ethers.Contract(mumbaiContracts.Collateral, usdcAbi, wallet);
+    const chainId = mainnetQ ? 137 : 80001;
+    const contractConfig = getContractConfig(chainId);
+    return new ethers.Contract(contractConfig.collateral, usdcAbi, wallet);
 }
 
 export function getCtfContract(mainnetQ: boolean, wallet: ethers.Wallet): ethers.Contract {
-    if (mainnetQ) {
-        const mainnetContracts = getContracts(137);
-        return new ethers.Contract(mainnetContracts.Conditional, ctfAbi, wallet);
-    }
-    const mumbaiContracts = getContracts(80001);
-    return new ethers.Contract(mumbaiContracts.Conditional, ctfAbi, wallet);
+    const chainId = mainnetQ ? 137 : 80001;
+    const contractConfig = getContractConfig(chainId);
+    return new ethers.Contract(contractConfig.conditionalTokens, ctfAbi, wallet);
 }
 
 async function main() {
@@ -50,7 +44,7 @@ async function main() {
     const chainId = parseInt(`${process.env.CHAIN_ID || Chain.MUMBAI}`) as Chain;
     console.log(`Address: ${await wallet.getAddress()}, chainId: ${chainId}`);
 
-    const contracts = getContracts(isMainnet ? 137 : 80001);
+    const contractConfig = getContractConfig(chainId);
     const usdc = getUsdcContract(isMainnet, wallet);
     const ctf = getCtfContract(isMainnet, wallet);
 
@@ -61,31 +55,31 @@ async function main() {
     console.log(`usdcAllowanceCtf: ${usdcAllowanceCtf}`);
     const usdcAllowanceExchange = (await usdc.allowance(
         wallet.address,
-        contracts.Exchange,
+        contractConfig.exchange,
     )) as BigNumber;
     const conditionalTokensAllowanceExchange = (await ctf.isApprovedForAll(
         wallet.address,
-        contracts.Exchange,
+        contractConfig.exchange,
     )) as BigNumber;
 
     let txn;
 
     if (!usdcAllowanceCtf.gt(constants.Zero)) {
-        txn = await usdc.approve(contracts.Conditional, constants.MaxUint256, {
+        txn = await usdc.approve(contractConfig.conditionalTokens, constants.MaxUint256, {
             gasPrice: 100_000_000_000,
             gasLimit: 200_000,
         });
         console.log(`Setting USDC allowance for CTF: ${txn.hash}`);
     }
     if (!usdcAllowanceExchange.gt(constants.Zero)) {
-        txn = await usdc.approve(contracts.Exchange, constants.MaxUint256, {
+        txn = await usdc.approve(contractConfig.exchange, constants.MaxUint256, {
             gasPrice: 100_000_000_000,
             gasLimit: 200_000,
         });
         console.log(`Setting USDC allowance for Exchange: ${txn.hash}`);
     }
     if (!conditionalTokensAllowanceExchange) {
-        txn = await ctf.setApprovalForAll(contracts.Exchange, true, {
+        txn = await ctf.setApprovalForAll(contractConfig.exchange, true, {
             gasPrice: 100_000_000_000,
             gasLimit: 200_000,
         });

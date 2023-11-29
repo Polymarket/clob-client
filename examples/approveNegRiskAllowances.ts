@@ -5,7 +5,6 @@ import { Chain } from "../src";
 import { getContractConfig } from "../src/config";
 import { usdcAbi } from "./abi/usdcAbi";
 import { ctfAbi } from "./abi/ctfAbi";
-import { negRiskAdapterAbi } from "./abi/negRiskAdapterAbi";
 
 dotenvConfig({ path: resolve(__dirname, "../.env") });
 
@@ -41,15 +40,6 @@ export function getCtfContract(mainnetQ: boolean, wallet: ethers.Wallet): ethers
     return new ethers.Contract(contractConfig.conditionalTokens, ctfAbi, wallet);
 }
 
-export function getNegRiskAdapterContract(
-    mainnetQ: boolean,
-    wallet: ethers.Wallet,
-): ethers.Contract {
-    const chainId = mainnetQ ? 137 : 80001;
-    const contractConfig = getContractConfig(chainId);
-    return new ethers.Contract(contractConfig.negRiskAdapter, negRiskAdapterAbi, wallet);
-}
-
 async function main() {
     // --------------------------
     // SET MAINNET OR MUMBAI HERE
@@ -79,9 +69,14 @@ async function main() {
         wallet.address,
         contractConfig.negRiskExchange,
     )) as BigNumber;
+    const conditionalTokensAllowanceNegRiskAdapter = (await ctf.isApprovedForAll(
+        wallet.address,
+        contractConfig.negRiskAdapter,
+    )) as BigNumber;
 
     let txn;
 
+    // for splitting through the NegRiskAdapter
     if (!usdcAllowanceNegRiskAdapter.gt(constants.Zero)) {
         txn = await usdc.approve(contractConfig.negRiskAdapter, constants.MaxUint256, {
             gasPrice: 100_000_000_000,
@@ -94,14 +89,21 @@ async function main() {
             gasPrice: 100_000_000_000,
             gasLimit: 200_000,
         });
-        console.log(`Setting USDC allowance for Exchange: ${txn.hash}`);
+        console.log(`Setting USDC allowance for NegRiskExchange: ${txn.hash}`);
     }
     if (!conditionalTokensAllowanceNegRiskExchange) {
         txn = await ctf.setApprovalForAll(contractConfig.negRiskExchange, true, {
             gasPrice: 100_000_000_000,
             gasLimit: 200_000,
         });
-        console.log(`Setting Conditional Tokens allowance for Exchange: ${txn.hash}`);
+        console.log(`Setting Conditional Tokens allowance for NegRiskExchange: ${txn.hash}`);
+    }
+    if (!conditionalTokensAllowanceNegRiskAdapter) {
+        txn = await ctf.setApprovalForAll(contractConfig.negRiskAdapter, true, {
+            gasPrice: 100_000_000_000,
+            gasLimit: 200_000,
+        });
+        console.log(`Setting Conditional Tokens allowance for NegRiskAdapter: ${txn.hash}`);
     }
     console.log("Allowances set");
 }
