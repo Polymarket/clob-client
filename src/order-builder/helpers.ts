@@ -178,7 +178,7 @@ export const createOrder = async (
 
     // If funder address is not given, use the signer address
     const maker = funderAddress === undefined ? eoaSignerAddress : funderAddress;
-    const contractConfig = getContractConfig(chainId, options.negRisk);
+    const contractConfig = getContractConfig(chainId);
 
     const orderData = await buildOrderCreationArgs(
         eoaSignerAddress,
@@ -187,7 +187,12 @@ export const createOrder = async (
         userOrder,
         ROUNDING_CONFIG[options.tickSize],
     );
-    return buildOrder(eoaSigner, contractConfig.exchange, chainId, orderData);
+
+    const exchangeContract = options.negRisk
+        ? contractConfig.negRiskExchange
+        : contractConfig.exchange;
+
+    return buildOrder(eoaSigner, exchangeContract, chainId, orderData);
 };
 
 export const getMarketBuyOrderRawAmounts = (
@@ -280,7 +285,7 @@ export const createMarketBuyOrder = async (
 
     // If funder address is not given, use the signer address
     const maker = funderAddress === undefined ? eoaSignerAddress : funderAddress;
-    const contractConfig = getContractConfig(chainId, options.negRisk);
+    const contractConfig = getContractConfig(chainId);
 
     const orderData = await buildMarketBuyOrderCreationArgs(
         eoaSignerAddress,
@@ -289,5 +294,10 @@ export const createMarketBuyOrder = async (
         userMarketOrder,
         ROUNDING_CONFIG[options.tickSize],
     );
-    return buildOrder(eoaSigner, contractConfig.exchange, chainId, orderData);
+
+    const exchangeContract = options.negRisk
+        ? contractConfig.negRiskExchange
+        : contractConfig.exchange;
+
+    return buildOrder(eoaSigner, exchangeContract, chainId, orderData);
 };
