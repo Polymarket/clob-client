@@ -18,6 +18,7 @@ describe("eip712", () => {
         expect(signature).not.undefined;
         expect(signature).not.empty;
         expect(signature).equal(
+            // eslint-disable-next-line max-len
             "0xd91760ebcb14e814e9e12600b9bc7cd6bf13ebc175f6a28538b4925763f94f90012da34dd71290d441c28bc4f9b2281d3eb9ecfd1c9a63db1ce9ca85c89c914c1b",
         );
     });

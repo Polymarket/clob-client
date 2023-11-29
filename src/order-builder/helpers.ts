@@ -16,13 +16,13 @@ import {
     TickSize,
     RoundConfig,
     CreateOrderOptions,
-} from "src/types";
-import { decimalPlaces, roundDown, roundNormal, roundUp } from "src/utilities";
+} from "../types";
+import { decimalPlaces, roundDown, roundNormal, roundUp } from "../utilities";
 import {
     COLLATERAL_TOKEN_DECIMALS,
     CONDITIONAL_TOKEN_DECIMALS,
     getContractConfig,
-} from "src/config";
+} from "../config";
 
 export const ROUNDING_CONFIG: Record<TickSize, RoundConfig> = {
     "0.1": {

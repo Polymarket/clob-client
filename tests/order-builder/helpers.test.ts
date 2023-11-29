@@ -1773,291 +1773,583 @@ describe("helpers", () => {
     });
 
     describe("createOrder", () => {
-        describe("buy order", async () => {
-            it("0.1", async () => {
-                const order: UserOrder = {
-                    tokenID: "123",
-                    price: 0.5,
-                    size: 21.04,
-                    side: Side.BUY,
-                    feeRateBps: 111,
-                    nonce: 123,
-                    expiration: 50000,
-                };
+        describe("CTF Exchange", () => {
+            describe("buy order", async () => {
+                it("0.1", async () => {
+                    const order: UserOrder = {
+                        tokenID: "123",
+                        price: 0.5,
+                        size: 21.04,
+                        side: Side.BUY,
+                        feeRateBps: 111,
+                        nonce: 123,
+                        expiration: 50000,
+                    };
 
-                const signedOrder = await createOrder(
-                    wallet,
-                    Chain.MUMBAI,
-                    SignatureType.EOA,
-                    "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
-                    order,
-                    { tickSize: "0.1" },
-                );
-                expect(signedOrder).not.null;
-                expect(signedOrder).not.undefined;
+                    const signedOrder = await createOrder(
+                        wallet,
+                        Chain.MUMBAI,
+                        SignatureType.EOA,
+                        "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+                        order,
+                        { tickSize: "0.1", negRisk: false },
+                    );
+                    expect(signedOrder).not.null;
+                    expect(signedOrder).not.undefined;
 
-                expect(signedOrder.salt).not.empty;
-                expect(signedOrder.maker).equal("0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266");
-                expect(signedOrder.signer).equal("0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266");
-                expect(signedOrder.taker).equal("0x0000000000000000000000000000000000000000");
-                expect(signedOrder.tokenId).equal("123");
-                expect(signedOrder.makerAmount).equal("10520000");
-                expect(signedOrder.takerAmount).equal("21040000");
-                expect(signedOrder.side).equal(UtilsSide.BUY);
-                expect(signedOrder.expiration).equal("50000");
-                expect(signedOrder.nonce).equal("123");
-                expect(signedOrder.feeRateBps).equal("111");
-                expect(signedOrder.signatureType).equal(SignatureType.EOA);
-                expect(signedOrder.signature).not.empty;
+                    expect(signedOrder.salt).not.empty;
+                    expect(signedOrder.maker).equal("0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266");
+                    expect(signedOrder.signer).equal("0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266");
+                    expect(signedOrder.taker).equal("0x0000000000000000000000000000000000000000");
+                    expect(signedOrder.tokenId).equal("123");
+                    expect(signedOrder.makerAmount).equal("10520000");
+                    expect(signedOrder.takerAmount).equal("21040000");
+                    expect(signedOrder.side).equal(UtilsSide.BUY);
+                    expect(signedOrder.expiration).equal("50000");
+                    expect(signedOrder.nonce).equal("123");
+                    expect(signedOrder.feeRateBps).equal("111");
+                    expect(signedOrder.signatureType).equal(SignatureType.EOA);
+                    expect(signedOrder.signature).not.empty;
+                });
+
+                it("0.01", async () => {
+                    const order: UserOrder = {
+                        tokenID: "123",
+                        price: 0.56,
+                        size: 21.04,
+                        side: Side.BUY,
+                        feeRateBps: 111,
+                        nonce: 123,
+                        expiration: 50000,
+                    };
+
+                    const signedOrder = await createOrder(
+                        wallet,
+                        Chain.MUMBAI,
+                        SignatureType.EOA,
+                        "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+                        order,
+                        { tickSize: "0.01", negRisk: false },
+                    );
+                    expect(signedOrder).not.null;
+                    expect(signedOrder).not.undefined;
+
+                    expect(signedOrder.salt).not.empty;
+                    expect(signedOrder.maker).equal("0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266");
+                    expect(signedOrder.signer).equal("0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266");
+                    expect(signedOrder.taker).equal("0x0000000000000000000000000000000000000000");
+                    expect(signedOrder.tokenId).equal("123");
+                    expect(signedOrder.makerAmount).equal("11782400");
+                    expect(signedOrder.takerAmount).equal("21040000");
+                    expect(signedOrder.side).equal(UtilsSide.BUY);
+                    expect(signedOrder.expiration).equal("50000");
+                    expect(signedOrder.nonce).equal("123");
+                    expect(signedOrder.feeRateBps).equal("111");
+                    expect(signedOrder.signatureType).equal(SignatureType.EOA);
+                    expect(signedOrder.signature).not.empty;
+                });
+
+                it("0.001", async () => {
+                    const order: UserOrder = {
+                        tokenID: "123",
+                        price: 0.056,
+                        size: 21.04,
+                        side: Side.BUY,
+                        feeRateBps: 111,
+                        nonce: 123,
+                        expiration: 50000,
+                    };
+
+                    const signedOrder = await createOrder(
+                        wallet,
+                        Chain.MUMBAI,
+                        SignatureType.EOA,
+                        "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+                        order,
+                        { tickSize: "0.001", negRisk: false },
+                    );
+                    expect(signedOrder).not.null;
+                    expect(signedOrder).not.undefined;
+
+                    expect(signedOrder.salt).not.empty;
+                    expect(signedOrder.maker).equal("0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266");
+                    expect(signedOrder.signer).equal("0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266");
+                    expect(signedOrder.taker).equal("0x0000000000000000000000000000000000000000");
+                    expect(signedOrder.tokenId).equal("123");
+                    expect(signedOrder.makerAmount).equal("1178240");
+                    expect(signedOrder.takerAmount).equal("21040000");
+                    expect(signedOrder.side).equal(UtilsSide.BUY);
+                    expect(signedOrder.expiration).equal("50000");
+                    expect(signedOrder.nonce).equal("123");
+                    expect(signedOrder.feeRateBps).equal("111");
+                    expect(signedOrder.signatureType).equal(SignatureType.EOA);
+                    expect(signedOrder.signature).not.empty;
+                });
+
+                it("0.0001", async () => {
+                    const order: UserOrder = {
+                        tokenID: "123",
+                        price: 0.0056,
+                        size: 21.04,
+                        side: Side.BUY,
+                        feeRateBps: 111,
+                        nonce: 123,
+                        expiration: 50000,
+                    };
+
+                    const signedOrder = await createOrder(
+                        wallet,
+                        Chain.MUMBAI,
+                        SignatureType.EOA,
+                        "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+                        order,
+                        { tickSize: "0.0001", negRisk: false },
+                    );
+                    expect(signedOrder).not.null;
+                    expect(signedOrder).not.undefined;
+
+                    expect(signedOrder.salt).not.empty;
+                    expect(signedOrder.maker).equal("0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266");
+                    expect(signedOrder.signer).equal("0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266");
+                    expect(signedOrder.taker).equal("0x0000000000000000000000000000000000000000");
+                    expect(signedOrder.tokenId).equal("123");
+                    expect(signedOrder.makerAmount).equal("117824");
+                    expect(signedOrder.takerAmount).equal("21040000");
+                    expect(signedOrder.side).equal(UtilsSide.BUY);
+                    expect(signedOrder.expiration).equal("50000");
+                    expect(signedOrder.nonce).equal("123");
+                    expect(signedOrder.feeRateBps).equal("111");
+                    expect(signedOrder.signatureType).equal(SignatureType.EOA);
+                    expect(signedOrder.signature).not.empty;
+                });
             });
 
-            it("0.01", async () => {
-                const order: UserOrder = {
-                    tokenID: "123",
-                    price: 0.56,
-                    size: 21.04,
-                    side: Side.BUY,
-                    feeRateBps: 111,
-                    nonce: 123,
-                    expiration: 50000,
-                };
+            describe("sell order", async () => {
+                it("0.1", async () => {
+                    const order: UserOrder = {
+                        tokenID: "5",
+                        price: 0.5,
+                        size: 21.04,
+                        side: Side.SELL,
+                        feeRateBps: 0,
+                        nonce: 0,
+                    };
 
-                const signedOrder = await createOrder(
-                    wallet,
-                    Chain.MUMBAI,
-                    SignatureType.EOA,
-                    "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
-                    order,
-                    { tickSize: "0.01" },
-                );
-                expect(signedOrder).not.null;
-                expect(signedOrder).not.undefined;
+                    const signedOrder = await createOrder(
+                        wallet,
+                        Chain.MUMBAI,
+                        SignatureType.POLY_GNOSIS_SAFE,
+                        "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+                        order,
+                        { tickSize: "0.1", negRisk: false },
+                    );
 
-                expect(signedOrder.salt).not.empty;
-                expect(signedOrder.maker).equal("0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266");
-                expect(signedOrder.signer).equal("0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266");
-                expect(signedOrder.taker).equal("0x0000000000000000000000000000000000000000");
-                expect(signedOrder.tokenId).equal("123");
-                expect(signedOrder.makerAmount).equal("11782400");
-                expect(signedOrder.takerAmount).equal("21040000");
-                expect(signedOrder.side).equal(UtilsSide.BUY);
-                expect(signedOrder.expiration).equal("50000");
-                expect(signedOrder.nonce).equal("123");
-                expect(signedOrder.feeRateBps).equal("111");
-                expect(signedOrder.signatureType).equal(SignatureType.EOA);
-                expect(signedOrder.signature).not.empty;
-            });
+                    expect(signedOrder.salt).not.empty;
+                    expect(signedOrder.maker).equal("0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266");
+                    expect(signedOrder.signer).equal("0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266");
+                    expect(signedOrder.taker).equal("0x0000000000000000000000000000000000000000");
+                    expect(signedOrder.tokenId).equal("5");
+                    expect(signedOrder.makerAmount).equal("21040000");
+                    expect(signedOrder.takerAmount).equal("10520000");
+                    expect(signedOrder.side).equal(UtilsSide.SELL);
+                    expect(signedOrder.expiration).equal("0");
+                    expect(signedOrder.nonce).equal("0");
+                    expect(signedOrder.feeRateBps).equal("0");
+                    expect(signedOrder.signatureType).equal(SignatureType.POLY_GNOSIS_SAFE);
+                    expect(signedOrder.signature).not.empty;
+                });
 
-            it("0.001", async () => {
-                const order: UserOrder = {
-                    tokenID: "123",
-                    price: 0.056,
-                    size: 21.04,
-                    side: Side.BUY,
-                    feeRateBps: 111,
-                    nonce: 123,
-                    expiration: 50000,
-                };
+                it("0.01", async () => {
+                    const order: UserOrder = {
+                        tokenID: "5",
+                        price: 0.56,
+                        size: 21.04,
+                        side: Side.SELL,
+                        feeRateBps: 0,
+                        nonce: 0,
+                    };
 
-                const signedOrder = await createOrder(
-                    wallet,
-                    Chain.MUMBAI,
-                    SignatureType.EOA,
-                    "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
-                    order,
-                    { tickSize: "0.001" },
-                );
-                expect(signedOrder).not.null;
-                expect(signedOrder).not.undefined;
+                    const signedOrder = await createOrder(
+                        wallet,
+                        Chain.MUMBAI,
+                        SignatureType.POLY_GNOSIS_SAFE,
+                        "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+                        order,
+                        { tickSize: "0.01", negRisk: false },
+                    );
 
-                expect(signedOrder.salt).not.empty;
-                expect(signedOrder.maker).equal("0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266");
-                expect(signedOrder.signer).equal("0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266");
-                expect(signedOrder.taker).equal("0x0000000000000000000000000000000000000000");
-                expect(signedOrder.tokenId).equal("123");
-                expect(signedOrder.makerAmount).equal("1178240");
-                expect(signedOrder.takerAmount).equal("21040000");
-                expect(signedOrder.side).equal(UtilsSide.BUY);
-                expect(signedOrder.expiration).equal("50000");
-                expect(signedOrder.nonce).equal("123");
-                expect(signedOrder.feeRateBps).equal("111");
-                expect(signedOrder.signatureType).equal(SignatureType.EOA);
-                expect(signedOrder.signature).not.empty;
-            });
+                    expect(signedOrder.salt).not.empty;
+                    expect(signedOrder.maker).equal("0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266");
+                    expect(signedOrder.signer).equal("0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266");
+                    expect(signedOrder.taker).equal("0x0000000000000000000000000000000000000000");
+                    expect(signedOrder.tokenId).equal("5");
+                    expect(signedOrder.makerAmount).equal("21040000");
+                    expect(signedOrder.takerAmount).equal("11782400");
+                    expect(signedOrder.side).equal(UtilsSide.SELL);
+                    expect(signedOrder.expiration).equal("0");
+                    expect(signedOrder.nonce).equal("0");
+                    expect(signedOrder.feeRateBps).equal("0");
+                    expect(signedOrder.signatureType).equal(SignatureType.POLY_GNOSIS_SAFE);
+                    expect(signedOrder.signature).not.empty;
+                });
 
-            it("0.0001", async () => {
-                const order: UserOrder = {
-                    tokenID: "123",
-                    price: 0.0056,
-                    size: 21.04,
-                    side: Side.BUY,
-                    feeRateBps: 111,
-                    nonce: 123,
-                    expiration: 50000,
-                };
+                it("0.001", async () => {
+                    const order: UserOrder = {
+                        tokenID: "5",
+                        price: 0.056,
+                        size: 21.04,
+                        side: Side.SELL,
+                        feeRateBps: 0,
+                        nonce: 0,
+                    };
 
-                const signedOrder = await createOrder(
-                    wallet,
-                    Chain.MUMBAI,
-                    SignatureType.EOA,
-                    "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
-                    order,
-                    { tickSize: "0.0001" },
-                );
-                expect(signedOrder).not.null;
-                expect(signedOrder).not.undefined;
+                    const signedOrder = await createOrder(
+                        wallet,
+                        Chain.MUMBAI,
+                        SignatureType.POLY_GNOSIS_SAFE,
+                        "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+                        order,
+                        { tickSize: "0.001", negRisk: false },
+                    );
 
-                expect(signedOrder.salt).not.empty;
-                expect(signedOrder.maker).equal("0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266");
-                expect(signedOrder.signer).equal("0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266");
-                expect(signedOrder.taker).equal("0x0000000000000000000000000000000000000000");
-                expect(signedOrder.tokenId).equal("123");
-                expect(signedOrder.makerAmount).equal("117824");
-                expect(signedOrder.takerAmount).equal("21040000");
-                expect(signedOrder.side).equal(UtilsSide.BUY);
-                expect(signedOrder.expiration).equal("50000");
-                expect(signedOrder.nonce).equal("123");
-                expect(signedOrder.feeRateBps).equal("111");
-                expect(signedOrder.signatureType).equal(SignatureType.EOA);
-                expect(signedOrder.signature).not.empty;
+                    expect(signedOrder.salt).not.empty;
+                    expect(signedOrder.maker).equal("0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266");
+                    expect(signedOrder.signer).equal("0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266");
+                    expect(signedOrder.taker).equal("0x0000000000000000000000000000000000000000");
+                    expect(signedOrder.tokenId).equal("5");
+                    expect(signedOrder.makerAmount).equal("21040000");
+                    expect(signedOrder.takerAmount).equal("1178240");
+                    expect(signedOrder.side).equal(UtilsSide.SELL);
+                    expect(signedOrder.expiration).equal("0");
+                    expect(signedOrder.nonce).equal("0");
+                    expect(signedOrder.feeRateBps).equal("0");
+                    expect(signedOrder.signatureType).equal(SignatureType.POLY_GNOSIS_SAFE);
+                    expect(signedOrder.signature).not.empty;
+                });
+
+                it("0.0001", async () => {
+                    const order: UserOrder = {
+                        tokenID: "5",
+                        price: 0.0056,
+                        size: 21.04,
+                        side: Side.SELL,
+                        feeRateBps: 0,
+                        nonce: 0,
+                    };
+
+                    const signedOrder = await createOrder(
+                        wallet,
+                        Chain.MUMBAI,
+                        SignatureType.POLY_GNOSIS_SAFE,
+                        "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+                        order,
+                        { tickSize: "0.0001", negRisk: false },
+                    );
+
+                    expect(signedOrder.salt).not.empty;
+                    expect(signedOrder.maker).equal("0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266");
+                    expect(signedOrder.signer).equal("0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266");
+                    expect(signedOrder.taker).equal("0x0000000000000000000000000000000000000000");
+                    expect(signedOrder.tokenId).equal("5");
+                    expect(signedOrder.makerAmount).equal("21040000");
+                    expect(signedOrder.takerAmount).equal("117824");
+                    expect(signedOrder.side).equal(UtilsSide.SELL);
+                    expect(signedOrder.expiration).equal("0");
+                    expect(signedOrder.nonce).equal("0");
+                    expect(signedOrder.feeRateBps).equal("0");
+                    expect(signedOrder.signatureType).equal(SignatureType.POLY_GNOSIS_SAFE);
+                    expect(signedOrder.signature).not.empty;
+                });
             });
         });
 
-        describe("sell order", async () => {
-            it("0.1", async () => {
-                const order: UserOrder = {
-                    tokenID: "5",
-                    price: 0.5,
-                    size: 21.04,
-                    side: Side.SELL,
-                    feeRateBps: 0,
-                    nonce: 0,
-                };
+        describe("Neg RiskCTF Exchange", () => {
+            describe("buy order", async () => {
+                it("0.1", async () => {
+                    const order: UserOrder = {
+                        tokenID: "123",
+                        price: 0.5,
+                        size: 21.04,
+                        side: Side.BUY,
+                        feeRateBps: 111,
+                        nonce: 123,
+                        expiration: 50000,
+                    };
 
-                const signedOrder = await createOrder(
-                    wallet,
-                    Chain.MUMBAI,
-                    SignatureType.POLY_GNOSIS_SAFE,
-                    "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
-                    order,
-                    { tickSize: "0.1" },
-                );
+                    const signedOrder = await createOrder(
+                        wallet,
+                        Chain.MUMBAI,
+                        SignatureType.EOA,
+                        "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+                        order,
+                        { tickSize: "0.1", negRisk: true },
+                    );
+                    expect(signedOrder).not.null;
+                    expect(signedOrder).not.undefined;
 
-                expect(signedOrder.salt).not.empty;
-                expect(signedOrder.maker).equal("0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266");
-                expect(signedOrder.signer).equal("0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266");
-                expect(signedOrder.taker).equal("0x0000000000000000000000000000000000000000");
-                expect(signedOrder.tokenId).equal("5");
-                expect(signedOrder.makerAmount).equal("21040000");
-                expect(signedOrder.takerAmount).equal("10520000");
-                expect(signedOrder.side).equal(UtilsSide.SELL);
-                expect(signedOrder.expiration).equal("0");
-                expect(signedOrder.nonce).equal("0");
-                expect(signedOrder.feeRateBps).equal("0");
-                expect(signedOrder.signatureType).equal(SignatureType.POLY_GNOSIS_SAFE);
-                expect(signedOrder.signature).not.empty;
+                    expect(signedOrder.salt).not.empty;
+                    expect(signedOrder.maker).equal("0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266");
+                    expect(signedOrder.signer).equal("0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266");
+                    expect(signedOrder.taker).equal("0x0000000000000000000000000000000000000000");
+                    expect(signedOrder.tokenId).equal("123");
+                    expect(signedOrder.makerAmount).equal("10520000");
+                    expect(signedOrder.takerAmount).equal("21040000");
+                    expect(signedOrder.side).equal(UtilsSide.BUY);
+                    expect(signedOrder.expiration).equal("50000");
+                    expect(signedOrder.nonce).equal("123");
+                    expect(signedOrder.feeRateBps).equal("111");
+                    expect(signedOrder.signatureType).equal(SignatureType.EOA);
+                    expect(signedOrder.signature).not.empty;
+                });
+
+                it("0.01", async () => {
+                    const order: UserOrder = {
+                        tokenID: "123",
+                        price: 0.56,
+                        size: 21.04,
+                        side: Side.BUY,
+                        feeRateBps: 111,
+                        nonce: 123,
+                        expiration: 50000,
+                    };
+
+                    const signedOrder = await createOrder(
+                        wallet,
+                        Chain.MUMBAI,
+                        SignatureType.EOA,
+                        "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+                        order,
+                        { tickSize: "0.01", negRisk: true },
+                    );
+                    expect(signedOrder).not.null;
+                    expect(signedOrder).not.undefined;
+
+                    expect(signedOrder.salt).not.empty;
+                    expect(signedOrder.maker).equal("0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266");
+                    expect(signedOrder.signer).equal("0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266");
+                    expect(signedOrder.taker).equal("0x0000000000000000000000000000000000000000");
+                    expect(signedOrder.tokenId).equal("123");
+                    expect(signedOrder.makerAmount).equal("11782400");
+                    expect(signedOrder.takerAmount).equal("21040000");
+                    expect(signedOrder.side).equal(UtilsSide.BUY);
+                    expect(signedOrder.expiration).equal("50000");
+                    expect(signedOrder.nonce).equal("123");
+                    expect(signedOrder.feeRateBps).equal("111");
+                    expect(signedOrder.signatureType).equal(SignatureType.EOA);
+                    expect(signedOrder.signature).not.empty;
+                });
+
+                it("0.001", async () => {
+                    const order: UserOrder = {
+                        tokenID: "123",
+                        price: 0.056,
+                        size: 21.04,
+                        side: Side.BUY,
+                        feeRateBps: 111,
+                        nonce: 123,
+                        expiration: 50000,
+                    };
+
+                    const signedOrder = await createOrder(
+                        wallet,
+                        Chain.MUMBAI,
+                        SignatureType.EOA,
+                        "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+                        order,
+                        { tickSize: "0.001", negRisk: true },
+                    );
+                    expect(signedOrder).not.null;
+                    expect(signedOrder).not.undefined;
+
+                    expect(signedOrder.salt).not.empty;
+                    expect(signedOrder.maker).equal("0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266");
+                    expect(signedOrder.signer).equal("0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266");
+                    expect(signedOrder.taker).equal("0x0000000000000000000000000000000000000000");
+                    expect(signedOrder.tokenId).equal("123");
+                    expect(signedOrder.makerAmount).equal("1178240");
+                    expect(signedOrder.takerAmount).equal("21040000");
+                    expect(signedOrder.side).equal(UtilsSide.BUY);
+                    expect(signedOrder.expiration).equal("50000");
+                    expect(signedOrder.nonce).equal("123");
+                    expect(signedOrder.feeRateBps).equal("111");
+                    expect(signedOrder.signatureType).equal(SignatureType.EOA);
+                    expect(signedOrder.signature).not.empty;
+                });
+
+                it("0.0001", async () => {
+                    const order: UserOrder = {
+                        tokenID: "123",
+                        price: 0.0056,
+                        size: 21.04,
+                        side: Side.BUY,
+                        feeRateBps: 111,
+                        nonce: 123,
+                        expiration: 50000,
+                    };
+
+                    const signedOrder = await createOrder(
+                        wallet,
+                        Chain.MUMBAI,
+                        SignatureType.EOA,
+                        "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+                        order,
+                        { tickSize: "0.0001", negRisk: true },
+                    );
+                    expect(signedOrder).not.null;
+                    expect(signedOrder).not.undefined;
+
+                    expect(signedOrder.salt).not.empty;
+                    expect(signedOrder.maker).equal("0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266");
+                    expect(signedOrder.signer).equal("0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266");
+                    expect(signedOrder.taker).equal("0x0000000000000000000000000000000000000000");
+                    expect(signedOrder.tokenId).equal("123");
+                    expect(signedOrder.makerAmount).equal("117824");
+                    expect(signedOrder.takerAmount).equal("21040000");
+                    expect(signedOrder.side).equal(UtilsSide.BUY);
+                    expect(signedOrder.expiration).equal("50000");
+                    expect(signedOrder.nonce).equal("123");
+                    expect(signedOrder.feeRateBps).equal("111");
+                    expect(signedOrder.signatureType).equal(SignatureType.EOA);
+                    expect(signedOrder.signature).not.empty;
+                });
             });
 
-            it("0.01", async () => {
-                const order: UserOrder = {
-                    tokenID: "5",
-                    price: 0.56,
-                    size: 21.04,
-                    side: Side.SELL,
-                    feeRateBps: 0,
-                    nonce: 0,
-                };
+            describe("sell order", async () => {
+                it("0.1", async () => {
+                    const order: UserOrder = {
+                        tokenID: "5",
+                        price: 0.5,
+                        size: 21.04,
+                        side: Side.SELL,
+                        feeRateBps: 0,
+                        nonce: 0,
+                    };
 
-                const signedOrder = await createOrder(
-                    wallet,
-                    Chain.MUMBAI,
-                    SignatureType.POLY_GNOSIS_SAFE,
-                    "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
-                    order,
-                    { tickSize: "0.01" },
-                );
+                    const signedOrder = await createOrder(
+                        wallet,
+                        Chain.MUMBAI,
+                        SignatureType.POLY_GNOSIS_SAFE,
+                        "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+                        order,
+                        { tickSize: "0.1", negRisk: true },
+                    );
 
-                expect(signedOrder.salt).not.empty;
-                expect(signedOrder.maker).equal("0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266");
-                expect(signedOrder.signer).equal("0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266");
-                expect(signedOrder.taker).equal("0x0000000000000000000000000000000000000000");
-                expect(signedOrder.tokenId).equal("5");
-                expect(signedOrder.makerAmount).equal("21040000");
-                expect(signedOrder.takerAmount).equal("11782400");
-                expect(signedOrder.side).equal(UtilsSide.SELL);
-                expect(signedOrder.expiration).equal("0");
-                expect(signedOrder.nonce).equal("0");
-                expect(signedOrder.feeRateBps).equal("0");
-                expect(signedOrder.signatureType).equal(SignatureType.POLY_GNOSIS_SAFE);
-                expect(signedOrder.signature).not.empty;
-            });
+                    expect(signedOrder.salt).not.empty;
+                    expect(signedOrder.maker).equal("0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266");
+                    expect(signedOrder.signer).equal("0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266");
+                    expect(signedOrder.taker).equal("0x0000000000000000000000000000000000000000");
+                    expect(signedOrder.tokenId).equal("5");
+                    expect(signedOrder.makerAmount).equal("21040000");
+                    expect(signedOrder.takerAmount).equal("10520000");
+                    expect(signedOrder.side).equal(UtilsSide.SELL);
+                    expect(signedOrder.expiration).equal("0");
+                    expect(signedOrder.nonce).equal("0");
+                    expect(signedOrder.feeRateBps).equal("0");
+                    expect(signedOrder.signatureType).equal(SignatureType.POLY_GNOSIS_SAFE);
+                    expect(signedOrder.signature).not.empty;
+                });
 
-            it("0.001", async () => {
-                const order: UserOrder = {
-                    tokenID: "5",
-                    price: 0.056,
-                    size: 21.04,
-                    side: Side.SELL,
-                    feeRateBps: 0,
-                    nonce: 0,
-                };
+                it("0.01", async () => {
+                    const order: UserOrder = {
+                        tokenID: "5",
+                        price: 0.56,
+                        size: 21.04,
+                        side: Side.SELL,
+                        feeRateBps: 0,
+                        nonce: 0,
+                    };
 
-                const signedOrder = await createOrder(
-                    wallet,
-                    Chain.MUMBAI,
-                    SignatureType.POLY_GNOSIS_SAFE,
-                    "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
-                    order,
-                    { tickSize: "0.001" },
-                );
+                    const signedOrder = await createOrder(
+                        wallet,
+                        Chain.MUMBAI,
+                        SignatureType.POLY_GNOSIS_SAFE,
+                        "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+                        order,
+                        { tickSize: "0.01", negRisk: true },
+                    );
 
-                expect(signedOrder.salt).not.empty;
-                expect(signedOrder.maker).equal("0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266");
-                expect(signedOrder.signer).equal("0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266");
-                expect(signedOrder.taker).equal("0x0000000000000000000000000000000000000000");
-                expect(signedOrder.tokenId).equal("5");
-                expect(signedOrder.makerAmount).equal("21040000");
-                expect(signedOrder.takerAmount).equal("1178240");
-                expect(signedOrder.side).equal(UtilsSide.SELL);
-                expect(signedOrder.expiration).equal("0");
-                expect(signedOrder.nonce).equal("0");
-                expect(signedOrder.feeRateBps).equal("0");
-                expect(signedOrder.signatureType).equal(SignatureType.POLY_GNOSIS_SAFE);
-                expect(signedOrder.signature).not.empty;
-            });
+                    expect(signedOrder.salt).not.empty;
+                    expect(signedOrder.maker).equal("0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266");
+                    expect(signedOrder.signer).equal("0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266");
+                    expect(signedOrder.taker).equal("0x0000000000000000000000000000000000000000");
+                    expect(signedOrder.tokenId).equal("5");
+                    expect(signedOrder.makerAmount).equal("21040000");
+                    expect(signedOrder.takerAmount).equal("11782400");
+                    expect(signedOrder.side).equal(UtilsSide.SELL);
+                    expect(signedOrder.expiration).equal("0");
+                    expect(signedOrder.nonce).equal("0");
+                    expect(signedOrder.feeRateBps).equal("0");
+                    expect(signedOrder.signatureType).equal(SignatureType.POLY_GNOSIS_SAFE);
+                    expect(signedOrder.signature).not.empty;
+                });
 
-            it("0.0001", async () => {
-                const order: UserOrder = {
-                    tokenID: "5",
-                    price: 0.0056,
-                    size: 21.04,
-                    side: Side.SELL,
-                    feeRateBps: 0,
-                    nonce: 0,
-                };
+                it("0.001", async () => {
+                    const order: UserOrder = {
+                        tokenID: "5",
+                        price: 0.056,
+                        size: 21.04,
+                        side: Side.SELL,
+                        feeRateBps: 0,
+                        nonce: 0,
+                    };
 
-                const signedOrder = await createOrder(
-                    wallet,
-                    Chain.MUMBAI,
-                    SignatureType.POLY_GNOSIS_SAFE,
-                    "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
-                    order,
-                    { tickSize: "0.0001" },
-                );
+                    const signedOrder = await createOrder(
+                        wallet,
+                        Chain.MUMBAI,
+                        SignatureType.POLY_GNOSIS_SAFE,
+                        "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+                        order,
+                        { tickSize: "0.001", negRisk: true },
+                    );
 
-                expect(signedOrder.salt).not.empty;
-                expect(signedOrder.maker).equal("0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266");
-                expect(signedOrder.signer).equal("0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266");
-                expect(signedOrder.taker).equal("0x0000000000000000000000000000000000000000");
-                expect(signedOrder.tokenId).equal("5");
-                expect(signedOrder.makerAmount).equal("21040000");
-                expect(signedOrder.takerAmount).equal("117824");
-                expect(signedOrder.side).equal(UtilsSide.SELL);
-                expect(signedOrder.expiration).equal("0");
-                expect(signedOrder.nonce).equal("0");
-                expect(signedOrder.feeRateBps).equal("0");
-                expect(signedOrder.signatureType).equal(SignatureType.POLY_GNOSIS_SAFE);
-                expect(signedOrder.signature).not.empty;
+                    expect(signedOrder.salt).not.empty;
+                    expect(signedOrder.maker).equal("0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266");
+                    expect(signedOrder.signer).equal("0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266");
+                    expect(signedOrder.taker).equal("0x0000000000000000000000000000000000000000");
+                    expect(signedOrder.tokenId).equal("5");
+                    expect(signedOrder.makerAmount).equal("21040000");
+                    expect(signedOrder.takerAmount).equal("1178240");
+                    expect(signedOrder.side).equal(UtilsSide.SELL);
+                    expect(signedOrder.expiration).equal("0");
+                    expect(signedOrder.nonce).equal("0");
+                    expect(signedOrder.feeRateBps).equal("0");
+                    expect(signedOrder.signatureType).equal(SignatureType.POLY_GNOSIS_SAFE);
+                    expect(signedOrder.signature).not.empty;
+                });
+
+                it("0.0001", async () => {
+                    const order: UserOrder = {
+                        tokenID: "5",
+                        price: 0.0056,
+                        size: 21.04,
+                        side: Side.SELL,
+                        feeRateBps: 0,
+                        nonce: 0,
+                    };
+
+                    const signedOrder = await createOrder(
+                        wallet,
+                        Chain.MUMBAI,
+                        SignatureType.POLY_GNOSIS_SAFE,
+                        "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+                        order,
+                        { tickSize: "0.0001", negRisk: true },
+                    );
+
+                    expect(signedOrder.salt).not.empty;
+                    expect(signedOrder.maker).equal("0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266");
+                    expect(signedOrder.signer).equal("0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266");
+                    expect(signedOrder.taker).equal("0x0000000000000000000000000000000000000000");
+                    expect(signedOrder.tokenId).equal("5");
+                    expect(signedOrder.makerAmount).equal("21040000");
+                    expect(signedOrder.takerAmount).equal("117824");
+                    expect(signedOrder.side).equal(UtilsSide.SELL);
+                    expect(signedOrder.expiration).equal("0");
+                    expect(signedOrder.nonce).equal("0");
+                    expect(signedOrder.feeRateBps).equal("0");
+                    expect(signedOrder.signatureType).equal(SignatureType.POLY_GNOSIS_SAFE);
+                    expect(signedOrder.signature).not.empty;
+                });
             });
         });
     });
@@ -3049,149 +3341,299 @@ describe("helpers", () => {
     });
 
     describe("createMarketBuyOrder", () => {
-        describe("buy order", async () => {
-            it("0.1", async () => {
-                const order: UserMarketOrder = {
-                    tokenID: "123",
-                    price: 0.5,
-                    amount: 100,
-                    feeRateBps: 111,
-                    nonce: 123,
-                    expiration: 50000,
-                };
+        describe("CTF Exchange", () => {
+            describe("buy order", async () => {
+                it("0.1", async () => {
+                    const order: UserMarketOrder = {
+                        tokenID: "123",
+                        price: 0.5,
+                        amount: 100,
+                        feeRateBps: 111,
+                        nonce: 123,
+                        expiration: 50000,
+                    };
 
-                const signedOrder = await createMarketBuyOrder(
-                    wallet,
-                    Chain.MUMBAI,
-                    SignatureType.EOA,
-                    "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
-                    order,
-                    { tickSize: "0.1" },
-                );
-                expect(signedOrder).not.null;
-                expect(signedOrder).not.undefined;
+                    const signedOrder = await createMarketBuyOrder(
+                        wallet,
+                        Chain.MUMBAI,
+                        SignatureType.EOA,
+                        "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+                        order,
+                        { tickSize: "0.1", negRisk: false },
+                    );
+                    expect(signedOrder).not.null;
+                    expect(signedOrder).not.undefined;
 
-                expect(signedOrder.salt).not.empty;
-                expect(signedOrder.maker).equal("0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266");
-                expect(signedOrder.signer).equal("0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266");
-                expect(signedOrder.taker).equal("0x0000000000000000000000000000000000000000");
-                expect(signedOrder.tokenId).equal("123");
-                expect(signedOrder.makerAmount).equal("100000000");
-                expect(signedOrder.takerAmount).equal("200000000");
-                expect(signedOrder.side).equal(UtilsSide.BUY);
-                expect(signedOrder.expiration).equal("50000");
-                expect(signedOrder.nonce).equal("123");
-                expect(signedOrder.feeRateBps).equal("111");
-                expect(signedOrder.signatureType).equal(SignatureType.EOA);
-                expect(signedOrder.signature).not.empty;
+                    expect(signedOrder.salt).not.empty;
+                    expect(signedOrder.maker).equal("0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266");
+                    expect(signedOrder.signer).equal("0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266");
+                    expect(signedOrder.taker).equal("0x0000000000000000000000000000000000000000");
+                    expect(signedOrder.tokenId).equal("123");
+                    expect(signedOrder.makerAmount).equal("100000000");
+                    expect(signedOrder.takerAmount).equal("200000000");
+                    expect(signedOrder.side).equal(UtilsSide.BUY);
+                    expect(signedOrder.expiration).equal("50000");
+                    expect(signedOrder.nonce).equal("123");
+                    expect(signedOrder.feeRateBps).equal("111");
+                    expect(signedOrder.signatureType).equal(SignatureType.EOA);
+                    expect(signedOrder.signature).not.empty;
+                });
+
+                it("0.01", async () => {
+                    const order: UserMarketOrder = {
+                        tokenID: "123",
+                        price: 0.56,
+                        amount: 100,
+                        feeRateBps: 111,
+                        nonce: 123,
+                        expiration: 50000,
+                    };
+
+                    const signedOrder = await createMarketBuyOrder(
+                        wallet,
+                        Chain.MUMBAI,
+                        SignatureType.EOA,
+                        "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+                        order,
+                        { tickSize: "0.01", negRisk: false },
+                    );
+                    expect(signedOrder).not.null;
+                    expect(signedOrder).not.undefined;
+
+                    expect(signedOrder.salt).not.empty;
+                    expect(signedOrder.maker).equal("0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266");
+                    expect(signedOrder.signer).equal("0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266");
+                    expect(signedOrder.taker).equal("0x0000000000000000000000000000000000000000");
+                    expect(signedOrder.tokenId).equal("123");
+                    expect(signedOrder.makerAmount).equal("100000000");
+                    expect(signedOrder.takerAmount).equal("178571400");
+                    expect(signedOrder.side).equal(UtilsSide.BUY);
+                    expect(signedOrder.expiration).equal("50000");
+                    expect(signedOrder.nonce).equal("123");
+                    expect(signedOrder.feeRateBps).equal("111");
+                    expect(signedOrder.signatureType).equal(SignatureType.EOA);
+                    expect(signedOrder.signature).not.empty;
+                });
+
+                it("0.001", async () => {
+                    const order: UserMarketOrder = {
+                        tokenID: "123",
+                        price: 0.056,
+                        amount: 100,
+                        feeRateBps: 111,
+                        nonce: 123,
+                        expiration: 50000,
+                    };
+
+                    const signedOrder = await createMarketBuyOrder(
+                        wallet,
+                        Chain.MUMBAI,
+                        SignatureType.EOA,
+                        "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+                        order,
+                        { tickSize: "0.001", negRisk: false },
+                    );
+                    expect(signedOrder).not.null;
+                    expect(signedOrder).not.undefined;
+
+                    expect(signedOrder.salt).not.empty;
+                    expect(signedOrder.maker).equal("0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266");
+                    expect(signedOrder.signer).equal("0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266");
+                    expect(signedOrder.taker).equal("0x0000000000000000000000000000000000000000");
+                    expect(signedOrder.tokenId).equal("123");
+                    expect(signedOrder.makerAmount).equal("100000000");
+                    expect(signedOrder.takerAmount).equal("1785714280");
+                    expect(signedOrder.side).equal(UtilsSide.BUY);
+                    expect(signedOrder.expiration).equal("50000");
+                    expect(signedOrder.nonce).equal("123");
+                    expect(signedOrder.feeRateBps).equal("111");
+                    expect(signedOrder.signatureType).equal(SignatureType.EOA);
+                    expect(signedOrder.signature).not.empty;
+                });
+
+                it("0.0001", async () => {
+                    const order: UserMarketOrder = {
+                        tokenID: "123",
+                        price: 0.0056,
+                        amount: 100,
+                        feeRateBps: 111,
+                        nonce: 123,
+                        expiration: 50000,
+                    };
+
+                    const signedOrder = await createMarketBuyOrder(
+                        wallet,
+                        Chain.MUMBAI,
+                        SignatureType.EOA,
+                        "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+                        order,
+                        { tickSize: "0.0001", negRisk: false },
+                    );
+                    expect(signedOrder).not.null;
+                    expect(signedOrder).not.undefined;
+
+                    expect(signedOrder.salt).not.empty;
+                    expect(signedOrder.maker).equal("0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266");
+                    expect(signedOrder.signer).equal("0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266");
+                    expect(signedOrder.taker).equal("0x0000000000000000000000000000000000000000");
+                    expect(signedOrder.tokenId).equal("123");
+                    expect(signedOrder.makerAmount).equal("100000000");
+                    expect(signedOrder.takerAmount).equal("17857142857");
+                    expect(signedOrder.side).equal(UtilsSide.BUY);
+                    expect(signedOrder.expiration).equal("50000");
+                    expect(signedOrder.nonce).equal("123");
+                    expect(signedOrder.feeRateBps).equal("111");
+                    expect(signedOrder.signatureType).equal(SignatureType.EOA);
+                    expect(signedOrder.signature).not.empty;
+                });
             });
+        });
 
-            it("0.01", async () => {
-                const order: UserMarketOrder = {
-                    tokenID: "123",
-                    price: 0.56,
-                    amount: 100,
-                    feeRateBps: 111,
-                    nonce: 123,
-                    expiration: 50000,
-                };
+        describe("CTF Exchange", () => {
+            describe("buy order", async () => {
+                it("0.1", async () => {
+                    const order: UserMarketOrder = {
+                        tokenID: "123",
+                        price: 0.5,
+                        amount: 100,
+                        feeRateBps: 111,
+                        nonce: 123,
+                        expiration: 50000,
+                    };
 
-                const signedOrder = await createMarketBuyOrder(
-                    wallet,
-                    Chain.MUMBAI,
-                    SignatureType.EOA,
-                    "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
-                    order,
-                    { tickSize: "0.01" },
-                );
-                expect(signedOrder).not.null;
-                expect(signedOrder).not.undefined;
+                    const signedOrder = await createMarketBuyOrder(
+                        wallet,
+                        Chain.MUMBAI,
+                        SignatureType.EOA,
+                        "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+                        order,
+                        { tickSize: "0.1", negRisk: true },
+                    );
+                    expect(signedOrder).not.null;
+                    expect(signedOrder).not.undefined;
 
-                expect(signedOrder.salt).not.empty;
-                expect(signedOrder.maker).equal("0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266");
-                expect(signedOrder.signer).equal("0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266");
-                expect(signedOrder.taker).equal("0x0000000000000000000000000000000000000000");
-                expect(signedOrder.tokenId).equal("123");
-                expect(signedOrder.makerAmount).equal("100000000");
-                expect(signedOrder.takerAmount).equal("178571400");
-                expect(signedOrder.side).equal(UtilsSide.BUY);
-                expect(signedOrder.expiration).equal("50000");
-                expect(signedOrder.nonce).equal("123");
-                expect(signedOrder.feeRateBps).equal("111");
-                expect(signedOrder.signatureType).equal(SignatureType.EOA);
-                expect(signedOrder.signature).not.empty;
-            });
+                    expect(signedOrder.salt).not.empty;
+                    expect(signedOrder.maker).equal("0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266");
+                    expect(signedOrder.signer).equal("0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266");
+                    expect(signedOrder.taker).equal("0x0000000000000000000000000000000000000000");
+                    expect(signedOrder.tokenId).equal("123");
+                    expect(signedOrder.makerAmount).equal("100000000");
+                    expect(signedOrder.takerAmount).equal("200000000");
+                    expect(signedOrder.side).equal(UtilsSide.BUY);
+                    expect(signedOrder.expiration).equal("50000");
+                    expect(signedOrder.nonce).equal("123");
+                    expect(signedOrder.feeRateBps).equal("111");
+                    expect(signedOrder.signatureType).equal(SignatureType.EOA);
+                    expect(signedOrder.signature).not.empty;
+                });
 
-            it("0.001", async () => {
-                const order: UserMarketOrder = {
-                    tokenID: "123",
-                    price: 0.056,
-                    amount: 100,
-                    feeRateBps: 111,
-                    nonce: 123,
-                    expiration: 50000,
-                };
+                it("0.01", async () => {
+                    const order: UserMarketOrder = {
+                        tokenID: "123",
+                        price: 0.56,
+                        amount: 100,
+                        feeRateBps: 111,
+                        nonce: 123,
+                        expiration: 50000,
+                    };
 
-                const signedOrder = await createMarketBuyOrder(
-                    wallet,
-                    Chain.MUMBAI,
-                    SignatureType.EOA,
-                    "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
-                    order,
-                    { tickSize: "0.001" },
-                );
-                expect(signedOrder).not.null;
-                expect(signedOrder).not.undefined;
+                    const signedOrder = await createMarketBuyOrder(
+                        wallet,
+                        Chain.MUMBAI,
+                        SignatureType.EOA,
+                        "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+                        order,
+                        { tickSize: "0.01", negRisk: true },
+                    );
+                    expect(signedOrder).not.null;
+                    expect(signedOrder).not.undefined;
 
-                expect(signedOrder.salt).not.empty;
-                expect(signedOrder.maker).equal("0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266");
-                expect(signedOrder.signer).equal("0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266");
-                expect(signedOrder.taker).equal("0x0000000000000000000000000000000000000000");
-                expect(signedOrder.tokenId).equal("123");
-                expect(signedOrder.makerAmount).equal("100000000");
-                expect(signedOrder.takerAmount).equal("1785714280");
-                expect(signedOrder.side).equal(UtilsSide.BUY);
-                expect(signedOrder.expiration).equal("50000");
-                expect(signedOrder.nonce).equal("123");
-                expect(signedOrder.feeRateBps).equal("111");
-                expect(signedOrder.signatureType).equal(SignatureType.EOA);
-                expect(signedOrder.signature).not.empty;
-            });
+                    expect(signedOrder.salt).not.empty;
+                    expect(signedOrder.maker).equal("0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266");
+                    expect(signedOrder.signer).equal("0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266");
+                    expect(signedOrder.taker).equal("0x0000000000000000000000000000000000000000");
+                    expect(signedOrder.tokenId).equal("123");
+                    expect(signedOrder.makerAmount).equal("100000000");
+                    expect(signedOrder.takerAmount).equal("178571400");
+                    expect(signedOrder.side).equal(UtilsSide.BUY);
+                    expect(signedOrder.expiration).equal("50000");
+                    expect(signedOrder.nonce).equal("123");
+                    expect(signedOrder.feeRateBps).equal("111");
+                    expect(signedOrder.signatureType).equal(SignatureType.EOA);
+                    expect(signedOrder.signature).not.empty;
+                });
 
-            it("0.0001", async () => {
-                const order: UserMarketOrder = {
-                    tokenID: "123",
-                    price: 0.0056,
-                    amount: 100,
-                    feeRateBps: 111,
-                    nonce: 123,
-                    expiration: 50000,
-                };
+                it("0.001", async () => {
+                    const order: UserMarketOrder = {
+                        tokenID: "123",
+                        price: 0.056,
+                        amount: 100,
+                        feeRateBps: 111,
+                        nonce: 123,
+                        expiration: 50000,
+                    };
 
-                const signedOrder = await createMarketBuyOrder(
-                    wallet,
-                    Chain.MUMBAI,
-                    SignatureType.EOA,
-                    "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
-                    order,
-                    { tickSize: "0.0001" },
-                );
-                expect(signedOrder).not.null;
-                expect(signedOrder).not.undefined;
+                    const signedOrder = await createMarketBuyOrder(
+                        wallet,
+                        Chain.MUMBAI,
+                        SignatureType.EOA,
+                        "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+                        order,
+                        { tickSize: "0.001", negRisk: true },
+                    );
+                    expect(signedOrder).not.null;
+                    expect(signedOrder).not.undefined;
 
-                expect(signedOrder.salt).not.empty;
-                expect(signedOrder.maker).equal("0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266");
-                expect(signedOrder.signer).equal("0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266");
-                expect(signedOrder.taker).equal("0x0000000000000000000000000000000000000000");
-                expect(signedOrder.tokenId).equal("123");
-                expect(signedOrder.makerAmount).equal("100000000");
-                expect(signedOrder.takerAmount).equal("17857142857");
-                expect(signedOrder.side).equal(UtilsSide.BUY);
-                expect(signedOrder.expiration).equal("50000");
-                expect(signedOrder.nonce).equal("123");
-                expect(signedOrder.feeRateBps).equal("111");
-                expect(signedOrder.signatureType).equal(SignatureType.EOA);
-                expect(signedOrder.signature).not.empty;
+                    expect(signedOrder.salt).not.empty;
+                    expect(signedOrder.maker).equal("0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266");
+                    expect(signedOrder.signer).equal("0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266");
+                    expect(signedOrder.taker).equal("0x0000000000000000000000000000000000000000");
+                    expect(signedOrder.tokenId).equal("123");
+                    expect(signedOrder.makerAmount).equal("100000000");
+                    expect(signedOrder.takerAmount).equal("1785714280");
+                    expect(signedOrder.side).equal(UtilsSide.BUY);
+                    expect(signedOrder.expiration).equal("50000");
+                    expect(signedOrder.nonce).equal("123");
+                    expect(signedOrder.feeRateBps).equal("111");
+                    expect(signedOrder.signatureType).equal(SignatureType.EOA);
+                    expect(signedOrder.signature).not.empty;
+                });
+
+                it("0.0001", async () => {
+                    const order: UserMarketOrder = {
+                        tokenID: "123",
+                        price: 0.0056,
+                        amount: 100,
+                        feeRateBps: 111,
+                        nonce: 123,
+                        expiration: 50000,
+                    };
+
+                    const signedOrder = await createMarketBuyOrder(
+                        wallet,
+                        Chain.MUMBAI,
+                        SignatureType.EOA,
+                        "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+                        order,
+                        { tickSize: "0.0001", negRisk: true },
+                    );
+                    expect(signedOrder).not.null;
+                    expect(signedOrder).not.undefined;
+
+                    expect(signedOrder.salt).not.empty;
+                    expect(signedOrder.maker).equal("0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266");
+                    expect(signedOrder.signer).equal("0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266");
+                    expect(signedOrder.taker).equal("0x0000000000000000000000000000000000000000");
+                    expect(signedOrder.tokenId).equal("123");
+                    expect(signedOrder.makerAmount).equal("100000000");
+                    expect(signedOrder.takerAmount).equal("17857142857");
+                    expect(signedOrder.side).equal(UtilsSide.BUY);
+                    expect(signedOrder.expiration).equal("50000");
+                    expect(signedOrder.nonce).equal("123");
+                    expect(signedOrder.feeRateBps).equal("111");
+                    expect(signedOrder.signatureType).equal(SignatureType.EOA);
+                    expect(signedOrder.signature).not.empty;
+                });
             });
         });
     });

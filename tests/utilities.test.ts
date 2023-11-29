@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 import "mocha";
 import { expect } from "chai";
 import {
@@ -235,2642 +236,5286 @@ describe("utilities", () => {
         });
 
         describe("All orders combinations", async () => {
-            describe("0.1", async () => {
-                // publicly known private key
-                const token =
-                    "1343197538147866997676250008839231694243646439454152539053893078719042421992";
-                const privateKey =
-                    "0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80";
-                const address = "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266";
-                const wallet = new Wallet(privateKey);
-                const chainId = Chain.MUMBAI;
-                const owner = "f4f247b7-4ac7-ff29-a152-04fda0a8755a";
+            describe("CTF Exchange", async () => {
+                describe("0.1", async () => {
+                    // publicly known private key
+                    const token =
+                        "1343197538147866997676250008839231694243646439454152539053893078719042421992";
+                    const privateKey =
+                        "0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80";
+                    const address = "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266";
+                    const wallet = new Wallet(privateKey);
+                    const chainId = Chain.MUMBAI;
+                    const owner = "f4f247b7-4ac7-ff29-a152-04fda0a8755a";
 
-                it("GTD BUY EOA", async () => {
-                    const userOrder: UserOrder = {
-                        tokenID: token,
-                        price: 0.5,
-                        side: Side.BUY,
-                        size: 100,
-                        expiration: 1709948026,
-                    };
-                    const signedOrder = await createOrder(
-                        wallet,
-                        chainId,
-                        SignatureType.EOA,
-                        address,
-                        userOrder,
-                        { tickSize: "0.1" },
-                    );
-                    expect(signedOrder).not.null;
-                    expect(signedOrder).not.undefined;
+                    it("GTD BUY EOA", async () => {
+                        const userOrder: UserOrder = {
+                            tokenID: token,
+                            price: 0.5,
+                            side: Side.BUY,
+                            size: 100,
+                            expiration: 1709948026,
+                        };
+                        const signedOrder = await createOrder(
+                            wallet,
+                            chainId,
+                            SignatureType.EOA,
+                            address,
+                            userOrder,
+                            { tickSize: "0.1", negRisk: false },
+                        );
+                        expect(signedOrder).not.null;
+                        expect(signedOrder).not.undefined;
 
-                    const jsonGTDOrder = orderToJson(signedOrder, owner, OrderType.GTD);
-                    expect(jsonGTDOrder).not.null;
-                    expect(jsonGTDOrder).not.undefined;
+                        const jsonGTDOrder = orderToJson(signedOrder, owner, OrderType.GTD);
+                        expect(jsonGTDOrder).not.null;
+                        expect(jsonGTDOrder).not.undefined;
 
-                    expect(jsonGTDOrder).deep.equal({
-                        order: {
-                            salt: parseInt(signedOrder.salt),
-                            maker: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
-                            signer: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
-                            taker: "0x0000000000000000000000000000000000000000",
-                            tokenId: token,
-                            makerAmount: "50000000",
-                            takerAmount: "100000000",
-                            side: "BUY",
-                            expiration: "1709948026",
-                            nonce: "0",
-                            feeRateBps: "0",
-                            signatureType: 0,
-                            signature: signedOrder.signature,
-                        },
-                        owner: owner,
-                        orderType: OrderType.GTD,
+                        expect(jsonGTDOrder).deep.equal({
+                            order: {
+                                salt: parseInt(signedOrder.salt),
+                                maker: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+                                signer: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+                                taker: "0x0000000000000000000000000000000000000000",
+                                tokenId: token,
+                                makerAmount: "50000000",
+                                takerAmount: "100000000",
+                                side: "BUY",
+                                expiration: "1709948026",
+                                nonce: "0",
+                                feeRateBps: "0",
+                                signatureType: 0,
+                                signature: signedOrder.signature,
+                            },
+                            owner: owner,
+                            orderType: OrderType.GTD,
+                        });
+                    });
+
+                    it("GTD BUY POLY_PROXY", async () => {
+                        const userOrder = {
+                            tokenID: token,
+                            price: 0.5,
+                            side: Side.BUY,
+                            size: 100,
+                            expiration: 1709948026,
+                        };
+                        const signedOrder = await createOrder(
+                            wallet,
+                            chainId,
+                            SignatureType.POLY_PROXY,
+                            address,
+                            userOrder,
+                            { tickSize: "0.1", negRisk: false },
+                        );
+                        expect(signedOrder).not.null;
+                        expect(signedOrder).not.undefined;
+
+                        const jsonGTDOrder = orderToJson(signedOrder, owner, OrderType.GTD);
+                        expect(jsonGTDOrder).not.null;
+                        expect(jsonGTDOrder).not.undefined;
+
+                        expect(jsonGTDOrder).deep.equal({
+                            order: {
+                                salt: parseInt(signedOrder.salt),
+                                maker: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+                                signer: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+                                taker: "0x0000000000000000000000000000000000000000",
+                                tokenId: token,
+                                makerAmount: "50000000",
+                                takerAmount: "100000000",
+                                side: "BUY",
+                                expiration: "1709948026",
+                                nonce: "0",
+                                feeRateBps: "0",
+                                signatureType: 1,
+                                signature: signedOrder.signature,
+                            },
+                            owner: owner,
+                            orderType: OrderType.GTD,
+                        });
+                    });
+
+                    it("GTD BUY POLY_GNOSIS_SAFE", async () => {
+                        const userOrder = {
+                            tokenID: token,
+                            price: 0.5,
+                            side: Side.BUY,
+                            size: 100,
+                            expiration: 1709948026,
+                        };
+                        const signedOrder = await createOrder(
+                            wallet,
+                            chainId,
+                            SignatureType.POLY_GNOSIS_SAFE,
+                            address,
+                            userOrder,
+                            { tickSize: "0.1", negRisk: false },
+                        );
+                        expect(signedOrder).not.null;
+                        expect(signedOrder).not.undefined;
+
+                        const jsonGTDOrder = orderToJson(signedOrder, owner, OrderType.GTD);
+                        expect(jsonGTDOrder).not.null;
+                        expect(jsonGTDOrder).not.undefined;
+
+                        expect(jsonGTDOrder).deep.equal({
+                            order: {
+                                salt: parseInt(signedOrder.salt),
+                                maker: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+                                signer: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+                                taker: "0x0000000000000000000000000000000000000000",
+                                tokenId: token,
+                                makerAmount: "50000000",
+                                takerAmount: "100000000",
+                                side: "BUY",
+                                expiration: "1709948026",
+                                nonce: "0",
+                                feeRateBps: "0",
+                                signatureType: 2,
+                                signature: signedOrder.signature,
+                            },
+                            owner: owner,
+                            orderType: OrderType.GTD,
+                        });
+                    });
+
+                    it("GTD SELL EOA", async () => {
+                        const userOrder = {
+                            tokenID: token,
+                            price: 0.5,
+                            side: Side.SELL,
+                            size: 100,
+                            expiration: 1709948026,
+                        };
+                        const signedOrder = await createOrder(
+                            wallet,
+                            chainId,
+                            SignatureType.EOA,
+                            address,
+                            userOrder,
+                            { tickSize: "0.1", negRisk: false },
+                        );
+                        expect(signedOrder).not.null;
+                        expect(signedOrder).not.undefined;
+
+                        const jsonGTDOrder = orderToJson(signedOrder, owner, OrderType.GTD);
+                        expect(jsonGTDOrder).not.null;
+                        expect(jsonGTDOrder).not.undefined;
+
+                        expect(jsonGTDOrder).deep.equal({
+                            order: {
+                                salt: parseInt(signedOrder.salt),
+                                maker: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+                                signer: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+                                taker: "0x0000000000000000000000000000000000000000",
+                                tokenId: token,
+                                makerAmount: "100000000",
+                                takerAmount: "50000000",
+                                side: "SELL",
+                                expiration: "1709948026",
+                                nonce: "0",
+                                feeRateBps: "0",
+                                signatureType: 0,
+                                signature: signedOrder.signature,
+                            },
+                            owner: owner,
+                            orderType: OrderType.GTD,
+                        });
+                    });
+
+                    it("GTD SELL POLY_PROXY", async () => {
+                        const userOrder = {
+                            tokenID: token,
+                            price: 0.5,
+                            side: Side.SELL,
+                            size: 100,
+                            expiration: 1709948026,
+                        };
+                        const signedOrder = await createOrder(
+                            wallet,
+                            chainId,
+                            SignatureType.POLY_PROXY,
+                            address,
+                            userOrder,
+                            { tickSize: "0.1", negRisk: false },
+                        );
+                        expect(signedOrder).not.null;
+                        expect(signedOrder).not.undefined;
+
+                        const jsonGTDOrder = orderToJson(signedOrder, owner, OrderType.GTD);
+                        expect(jsonGTDOrder).not.null;
+                        expect(jsonGTDOrder).not.undefined;
+
+                        expect(jsonGTDOrder).deep.equal({
+                            order: {
+                                salt: parseInt(signedOrder.salt),
+                                maker: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+                                signer: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+                                taker: "0x0000000000000000000000000000000000000000",
+                                tokenId: token,
+                                makerAmount: "100000000",
+                                takerAmount: "50000000",
+                                side: "SELL",
+                                expiration: "1709948026",
+                                nonce: "0",
+                                feeRateBps: "0",
+                                signatureType: 1,
+                                signature: signedOrder.signature,
+                            },
+                            owner: owner,
+                            orderType: OrderType.GTD,
+                        });
+                    });
+
+                    it("GTD SELL POLY_GNOSIS_SAFE", async () => {
+                        const userOrder = {
+                            tokenID: token,
+                            price: 0.5,
+                            side: Side.SELL,
+                            size: 100,
+                            expiration: 1709948026,
+                        };
+                        const signedOrder = await createOrder(
+                            wallet,
+                            chainId,
+                            SignatureType.POLY_GNOSIS_SAFE,
+                            address,
+                            userOrder,
+                            { tickSize: "0.1", negRisk: false },
+                        );
+                        expect(signedOrder).not.null;
+                        expect(signedOrder).not.undefined;
+
+                        const jsonGTDOrder = orderToJson(signedOrder, owner, OrderType.GTD);
+                        expect(jsonGTDOrder).not.null;
+                        expect(jsonGTDOrder).not.undefined;
+
+                        expect(jsonGTDOrder).deep.equal({
+                            order: {
+                                salt: parseInt(signedOrder.salt),
+                                maker: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+                                signer: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+                                taker: "0x0000000000000000000000000000000000000000",
+                                tokenId: token,
+                                makerAmount: "100000000",
+                                takerAmount: "50000000",
+                                side: "SELL",
+                                expiration: "1709948026",
+                                nonce: "0",
+                                feeRateBps: "0",
+                                signatureType: 2,
+                                signature: signedOrder.signature,
+                            },
+                            owner: owner,
+                            orderType: OrderType.GTD,
+                        });
+                    });
+
+                    it("GTC BUY EOA", async () => {
+                        const userOrder = {
+                            tokenID: token,
+                            price: 0.5,
+                            side: Side.BUY,
+                            size: 100,
+                        };
+                        const signedOrder = await createOrder(
+                            wallet,
+                            chainId,
+                            SignatureType.EOA,
+                            address,
+                            userOrder,
+                            { tickSize: "0.1", negRisk: false },
+                        );
+                        expect(signedOrder).not.null;
+                        expect(signedOrder).not.undefined;
+
+                        const jsonGTCOrder = orderToJson(signedOrder, owner, OrderType.GTC);
+                        expect(jsonGTCOrder).not.null;
+                        expect(jsonGTCOrder).not.undefined;
+
+                        expect(jsonGTCOrder).deep.equal({
+                            order: {
+                                salt: parseInt(signedOrder.salt),
+                                maker: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+                                signer: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+                                taker: "0x0000000000000000000000000000000000000000",
+                                tokenId: token,
+                                makerAmount: "50000000",
+                                takerAmount: "100000000",
+                                side: "BUY",
+                                expiration: "0",
+                                nonce: "0",
+                                feeRateBps: "0",
+                                signatureType: 0,
+                                signature: signedOrder.signature,
+                            },
+                            owner: owner,
+                            orderType: OrderType.GTC,
+                        });
+                    });
+
+                    it("GTC BUY POLY_PROXY", async () => {
+                        const userOrder = {
+                            tokenID: token,
+                            price: 0.5,
+                            side: Side.BUY,
+                            size: 100,
+                        };
+                        const signedOrder = await createOrder(
+                            wallet,
+                            chainId,
+                            SignatureType.POLY_PROXY,
+                            address,
+                            userOrder,
+                            { tickSize: "0.1", negRisk: false },
+                        );
+                        expect(signedOrder).not.null;
+                        expect(signedOrder).not.undefined;
+
+                        const jsonGTCOrder = orderToJson(signedOrder, owner, OrderType.GTC);
+                        expect(jsonGTCOrder).not.null;
+                        expect(jsonGTCOrder).not.undefined;
+
+                        expect(jsonGTCOrder).deep.equal({
+                            order: {
+                                salt: parseInt(signedOrder.salt),
+                                maker: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+                                signer: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+                                taker: "0x0000000000000000000000000000000000000000",
+                                tokenId: token,
+                                makerAmount: "50000000",
+                                takerAmount: "100000000",
+                                side: "BUY",
+                                expiration: "0",
+                                nonce: "0",
+                                feeRateBps: "0",
+                                signatureType: 1,
+                                signature: signedOrder.signature,
+                            },
+                            owner: owner,
+                            orderType: OrderType.GTC,
+                        });
+                    });
+
+                    it("GTC BUY POLY_GNOSIS_SAFE", async () => {
+                        const userOrder = {
+                            tokenID: token,
+                            price: 0.5,
+                            side: Side.BUY,
+                            size: 100,
+                        };
+                        const signedOrder = await createOrder(
+                            wallet,
+                            chainId,
+                            SignatureType.POLY_GNOSIS_SAFE,
+                            address,
+                            userOrder,
+                            { tickSize: "0.1", negRisk: false },
+                        );
+                        expect(signedOrder).not.null;
+                        expect(signedOrder).not.undefined;
+
+                        const jsonGTCOrder = orderToJson(signedOrder, owner, OrderType.GTC);
+                        expect(jsonGTCOrder).not.null;
+                        expect(jsonGTCOrder).not.undefined;
+
+                        expect(jsonGTCOrder).deep.equal({
+                            order: {
+                                salt: parseInt(signedOrder.salt),
+                                maker: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+                                signer: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+                                taker: "0x0000000000000000000000000000000000000000",
+                                tokenId: token,
+                                makerAmount: "50000000",
+                                takerAmount: "100000000",
+                                side: "BUY",
+                                expiration: "0",
+                                nonce: "0",
+                                feeRateBps: "0",
+                                signatureType: 2,
+                                signature: signedOrder.signature,
+                            },
+                            owner: owner,
+                            orderType: OrderType.GTC,
+                        });
+                    });
+
+                    it("GTC SELL EOA", async () => {
+                        const userOrder = {
+                            tokenID: token,
+                            price: 0.5,
+                            side: Side.SELL,
+                            size: 100,
+                        };
+                        const signedOrder = await createOrder(
+                            wallet,
+                            chainId,
+                            SignatureType.EOA,
+                            address,
+                            userOrder,
+                            { tickSize: "0.1", negRisk: false },
+                        );
+                        expect(signedOrder).not.null;
+                        expect(signedOrder).not.undefined;
+
+                        const jsonGTCOrder = orderToJson(signedOrder, owner, OrderType.GTC);
+                        expect(jsonGTCOrder).not.null;
+                        expect(jsonGTCOrder).not.undefined;
+
+                        expect(jsonGTCOrder).deep.equal({
+                            order: {
+                                salt: parseInt(signedOrder.salt),
+                                maker: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+                                signer: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+                                taker: "0x0000000000000000000000000000000000000000",
+                                tokenId: token,
+                                makerAmount: "100000000",
+                                takerAmount: "50000000",
+                                side: "SELL",
+                                expiration: "0",
+                                nonce: "0",
+                                feeRateBps: "0",
+                                signatureType: 0,
+                                signature: signedOrder.signature,
+                            },
+                            owner: owner,
+                            orderType: OrderType.GTC,
+                        });
+                    });
+
+                    it("GTC SELL POLY_PROXY", async () => {
+                        const userOrder = {
+                            tokenID: token,
+                            price: 0.5,
+                            side: Side.SELL,
+                            size: 100,
+                        };
+                        const signedOrder = await createOrder(
+                            wallet,
+                            chainId,
+                            SignatureType.POLY_PROXY,
+                            address,
+                            userOrder,
+                            { tickSize: "0.1", negRisk: false },
+                        );
+                        expect(signedOrder).not.null;
+                        expect(signedOrder).not.undefined;
+
+                        const jsonGTCOrder = orderToJson(signedOrder, owner, OrderType.GTC);
+                        expect(jsonGTCOrder).not.null;
+                        expect(jsonGTCOrder).not.undefined;
+
+                        expect(jsonGTCOrder).deep.equal({
+                            order: {
+                                salt: parseInt(signedOrder.salt),
+                                maker: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+                                signer: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+                                taker: "0x0000000000000000000000000000000000000000",
+                                tokenId: token,
+                                makerAmount: "100000000",
+                                takerAmount: "50000000",
+                                side: "SELL",
+                                expiration: "0",
+                                nonce: "0",
+                                feeRateBps: "0",
+                                signatureType: 1,
+                                signature: signedOrder.signature,
+                            },
+                            owner: owner,
+                            orderType: OrderType.GTC,
+                        });
+                    });
+
+                    it("GTC SELL POLY_GNOSIS_SAFE", async () => {
+                        const userOrder = {
+                            tokenID: token,
+                            price: 0.5,
+                            side: Side.SELL,
+                            size: 100,
+                        };
+                        const signedOrder = await createOrder(
+                            wallet,
+                            chainId,
+                            SignatureType.POLY_GNOSIS_SAFE,
+                            address,
+                            userOrder,
+                            { tickSize: "0.1", negRisk: false },
+                        );
+                        expect(signedOrder).not.null;
+                        expect(signedOrder).not.undefined;
+
+                        const jsonGTCOrder = orderToJson(signedOrder, owner, OrderType.GTC);
+                        expect(jsonGTCOrder).not.null;
+                        expect(jsonGTCOrder).not.undefined;
+
+                        expect(jsonGTCOrder).deep.equal({
+                            order: {
+                                salt: parseInt(signedOrder.salt),
+                                maker: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+                                signer: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+                                taker: "0x0000000000000000000000000000000000000000",
+                                tokenId: token,
+                                makerAmount: "100000000",
+                                takerAmount: "50000000",
+                                side: "SELL",
+                                expiration: "0",
+                                nonce: "0",
+                                feeRateBps: "0",
+                                signatureType: 2,
+                                signature: signedOrder.signature,
+                            },
+                            owner: owner,
+                            orderType: OrderType.GTC,
+                        });
+                    });
+
+                    it("FOK BUY EOA", async () => {
+                        const userMarketOrder: UserMarketOrder = {
+                            tokenID: token,
+                            price: 0.5,
+                            amount: 100,
+                        };
+                        const signedOrder = await createMarketBuyOrder(
+                            wallet,
+                            chainId,
+                            SignatureType.EOA,
+                            address,
+                            userMarketOrder,
+                            { tickSize: "0.1", negRisk: false },
+                        );
+                        expect(signedOrder).not.null;
+                        expect(signedOrder).not.undefined;
+
+                        const jsonFOKOrder = orderToJson(signedOrder, owner, OrderType.FOK);
+                        expect(jsonFOKOrder).not.null;
+                        expect(jsonFOKOrder).not.undefined;
+
+                        expect(jsonFOKOrder).deep.equal({
+                            order: {
+                                salt: parseInt(signedOrder.salt),
+                                maker: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+                                signer: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+                                taker: "0x0000000000000000000000000000000000000000",
+                                tokenId: token,
+                                makerAmount: "100000000",
+                                takerAmount: "200000000",
+                                side: "BUY",
+                                expiration: "0",
+                                nonce: "0",
+                                feeRateBps: "0",
+                                signatureType: 0,
+                                signature: signedOrder.signature,
+                            },
+                            owner: owner,
+                            orderType: OrderType.FOK,
+                        });
+                    });
+
+                    it("FOK BUY POLY_PROXY", async () => {
+                        const userMarketOrder = {
+                            tokenID: token,
+                            price: 0.5,
+                            amount: 100,
+                        };
+                        const signedOrder = await createMarketBuyOrder(
+                            wallet,
+                            chainId,
+                            SignatureType.POLY_PROXY,
+                            address,
+                            userMarketOrder,
+                            { tickSize: "0.1", negRisk: false },
+                        );
+                        expect(signedOrder).not.null;
+                        expect(signedOrder).not.undefined;
+
+                        const jsonFOKOrder = orderToJson(signedOrder, owner, OrderType.FOK);
+                        expect(jsonFOKOrder).not.null;
+                        expect(jsonFOKOrder).not.undefined;
+
+                        expect(jsonFOKOrder).deep.equal({
+                            order: {
+                                salt: parseInt(signedOrder.salt),
+                                maker: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+                                signer: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+                                taker: "0x0000000000000000000000000000000000000000",
+                                tokenId: token,
+                                makerAmount: "100000000",
+                                takerAmount: "200000000",
+                                side: "BUY",
+                                expiration: "0",
+                                nonce: "0",
+                                feeRateBps: "0",
+                                signatureType: 1,
+                                signature: signedOrder.signature,
+                            },
+                            owner: owner,
+                            orderType: OrderType.FOK,
+                        });
+                    });
+
+                    it("FOK BUY POLY_GNOSIS_SAFE", async () => {
+                        const userMarketOrder = {
+                            tokenID: token,
+                            price: 0.5,
+                            amount: 100,
+                        };
+                        const signedOrder = await createMarketBuyOrder(
+                            wallet,
+                            chainId,
+                            SignatureType.POLY_GNOSIS_SAFE,
+                            address,
+                            userMarketOrder,
+                            { tickSize: "0.1", negRisk: false },
+                        );
+                        expect(signedOrder).not.null;
+                        expect(signedOrder).not.undefined;
+
+                        const jsonFOKOrder = orderToJson(signedOrder, owner, OrderType.FOK);
+                        expect(jsonFOKOrder).not.null;
+                        expect(jsonFOKOrder).not.undefined;
+
+                        expect(jsonFOKOrder).deep.equal({
+                            order: {
+                                salt: parseInt(signedOrder.salt),
+                                maker: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+                                signer: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+                                taker: "0x0000000000000000000000000000000000000000",
+                                tokenId: token,
+                                makerAmount: "100000000",
+                                takerAmount: "200000000",
+                                side: "BUY",
+                                expiration: "0",
+                                nonce: "0",
+                                feeRateBps: "0",
+                                signatureType: 2,
+                                signature: signedOrder.signature,
+                            },
+                            owner: owner,
+                            orderType: OrderType.FOK,
+                        });
                     });
                 });
 
-                it("GTD BUY POLY_PROXY", async () => {
-                    const userOrder = {
-                        tokenID: token,
-                        price: 0.5,
-                        side: Side.BUY,
-                        size: 100,
-                        expiration: 1709948026,
-                    };
-                    const signedOrder = await createOrder(
-                        wallet,
-                        chainId,
-                        SignatureType.POLY_PROXY,
-                        address,
-                        userOrder,
-                        { tickSize: "0.1" },
-                    );
-                    expect(signedOrder).not.null;
-                    expect(signedOrder).not.undefined;
+                describe("0.01", async () => {
+                    // publicly known private key
+                    const token =
+                        "1343197538147866997676250008839231694243646439454152539053893078719042421992";
+                    const privateKey =
+                        "0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80";
+                    const address = "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266";
+                    const wallet = new Wallet(privateKey);
+                    const chainId = Chain.MUMBAI;
+                    const owner = "f4f247b7-4ac7-ff29-a152-04fda0a8755a";
 
-                    const jsonGTDOrder = orderToJson(signedOrder, owner, OrderType.GTD);
-                    expect(jsonGTDOrder).not.null;
-                    expect(jsonGTDOrder).not.undefined;
+                    it("GTD BUY EOA", async () => {
+                        const userOrder: UserOrder = {
+                            tokenID: token,
+                            price: 0.05,
+                            side: Side.BUY,
+                            size: 100,
+                            expiration: 1709948026,
+                        };
+                        const signedOrder = await createOrder(
+                            wallet,
+                            chainId,
+                            SignatureType.EOA,
+                            address,
+                            userOrder,
+                            { tickSize: "0.01", negRisk: false },
+                        );
+                        expect(signedOrder).not.null;
+                        expect(signedOrder).not.undefined;
 
-                    expect(jsonGTDOrder).deep.equal({
-                        order: {
-                            salt: parseInt(signedOrder.salt),
-                            maker: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
-                            signer: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
-                            taker: "0x0000000000000000000000000000000000000000",
-                            tokenId: token,
-                            makerAmount: "50000000",
-                            takerAmount: "100000000",
-                            side: "BUY",
-                            expiration: "1709948026",
-                            nonce: "0",
-                            feeRateBps: "0",
-                            signatureType: 1,
-                            signature: signedOrder.signature,
-                        },
-                        owner: owner,
-                        orderType: OrderType.GTD,
+                        const jsonGTDOrder = orderToJson(signedOrder, owner, OrderType.GTD);
+                        expect(jsonGTDOrder).not.null;
+                        expect(jsonGTDOrder).not.undefined;
+
+                        expect(jsonGTDOrder).deep.equal({
+                            order: {
+                                salt: parseInt(signedOrder.salt),
+                                maker: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+                                signer: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+                                taker: "0x0000000000000000000000000000000000000000",
+                                tokenId: token,
+                                makerAmount: "5000000",
+                                takerAmount: "100000000",
+                                side: "BUY",
+                                expiration: "1709948026",
+                                nonce: "0",
+                                feeRateBps: "0",
+                                signatureType: 0,
+                                signature: signedOrder.signature,
+                            },
+                            owner: owner,
+                            orderType: OrderType.GTD,
+                        });
+                    });
+
+                    it("GTD BUY POLY_PROXY", async () => {
+                        const userOrder = {
+                            tokenID: token,
+                            price: 0.05,
+                            side: Side.BUY,
+                            size: 100,
+                            expiration: 1709948026,
+                        };
+                        const signedOrder = await createOrder(
+                            wallet,
+                            chainId,
+                            SignatureType.POLY_PROXY,
+                            address,
+                            userOrder,
+                            { tickSize: "0.01", negRisk: false },
+                        );
+                        expect(signedOrder).not.null;
+                        expect(signedOrder).not.undefined;
+
+                        const jsonGTDOrder = orderToJson(signedOrder, owner, OrderType.GTD);
+                        expect(jsonGTDOrder).not.null;
+                        expect(jsonGTDOrder).not.undefined;
+
+                        expect(jsonGTDOrder).deep.equal({
+                            order: {
+                                salt: parseInt(signedOrder.salt),
+                                maker: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+                                signer: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+                                taker: "0x0000000000000000000000000000000000000000",
+                                tokenId: token,
+                                makerAmount: "5000000",
+                                takerAmount: "100000000",
+                                side: "BUY",
+                                expiration: "1709948026",
+                                nonce: "0",
+                                feeRateBps: "0",
+                                signatureType: 1,
+                                signature: signedOrder.signature,
+                            },
+                            owner: owner,
+                            orderType: OrderType.GTD,
+                        });
+                    });
+
+                    it("GTD BUY POLY_GNOSIS_SAFE", async () => {
+                        const userOrder = {
+                            tokenID: token,
+                            price: 0.05,
+                            side: Side.BUY,
+                            size: 100,
+                            expiration: 1709948026,
+                        };
+                        const signedOrder = await createOrder(
+                            wallet,
+                            chainId,
+                            SignatureType.POLY_GNOSIS_SAFE,
+                            address,
+                            userOrder,
+                            { tickSize: "0.01", negRisk: false },
+                        );
+                        expect(signedOrder).not.null;
+                        expect(signedOrder).not.undefined;
+
+                        const jsonGTDOrder = orderToJson(signedOrder, owner, OrderType.GTD);
+                        expect(jsonGTDOrder).not.null;
+                        expect(jsonGTDOrder).not.undefined;
+
+                        expect(jsonGTDOrder).deep.equal({
+                            order: {
+                                salt: parseInt(signedOrder.salt),
+                                maker: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+                                signer: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+                                taker: "0x0000000000000000000000000000000000000000",
+                                tokenId: token,
+                                makerAmount: "5000000",
+                                takerAmount: "100000000",
+                                side: "BUY",
+                                expiration: "1709948026",
+                                nonce: "0",
+                                feeRateBps: "0",
+                                signatureType: 2,
+                                signature: signedOrder.signature,
+                            },
+                            owner: owner,
+                            orderType: OrderType.GTD,
+                        });
+                    });
+
+                    it("GTD SELL EOA", async () => {
+                        const userOrder = {
+                            tokenID: token,
+                            price: 0.05,
+                            side: Side.SELL,
+                            size: 100,
+                            expiration: 1709948026,
+                        };
+                        const signedOrder = await createOrder(
+                            wallet,
+                            chainId,
+                            SignatureType.EOA,
+                            address,
+                            userOrder,
+                            { tickSize: "0.01", negRisk: false },
+                        );
+                        expect(signedOrder).not.null;
+                        expect(signedOrder).not.undefined;
+
+                        const jsonGTDOrder = orderToJson(signedOrder, owner, OrderType.GTD);
+                        expect(jsonGTDOrder).not.null;
+                        expect(jsonGTDOrder).not.undefined;
+
+                        expect(jsonGTDOrder).deep.equal({
+                            order: {
+                                salt: parseInt(signedOrder.salt),
+                                maker: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+                                signer: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+                                taker: "0x0000000000000000000000000000000000000000",
+                                tokenId: token,
+                                makerAmount: "100000000",
+                                takerAmount: "5000000",
+                                side: "SELL",
+                                expiration: "1709948026",
+                                nonce: "0",
+                                feeRateBps: "0",
+                                signatureType: 0,
+                                signature: signedOrder.signature,
+                            },
+                            owner: owner,
+                            orderType: OrderType.GTD,
+                        });
+                    });
+
+                    it("GTD SELL POLY_PROXY", async () => {
+                        const userOrder = {
+                            tokenID: token,
+                            price: 0.05,
+                            side: Side.SELL,
+                            size: 100,
+                            expiration: 1709948026,
+                        };
+                        const signedOrder = await createOrder(
+                            wallet,
+                            chainId,
+                            SignatureType.POLY_PROXY,
+                            address,
+                            userOrder,
+                            { tickSize: "0.01", negRisk: false },
+                        );
+                        expect(signedOrder).not.null;
+                        expect(signedOrder).not.undefined;
+
+                        const jsonGTDOrder = orderToJson(signedOrder, owner, OrderType.GTD);
+                        expect(jsonGTDOrder).not.null;
+                        expect(jsonGTDOrder).not.undefined;
+
+                        expect(jsonGTDOrder).deep.equal({
+                            order: {
+                                salt: parseInt(signedOrder.salt),
+                                maker: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+                                signer: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+                                taker: "0x0000000000000000000000000000000000000000",
+                                tokenId: token,
+                                makerAmount: "100000000",
+                                takerAmount: "5000000",
+                                side: "SELL",
+                                expiration: "1709948026",
+                                nonce: "0",
+                                feeRateBps: "0",
+                                signatureType: 1,
+                                signature: signedOrder.signature,
+                            },
+                            owner: owner,
+                            orderType: OrderType.GTD,
+                        });
+                    });
+
+                    it("GTD SELL POLY_GNOSIS_SAFE", async () => {
+                        const userOrder = {
+                            tokenID: token,
+                            price: 0.05,
+                            side: Side.SELL,
+                            size: 100,
+                            expiration: 1709948026,
+                        };
+                        const signedOrder = await createOrder(
+                            wallet,
+                            chainId,
+                            SignatureType.POLY_GNOSIS_SAFE,
+                            address,
+                            userOrder,
+                            { tickSize: "0.01", negRisk: false },
+                        );
+                        expect(signedOrder).not.null;
+                        expect(signedOrder).not.undefined;
+
+                        const jsonGTDOrder = orderToJson(signedOrder, owner, OrderType.GTD);
+                        expect(jsonGTDOrder).not.null;
+                        expect(jsonGTDOrder).not.undefined;
+
+                        expect(jsonGTDOrder).deep.equal({
+                            order: {
+                                salt: parseInt(signedOrder.salt),
+                                maker: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+                                signer: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+                                taker: "0x0000000000000000000000000000000000000000",
+                                tokenId: token,
+                                makerAmount: "100000000",
+                                takerAmount: "5000000",
+                                side: "SELL",
+                                expiration: "1709948026",
+                                nonce: "0",
+                                feeRateBps: "0",
+                                signatureType: 2,
+                                signature: signedOrder.signature,
+                            },
+                            owner: owner,
+                            orderType: OrderType.GTD,
+                        });
+                    });
+
+                    it("GTC BUY EOA", async () => {
+                        const userOrder = {
+                            tokenID: token,
+                            price: 0.05,
+                            side: Side.BUY,
+                            size: 100,
+                        };
+                        const signedOrder = await createOrder(
+                            wallet,
+                            chainId,
+                            SignatureType.EOA,
+                            address,
+                            userOrder,
+                            { tickSize: "0.01", negRisk: false },
+                        );
+                        expect(signedOrder).not.null;
+                        expect(signedOrder).not.undefined;
+
+                        const jsonGTCOrder = orderToJson(signedOrder, owner, OrderType.GTC);
+                        expect(jsonGTCOrder).not.null;
+                        expect(jsonGTCOrder).not.undefined;
+
+                        expect(jsonGTCOrder).deep.equal({
+                            order: {
+                                salt: parseInt(signedOrder.salt),
+                                maker: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+                                signer: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+                                taker: "0x0000000000000000000000000000000000000000",
+                                tokenId: token,
+                                makerAmount: "5000000",
+                                takerAmount: "100000000",
+                                side: "BUY",
+                                expiration: "0",
+                                nonce: "0",
+                                feeRateBps: "0",
+                                signatureType: 0,
+                                signature: signedOrder.signature,
+                            },
+                            owner: owner,
+                            orderType: OrderType.GTC,
+                        });
+                    });
+
+                    it("GTC BUY POLY_PROXY", async () => {
+                        const userOrder = {
+                            tokenID: token,
+                            price: 0.05,
+                            side: Side.BUY,
+                            size: 100,
+                        };
+                        const signedOrder = await createOrder(
+                            wallet,
+                            chainId,
+                            SignatureType.POLY_PROXY,
+                            address,
+                            userOrder,
+                            { tickSize: "0.01", negRisk: false },
+                        );
+                        expect(signedOrder).not.null;
+                        expect(signedOrder).not.undefined;
+
+                        const jsonGTCOrder = orderToJson(signedOrder, owner, OrderType.GTC);
+                        expect(jsonGTCOrder).not.null;
+                        expect(jsonGTCOrder).not.undefined;
+
+                        expect(jsonGTCOrder).deep.equal({
+                            order: {
+                                salt: parseInt(signedOrder.salt),
+                                maker: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+                                signer: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+                                taker: "0x0000000000000000000000000000000000000000",
+                                tokenId: token,
+                                makerAmount: "5000000",
+                                takerAmount: "100000000",
+                                side: "BUY",
+                                expiration: "0",
+                                nonce: "0",
+                                feeRateBps: "0",
+                                signatureType: 1,
+                                signature: signedOrder.signature,
+                            },
+                            owner: owner,
+                            orderType: OrderType.GTC,
+                        });
+                    });
+
+                    it("GTC BUY POLY_GNOSIS_SAFE", async () => {
+                        const userOrder = {
+                            tokenID: token,
+                            price: 0.05,
+                            side: Side.BUY,
+                            size: 100,
+                        };
+                        const signedOrder = await createOrder(
+                            wallet,
+                            chainId,
+                            SignatureType.POLY_GNOSIS_SAFE,
+                            address,
+                            userOrder,
+                            { tickSize: "0.01", negRisk: false },
+                        );
+                        expect(signedOrder).not.null;
+                        expect(signedOrder).not.undefined;
+
+                        const jsonGTCOrder = orderToJson(signedOrder, owner, OrderType.GTC);
+                        expect(jsonGTCOrder).not.null;
+                        expect(jsonGTCOrder).not.undefined;
+
+                        expect(jsonGTCOrder).deep.equal({
+                            order: {
+                                salt: parseInt(signedOrder.salt),
+                                maker: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+                                signer: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+                                taker: "0x0000000000000000000000000000000000000000",
+                                tokenId: token,
+                                makerAmount: "5000000",
+                                takerAmount: "100000000",
+                                side: "BUY",
+                                expiration: "0",
+                                nonce: "0",
+                                feeRateBps: "0",
+                                signatureType: 2,
+                                signature: signedOrder.signature,
+                            },
+                            owner: owner,
+                            orderType: OrderType.GTC,
+                        });
+                    });
+
+                    it("GTC SELL EOA", async () => {
+                        const userOrder = {
+                            tokenID: token,
+                            price: 0.05,
+                            side: Side.SELL,
+                            size: 100,
+                        };
+                        const signedOrder = await createOrder(
+                            wallet,
+                            chainId,
+                            SignatureType.EOA,
+                            address,
+                            userOrder,
+                            { tickSize: "0.01", negRisk: false },
+                        );
+                        expect(signedOrder).not.null;
+                        expect(signedOrder).not.undefined;
+
+                        const jsonGTCOrder = orderToJson(signedOrder, owner, OrderType.GTC);
+                        expect(jsonGTCOrder).not.null;
+                        expect(jsonGTCOrder).not.undefined;
+
+                        expect(jsonGTCOrder).deep.equal({
+                            order: {
+                                salt: parseInt(signedOrder.salt),
+                                maker: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+                                signer: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+                                taker: "0x0000000000000000000000000000000000000000",
+                                tokenId: token,
+                                makerAmount: "100000000",
+                                takerAmount: "5000000",
+                                side: "SELL",
+                                expiration: "0",
+                                nonce: "0",
+                                feeRateBps: "0",
+                                signatureType: 0,
+                                signature: signedOrder.signature,
+                            },
+                            owner: owner,
+                            orderType: OrderType.GTC,
+                        });
+                    });
+
+                    it("GTC SELL POLY_PROXY", async () => {
+                        const userOrder = {
+                            tokenID: token,
+                            price: 0.05,
+                            side: Side.SELL,
+                            size: 100,
+                        };
+                        const signedOrder = await createOrder(
+                            wallet,
+                            chainId,
+                            SignatureType.POLY_PROXY,
+                            address,
+                            userOrder,
+                            { tickSize: "0.01", negRisk: false },
+                        );
+                        expect(signedOrder).not.null;
+                        expect(signedOrder).not.undefined;
+
+                        const jsonGTCOrder = orderToJson(signedOrder, owner, OrderType.GTC);
+                        expect(jsonGTCOrder).not.null;
+                        expect(jsonGTCOrder).not.undefined;
+
+                        expect(jsonGTCOrder).deep.equal({
+                            order: {
+                                salt: parseInt(signedOrder.salt),
+                                maker: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+                                signer: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+                                taker: "0x0000000000000000000000000000000000000000",
+                                tokenId: token,
+                                makerAmount: "100000000",
+                                takerAmount: "5000000",
+                                side: "SELL",
+                                expiration: "0",
+                                nonce: "0",
+                                feeRateBps: "0",
+                                signatureType: 1,
+                                signature: signedOrder.signature,
+                            },
+                            owner: owner,
+                            orderType: OrderType.GTC,
+                        });
+                    });
+
+                    it("GTC SELL POLY_GNOSIS_SAFE", async () => {
+                        const userOrder = {
+                            tokenID: token,
+                            price: 0.05,
+                            side: Side.SELL,
+                            size: 100,
+                        };
+                        const signedOrder = await createOrder(
+                            wallet,
+                            chainId,
+                            SignatureType.POLY_GNOSIS_SAFE,
+                            address,
+                            userOrder,
+                            { tickSize: "0.01", negRisk: false },
+                        );
+                        expect(signedOrder).not.null;
+                        expect(signedOrder).not.undefined;
+
+                        const jsonGTCOrder = orderToJson(signedOrder, owner, OrderType.GTC);
+                        expect(jsonGTCOrder).not.null;
+                        expect(jsonGTCOrder).not.undefined;
+
+                        expect(jsonGTCOrder).deep.equal({
+                            order: {
+                                salt: parseInt(signedOrder.salt),
+                                maker: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+                                signer: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+                                taker: "0x0000000000000000000000000000000000000000",
+                                tokenId: token,
+                                makerAmount: "100000000",
+                                takerAmount: "5000000",
+                                side: "SELL",
+                                expiration: "0",
+                                nonce: "0",
+                                feeRateBps: "0",
+                                signatureType: 2,
+                                signature: signedOrder.signature,
+                            },
+                            owner: owner,
+                            orderType: OrderType.GTC,
+                        });
+                    });
+
+                    it("FOK BUY EOA", async () => {
+                        const userMarketOrder: UserMarketOrder = {
+                            tokenID: token,
+                            price: 0.05,
+                            amount: 100,
+                        };
+                        const signedOrder = await createMarketBuyOrder(
+                            wallet,
+                            chainId,
+                            SignatureType.EOA,
+                            address,
+                            userMarketOrder,
+                            { tickSize: "0.01", negRisk: false },
+                        );
+                        expect(signedOrder).not.null;
+                        expect(signedOrder).not.undefined;
+
+                        const jsonFOKOrder = orderToJson(signedOrder, owner, OrderType.FOK);
+                        expect(jsonFOKOrder).not.null;
+                        expect(jsonFOKOrder).not.undefined;
+
+                        expect(jsonFOKOrder).deep.equal({
+                            order: {
+                                salt: parseInt(signedOrder.salt),
+                                maker: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+                                signer: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+                                taker: "0x0000000000000000000000000000000000000000",
+                                tokenId: token,
+                                makerAmount: "100000000",
+                                takerAmount: "2000000000",
+                                side: "BUY",
+                                expiration: "0",
+                                nonce: "0",
+                                feeRateBps: "0",
+                                signatureType: 0,
+                                signature: signedOrder.signature,
+                            },
+                            owner: owner,
+                            orderType: OrderType.FOK,
+                        });
+                    });
+
+                    it("FOK BUY POLY_PROXY", async () => {
+                        const userMarketOrder = {
+                            tokenID: token,
+                            price: 0.05,
+                            amount: 100,
+                        };
+                        const signedOrder = await createMarketBuyOrder(
+                            wallet,
+                            chainId,
+                            SignatureType.POLY_PROXY,
+                            address,
+                            userMarketOrder,
+                            { tickSize: "0.01", negRisk: false },
+                        );
+                        expect(signedOrder).not.null;
+                        expect(signedOrder).not.undefined;
+
+                        const jsonFOKOrder = orderToJson(signedOrder, owner, OrderType.FOK);
+                        expect(jsonFOKOrder).not.null;
+                        expect(jsonFOKOrder).not.undefined;
+
+                        expect(jsonFOKOrder).deep.equal({
+                            order: {
+                                salt: parseInt(signedOrder.salt),
+                                maker: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+                                signer: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+                                taker: "0x0000000000000000000000000000000000000000",
+                                tokenId: token,
+                                makerAmount: "100000000",
+                                takerAmount: "2000000000",
+                                side: "BUY",
+                                expiration: "0",
+                                nonce: "0",
+                                feeRateBps: "0",
+                                signatureType: 1,
+                                signature: signedOrder.signature,
+                            },
+                            owner: owner,
+                            orderType: OrderType.FOK,
+                        });
+                    });
+
+                    it("FOK BUY POLY_GNOSIS_SAFE", async () => {
+                        const userMarketOrder = {
+                            tokenID: token,
+                            price: 0.05,
+                            amount: 100,
+                        };
+                        const signedOrder = await createMarketBuyOrder(
+                            wallet,
+                            chainId,
+                            SignatureType.POLY_GNOSIS_SAFE,
+                            address,
+                            userMarketOrder,
+                            { tickSize: "0.01", negRisk: false },
+                        );
+                        expect(signedOrder).not.null;
+                        expect(signedOrder).not.undefined;
+
+                        const jsonFOKOrder = orderToJson(signedOrder, owner, OrderType.FOK);
+                        expect(jsonFOKOrder).not.null;
+                        expect(jsonFOKOrder).not.undefined;
+
+                        expect(jsonFOKOrder).deep.equal({
+                            order: {
+                                salt: parseInt(signedOrder.salt),
+                                maker: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+                                signer: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+                                taker: "0x0000000000000000000000000000000000000000",
+                                tokenId: token,
+                                makerAmount: "100000000",
+                                takerAmount: "2000000000",
+                                side: "BUY",
+                                expiration: "0",
+                                nonce: "0",
+                                feeRateBps: "0",
+                                signatureType: 2,
+                                signature: signedOrder.signature,
+                            },
+                            owner: owner,
+                            orderType: OrderType.FOK,
+                        });
                     });
                 });
 
-                it("GTD BUY POLY_GNOSIS_SAFE", async () => {
-                    const userOrder = {
-                        tokenID: token,
-                        price: 0.5,
-                        side: Side.BUY,
-                        size: 100,
-                        expiration: 1709948026,
-                    };
-                    const signedOrder = await createOrder(
-                        wallet,
-                        chainId,
-                        SignatureType.POLY_GNOSIS_SAFE,
-                        address,
-                        userOrder,
-                        { tickSize: "0.1" },
-                    );
-                    expect(signedOrder).not.null;
-                    expect(signedOrder).not.undefined;
+                describe("0.001", async () => {
+                    // publicly known private key
+                    const token =
+                        "1343197538147866997676250008839231694243646439454152539053893078719042421992";
+                    const privateKey =
+                        "0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80";
+                    const address = "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266";
+                    const wallet = new Wallet(privateKey);
+                    const chainId = Chain.MUMBAI;
+                    const owner = "f4f247b7-4ac7-ff29-a152-04fda0a8755a";
 
-                    const jsonGTDOrder = orderToJson(signedOrder, owner, OrderType.GTD);
-                    expect(jsonGTDOrder).not.null;
-                    expect(jsonGTDOrder).not.undefined;
+                    it("GTD BUY EOA", async () => {
+                        const userOrder: UserOrder = {
+                            tokenID: token,
+                            price: 0.005,
+                            side: Side.BUY,
+                            size: 100,
+                            expiration: 1709948026,
+                        };
+                        const signedOrder = await createOrder(
+                            wallet,
+                            chainId,
+                            SignatureType.EOA,
+                            address,
+                            userOrder,
+                            { tickSize: "0.001", negRisk: false },
+                        );
+                        expect(signedOrder).not.null;
+                        expect(signedOrder).not.undefined;
 
-                    expect(jsonGTDOrder).deep.equal({
-                        order: {
-                            salt: parseInt(signedOrder.salt),
-                            maker: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
-                            signer: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
-                            taker: "0x0000000000000000000000000000000000000000",
-                            tokenId: token,
-                            makerAmount: "50000000",
-                            takerAmount: "100000000",
-                            side: "BUY",
-                            expiration: "1709948026",
-                            nonce: "0",
-                            feeRateBps: "0",
-                            signatureType: 2,
-                            signature: signedOrder.signature,
-                        },
-                        owner: owner,
-                        orderType: OrderType.GTD,
+                        const jsonGTDOrder = orderToJson(signedOrder, owner, OrderType.GTD);
+                        expect(jsonGTDOrder).not.null;
+                        expect(jsonGTDOrder).not.undefined;
+
+                        expect(jsonGTDOrder).deep.equal({
+                            order: {
+                                salt: parseInt(signedOrder.salt),
+                                maker: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+                                signer: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+                                taker: "0x0000000000000000000000000000000000000000",
+                                tokenId: token,
+                                makerAmount: "500000",
+                                takerAmount: "100000000",
+                                side: "BUY",
+                                expiration: "1709948026",
+                                nonce: "0",
+                                feeRateBps: "0",
+                                signatureType: 0,
+                                signature: signedOrder.signature,
+                            },
+                            owner: owner,
+                            orderType: OrderType.GTD,
+                        });
+                    });
+
+                    it("GTD BUY POLY_PROXY", async () => {
+                        const userOrder = {
+                            tokenID: token,
+                            price: 0.005,
+                            side: Side.BUY,
+                            size: 100,
+                            expiration: 1709948026,
+                        };
+                        const signedOrder = await createOrder(
+                            wallet,
+                            chainId,
+                            SignatureType.POLY_PROXY,
+                            address,
+                            userOrder,
+                            { tickSize: "0.001", negRisk: false },
+                        );
+                        expect(signedOrder).not.null;
+                        expect(signedOrder).not.undefined;
+
+                        const jsonGTDOrder = orderToJson(signedOrder, owner, OrderType.GTD);
+                        expect(jsonGTDOrder).not.null;
+                        expect(jsonGTDOrder).not.undefined;
+
+                        expect(jsonGTDOrder).deep.equal({
+                            order: {
+                                salt: parseInt(signedOrder.salt),
+                                maker: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+                                signer: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+                                taker: "0x0000000000000000000000000000000000000000",
+                                tokenId: token,
+                                makerAmount: "500000",
+                                takerAmount: "100000000",
+                                side: "BUY",
+                                expiration: "1709948026",
+                                nonce: "0",
+                                feeRateBps: "0",
+                                signatureType: 1,
+                                signature: signedOrder.signature,
+                            },
+                            owner: owner,
+                            orderType: OrderType.GTD,
+                        });
+                    });
+
+                    it("GTD BUY POLY_GNOSIS_SAFE", async () => {
+                        const userOrder = {
+                            tokenID: token,
+                            price: 0.005,
+                            side: Side.BUY,
+                            size: 100,
+                            expiration: 1709948026,
+                        };
+                        const signedOrder = await createOrder(
+                            wallet,
+                            chainId,
+                            SignatureType.POLY_GNOSIS_SAFE,
+                            address,
+                            userOrder,
+                            { tickSize: "0.001", negRisk: false },
+                        );
+                        expect(signedOrder).not.null;
+                        expect(signedOrder).not.undefined;
+
+                        const jsonGTDOrder = orderToJson(signedOrder, owner, OrderType.GTD);
+                        expect(jsonGTDOrder).not.null;
+                        expect(jsonGTDOrder).not.undefined;
+
+                        expect(jsonGTDOrder).deep.equal({
+                            order: {
+                                salt: parseInt(signedOrder.salt),
+                                maker: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+                                signer: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+                                taker: "0x0000000000000000000000000000000000000000",
+                                tokenId: token,
+                                makerAmount: "500000",
+                                takerAmount: "100000000",
+                                side: "BUY",
+                                expiration: "1709948026",
+                                nonce: "0",
+                                feeRateBps: "0",
+                                signatureType: 2,
+                                signature: signedOrder.signature,
+                            },
+                            owner: owner,
+                            orderType: OrderType.GTD,
+                        });
+                    });
+
+                    it("GTD SELL EOA", async () => {
+                        const userOrder = {
+                            tokenID: token,
+                            price: 0.005,
+                            side: Side.SELL,
+                            size: 100,
+                            expiration: 1709948026,
+                        };
+                        const signedOrder = await createOrder(
+                            wallet,
+                            chainId,
+                            SignatureType.EOA,
+                            address,
+                            userOrder,
+                            { tickSize: "0.001", negRisk: false },
+                        );
+                        expect(signedOrder).not.null;
+                        expect(signedOrder).not.undefined;
+
+                        const jsonGTDOrder = orderToJson(signedOrder, owner, OrderType.GTD);
+                        expect(jsonGTDOrder).not.null;
+                        expect(jsonGTDOrder).not.undefined;
+
+                        expect(jsonGTDOrder).deep.equal({
+                            order: {
+                                salt: parseInt(signedOrder.salt),
+                                maker: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+                                signer: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+                                taker: "0x0000000000000000000000000000000000000000",
+                                tokenId: token,
+                                makerAmount: "100000000",
+                                takerAmount: "500000",
+                                side: "SELL",
+                                expiration: "1709948026",
+                                nonce: "0",
+                                feeRateBps: "0",
+                                signatureType: 0,
+                                signature: signedOrder.signature,
+                            },
+                            owner: owner,
+                            orderType: OrderType.GTD,
+                        });
+                    });
+
+                    it("GTD SELL POLY_PROXY", async () => {
+                        const userOrder = {
+                            tokenID: token,
+                            price: 0.005,
+                            side: Side.SELL,
+                            size: 100,
+                            expiration: 1709948026,
+                        };
+                        const signedOrder = await createOrder(
+                            wallet,
+                            chainId,
+                            SignatureType.POLY_PROXY,
+                            address,
+                            userOrder,
+                            { tickSize: "0.001", negRisk: false },
+                        );
+                        expect(signedOrder).not.null;
+                        expect(signedOrder).not.undefined;
+
+                        const jsonGTDOrder = orderToJson(signedOrder, owner, OrderType.GTD);
+                        expect(jsonGTDOrder).not.null;
+                        expect(jsonGTDOrder).not.undefined;
+
+                        expect(jsonGTDOrder).deep.equal({
+                            order: {
+                                salt: parseInt(signedOrder.salt),
+                                maker: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+                                signer: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+                                taker: "0x0000000000000000000000000000000000000000",
+                                tokenId: token,
+                                makerAmount: "100000000",
+                                takerAmount: "500000",
+                                side: "SELL",
+                                expiration: "1709948026",
+                                nonce: "0",
+                                feeRateBps: "0",
+                                signatureType: 1,
+                                signature: signedOrder.signature,
+                            },
+                            owner: owner,
+                            orderType: OrderType.GTD,
+                        });
+                    });
+
+                    it("GTD SELL POLY_GNOSIS_SAFE", async () => {
+                        const userOrder = {
+                            tokenID: token,
+                            price: 0.005,
+                            side: Side.SELL,
+                            size: 100,
+                            expiration: 1709948026,
+                        };
+                        const signedOrder = await createOrder(
+                            wallet,
+                            chainId,
+                            SignatureType.POLY_GNOSIS_SAFE,
+                            address,
+                            userOrder,
+                            { tickSize: "0.001", negRisk: false },
+                        );
+                        expect(signedOrder).not.null;
+                        expect(signedOrder).not.undefined;
+
+                        const jsonGTDOrder = orderToJson(signedOrder, owner, OrderType.GTD);
+                        expect(jsonGTDOrder).not.null;
+                        expect(jsonGTDOrder).not.undefined;
+
+                        expect(jsonGTDOrder).deep.equal({
+                            order: {
+                                salt: parseInt(signedOrder.salt),
+                                maker: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+                                signer: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+                                taker: "0x0000000000000000000000000000000000000000",
+                                tokenId: token,
+                                makerAmount: "100000000",
+                                takerAmount: "500000",
+                                side: "SELL",
+                                expiration: "1709948026",
+                                nonce: "0",
+                                feeRateBps: "0",
+                                signatureType: 2,
+                                signature: signedOrder.signature,
+                            },
+                            owner: owner,
+                            orderType: OrderType.GTD,
+                        });
+                    });
+
+                    it("GTC BUY EOA", async () => {
+                        const userOrder = {
+                            tokenID: token,
+                            price: 0.005,
+                            side: Side.BUY,
+                            size: 100,
+                        };
+                        const signedOrder = await createOrder(
+                            wallet,
+                            chainId,
+                            SignatureType.EOA,
+                            address,
+                            userOrder,
+                            { tickSize: "0.001", negRisk: false },
+                        );
+                        expect(signedOrder).not.null;
+                        expect(signedOrder).not.undefined;
+
+                        const jsonGTCOrder = orderToJson(signedOrder, owner, OrderType.GTC);
+                        expect(jsonGTCOrder).not.null;
+                        expect(jsonGTCOrder).not.undefined;
+
+                        expect(jsonGTCOrder).deep.equal({
+                            order: {
+                                salt: parseInt(signedOrder.salt),
+                                maker: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+                                signer: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+                                taker: "0x0000000000000000000000000000000000000000",
+                                tokenId: token,
+                                makerAmount: "500000",
+                                takerAmount: "100000000",
+                                side: "BUY",
+                                expiration: "0",
+                                nonce: "0",
+                                feeRateBps: "0",
+                                signatureType: 0,
+                                signature: signedOrder.signature,
+                            },
+                            owner: owner,
+                            orderType: OrderType.GTC,
+                        });
+                    });
+
+                    it("GTC BUY POLY_PROXY", async () => {
+                        const userOrder = {
+                            tokenID: token,
+                            price: 0.005,
+                            side: Side.BUY,
+                            size: 100,
+                        };
+                        const signedOrder = await createOrder(
+                            wallet,
+                            chainId,
+                            SignatureType.POLY_PROXY,
+                            address,
+                            userOrder,
+                            { tickSize: "0.001", negRisk: false },
+                        );
+                        expect(signedOrder).not.null;
+                        expect(signedOrder).not.undefined;
+
+                        const jsonGTCOrder = orderToJson(signedOrder, owner, OrderType.GTC);
+                        expect(jsonGTCOrder).not.null;
+                        expect(jsonGTCOrder).not.undefined;
+
+                        expect(jsonGTCOrder).deep.equal({
+                            order: {
+                                salt: parseInt(signedOrder.salt),
+                                maker: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+                                signer: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+                                taker: "0x0000000000000000000000000000000000000000",
+                                tokenId: token,
+                                makerAmount: "500000",
+                                takerAmount: "100000000",
+                                side: "BUY",
+                                expiration: "0",
+                                nonce: "0",
+                                feeRateBps: "0",
+                                signatureType: 1,
+                                signature: signedOrder.signature,
+                            },
+                            owner: owner,
+                            orderType: OrderType.GTC,
+                        });
+                    });
+
+                    it("GTC BUY POLY_GNOSIS_SAFE", async () => {
+                        const userOrder = {
+                            tokenID: token,
+                            price: 0.005,
+                            side: Side.BUY,
+                            size: 100,
+                        };
+                        const signedOrder = await createOrder(
+                            wallet,
+                            chainId,
+                            SignatureType.POLY_GNOSIS_SAFE,
+                            address,
+                            userOrder,
+                            { tickSize: "0.001", negRisk: false },
+                        );
+                        expect(signedOrder).not.null;
+                        expect(signedOrder).not.undefined;
+
+                        const jsonGTCOrder = orderToJson(signedOrder, owner, OrderType.GTC);
+                        expect(jsonGTCOrder).not.null;
+                        expect(jsonGTCOrder).not.undefined;
+
+                        expect(jsonGTCOrder).deep.equal({
+                            order: {
+                                salt: parseInt(signedOrder.salt),
+                                maker: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+                                signer: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+                                taker: "0x0000000000000000000000000000000000000000",
+                                tokenId: token,
+                                makerAmount: "500000",
+                                takerAmount: "100000000",
+                                side: "BUY",
+                                expiration: "0",
+                                nonce: "0",
+                                feeRateBps: "0",
+                                signatureType: 2,
+                                signature: signedOrder.signature,
+                            },
+                            owner: owner,
+                            orderType: OrderType.GTC,
+                        });
+                    });
+
+                    it("GTC SELL EOA", async () => {
+                        const userOrder = {
+                            tokenID: token,
+                            price: 0.005,
+                            side: Side.SELL,
+                            size: 100,
+                        };
+                        const signedOrder = await createOrder(
+                            wallet,
+                            chainId,
+                            SignatureType.EOA,
+                            address,
+                            userOrder,
+                            { tickSize: "0.001", negRisk: false },
+                        );
+                        expect(signedOrder).not.null;
+                        expect(signedOrder).not.undefined;
+
+                        const jsonGTCOrder = orderToJson(signedOrder, owner, OrderType.GTC);
+                        expect(jsonGTCOrder).not.null;
+                        expect(jsonGTCOrder).not.undefined;
+
+                        expect(jsonGTCOrder).deep.equal({
+                            order: {
+                                salt: parseInt(signedOrder.salt),
+                                maker: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+                                signer: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+                                taker: "0x0000000000000000000000000000000000000000",
+                                tokenId: token,
+                                makerAmount: "100000000",
+                                takerAmount: "500000",
+                                side: "SELL",
+                                expiration: "0",
+                                nonce: "0",
+                                feeRateBps: "0",
+                                signatureType: 0,
+                                signature: signedOrder.signature,
+                            },
+                            owner: owner,
+                            orderType: OrderType.GTC,
+                        });
+                    });
+
+                    it("GTC SELL POLY_PROXY", async () => {
+                        const userOrder = {
+                            tokenID: token,
+                            price: 0.005,
+                            side: Side.SELL,
+                            size: 100,
+                        };
+                        const signedOrder = await createOrder(
+                            wallet,
+                            chainId,
+                            SignatureType.POLY_PROXY,
+                            address,
+                            userOrder,
+                            { tickSize: "0.001", negRisk: false },
+                        );
+                        expect(signedOrder).not.null;
+                        expect(signedOrder).not.undefined;
+
+                        const jsonGTCOrder = orderToJson(signedOrder, owner, OrderType.GTC);
+                        expect(jsonGTCOrder).not.null;
+                        expect(jsonGTCOrder).not.undefined;
+
+                        expect(jsonGTCOrder).deep.equal({
+                            order: {
+                                salt: parseInt(signedOrder.salt),
+                                maker: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+                                signer: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+                                taker: "0x0000000000000000000000000000000000000000",
+                                tokenId: token,
+                                makerAmount: "100000000",
+                                takerAmount: "500000",
+                                side: "SELL",
+                                expiration: "0",
+                                nonce: "0",
+                                feeRateBps: "0",
+                                signatureType: 1,
+                                signature: signedOrder.signature,
+                            },
+                            owner: owner,
+                            orderType: OrderType.GTC,
+                        });
+                    });
+
+                    it("GTC SELL POLY_GNOSIS_SAFE", async () => {
+                        const userOrder = {
+                            tokenID: token,
+                            price: 0.005,
+                            side: Side.SELL,
+                            size: 100,
+                        };
+                        const signedOrder = await createOrder(
+                            wallet,
+                            chainId,
+                            SignatureType.POLY_GNOSIS_SAFE,
+                            address,
+                            userOrder,
+                            { tickSize: "0.001", negRisk: false },
+                        );
+                        expect(signedOrder).not.null;
+                        expect(signedOrder).not.undefined;
+
+                        const jsonGTCOrder = orderToJson(signedOrder, owner, OrderType.GTC);
+                        expect(jsonGTCOrder).not.null;
+                        expect(jsonGTCOrder).not.undefined;
+
+                        expect(jsonGTCOrder).deep.equal({
+                            order: {
+                                salt: parseInt(signedOrder.salt),
+                                maker: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+                                signer: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+                                taker: "0x0000000000000000000000000000000000000000",
+                                tokenId: token,
+                                makerAmount: "100000000",
+                                takerAmount: "500000",
+                                side: "SELL",
+                                expiration: "0",
+                                nonce: "0",
+                                feeRateBps: "0",
+                                signatureType: 2,
+                                signature: signedOrder.signature,
+                            },
+                            owner: owner,
+                            orderType: OrderType.GTC,
+                        });
+                    });
+
+                    it("FOK BUY EOA", async () => {
+                        const userMarketOrder: UserMarketOrder = {
+                            tokenID: token,
+                            price: 0.005,
+                            amount: 100,
+                        };
+                        const signedOrder = await createMarketBuyOrder(
+                            wallet,
+                            chainId,
+                            SignatureType.EOA,
+                            address,
+                            userMarketOrder,
+                            { tickSize: "0.001", negRisk: false },
+                        );
+                        expect(signedOrder).not.null;
+                        expect(signedOrder).not.undefined;
+
+                        const jsonFOKOrder = orderToJson(signedOrder, owner, OrderType.FOK);
+                        expect(jsonFOKOrder).not.null;
+                        expect(jsonFOKOrder).not.undefined;
+
+                        expect(jsonFOKOrder).deep.equal({
+                            order: {
+                                salt: parseInt(signedOrder.salt),
+                                maker: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+                                signer: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+                                taker: "0x0000000000000000000000000000000000000000",
+                                tokenId: token,
+                                makerAmount: "100000000",
+                                takerAmount: "20000000000",
+                                side: "BUY",
+                                expiration: "0",
+                                nonce: "0",
+                                feeRateBps: "0",
+                                signatureType: 0,
+                                signature: signedOrder.signature,
+                            },
+                            owner: owner,
+                            orderType: OrderType.FOK,
+                        });
+                    });
+
+                    it("FOK BUY POLY_PROXY", async () => {
+                        const userMarketOrder = {
+                            tokenID: token,
+                            price: 0.005,
+                            amount: 100,
+                        };
+                        const signedOrder = await createMarketBuyOrder(
+                            wallet,
+                            chainId,
+                            SignatureType.POLY_PROXY,
+                            address,
+                            userMarketOrder,
+                            { tickSize: "0.001", negRisk: false },
+                        );
+                        expect(signedOrder).not.null;
+                        expect(signedOrder).not.undefined;
+
+                        const jsonFOKOrder = orderToJson(signedOrder, owner, OrderType.FOK);
+                        expect(jsonFOKOrder).not.null;
+                        expect(jsonFOKOrder).not.undefined;
+
+                        expect(jsonFOKOrder).deep.equal({
+                            order: {
+                                salt: parseInt(signedOrder.salt),
+                                maker: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+                                signer: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+                                taker: "0x0000000000000000000000000000000000000000",
+                                tokenId: token,
+                                makerAmount: "100000000",
+                                takerAmount: "20000000000",
+                                side: "BUY",
+                                expiration: "0",
+                                nonce: "0",
+                                feeRateBps: "0",
+                                signatureType: 1,
+                                signature: signedOrder.signature,
+                            },
+                            owner: owner,
+                            orderType: OrderType.FOK,
+                        });
+                    });
+
+                    it("FOK BUY POLY_GNOSIS_SAFE", async () => {
+                        const userMarketOrder = {
+                            tokenID: token,
+                            price: 0.005,
+                            amount: 100,
+                        };
+                        const signedOrder = await createMarketBuyOrder(
+                            wallet,
+                            chainId,
+                            SignatureType.POLY_GNOSIS_SAFE,
+                            address,
+                            userMarketOrder,
+                            { tickSize: "0.001", negRisk: false },
+                        );
+                        expect(signedOrder).not.null;
+                        expect(signedOrder).not.undefined;
+
+                        const jsonFOKOrder = orderToJson(signedOrder, owner, OrderType.FOK);
+                        expect(jsonFOKOrder).not.null;
+                        expect(jsonFOKOrder).not.undefined;
+
+                        expect(jsonFOKOrder).deep.equal({
+                            order: {
+                                salt: parseInt(signedOrder.salt),
+                                maker: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+                                signer: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+                                taker: "0x0000000000000000000000000000000000000000",
+                                tokenId: token,
+                                makerAmount: "100000000",
+                                takerAmount: "20000000000",
+                                side: "BUY",
+                                expiration: "0",
+                                nonce: "0",
+                                feeRateBps: "0",
+                                signatureType: 2,
+                                signature: signedOrder.signature,
+                            },
+                            owner: owner,
+                            orderType: OrderType.FOK,
+                        });
                     });
                 });
 
-                it("GTD SELL EOA", async () => {
-                    const userOrder = {
-                        tokenID: token,
-                        price: 0.5,
-                        side: Side.SELL,
-                        size: 100,
-                        expiration: 1709948026,
-                    };
-                    const signedOrder = await createOrder(
-                        wallet,
-                        chainId,
-                        SignatureType.EOA,
-                        address,
-                        userOrder,
-                        { tickSize: "0.1" },
-                    );
-                    expect(signedOrder).not.null;
-                    expect(signedOrder).not.undefined;
+                describe("0.0001", async () => {
+                    // publicly known private key
+                    const token =
+                        "1343197538147866997676250008839231694243646439454152539053893078719042421992";
+                    const privateKey =
+                        "0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80";
+                    const address = "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266";
+                    const wallet = new Wallet(privateKey);
+                    const chainId = Chain.MUMBAI;
+                    const owner = "f4f247b7-4ac7-ff29-a152-04fda0a8755a";
 
-                    const jsonGTDOrder = orderToJson(signedOrder, owner, OrderType.GTD);
-                    expect(jsonGTDOrder).not.null;
-                    expect(jsonGTDOrder).not.undefined;
+                    it("GTD BUY EOA", async () => {
+                        const userOrder: UserOrder = {
+                            tokenID: token,
+                            price: 0.0005,
+                            side: Side.BUY,
+                            size: 100,
+                            expiration: 1709948026,
+                        };
+                        const signedOrder = await createOrder(
+                            wallet,
+                            chainId,
+                            SignatureType.EOA,
+                            address,
+                            userOrder,
+                            { tickSize: "0.0001", negRisk: false },
+                        );
+                        expect(signedOrder).not.null;
+                        expect(signedOrder).not.undefined;
 
-                    expect(jsonGTDOrder).deep.equal({
-                        order: {
-                            salt: parseInt(signedOrder.salt),
-                            maker: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
-                            signer: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
-                            taker: "0x0000000000000000000000000000000000000000",
-                            tokenId: token,
-                            makerAmount: "100000000",
-                            takerAmount: "50000000",
-                            side: "SELL",
-                            expiration: "1709948026",
-                            nonce: "0",
-                            feeRateBps: "0",
-                            signatureType: 0,
-                            signature: signedOrder.signature,
-                        },
-                        owner: owner,
-                        orderType: OrderType.GTD,
+                        const jsonGTDOrder = orderToJson(signedOrder, owner, OrderType.GTD);
+                        expect(jsonGTDOrder).not.null;
+                        expect(jsonGTDOrder).not.undefined;
+
+                        expect(jsonGTDOrder).deep.equal({
+                            order: {
+                                salt: parseInt(signedOrder.salt),
+                                maker: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+                                signer: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+                                taker: "0x0000000000000000000000000000000000000000",
+                                tokenId: token,
+                                makerAmount: "50000",
+                                takerAmount: "100000000",
+                                side: "BUY",
+                                expiration: "1709948026",
+                                nonce: "0",
+                                feeRateBps: "0",
+                                signatureType: 0,
+                                signature: signedOrder.signature,
+                            },
+                            owner: owner,
+                            orderType: OrderType.GTD,
+                        });
                     });
-                });
 
-                it("GTD SELL POLY_PROXY", async () => {
-                    const userOrder = {
-                        tokenID: token,
-                        price: 0.5,
-                        side: Side.SELL,
-                        size: 100,
-                        expiration: 1709948026,
-                    };
-                    const signedOrder = await createOrder(
-                        wallet,
-                        chainId,
-                        SignatureType.POLY_PROXY,
-                        address,
-                        userOrder,
-                        { tickSize: "0.1" },
-                    );
-                    expect(signedOrder).not.null;
-                    expect(signedOrder).not.undefined;
+                    it("GTD BUY POLY_PROXY", async () => {
+                        const userOrder = {
+                            tokenID: token,
+                            price: 0.0005,
+                            side: Side.BUY,
+                            size: 100,
+                            expiration: 1709948026,
+                        };
+                        const signedOrder = await createOrder(
+                            wallet,
+                            chainId,
+                            SignatureType.POLY_PROXY,
+                            address,
+                            userOrder,
+                            { tickSize: "0.0001", negRisk: false },
+                        );
+                        expect(signedOrder).not.null;
+                        expect(signedOrder).not.undefined;
 
-                    const jsonGTDOrder = orderToJson(signedOrder, owner, OrderType.GTD);
-                    expect(jsonGTDOrder).not.null;
-                    expect(jsonGTDOrder).not.undefined;
+                        const jsonGTDOrder = orderToJson(signedOrder, owner, OrderType.GTD);
+                        expect(jsonGTDOrder).not.null;
+                        expect(jsonGTDOrder).not.undefined;
 
-                    expect(jsonGTDOrder).deep.equal({
-                        order: {
-                            salt: parseInt(signedOrder.salt),
-                            maker: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
-                            signer: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
-                            taker: "0x0000000000000000000000000000000000000000",
-                            tokenId: token,
-                            makerAmount: "100000000",
-                            takerAmount: "50000000",
-                            side: "SELL",
-                            expiration: "1709948026",
-                            nonce: "0",
-                            feeRateBps: "0",
-                            signatureType: 1,
-                            signature: signedOrder.signature,
-                        },
-                        owner: owner,
-                        orderType: OrderType.GTD,
+                        expect(jsonGTDOrder).deep.equal({
+                            order: {
+                                salt: parseInt(signedOrder.salt),
+                                maker: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+                                signer: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+                                taker: "0x0000000000000000000000000000000000000000",
+                                tokenId: token,
+                                makerAmount: "50000",
+                                takerAmount: "100000000",
+                                side: "BUY",
+                                expiration: "1709948026",
+                                nonce: "0",
+                                feeRateBps: "0",
+                                signatureType: 1,
+                                signature: signedOrder.signature,
+                            },
+                            owner: owner,
+                            orderType: OrderType.GTD,
+                        });
                     });
-                });
 
-                it("GTD SELL POLY_GNOSIS_SAFE", async () => {
-                    const userOrder = {
-                        tokenID: token,
-                        price: 0.5,
-                        side: Side.SELL,
-                        size: 100,
-                        expiration: 1709948026,
-                    };
-                    const signedOrder = await createOrder(
-                        wallet,
-                        chainId,
-                        SignatureType.POLY_GNOSIS_SAFE,
-                        address,
-                        userOrder,
-                        { tickSize: "0.1" },
-                    );
-                    expect(signedOrder).not.null;
-                    expect(signedOrder).not.undefined;
+                    it("GTD BUY POLY_GNOSIS_SAFE", async () => {
+                        const userOrder = {
+                            tokenID: token,
+                            price: 0.0005,
+                            side: Side.BUY,
+                            size: 100,
+                            expiration: 1709948026,
+                        };
+                        const signedOrder = await createOrder(
+                            wallet,
+                            chainId,
+                            SignatureType.POLY_GNOSIS_SAFE,
+                            address,
+                            userOrder,
+                            { tickSize: "0.0001", negRisk: false },
+                        );
+                        expect(signedOrder).not.null;
+                        expect(signedOrder).not.undefined;
 
-                    const jsonGTDOrder = orderToJson(signedOrder, owner, OrderType.GTD);
-                    expect(jsonGTDOrder).not.null;
-                    expect(jsonGTDOrder).not.undefined;
+                        const jsonGTDOrder = orderToJson(signedOrder, owner, OrderType.GTD);
+                        expect(jsonGTDOrder).not.null;
+                        expect(jsonGTDOrder).not.undefined;
 
-                    expect(jsonGTDOrder).deep.equal({
-                        order: {
-                            salt: parseInt(signedOrder.salt),
-                            maker: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
-                            signer: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
-                            taker: "0x0000000000000000000000000000000000000000",
-                            tokenId: token,
-                            makerAmount: "100000000",
-                            takerAmount: "50000000",
-                            side: "SELL",
-                            expiration: "1709948026",
-                            nonce: "0",
-                            feeRateBps: "0",
-                            signatureType: 2,
-                            signature: signedOrder.signature,
-                        },
-                        owner: owner,
-                        orderType: OrderType.GTD,
+                        expect(jsonGTDOrder).deep.equal({
+                            order: {
+                                salt: parseInt(signedOrder.salt),
+                                maker: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+                                signer: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+                                taker: "0x0000000000000000000000000000000000000000",
+                                tokenId: token,
+                                makerAmount: "50000",
+                                takerAmount: "100000000",
+                                side: "BUY",
+                                expiration: "1709948026",
+                                nonce: "0",
+                                feeRateBps: "0",
+                                signatureType: 2,
+                                signature: signedOrder.signature,
+                            },
+                            owner: owner,
+                            orderType: OrderType.GTD,
+                        });
                     });
-                });
 
-                it("GTC BUY EOA", async () => {
-                    const userOrder = {
-                        tokenID: token,
-                        price: 0.5,
-                        side: Side.BUY,
-                        size: 100,
-                    };
-                    const signedOrder = await createOrder(
-                        wallet,
-                        chainId,
-                        SignatureType.EOA,
-                        address,
-                        userOrder,
-                        { tickSize: "0.1" },
-                    );
-                    expect(signedOrder).not.null;
-                    expect(signedOrder).not.undefined;
+                    it("GTD SELL EOA", async () => {
+                        const userOrder = {
+                            tokenID: token,
+                            price: 0.0005,
+                            side: Side.SELL,
+                            size: 100,
+                            expiration: 1709948026,
+                        };
+                        const signedOrder = await createOrder(
+                            wallet,
+                            chainId,
+                            SignatureType.EOA,
+                            address,
+                            userOrder,
+                            { tickSize: "0.0001", negRisk: false },
+                        );
+                        expect(signedOrder).not.null;
+                        expect(signedOrder).not.undefined;
 
-                    const jsonGTCOrder = orderToJson(signedOrder, owner, OrderType.GTC);
-                    expect(jsonGTCOrder).not.null;
-                    expect(jsonGTCOrder).not.undefined;
+                        const jsonGTDOrder = orderToJson(signedOrder, owner, OrderType.GTD);
+                        expect(jsonGTDOrder).not.null;
+                        expect(jsonGTDOrder).not.undefined;
 
-                    expect(jsonGTCOrder).deep.equal({
-                        order: {
-                            salt: parseInt(signedOrder.salt),
-                            maker: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
-                            signer: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
-                            taker: "0x0000000000000000000000000000000000000000",
-                            tokenId: token,
-                            makerAmount: "50000000",
-                            takerAmount: "100000000",
-                            side: "BUY",
-                            expiration: "0",
-                            nonce: "0",
-                            feeRateBps: "0",
-                            signatureType: 0,
-                            signature: signedOrder.signature,
-                        },
-                        owner: owner,
-                        orderType: OrderType.GTC,
+                        expect(jsonGTDOrder).deep.equal({
+                            order: {
+                                salt: parseInt(signedOrder.salt),
+                                maker: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+                                signer: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+                                taker: "0x0000000000000000000000000000000000000000",
+                                tokenId: token,
+                                makerAmount: "100000000",
+                                takerAmount: "50000",
+                                side: "SELL",
+                                expiration: "1709948026",
+                                nonce: "0",
+                                feeRateBps: "0",
+                                signatureType: 0,
+                                signature: signedOrder.signature,
+                            },
+                            owner: owner,
+                            orderType: OrderType.GTD,
+                        });
                     });
-                });
 
-                it("GTC BUY POLY_PROXY", async () => {
-                    const userOrder = {
-                        tokenID: token,
-                        price: 0.5,
-                        side: Side.BUY,
-                        size: 100,
-                    };
-                    const signedOrder = await createOrder(
-                        wallet,
-                        chainId,
-                        SignatureType.POLY_PROXY,
-                        address,
-                        userOrder,
-                        { tickSize: "0.1" },
-                    );
-                    expect(signedOrder).not.null;
-                    expect(signedOrder).not.undefined;
+                    it("GTD SELL POLY_PROXY", async () => {
+                        const userOrder = {
+                            tokenID: token,
+                            price: 0.0005,
+                            side: Side.SELL,
+                            size: 100,
+                            expiration: 1709948026,
+                        };
+                        const signedOrder = await createOrder(
+                            wallet,
+                            chainId,
+                            SignatureType.POLY_PROXY,
+                            address,
+                            userOrder,
+                            { tickSize: "0.0001", negRisk: false },
+                        );
+                        expect(signedOrder).not.null;
+                        expect(signedOrder).not.undefined;
 
-                    const jsonGTCOrder = orderToJson(signedOrder, owner, OrderType.GTC);
-                    expect(jsonGTCOrder).not.null;
-                    expect(jsonGTCOrder).not.undefined;
+                        const jsonGTDOrder = orderToJson(signedOrder, owner, OrderType.GTD);
+                        expect(jsonGTDOrder).not.null;
+                        expect(jsonGTDOrder).not.undefined;
 
-                    expect(jsonGTCOrder).deep.equal({
-                        order: {
-                            salt: parseInt(signedOrder.salt),
-                            maker: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
-                            signer: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
-                            taker: "0x0000000000000000000000000000000000000000",
-                            tokenId: token,
-                            makerAmount: "50000000",
-                            takerAmount: "100000000",
-                            side: "BUY",
-                            expiration: "0",
-                            nonce: "0",
-                            feeRateBps: "0",
-                            signatureType: 1,
-                            signature: signedOrder.signature,
-                        },
-                        owner: owner,
-                        orderType: OrderType.GTC,
+                        expect(jsonGTDOrder).deep.equal({
+                            order: {
+                                salt: parseInt(signedOrder.salt),
+                                maker: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+                                signer: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+                                taker: "0x0000000000000000000000000000000000000000",
+                                tokenId: token,
+                                makerAmount: "100000000",
+                                takerAmount: "50000",
+                                side: "SELL",
+                                expiration: "1709948026",
+                                nonce: "0",
+                                feeRateBps: "0",
+                                signatureType: 1,
+                                signature: signedOrder.signature,
+                            },
+                            owner: owner,
+                            orderType: OrderType.GTD,
+                        });
                     });
-                });
 
-                it("GTC BUY POLY_GNOSIS_SAFE", async () => {
-                    const userOrder = {
-                        tokenID: token,
-                        price: 0.5,
-                        side: Side.BUY,
-                        size: 100,
-                    };
-                    const signedOrder = await createOrder(
-                        wallet,
-                        chainId,
-                        SignatureType.POLY_GNOSIS_SAFE,
-                        address,
-                        userOrder,
-                        { tickSize: "0.1" },
-                    );
-                    expect(signedOrder).not.null;
-                    expect(signedOrder).not.undefined;
+                    it("GTD SELL POLY_GNOSIS_SAFE", async () => {
+                        const userOrder = {
+                            tokenID: token,
+                            price: 0.0005,
+                            side: Side.SELL,
+                            size: 100,
+                            expiration: 1709948026,
+                        };
+                        const signedOrder = await createOrder(
+                            wallet,
+                            chainId,
+                            SignatureType.POLY_GNOSIS_SAFE,
+                            address,
+                            userOrder,
+                            { tickSize: "0.0001", negRisk: false },
+                        );
+                        expect(signedOrder).not.null;
+                        expect(signedOrder).not.undefined;
 
-                    const jsonGTCOrder = orderToJson(signedOrder, owner, OrderType.GTC);
-                    expect(jsonGTCOrder).not.null;
-                    expect(jsonGTCOrder).not.undefined;
+                        const jsonGTDOrder = orderToJson(signedOrder, owner, OrderType.GTD);
+                        expect(jsonGTDOrder).not.null;
+                        expect(jsonGTDOrder).not.undefined;
 
-                    expect(jsonGTCOrder).deep.equal({
-                        order: {
-                            salt: parseInt(signedOrder.salt),
-                            maker: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
-                            signer: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
-                            taker: "0x0000000000000000000000000000000000000000",
-                            tokenId: token,
-                            makerAmount: "50000000",
-                            takerAmount: "100000000",
-                            side: "BUY",
-                            expiration: "0",
-                            nonce: "0",
-                            feeRateBps: "0",
-                            signatureType: 2,
-                            signature: signedOrder.signature,
-                        },
-                        owner: owner,
-                        orderType: OrderType.GTC,
+                        expect(jsonGTDOrder).deep.equal({
+                            order: {
+                                salt: parseInt(signedOrder.salt),
+                                maker: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+                                signer: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+                                taker: "0x0000000000000000000000000000000000000000",
+                                tokenId: token,
+                                makerAmount: "100000000",
+                                takerAmount: "50000",
+                                side: "SELL",
+                                expiration: "1709948026",
+                                nonce: "0",
+                                feeRateBps: "0",
+                                signatureType: 2,
+                                signature: signedOrder.signature,
+                            },
+                            owner: owner,
+                            orderType: OrderType.GTD,
+                        });
                     });
-                });
 
-                it("GTC SELL EOA", async () => {
-                    const userOrder = {
-                        tokenID: token,
-                        price: 0.5,
-                        side: Side.SELL,
-                        size: 100,
-                    };
-                    const signedOrder = await createOrder(
-                        wallet,
-                        chainId,
-                        SignatureType.EOA,
-                        address,
-                        userOrder,
-                        { tickSize: "0.1" },
-                    );
-                    expect(signedOrder).not.null;
-                    expect(signedOrder).not.undefined;
+                    it("GTC BUY EOA", async () => {
+                        const userOrder = {
+                            tokenID: token,
+                            price: 0.0005,
+                            side: Side.BUY,
+                            size: 100,
+                        };
+                        const signedOrder = await createOrder(
+                            wallet,
+                            chainId,
+                            SignatureType.EOA,
+                            address,
+                            userOrder,
+                            { tickSize: "0.0001", negRisk: false },
+                        );
+                        expect(signedOrder).not.null;
+                        expect(signedOrder).not.undefined;
 
-                    const jsonGTCOrder = orderToJson(signedOrder, owner, OrderType.GTC);
-                    expect(jsonGTCOrder).not.null;
-                    expect(jsonGTCOrder).not.undefined;
+                        const jsonGTCOrder = orderToJson(signedOrder, owner, OrderType.GTC);
+                        expect(jsonGTCOrder).not.null;
+                        expect(jsonGTCOrder).not.undefined;
 
-                    expect(jsonGTCOrder).deep.equal({
-                        order: {
-                            salt: parseInt(signedOrder.salt),
-                            maker: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
-                            signer: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
-                            taker: "0x0000000000000000000000000000000000000000",
-                            tokenId: token,
-                            makerAmount: "100000000",
-                            takerAmount: "50000000",
-                            side: "SELL",
-                            expiration: "0",
-                            nonce: "0",
-                            feeRateBps: "0",
-                            signatureType: 0,
-                            signature: signedOrder.signature,
-                        },
-                        owner: owner,
-                        orderType: OrderType.GTC,
+                        expect(jsonGTCOrder).deep.equal({
+                            order: {
+                                salt: parseInt(signedOrder.salt),
+                                maker: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+                                signer: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+                                taker: "0x0000000000000000000000000000000000000000",
+                                tokenId: token,
+                                makerAmount: "50000",
+                                takerAmount: "100000000",
+                                side: "BUY",
+                                expiration: "0",
+                                nonce: "0",
+                                feeRateBps: "0",
+                                signatureType: 0,
+                                signature: signedOrder.signature,
+                            },
+                            owner: owner,
+                            orderType: OrderType.GTC,
+                        });
                     });
-                });
 
-                it("GTC SELL POLY_PROXY", async () => {
-                    const userOrder = {
-                        tokenID: token,
-                        price: 0.5,
-                        side: Side.SELL,
-                        size: 100,
-                    };
-                    const signedOrder = await createOrder(
-                        wallet,
-                        chainId,
-                        SignatureType.POLY_PROXY,
-                        address,
-                        userOrder,
-                        { tickSize: "0.1" },
-                    );
-                    expect(signedOrder).not.null;
-                    expect(signedOrder).not.undefined;
+                    it("GTC BUY POLY_PROXY", async () => {
+                        const userOrder = {
+                            tokenID: token,
+                            price: 0.0005,
+                            side: Side.BUY,
+                            size: 100,
+                        };
+                        const signedOrder = await createOrder(
+                            wallet,
+                            chainId,
+                            SignatureType.POLY_PROXY,
+                            address,
+                            userOrder,
+                            { tickSize: "0.0001", negRisk: false },
+                        );
+                        expect(signedOrder).not.null;
+                        expect(signedOrder).not.undefined;
 
-                    const jsonGTCOrder = orderToJson(signedOrder, owner, OrderType.GTC);
-                    expect(jsonGTCOrder).not.null;
-                    expect(jsonGTCOrder).not.undefined;
+                        const jsonGTCOrder = orderToJson(signedOrder, owner, OrderType.GTC);
+                        expect(jsonGTCOrder).not.null;
+                        expect(jsonGTCOrder).not.undefined;
 
-                    expect(jsonGTCOrder).deep.equal({
-                        order: {
-                            salt: parseInt(signedOrder.salt),
-                            maker: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
-                            signer: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
-                            taker: "0x0000000000000000000000000000000000000000",
-                            tokenId: token,
-                            makerAmount: "100000000",
-                            takerAmount: "50000000",
-                            side: "SELL",
-                            expiration: "0",
-                            nonce: "0",
-                            feeRateBps: "0",
-                            signatureType: 1,
-                            signature: signedOrder.signature,
-                        },
-                        owner: owner,
-                        orderType: OrderType.GTC,
+                        expect(jsonGTCOrder).deep.equal({
+                            order: {
+                                salt: parseInt(signedOrder.salt),
+                                maker: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+                                signer: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+                                taker: "0x0000000000000000000000000000000000000000",
+                                tokenId: token,
+                                makerAmount: "50000",
+                                takerAmount: "100000000",
+                                side: "BUY",
+                                expiration: "0",
+                                nonce: "0",
+                                feeRateBps: "0",
+                                signatureType: 1,
+                                signature: signedOrder.signature,
+                            },
+                            owner: owner,
+                            orderType: OrderType.GTC,
+                        });
                     });
-                });
 
-                it("GTC SELL POLY_GNOSIS_SAFE", async () => {
-                    const userOrder = {
-                        tokenID: token,
-                        price: 0.5,
-                        side: Side.SELL,
-                        size: 100,
-                    };
-                    const signedOrder = await createOrder(
-                        wallet,
-                        chainId,
-                        SignatureType.POLY_GNOSIS_SAFE,
-                        address,
-                        userOrder,
-                        { tickSize: "0.1" },
-                    );
-                    expect(signedOrder).not.null;
-                    expect(signedOrder).not.undefined;
+                    it("GTC BUY POLY_GNOSIS_SAFE", async () => {
+                        const userOrder = {
+                            tokenID: token,
+                            price: 0.0005,
+                            side: Side.BUY,
+                            size: 100,
+                        };
+                        const signedOrder = await createOrder(
+                            wallet,
+                            chainId,
+                            SignatureType.POLY_GNOSIS_SAFE,
+                            address,
+                            userOrder,
+                            { tickSize: "0.0001", negRisk: false },
+                        );
+                        expect(signedOrder).not.null;
+                        expect(signedOrder).not.undefined;
 
-                    const jsonGTCOrder = orderToJson(signedOrder, owner, OrderType.GTC);
-                    expect(jsonGTCOrder).not.null;
-                    expect(jsonGTCOrder).not.undefined;
+                        const jsonGTCOrder = orderToJson(signedOrder, owner, OrderType.GTC);
+                        expect(jsonGTCOrder).not.null;
+                        expect(jsonGTCOrder).not.undefined;
 
-                    expect(jsonGTCOrder).deep.equal({
-                        order: {
-                            salt: parseInt(signedOrder.salt),
-                            maker: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
-                            signer: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
-                            taker: "0x0000000000000000000000000000000000000000",
-                            tokenId: token,
-                            makerAmount: "100000000",
-                            takerAmount: "50000000",
-                            side: "SELL",
-                            expiration: "0",
-                            nonce: "0",
-                            feeRateBps: "0",
-                            signatureType: 2,
-                            signature: signedOrder.signature,
-                        },
-                        owner: owner,
-                        orderType: OrderType.GTC,
+                        expect(jsonGTCOrder).deep.equal({
+                            order: {
+                                salt: parseInt(signedOrder.salt),
+                                maker: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+                                signer: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+                                taker: "0x0000000000000000000000000000000000000000",
+                                tokenId: token,
+                                makerAmount: "50000",
+                                takerAmount: "100000000",
+                                side: "BUY",
+                                expiration: "0",
+                                nonce: "0",
+                                feeRateBps: "0",
+                                signatureType: 2,
+                                signature: signedOrder.signature,
+                            },
+                            owner: owner,
+                            orderType: OrderType.GTC,
+                        });
                     });
-                });
 
-                it("FOK BUY EOA", async () => {
-                    const userMarketOrder: UserMarketOrder = {
-                        tokenID: token,
-                        price: 0.5,
-                        amount: 100,
-                    };
-                    const signedOrder = await createMarketBuyOrder(
-                        wallet,
-                        chainId,
-                        SignatureType.EOA,
-                        address,
-                        userMarketOrder,
-                        { tickSize: "0.1" },
-                    );
-                    expect(signedOrder).not.null;
-                    expect(signedOrder).not.undefined;
+                    it("GTC SELL EOA", async () => {
+                        const userOrder = {
+                            tokenID: token,
+                            price: 0.0005,
+                            side: Side.SELL,
+                            size: 100,
+                        };
+                        const signedOrder = await createOrder(
+                            wallet,
+                            chainId,
+                            SignatureType.EOA,
+                            address,
+                            userOrder,
+                            { tickSize: "0.0001", negRisk: false },
+                        );
+                        expect(signedOrder).not.null;
+                        expect(signedOrder).not.undefined;
 
-                    const jsonFOKOrder = orderToJson(signedOrder, owner, OrderType.FOK);
-                    expect(jsonFOKOrder).not.null;
-                    expect(jsonFOKOrder).not.undefined;
+                        const jsonGTCOrder = orderToJson(signedOrder, owner, OrderType.GTC);
+                        expect(jsonGTCOrder).not.null;
+                        expect(jsonGTCOrder).not.undefined;
 
-                    expect(jsonFOKOrder).deep.equal({
-                        order: {
-                            salt: parseInt(signedOrder.salt),
-                            maker: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
-                            signer: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
-                            taker: "0x0000000000000000000000000000000000000000",
-                            tokenId: token,
-                            makerAmount: "100000000",
-                            takerAmount: "200000000",
-                            side: "BUY",
-                            expiration: "0",
-                            nonce: "0",
-                            feeRateBps: "0",
-                            signatureType: 0,
-                            signature: signedOrder.signature,
-                        },
-                        owner: owner,
-                        orderType: OrderType.FOK,
+                        expect(jsonGTCOrder).deep.equal({
+                            order: {
+                                salt: parseInt(signedOrder.salt),
+                                maker: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+                                signer: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+                                taker: "0x0000000000000000000000000000000000000000",
+                                tokenId: token,
+                                makerAmount: "100000000",
+                                takerAmount: "50000",
+                                side: "SELL",
+                                expiration: "0",
+                                nonce: "0",
+                                feeRateBps: "0",
+                                signatureType: 0,
+                                signature: signedOrder.signature,
+                            },
+                            owner: owner,
+                            orderType: OrderType.GTC,
+                        });
                     });
-                });
 
-                it("FOK BUY POLY_PROXY", async () => {
-                    const userMarketOrder = {
-                        tokenID: token,
-                        price: 0.5,
-                        amount: 100,
-                    };
-                    const signedOrder = await createMarketBuyOrder(
-                        wallet,
-                        chainId,
-                        SignatureType.POLY_PROXY,
-                        address,
-                        userMarketOrder,
-                        { tickSize: "0.1" },
-                    );
-                    expect(signedOrder).not.null;
-                    expect(signedOrder).not.undefined;
+                    it("GTC SELL POLY_PROXY", async () => {
+                        const userOrder = {
+                            tokenID: token,
+                            price: 0.0005,
+                            side: Side.SELL,
+                            size: 100,
+                        };
+                        const signedOrder = await createOrder(
+                            wallet,
+                            chainId,
+                            SignatureType.POLY_PROXY,
+                            address,
+                            userOrder,
+                            { tickSize: "0.0001", negRisk: false },
+                        );
+                        expect(signedOrder).not.null;
+                        expect(signedOrder).not.undefined;
 
-                    const jsonFOKOrder = orderToJson(signedOrder, owner, OrderType.FOK);
-                    expect(jsonFOKOrder).not.null;
-                    expect(jsonFOKOrder).not.undefined;
+                        const jsonGTCOrder = orderToJson(signedOrder, owner, OrderType.GTC);
+                        expect(jsonGTCOrder).not.null;
+                        expect(jsonGTCOrder).not.undefined;
 
-                    expect(jsonFOKOrder).deep.equal({
-                        order: {
-                            salt: parseInt(signedOrder.salt),
-                            maker: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
-                            signer: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
-                            taker: "0x0000000000000000000000000000000000000000",
-                            tokenId: token,
-                            makerAmount: "100000000",
-                            takerAmount: "200000000",
-                            side: "BUY",
-                            expiration: "0",
-                            nonce: "0",
-                            feeRateBps: "0",
-                            signatureType: 1,
-                            signature: signedOrder.signature,
-                        },
-                        owner: owner,
-                        orderType: OrderType.FOK,
+                        expect(jsonGTCOrder).deep.equal({
+                            order: {
+                                salt: parseInt(signedOrder.salt),
+                                maker: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+                                signer: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+                                taker: "0x0000000000000000000000000000000000000000",
+                                tokenId: token,
+                                makerAmount: "100000000",
+                                takerAmount: "50000",
+                                side: "SELL",
+                                expiration: "0",
+                                nonce: "0",
+                                feeRateBps: "0",
+                                signatureType: 1,
+                                signature: signedOrder.signature,
+                            },
+                            owner: owner,
+                            orderType: OrderType.GTC,
+                        });
                     });
-                });
 
-                it("FOK BUY POLY_GNOSIS_SAFE", async () => {
-                    const userMarketOrder = {
-                        tokenID: token,
-                        price: 0.5,
-                        amount: 100,
-                    };
-                    const signedOrder = await createMarketBuyOrder(
-                        wallet,
-                        chainId,
-                        SignatureType.POLY_GNOSIS_SAFE,
-                        address,
-                        userMarketOrder,
-                        { tickSize: "0.1" },
-                    );
-                    expect(signedOrder).not.null;
-                    expect(signedOrder).not.undefined;
+                    it("GTC SELL POLY_GNOSIS_SAFE", async () => {
+                        const userOrder = {
+                            tokenID: token,
+                            price: 0.0005,
+                            side: Side.SELL,
+                            size: 100,
+                        };
+                        const signedOrder = await createOrder(
+                            wallet,
+                            chainId,
+                            SignatureType.POLY_GNOSIS_SAFE,
+                            address,
+                            userOrder,
+                            { tickSize: "0.0001", negRisk: false },
+                        );
+                        expect(signedOrder).not.null;
+                        expect(signedOrder).not.undefined;
 
-                    const jsonFOKOrder = orderToJson(signedOrder, owner, OrderType.FOK);
-                    expect(jsonFOKOrder).not.null;
-                    expect(jsonFOKOrder).not.undefined;
+                        const jsonGTCOrder = orderToJson(signedOrder, owner, OrderType.GTC);
+                        expect(jsonGTCOrder).not.null;
+                        expect(jsonGTCOrder).not.undefined;
 
-                    expect(jsonFOKOrder).deep.equal({
-                        order: {
-                            salt: parseInt(signedOrder.salt),
-                            maker: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
-                            signer: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
-                            taker: "0x0000000000000000000000000000000000000000",
-                            tokenId: token,
-                            makerAmount: "100000000",
-                            takerAmount: "200000000",
-                            side: "BUY",
-                            expiration: "0",
-                            nonce: "0",
-                            feeRateBps: "0",
-                            signatureType: 2,
-                            signature: signedOrder.signature,
-                        },
-                        owner: owner,
-                        orderType: OrderType.FOK,
+                        expect(jsonGTCOrder).deep.equal({
+                            order: {
+                                salt: parseInt(signedOrder.salt),
+                                maker: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+                                signer: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+                                taker: "0x0000000000000000000000000000000000000000",
+                                tokenId: token,
+                                makerAmount: "100000000",
+                                takerAmount: "50000",
+                                side: "SELL",
+                                expiration: "0",
+                                nonce: "0",
+                                feeRateBps: "0",
+                                signatureType: 2,
+                                signature: signedOrder.signature,
+                            },
+                            owner: owner,
+                            orderType: OrderType.GTC,
+                        });
+                    });
+
+                    it("FOK BUY EOA", async () => {
+                        const userMarketOrder: UserMarketOrder = {
+                            tokenID: token,
+                            price: 0.0005,
+                            amount: 100,
+                        };
+                        const signedOrder = await createMarketBuyOrder(
+                            wallet,
+                            chainId,
+                            SignatureType.EOA,
+                            address,
+                            userMarketOrder,
+                            { tickSize: "0.0001", negRisk: false },
+                        );
+                        expect(signedOrder).not.null;
+                        expect(signedOrder).not.undefined;
+
+                        const jsonFOKOrder = orderToJson(signedOrder, owner, OrderType.FOK);
+                        expect(jsonFOKOrder).not.null;
+                        expect(jsonFOKOrder).not.undefined;
+
+                        expect(jsonFOKOrder).deep.equal({
+                            order: {
+                                salt: parseInt(signedOrder.salt),
+                                maker: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+                                signer: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+                                taker: "0x0000000000000000000000000000000000000000",
+                                tokenId: token,
+                                makerAmount: "100000000",
+                                takerAmount: "200000000000",
+                                side: "BUY",
+                                expiration: "0",
+                                nonce: "0",
+                                feeRateBps: "0",
+                                signatureType: 0,
+                                signature: signedOrder.signature,
+                            },
+                            owner: owner,
+                            orderType: OrderType.FOK,
+                        });
+                    });
+
+                    it("FOK BUY POLY_PROXY", async () => {
+                        const userMarketOrder = {
+                            tokenID: token,
+                            price: 0.0005,
+                            amount: 100,
+                        };
+                        const signedOrder = await createMarketBuyOrder(
+                            wallet,
+                            chainId,
+                            SignatureType.POLY_PROXY,
+                            address,
+                            userMarketOrder,
+                            { tickSize: "0.0001", negRisk: false },
+                        );
+                        expect(signedOrder).not.null;
+                        expect(signedOrder).not.undefined;
+
+                        const jsonFOKOrder = orderToJson(signedOrder, owner, OrderType.FOK);
+                        expect(jsonFOKOrder).not.null;
+                        expect(jsonFOKOrder).not.undefined;
+
+                        expect(jsonFOKOrder).deep.equal({
+                            order: {
+                                salt: parseInt(signedOrder.salt),
+                                maker: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+                                signer: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+                                taker: "0x0000000000000000000000000000000000000000",
+                                tokenId: token,
+                                makerAmount: "100000000",
+                                takerAmount: "200000000000",
+                                side: "BUY",
+                                expiration: "0",
+                                nonce: "0",
+                                feeRateBps: "0",
+                                signatureType: 1,
+                                signature: signedOrder.signature,
+                            },
+                            owner: owner,
+                            orderType: OrderType.FOK,
+                        });
+                    });
+
+                    it("FOK BUY POLY_GNOSIS_SAFE", async () => {
+                        const userMarketOrder = {
+                            tokenID: token,
+                            price: 0.0005,
+                            amount: 100,
+                        };
+                        const signedOrder = await createMarketBuyOrder(
+                            wallet,
+                            chainId,
+                            SignatureType.POLY_GNOSIS_SAFE,
+                            address,
+                            userMarketOrder,
+                            { tickSize: "0.0001", negRisk: false },
+                        );
+                        expect(signedOrder).not.null;
+                        expect(signedOrder).not.undefined;
+
+                        const jsonFOKOrder = orderToJson(signedOrder, owner, OrderType.FOK);
+                        expect(jsonFOKOrder).not.null;
+                        expect(jsonFOKOrder).not.undefined;
+
+                        expect(jsonFOKOrder).deep.equal({
+                            order: {
+                                salt: parseInt(signedOrder.salt),
+                                maker: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+                                signer: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+                                taker: "0x0000000000000000000000000000000000000000",
+                                tokenId: token,
+                                makerAmount: "100000000",
+                                takerAmount: "200000000000",
+                                side: "BUY",
+                                expiration: "0",
+                                nonce: "0",
+                                feeRateBps: "0",
+                                signatureType: 2,
+                                signature: signedOrder.signature,
+                            },
+                            owner: owner,
+                            orderType: OrderType.FOK,
+                        });
                     });
                 });
             });
 
-            describe("0.01", async () => {
-                // publicly known private key
-                const token =
-                    "1343197538147866997676250008839231694243646439454152539053893078719042421992";
-                const privateKey =
-                    "0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80";
-                const address = "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266";
-                const wallet = new Wallet(privateKey);
-                const chainId = Chain.MUMBAI;
-                const owner = "f4f247b7-4ac7-ff29-a152-04fda0a8755a";
+            describe("Neg Risk CTF Exchange", async () => {
+                describe("0.1", async () => {
+                    // publicly known private key
+                    const token =
+                        "1343197538147866997676250008839231694243646439454152539053893078719042421992";
+                    const privateKey =
+                        "0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80";
+                    const address = "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266";
+                    const wallet = new Wallet(privateKey);
+                    const chainId = Chain.MUMBAI;
+                    const owner = "f4f247b7-4ac7-ff29-a152-04fda0a8755a";
 
-                it("GTD BUY EOA", async () => {
-                    const userOrder: UserOrder = {
-                        tokenID: token,
-                        price: 0.05,
-                        side: Side.BUY,
-                        size: 100,
-                        expiration: 1709948026,
-                    };
-                    const signedOrder = await createOrder(
-                        wallet,
-                        chainId,
-                        SignatureType.EOA,
-                        address,
-                        userOrder,
-                        { tickSize: "0.01" },
-                    );
-                    expect(signedOrder).not.null;
-                    expect(signedOrder).not.undefined;
+                    it("GTD BUY EOA", async () => {
+                        const userOrder: UserOrder = {
+                            tokenID: token,
+                            price: 0.5,
+                            side: Side.BUY,
+                            size: 100,
+                            expiration: 1709948026,
+                        };
+                        const signedOrder = await createOrder(
+                            wallet,
+                            chainId,
+                            SignatureType.EOA,
+                            address,
+                            userOrder,
+                            { tickSize: "0.1", negRisk: true },
+                        );
+                        expect(signedOrder).not.null;
+                        expect(signedOrder).not.undefined;
 
-                    const jsonGTDOrder = orderToJson(signedOrder, owner, OrderType.GTD);
-                    expect(jsonGTDOrder).not.null;
-                    expect(jsonGTDOrder).not.undefined;
+                        const jsonGTDOrder = orderToJson(signedOrder, owner, OrderType.GTD);
+                        expect(jsonGTDOrder).not.null;
+                        expect(jsonGTDOrder).not.undefined;
 
-                    expect(jsonGTDOrder).deep.equal({
-                        order: {
-                            salt: parseInt(signedOrder.salt),
-                            maker: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
-                            signer: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
-                            taker: "0x0000000000000000000000000000000000000000",
-                            tokenId: token,
-                            makerAmount: "5000000",
-                            takerAmount: "100000000",
-                            side: "BUY",
-                            expiration: "1709948026",
-                            nonce: "0",
-                            feeRateBps: "0",
-                            signatureType: 0,
-                            signature: signedOrder.signature,
-                        },
-                        owner: owner,
-                        orderType: OrderType.GTD,
+                        expect(jsonGTDOrder).deep.equal({
+                            order: {
+                                salt: parseInt(signedOrder.salt),
+                                maker: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+                                signer: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+                                taker: "0x0000000000000000000000000000000000000000",
+                                tokenId: token,
+                                makerAmount: "50000000",
+                                takerAmount: "100000000",
+                                side: "BUY",
+                                expiration: "1709948026",
+                                nonce: "0",
+                                feeRateBps: "0",
+                                signatureType: 0,
+                                signature: signedOrder.signature,
+                            },
+                            owner: owner,
+                            orderType: OrderType.GTD,
+                        });
+                    });
+
+                    it("GTD BUY POLY_PROXY", async () => {
+                        const userOrder = {
+                            tokenID: token,
+                            price: 0.5,
+                            side: Side.BUY,
+                            size: 100,
+                            expiration: 1709948026,
+                        };
+                        const signedOrder = await createOrder(
+                            wallet,
+                            chainId,
+                            SignatureType.POLY_PROXY,
+                            address,
+                            userOrder,
+                            { tickSize: "0.1", negRisk: true },
+                        );
+                        expect(signedOrder).not.null;
+                        expect(signedOrder).not.undefined;
+
+                        const jsonGTDOrder = orderToJson(signedOrder, owner, OrderType.GTD);
+                        expect(jsonGTDOrder).not.null;
+                        expect(jsonGTDOrder).not.undefined;
+
+                        expect(jsonGTDOrder).deep.equal({
+                            order: {
+                                salt: parseInt(signedOrder.salt),
+                                maker: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+                                signer: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+                                taker: "0x0000000000000000000000000000000000000000",
+                                tokenId: token,
+                                makerAmount: "50000000",
+                                takerAmount: "100000000",
+                                side: "BUY",
+                                expiration: "1709948026",
+                                nonce: "0",
+                                feeRateBps: "0",
+                                signatureType: 1,
+                                signature: signedOrder.signature,
+                            },
+                            owner: owner,
+                            orderType: OrderType.GTD,
+                        });
+                    });
+
+                    it("GTD BUY POLY_GNOSIS_SAFE", async () => {
+                        const userOrder = {
+                            tokenID: token,
+                            price: 0.5,
+                            side: Side.BUY,
+                            size: 100,
+                            expiration: 1709948026,
+                        };
+                        const signedOrder = await createOrder(
+                            wallet,
+                            chainId,
+                            SignatureType.POLY_GNOSIS_SAFE,
+                            address,
+                            userOrder,
+                            { tickSize: "0.1", negRisk: true },
+                        );
+                        expect(signedOrder).not.null;
+                        expect(signedOrder).not.undefined;
+
+                        const jsonGTDOrder = orderToJson(signedOrder, owner, OrderType.GTD);
+                        expect(jsonGTDOrder).not.null;
+                        expect(jsonGTDOrder).not.undefined;
+
+                        expect(jsonGTDOrder).deep.equal({
+                            order: {
+                                salt: parseInt(signedOrder.salt),
+                                maker: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+                                signer: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+                                taker: "0x0000000000000000000000000000000000000000",
+                                tokenId: token,
+                                makerAmount: "50000000",
+                                takerAmount: "100000000",
+                                side: "BUY",
+                                expiration: "1709948026",
+                                nonce: "0",
+                                feeRateBps: "0",
+                                signatureType: 2,
+                                signature: signedOrder.signature,
+                            },
+                            owner: owner,
+                            orderType: OrderType.GTD,
+                        });
+                    });
+
+                    it("GTD SELL EOA", async () => {
+                        const userOrder = {
+                            tokenID: token,
+                            price: 0.5,
+                            side: Side.SELL,
+                            size: 100,
+                            expiration: 1709948026,
+                        };
+                        const signedOrder = await createOrder(
+                            wallet,
+                            chainId,
+                            SignatureType.EOA,
+                            address,
+                            userOrder,
+                            { tickSize: "0.1", negRisk: true },
+                        );
+                        expect(signedOrder).not.null;
+                        expect(signedOrder).not.undefined;
+
+                        const jsonGTDOrder = orderToJson(signedOrder, owner, OrderType.GTD);
+                        expect(jsonGTDOrder).not.null;
+                        expect(jsonGTDOrder).not.undefined;
+
+                        expect(jsonGTDOrder).deep.equal({
+                            order: {
+                                salt: parseInt(signedOrder.salt),
+                                maker: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+                                signer: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+                                taker: "0x0000000000000000000000000000000000000000",
+                                tokenId: token,
+                                makerAmount: "100000000",
+                                takerAmount: "50000000",
+                                side: "SELL",
+                                expiration: "1709948026",
+                                nonce: "0",
+                                feeRateBps: "0",
+                                signatureType: 0,
+                                signature: signedOrder.signature,
+                            },
+                            owner: owner,
+                            orderType: OrderType.GTD,
+                        });
+                    });
+
+                    it("GTD SELL POLY_PROXY", async () => {
+                        const userOrder = {
+                            tokenID: token,
+                            price: 0.5,
+                            side: Side.SELL,
+                            size: 100,
+                            expiration: 1709948026,
+                        };
+                        const signedOrder = await createOrder(
+                            wallet,
+                            chainId,
+                            SignatureType.POLY_PROXY,
+                            address,
+                            userOrder,
+                            { tickSize: "0.1", negRisk: true },
+                        );
+                        expect(signedOrder).not.null;
+                        expect(signedOrder).not.undefined;
+
+                        const jsonGTDOrder = orderToJson(signedOrder, owner, OrderType.GTD);
+                        expect(jsonGTDOrder).not.null;
+                        expect(jsonGTDOrder).not.undefined;
+
+                        expect(jsonGTDOrder).deep.equal({
+                            order: {
+                                salt: parseInt(signedOrder.salt),
+                                maker: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+                                signer: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+                                taker: "0x0000000000000000000000000000000000000000",
+                                tokenId: token,
+                                makerAmount: "100000000",
+                                takerAmount: "50000000",
+                                side: "SELL",
+                                expiration: "1709948026",
+                                nonce: "0",
+                                feeRateBps: "0",
+                                signatureType: 1,
+                                signature: signedOrder.signature,
+                            },
+                            owner: owner,
+                            orderType: OrderType.GTD,
+                        });
+                    });
+
+                    it("GTD SELL POLY_GNOSIS_SAFE", async () => {
+                        const userOrder = {
+                            tokenID: token,
+                            price: 0.5,
+                            side: Side.SELL,
+                            size: 100,
+                            expiration: 1709948026,
+                        };
+                        const signedOrder = await createOrder(
+                            wallet,
+                            chainId,
+                            SignatureType.POLY_GNOSIS_SAFE,
+                            address,
+                            userOrder,
+                            { tickSize: "0.1", negRisk: true },
+                        );
+                        expect(signedOrder).not.null;
+                        expect(signedOrder).not.undefined;
+
+                        const jsonGTDOrder = orderToJson(signedOrder, owner, OrderType.GTD);
+                        expect(jsonGTDOrder).not.null;
+                        expect(jsonGTDOrder).not.undefined;
+
+                        expect(jsonGTDOrder).deep.equal({
+                            order: {
+                                salt: parseInt(signedOrder.salt),
+                                maker: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+                                signer: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+                                taker: "0x0000000000000000000000000000000000000000",
+                                tokenId: token,
+                                makerAmount: "100000000",
+                                takerAmount: "50000000",
+                                side: "SELL",
+                                expiration: "1709948026",
+                                nonce: "0",
+                                feeRateBps: "0",
+                                signatureType: 2,
+                                signature: signedOrder.signature,
+                            },
+                            owner: owner,
+                            orderType: OrderType.GTD,
+                        });
+                    });
+
+                    it("GTC BUY EOA", async () => {
+                        const userOrder = {
+                            tokenID: token,
+                            price: 0.5,
+                            side: Side.BUY,
+                            size: 100,
+                        };
+                        const signedOrder = await createOrder(
+                            wallet,
+                            chainId,
+                            SignatureType.EOA,
+                            address,
+                            userOrder,
+                            { tickSize: "0.1", negRisk: true },
+                        );
+                        expect(signedOrder).not.null;
+                        expect(signedOrder).not.undefined;
+
+                        const jsonGTCOrder = orderToJson(signedOrder, owner, OrderType.GTC);
+                        expect(jsonGTCOrder).not.null;
+                        expect(jsonGTCOrder).not.undefined;
+
+                        expect(jsonGTCOrder).deep.equal({
+                            order: {
+                                salt: parseInt(signedOrder.salt),
+                                maker: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+                                signer: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+                                taker: "0x0000000000000000000000000000000000000000",
+                                tokenId: token,
+                                makerAmount: "50000000",
+                                takerAmount: "100000000",
+                                side: "BUY",
+                                expiration: "0",
+                                nonce: "0",
+                                feeRateBps: "0",
+                                signatureType: 0,
+                                signature: signedOrder.signature,
+                            },
+                            owner: owner,
+                            orderType: OrderType.GTC,
+                        });
+                    });
+
+                    it("GTC BUY POLY_PROXY", async () => {
+                        const userOrder = {
+                            tokenID: token,
+                            price: 0.5,
+                            side: Side.BUY,
+                            size: 100,
+                        };
+                        const signedOrder = await createOrder(
+                            wallet,
+                            chainId,
+                            SignatureType.POLY_PROXY,
+                            address,
+                            userOrder,
+                            { tickSize: "0.1", negRisk: true },
+                        );
+                        expect(signedOrder).not.null;
+                        expect(signedOrder).not.undefined;
+
+                        const jsonGTCOrder = orderToJson(signedOrder, owner, OrderType.GTC);
+                        expect(jsonGTCOrder).not.null;
+                        expect(jsonGTCOrder).not.undefined;
+
+                        expect(jsonGTCOrder).deep.equal({
+                            order: {
+                                salt: parseInt(signedOrder.salt),
+                                maker: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+                                signer: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+                                taker: "0x0000000000000000000000000000000000000000",
+                                tokenId: token,
+                                makerAmount: "50000000",
+                                takerAmount: "100000000",
+                                side: "BUY",
+                                expiration: "0",
+                                nonce: "0",
+                                feeRateBps: "0",
+                                signatureType: 1,
+                                signature: signedOrder.signature,
+                            },
+                            owner: owner,
+                            orderType: OrderType.GTC,
+                        });
+                    });
+
+                    it("GTC BUY POLY_GNOSIS_SAFE", async () => {
+                        const userOrder = {
+                            tokenID: token,
+                            price: 0.5,
+                            side: Side.BUY,
+                            size: 100,
+                        };
+                        const signedOrder = await createOrder(
+                            wallet,
+                            chainId,
+                            SignatureType.POLY_GNOSIS_SAFE,
+                            address,
+                            userOrder,
+                            { tickSize: "0.1", negRisk: true },
+                        );
+                        expect(signedOrder).not.null;
+                        expect(signedOrder).not.undefined;
+
+                        const jsonGTCOrder = orderToJson(signedOrder, owner, OrderType.GTC);
+                        expect(jsonGTCOrder).not.null;
+                        expect(jsonGTCOrder).not.undefined;
+
+                        expect(jsonGTCOrder).deep.equal({
+                            order: {
+                                salt: parseInt(signedOrder.salt),
+                                maker: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+                                signer: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+                                taker: "0x0000000000000000000000000000000000000000",
+                                tokenId: token,
+                                makerAmount: "50000000",
+                                takerAmount: "100000000",
+                                side: "BUY",
+                                expiration: "0",
+                                nonce: "0",
+                                feeRateBps: "0",
+                                signatureType: 2,
+                                signature: signedOrder.signature,
+                            },
+                            owner: owner,
+                            orderType: OrderType.GTC,
+                        });
+                    });
+
+                    it("GTC SELL EOA", async () => {
+                        const userOrder = {
+                            tokenID: token,
+                            price: 0.5,
+                            side: Side.SELL,
+                            size: 100,
+                        };
+                        const signedOrder = await createOrder(
+                            wallet,
+                            chainId,
+                            SignatureType.EOA,
+                            address,
+                            userOrder,
+                            { tickSize: "0.1", negRisk: true },
+                        );
+                        expect(signedOrder).not.null;
+                        expect(signedOrder).not.undefined;
+
+                        const jsonGTCOrder = orderToJson(signedOrder, owner, OrderType.GTC);
+                        expect(jsonGTCOrder).not.null;
+                        expect(jsonGTCOrder).not.undefined;
+
+                        expect(jsonGTCOrder).deep.equal({
+                            order: {
+                                salt: parseInt(signedOrder.salt),
+                                maker: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+                                signer: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+                                taker: "0x0000000000000000000000000000000000000000",
+                                tokenId: token,
+                                makerAmount: "100000000",
+                                takerAmount: "50000000",
+                                side: "SELL",
+                                expiration: "0",
+                                nonce: "0",
+                                feeRateBps: "0",
+                                signatureType: 0,
+                                signature: signedOrder.signature,
+                            },
+                            owner: owner,
+                            orderType: OrderType.GTC,
+                        });
+                    });
+
+                    it("GTC SELL POLY_PROXY", async () => {
+                        const userOrder = {
+                            tokenID: token,
+                            price: 0.5,
+                            side: Side.SELL,
+                            size: 100,
+                        };
+                        const signedOrder = await createOrder(
+                            wallet,
+                            chainId,
+                            SignatureType.POLY_PROXY,
+                            address,
+                            userOrder,
+                            { tickSize: "0.1", negRisk: true },
+                        );
+                        expect(signedOrder).not.null;
+                        expect(signedOrder).not.undefined;
+
+                        const jsonGTCOrder = orderToJson(signedOrder, owner, OrderType.GTC);
+                        expect(jsonGTCOrder).not.null;
+                        expect(jsonGTCOrder).not.undefined;
+
+                        expect(jsonGTCOrder).deep.equal({
+                            order: {
+                                salt: parseInt(signedOrder.salt),
+                                maker: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+                                signer: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+                                taker: "0x0000000000000000000000000000000000000000",
+                                tokenId: token,
+                                makerAmount: "100000000",
+                                takerAmount: "50000000",
+                                side: "SELL",
+                                expiration: "0",
+                                nonce: "0",
+                                feeRateBps: "0",
+                                signatureType: 1,
+                                signature: signedOrder.signature,
+                            },
+                            owner: owner,
+                            orderType: OrderType.GTC,
+                        });
+                    });
+
+                    it("GTC SELL POLY_GNOSIS_SAFE", async () => {
+                        const userOrder = {
+                            tokenID: token,
+                            price: 0.5,
+                            side: Side.SELL,
+                            size: 100,
+                        };
+                        const signedOrder = await createOrder(
+                            wallet,
+                            chainId,
+                            SignatureType.POLY_GNOSIS_SAFE,
+                            address,
+                            userOrder,
+                            { tickSize: "0.1", negRisk: true },
+                        );
+                        expect(signedOrder).not.null;
+                        expect(signedOrder).not.undefined;
+
+                        const jsonGTCOrder = orderToJson(signedOrder, owner, OrderType.GTC);
+                        expect(jsonGTCOrder).not.null;
+                        expect(jsonGTCOrder).not.undefined;
+
+                        expect(jsonGTCOrder).deep.equal({
+                            order: {
+                                salt: parseInt(signedOrder.salt),
+                                maker: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+                                signer: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+                                taker: "0x0000000000000000000000000000000000000000",
+                                tokenId: token,
+                                makerAmount: "100000000",
+                                takerAmount: "50000000",
+                                side: "SELL",
+                                expiration: "0",
+                                nonce: "0",
+                                feeRateBps: "0",
+                                signatureType: 2,
+                                signature: signedOrder.signature,
+                            },
+                            owner: owner,
+                            orderType: OrderType.GTC,
+                        });
+                    });
+
+                    it("FOK BUY EOA", async () => {
+                        const userMarketOrder: UserMarketOrder = {
+                            tokenID: token,
+                            price: 0.5,
+                            amount: 100,
+                        };
+                        const signedOrder = await createMarketBuyOrder(
+                            wallet,
+                            chainId,
+                            SignatureType.EOA,
+                            address,
+                            userMarketOrder,
+                            { tickSize: "0.1", negRisk: true },
+                        );
+                        expect(signedOrder).not.null;
+                        expect(signedOrder).not.undefined;
+
+                        const jsonFOKOrder = orderToJson(signedOrder, owner, OrderType.FOK);
+                        expect(jsonFOKOrder).not.null;
+                        expect(jsonFOKOrder).not.undefined;
+
+                        expect(jsonFOKOrder).deep.equal({
+                            order: {
+                                salt: parseInt(signedOrder.salt),
+                                maker: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+                                signer: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+                                taker: "0x0000000000000000000000000000000000000000",
+                                tokenId: token,
+                                makerAmount: "100000000",
+                                takerAmount: "200000000",
+                                side: "BUY",
+                                expiration: "0",
+                                nonce: "0",
+                                feeRateBps: "0",
+                                signatureType: 0,
+                                signature: signedOrder.signature,
+                            },
+                            owner: owner,
+                            orderType: OrderType.FOK,
+                        });
+                    });
+
+                    it("FOK BUY POLY_PROXY", async () => {
+                        const userMarketOrder = {
+                            tokenID: token,
+                            price: 0.5,
+                            amount: 100,
+                        };
+                        const signedOrder = await createMarketBuyOrder(
+                            wallet,
+                            chainId,
+                            SignatureType.POLY_PROXY,
+                            address,
+                            userMarketOrder,
+                            { tickSize: "0.1", negRisk: true },
+                        );
+                        expect(signedOrder).not.null;
+                        expect(signedOrder).not.undefined;
+
+                        const jsonFOKOrder = orderToJson(signedOrder, owner, OrderType.FOK);
+                        expect(jsonFOKOrder).not.null;
+                        expect(jsonFOKOrder).not.undefined;
+
+                        expect(jsonFOKOrder).deep.equal({
+                            order: {
+                                salt: parseInt(signedOrder.salt),
+                                maker: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+                                signer: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+                                taker: "0x0000000000000000000000000000000000000000",
+                                tokenId: token,
+                                makerAmount: "100000000",
+                                takerAmount: "200000000",
+                                side: "BUY",
+                                expiration: "0",
+                                nonce: "0",
+                                feeRateBps: "0",
+                                signatureType: 1,
+                                signature: signedOrder.signature,
+                            },
+                            owner: owner,
+                            orderType: OrderType.FOK,
+                        });
+                    });
+
+                    it("FOK BUY POLY_GNOSIS_SAFE", async () => {
+                        const userMarketOrder = {
+                            tokenID: token,
+                            price: 0.5,
+                            amount: 100,
+                        };
+                        const signedOrder = await createMarketBuyOrder(
+                            wallet,
+                            chainId,
+                            SignatureType.POLY_GNOSIS_SAFE,
+                            address,
+                            userMarketOrder,
+                            { tickSize: "0.1", negRisk: true },
+                        );
+                        expect(signedOrder).not.null;
+                        expect(signedOrder).not.undefined;
+
+                        const jsonFOKOrder = orderToJson(signedOrder, owner, OrderType.FOK);
+                        expect(jsonFOKOrder).not.null;
+                        expect(jsonFOKOrder).not.undefined;
+
+                        expect(jsonFOKOrder).deep.equal({
+                            order: {
+                                salt: parseInt(signedOrder.salt),
+                                maker: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+                                signer: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+                                taker: "0x0000000000000000000000000000000000000000",
+                                tokenId: token,
+                                makerAmount: "100000000",
+                                takerAmount: "200000000",
+                                side: "BUY",
+                                expiration: "0",
+                                nonce: "0",
+                                feeRateBps: "0",
+                                signatureType: 2,
+                                signature: signedOrder.signature,
+                            },
+                            owner: owner,
+                            orderType: OrderType.FOK,
+                        });
                     });
                 });
 
-                it("GTD BUY POLY_PROXY", async () => {
-                    const userOrder = {
-                        tokenID: token,
-                        price: 0.05,
-                        side: Side.BUY,
-                        size: 100,
-                        expiration: 1709948026,
-                    };
-                    const signedOrder = await createOrder(
-                        wallet,
-                        chainId,
-                        SignatureType.POLY_PROXY,
-                        address,
-                        userOrder,
-                        { tickSize: "0.01" },
-                    );
-                    expect(signedOrder).not.null;
-                    expect(signedOrder).not.undefined;
+                describe("0.01", async () => {
+                    // publicly known private key
+                    const token =
+                        "1343197538147866997676250008839231694243646439454152539053893078719042421992";
+                    const privateKey =
+                        "0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80";
+                    const address = "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266";
+                    const wallet = new Wallet(privateKey);
+                    const chainId = Chain.MUMBAI;
+                    const owner = "f4f247b7-4ac7-ff29-a152-04fda0a8755a";
 
-                    const jsonGTDOrder = orderToJson(signedOrder, owner, OrderType.GTD);
-                    expect(jsonGTDOrder).not.null;
-                    expect(jsonGTDOrder).not.undefined;
+                    it("GTD BUY EOA", async () => {
+                        const userOrder: UserOrder = {
+                            tokenID: token,
+                            price: 0.05,
+                            side: Side.BUY,
+                            size: 100,
+                            expiration: 1709948026,
+                        };
+                        const signedOrder = await createOrder(
+                            wallet,
+                            chainId,
+                            SignatureType.EOA,
+                            address,
+                            userOrder,
+                            { tickSize: "0.01", negRisk: true },
+                        );
+                        expect(signedOrder).not.null;
+                        expect(signedOrder).not.undefined;
 
-                    expect(jsonGTDOrder).deep.equal({
-                        order: {
-                            salt: parseInt(signedOrder.salt),
-                            maker: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
-                            signer: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
-                            taker: "0x0000000000000000000000000000000000000000",
-                            tokenId: token,
-                            makerAmount: "5000000",
-                            takerAmount: "100000000",
-                            side: "BUY",
-                            expiration: "1709948026",
-                            nonce: "0",
-                            feeRateBps: "0",
-                            signatureType: 1,
-                            signature: signedOrder.signature,
-                        },
-                        owner: owner,
-                        orderType: OrderType.GTD,
+                        const jsonGTDOrder = orderToJson(signedOrder, owner, OrderType.GTD);
+                        expect(jsonGTDOrder).not.null;
+                        expect(jsonGTDOrder).not.undefined;
+
+                        expect(jsonGTDOrder).deep.equal({
+                            order: {
+                                salt: parseInt(signedOrder.salt),
+                                maker: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+                                signer: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+                                taker: "0x0000000000000000000000000000000000000000",
+                                tokenId: token,
+                                makerAmount: "5000000",
+                                takerAmount: "100000000",
+                                side: "BUY",
+                                expiration: "1709948026",
+                                nonce: "0",
+                                feeRateBps: "0",
+                                signatureType: 0,
+                                signature: signedOrder.signature,
+                            },
+                            owner: owner,
+                            orderType: OrderType.GTD,
+                        });
+                    });
+
+                    it("GTD BUY POLY_PROXY", async () => {
+                        const userOrder = {
+                            tokenID: token,
+                            price: 0.05,
+                            side: Side.BUY,
+                            size: 100,
+                            expiration: 1709948026,
+                        };
+                        const signedOrder = await createOrder(
+                            wallet,
+                            chainId,
+                            SignatureType.POLY_PROXY,
+                            address,
+                            userOrder,
+                            { tickSize: "0.01", negRisk: true },
+                        );
+                        expect(signedOrder).not.null;
+                        expect(signedOrder).not.undefined;
+
+                        const jsonGTDOrder = orderToJson(signedOrder, owner, OrderType.GTD);
+                        expect(jsonGTDOrder).not.null;
+                        expect(jsonGTDOrder).not.undefined;
+
+                        expect(jsonGTDOrder).deep.equal({
+                            order: {
+                                salt: parseInt(signedOrder.salt),
+                                maker: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+                                signer: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+                                taker: "0x0000000000000000000000000000000000000000",
+                                tokenId: token,
+                                makerAmount: "5000000",
+                                takerAmount: "100000000",
+                                side: "BUY",
+                                expiration: "1709948026",
+                                nonce: "0",
+                                feeRateBps: "0",
+                                signatureType: 1,
+                                signature: signedOrder.signature,
+                            },
+                            owner: owner,
+                            orderType: OrderType.GTD,
+                        });
+                    });
+
+                    it("GTD BUY POLY_GNOSIS_SAFE", async () => {
+                        const userOrder = {
+                            tokenID: token,
+                            price: 0.05,
+                            side: Side.BUY,
+                            size: 100,
+                            expiration: 1709948026,
+                        };
+                        const signedOrder = await createOrder(
+                            wallet,
+                            chainId,
+                            SignatureType.POLY_GNOSIS_SAFE,
+                            address,
+                            userOrder,
+                            { tickSize: "0.01", negRisk: true },
+                        );
+                        expect(signedOrder).not.null;
+                        expect(signedOrder).not.undefined;
+
+                        const jsonGTDOrder = orderToJson(signedOrder, owner, OrderType.GTD);
+                        expect(jsonGTDOrder).not.null;
+                        expect(jsonGTDOrder).not.undefined;
+
+                        expect(jsonGTDOrder).deep.equal({
+                            order: {
+                                salt: parseInt(signedOrder.salt),
+                                maker: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+                                signer: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+                                taker: "0x0000000000000000000000000000000000000000",
+                                tokenId: token,
+                                makerAmount: "5000000",
+                                takerAmount: "100000000",
+                                side: "BUY",
+                                expiration: "1709948026",
+                                nonce: "0",
+                                feeRateBps: "0",
+                                signatureType: 2,
+                                signature: signedOrder.signature,
+                            },
+                            owner: owner,
+                            orderType: OrderType.GTD,
+                        });
+                    });
+
+                    it("GTD SELL EOA", async () => {
+                        const userOrder = {
+                            tokenID: token,
+                            price: 0.05,
+                            side: Side.SELL,
+                            size: 100,
+                            expiration: 1709948026,
+                        };
+                        const signedOrder = await createOrder(
+                            wallet,
+                            chainId,
+                            SignatureType.EOA,
+                            address,
+                            userOrder,
+                            { tickSize: "0.01", negRisk: true },
+                        );
+                        expect(signedOrder).not.null;
+                        expect(signedOrder).not.undefined;
+
+                        const jsonGTDOrder = orderToJson(signedOrder, owner, OrderType.GTD);
+                        expect(jsonGTDOrder).not.null;
+                        expect(jsonGTDOrder).not.undefined;
+
+                        expect(jsonGTDOrder).deep.equal({
+                            order: {
+                                salt: parseInt(signedOrder.salt),
+                                maker: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+                                signer: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+                                taker: "0x0000000000000000000000000000000000000000",
+                                tokenId: token,
+                                makerAmount: "100000000",
+                                takerAmount: "5000000",
+                                side: "SELL",
+                                expiration: "1709948026",
+                                nonce: "0",
+                                feeRateBps: "0",
+                                signatureType: 0,
+                                signature: signedOrder.signature,
+                            },
+                            owner: owner,
+                            orderType: OrderType.GTD,
+                        });
+                    });
+
+                    it("GTD SELL POLY_PROXY", async () => {
+                        const userOrder = {
+                            tokenID: token,
+                            price: 0.05,
+                            side: Side.SELL,
+                            size: 100,
+                            expiration: 1709948026,
+                        };
+                        const signedOrder = await createOrder(
+                            wallet,
+                            chainId,
+                            SignatureType.POLY_PROXY,
+                            address,
+                            userOrder,
+                            { tickSize: "0.01", negRisk: true },
+                        );
+                        expect(signedOrder).not.null;
+                        expect(signedOrder).not.undefined;
+
+                        const jsonGTDOrder = orderToJson(signedOrder, owner, OrderType.GTD);
+                        expect(jsonGTDOrder).not.null;
+                        expect(jsonGTDOrder).not.undefined;
+
+                        expect(jsonGTDOrder).deep.equal({
+                            order: {
+                                salt: parseInt(signedOrder.salt),
+                                maker: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+                                signer: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+                                taker: "0x0000000000000000000000000000000000000000",
+                                tokenId: token,
+                                makerAmount: "100000000",
+                                takerAmount: "5000000",
+                                side: "SELL",
+                                expiration: "1709948026",
+                                nonce: "0",
+                                feeRateBps: "0",
+                                signatureType: 1,
+                                signature: signedOrder.signature,
+                            },
+                            owner: owner,
+                            orderType: OrderType.GTD,
+                        });
+                    });
+
+                    it("GTD SELL POLY_GNOSIS_SAFE", async () => {
+                        const userOrder = {
+                            tokenID: token,
+                            price: 0.05,
+                            side: Side.SELL,
+                            size: 100,
+                            expiration: 1709948026,
+                        };
+                        const signedOrder = await createOrder(
+                            wallet,
+                            chainId,
+                            SignatureType.POLY_GNOSIS_SAFE,
+                            address,
+                            userOrder,
+                            { tickSize: "0.01", negRisk: true },
+                        );
+                        expect(signedOrder).not.null;
+                        expect(signedOrder).not.undefined;
+
+                        const jsonGTDOrder = orderToJson(signedOrder, owner, OrderType.GTD);
+                        expect(jsonGTDOrder).not.null;
+                        expect(jsonGTDOrder).not.undefined;
+
+                        expect(jsonGTDOrder).deep.equal({
+                            order: {
+                                salt: parseInt(signedOrder.salt),
+                                maker: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+                                signer: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+                                taker: "0x0000000000000000000000000000000000000000",
+                                tokenId: token,
+                                makerAmount: "100000000",
+                                takerAmount: "5000000",
+                                side: "SELL",
+                                expiration: "1709948026",
+                                nonce: "0",
+                                feeRateBps: "0",
+                                signatureType: 2,
+                                signature: signedOrder.signature,
+                            },
+                            owner: owner,
+                            orderType: OrderType.GTD,
+                        });
+                    });
+
+                    it("GTC BUY EOA", async () => {
+                        const userOrder = {
+                            tokenID: token,
+                            price: 0.05,
+                            side: Side.BUY,
+                            size: 100,
+                        };
+                        const signedOrder = await createOrder(
+                            wallet,
+                            chainId,
+                            SignatureType.EOA,
+                            address,
+                            userOrder,
+                            { tickSize: "0.01", negRisk: true },
+                        );
+                        expect(signedOrder).not.null;
+                        expect(signedOrder).not.undefined;
+
+                        const jsonGTCOrder = orderToJson(signedOrder, owner, OrderType.GTC);
+                        expect(jsonGTCOrder).not.null;
+                        expect(jsonGTCOrder).not.undefined;
+
+                        expect(jsonGTCOrder).deep.equal({
+                            order: {
+                                salt: parseInt(signedOrder.salt),
+                                maker: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+                                signer: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+                                taker: "0x0000000000000000000000000000000000000000",
+                                tokenId: token,
+                                makerAmount: "5000000",
+                                takerAmount: "100000000",
+                                side: "BUY",
+                                expiration: "0",
+                                nonce: "0",
+                                feeRateBps: "0",
+                                signatureType: 0,
+                                signature: signedOrder.signature,
+                            },
+                            owner: owner,
+                            orderType: OrderType.GTC,
+                        });
+                    });
+
+                    it("GTC BUY POLY_PROXY", async () => {
+                        const userOrder = {
+                            tokenID: token,
+                            price: 0.05,
+                            side: Side.BUY,
+                            size: 100,
+                        };
+                        const signedOrder = await createOrder(
+                            wallet,
+                            chainId,
+                            SignatureType.POLY_PROXY,
+                            address,
+                            userOrder,
+                            { tickSize: "0.01", negRisk: true },
+                        );
+                        expect(signedOrder).not.null;
+                        expect(signedOrder).not.undefined;
+
+                        const jsonGTCOrder = orderToJson(signedOrder, owner, OrderType.GTC);
+                        expect(jsonGTCOrder).not.null;
+                        expect(jsonGTCOrder).not.undefined;
+
+                        expect(jsonGTCOrder).deep.equal({
+                            order: {
+                                salt: parseInt(signedOrder.salt),
+                                maker: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+                                signer: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+                                taker: "0x0000000000000000000000000000000000000000",
+                                tokenId: token,
+                                makerAmount: "5000000",
+                                takerAmount: "100000000",
+                                side: "BUY",
+                                expiration: "0",
+                                nonce: "0",
+                                feeRateBps: "0",
+                                signatureType: 1,
+                                signature: signedOrder.signature,
+                            },
+                            owner: owner,
+                            orderType: OrderType.GTC,
+                        });
+                    });
+
+                    it("GTC BUY POLY_GNOSIS_SAFE", async () => {
+                        const userOrder = {
+                            tokenID: token,
+                            price: 0.05,
+                            side: Side.BUY,
+                            size: 100,
+                        };
+                        const signedOrder = await createOrder(
+                            wallet,
+                            chainId,
+                            SignatureType.POLY_GNOSIS_SAFE,
+                            address,
+                            userOrder,
+                            { tickSize: "0.01", negRisk: true },
+                        );
+                        expect(signedOrder).not.null;
+                        expect(signedOrder).not.undefined;
+
+                        const jsonGTCOrder = orderToJson(signedOrder, owner, OrderType.GTC);
+                        expect(jsonGTCOrder).not.null;
+                        expect(jsonGTCOrder).not.undefined;
+
+                        expect(jsonGTCOrder).deep.equal({
+                            order: {
+                                salt: parseInt(signedOrder.salt),
+                                maker: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+                                signer: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+                                taker: "0x0000000000000000000000000000000000000000",
+                                tokenId: token,
+                                makerAmount: "5000000",
+                                takerAmount: "100000000",
+                                side: "BUY",
+                                expiration: "0",
+                                nonce: "0",
+                                feeRateBps: "0",
+                                signatureType: 2,
+                                signature: signedOrder.signature,
+                            },
+                            owner: owner,
+                            orderType: OrderType.GTC,
+                        });
+                    });
+
+                    it("GTC SELL EOA", async () => {
+                        const userOrder = {
+                            tokenID: token,
+                            price: 0.05,
+                            side: Side.SELL,
+                            size: 100,
+                        };
+                        const signedOrder = await createOrder(
+                            wallet,
+                            chainId,
+                            SignatureType.EOA,
+                            address,
+                            userOrder,
+                            { tickSize: "0.01", negRisk: true },
+                        );
+                        expect(signedOrder).not.null;
+                        expect(signedOrder).not.undefined;
+
+                        const jsonGTCOrder = orderToJson(signedOrder, owner, OrderType.GTC);
+                        expect(jsonGTCOrder).not.null;
+                        expect(jsonGTCOrder).not.undefined;
+
+                        expect(jsonGTCOrder).deep.equal({
+                            order: {
+                                salt: parseInt(signedOrder.salt),
+                                maker: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+                                signer: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+                                taker: "0x0000000000000000000000000000000000000000",
+                                tokenId: token,
+                                makerAmount: "100000000",
+                                takerAmount: "5000000",
+                                side: "SELL",
+                                expiration: "0",
+                                nonce: "0",
+                                feeRateBps: "0",
+                                signatureType: 0,
+                                signature: signedOrder.signature,
+                            },
+                            owner: owner,
+                            orderType: OrderType.GTC,
+                        });
+                    });
+
+                    it("GTC SELL POLY_PROXY", async () => {
+                        const userOrder = {
+                            tokenID: token,
+                            price: 0.05,
+                            side: Side.SELL,
+                            size: 100,
+                        };
+                        const signedOrder = await createOrder(
+                            wallet,
+                            chainId,
+                            SignatureType.POLY_PROXY,
+                            address,
+                            userOrder,
+                            { tickSize: "0.01", negRisk: true },
+                        );
+                        expect(signedOrder).not.null;
+                        expect(signedOrder).not.undefined;
+
+                        const jsonGTCOrder = orderToJson(signedOrder, owner, OrderType.GTC);
+                        expect(jsonGTCOrder).not.null;
+                        expect(jsonGTCOrder).not.undefined;
+
+                        expect(jsonGTCOrder).deep.equal({
+                            order: {
+                                salt: parseInt(signedOrder.salt),
+                                maker: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+                                signer: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+                                taker: "0x0000000000000000000000000000000000000000",
+                                tokenId: token,
+                                makerAmount: "100000000",
+                                takerAmount: "5000000",
+                                side: "SELL",
+                                expiration: "0",
+                                nonce: "0",
+                                feeRateBps: "0",
+                                signatureType: 1,
+                                signature: signedOrder.signature,
+                            },
+                            owner: owner,
+                            orderType: OrderType.GTC,
+                        });
+                    });
+
+                    it("GTC SELL POLY_GNOSIS_SAFE", async () => {
+                        const userOrder = {
+                            tokenID: token,
+                            price: 0.05,
+                            side: Side.SELL,
+                            size: 100,
+                        };
+                        const signedOrder = await createOrder(
+                            wallet,
+                            chainId,
+                            SignatureType.POLY_GNOSIS_SAFE,
+                            address,
+                            userOrder,
+                            { tickSize: "0.01", negRisk: true },
+                        );
+                        expect(signedOrder).not.null;
+                        expect(signedOrder).not.undefined;
+
+                        const jsonGTCOrder = orderToJson(signedOrder, owner, OrderType.GTC);
+                        expect(jsonGTCOrder).not.null;
+                        expect(jsonGTCOrder).not.undefined;
+
+                        expect(jsonGTCOrder).deep.equal({
+                            order: {
+                                salt: parseInt(signedOrder.salt),
+                                maker: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+                                signer: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+                                taker: "0x0000000000000000000000000000000000000000",
+                                tokenId: token,
+                                makerAmount: "100000000",
+                                takerAmount: "5000000",
+                                side: "SELL",
+                                expiration: "0",
+                                nonce: "0",
+                                feeRateBps: "0",
+                                signatureType: 2,
+                                signature: signedOrder.signature,
+                            },
+                            owner: owner,
+                            orderType: OrderType.GTC,
+                        });
+                    });
+
+                    it("FOK BUY EOA", async () => {
+                        const userMarketOrder: UserMarketOrder = {
+                            tokenID: token,
+                            price: 0.05,
+                            amount: 100,
+                        };
+                        const signedOrder = await createMarketBuyOrder(
+                            wallet,
+                            chainId,
+                            SignatureType.EOA,
+                            address,
+                            userMarketOrder,
+                            { tickSize: "0.01", negRisk: true },
+                        );
+                        expect(signedOrder).not.null;
+                        expect(signedOrder).not.undefined;
+
+                        const jsonFOKOrder = orderToJson(signedOrder, owner, OrderType.FOK);
+                        expect(jsonFOKOrder).not.null;
+                        expect(jsonFOKOrder).not.undefined;
+
+                        expect(jsonFOKOrder).deep.equal({
+                            order: {
+                                salt: parseInt(signedOrder.salt),
+                                maker: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+                                signer: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+                                taker: "0x0000000000000000000000000000000000000000",
+                                tokenId: token,
+                                makerAmount: "100000000",
+                                takerAmount: "2000000000",
+                                side: "BUY",
+                                expiration: "0",
+                                nonce: "0",
+                                feeRateBps: "0",
+                                signatureType: 0,
+                                signature: signedOrder.signature,
+                            },
+                            owner: owner,
+                            orderType: OrderType.FOK,
+                        });
+                    });
+
+                    it("FOK BUY POLY_PROXY", async () => {
+                        const userMarketOrder = {
+                            tokenID: token,
+                            price: 0.05,
+                            amount: 100,
+                        };
+                        const signedOrder = await createMarketBuyOrder(
+                            wallet,
+                            chainId,
+                            SignatureType.POLY_PROXY,
+                            address,
+                            userMarketOrder,
+                            { tickSize: "0.01", negRisk: true },
+                        );
+                        expect(signedOrder).not.null;
+                        expect(signedOrder).not.undefined;
+
+                        const jsonFOKOrder = orderToJson(signedOrder, owner, OrderType.FOK);
+                        expect(jsonFOKOrder).not.null;
+                        expect(jsonFOKOrder).not.undefined;
+
+                        expect(jsonFOKOrder).deep.equal({
+                            order: {
+                                salt: parseInt(signedOrder.salt),
+                                maker: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+                                signer: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+                                taker: "0x0000000000000000000000000000000000000000",
+                                tokenId: token,
+                                makerAmount: "100000000",
+                                takerAmount: "2000000000",
+                                side: "BUY",
+                                expiration: "0",
+                                nonce: "0",
+                                feeRateBps: "0",
+                                signatureType: 1,
+                                signature: signedOrder.signature,
+                            },
+                            owner: owner,
+                            orderType: OrderType.FOK,
+                        });
+                    });
+
+                    it("FOK BUY POLY_GNOSIS_SAFE", async () => {
+                        const userMarketOrder = {
+                            tokenID: token,
+                            price: 0.05,
+                            amount: 100,
+                        };
+                        const signedOrder = await createMarketBuyOrder(
+                            wallet,
+                            chainId,
+                            SignatureType.POLY_GNOSIS_SAFE,
+                            address,
+                            userMarketOrder,
+                            { tickSize: "0.01", negRisk: true },
+                        );
+                        expect(signedOrder).not.null;
+                        expect(signedOrder).not.undefined;
+
+                        const jsonFOKOrder = orderToJson(signedOrder, owner, OrderType.FOK);
+                        expect(jsonFOKOrder).not.null;
+                        expect(jsonFOKOrder).not.undefined;
+
+                        expect(jsonFOKOrder).deep.equal({
+                            order: {
+                                salt: parseInt(signedOrder.salt),
+                                maker: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+                                signer: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+                                taker: "0x0000000000000000000000000000000000000000",
+                                tokenId: token,
+                                makerAmount: "100000000",
+                                takerAmount: "2000000000",
+                                side: "BUY",
+                                expiration: "0",
+                                nonce: "0",
+                                feeRateBps: "0",
+                                signatureType: 2,
+                                signature: signedOrder.signature,
+                            },
+                            owner: owner,
+                            orderType: OrderType.FOK,
+                        });
                     });
                 });
 
-                it("GTD BUY POLY_GNOSIS_SAFE", async () => {
-                    const userOrder = {
-                        tokenID: token,
-                        price: 0.05,
-                        side: Side.BUY,
-                        size: 100,
-                        expiration: 1709948026,
-                    };
-                    const signedOrder = await createOrder(
-                        wallet,
-                        chainId,
-                        SignatureType.POLY_GNOSIS_SAFE,
-                        address,
-                        userOrder,
-                        { tickSize: "0.01" },
-                    );
-                    expect(signedOrder).not.null;
-                    expect(signedOrder).not.undefined;
+                describe("0.001", async () => {
+                    // publicly known private key
+                    const token =
+                        "1343197538147866997676250008839231694243646439454152539053893078719042421992";
+                    const privateKey =
+                        "0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80";
+                    const address = "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266";
+                    const wallet = new Wallet(privateKey);
+                    const chainId = Chain.MUMBAI;
+                    const owner = "f4f247b7-4ac7-ff29-a152-04fda0a8755a";
 
-                    const jsonGTDOrder = orderToJson(signedOrder, owner, OrderType.GTD);
-                    expect(jsonGTDOrder).not.null;
-                    expect(jsonGTDOrder).not.undefined;
+                    it("GTD BUY EOA", async () => {
+                        const userOrder: UserOrder = {
+                            tokenID: token,
+                            price: 0.005,
+                            side: Side.BUY,
+                            size: 100,
+                            expiration: 1709948026,
+                        };
+                        const signedOrder = await createOrder(
+                            wallet,
+                            chainId,
+                            SignatureType.EOA,
+                            address,
+                            userOrder,
+                            { tickSize: "0.001", negRisk: true },
+                        );
+                        expect(signedOrder).not.null;
+                        expect(signedOrder).not.undefined;
 
-                    expect(jsonGTDOrder).deep.equal({
-                        order: {
-                            salt: parseInt(signedOrder.salt),
-                            maker: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
-                            signer: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
-                            taker: "0x0000000000000000000000000000000000000000",
-                            tokenId: token,
-                            makerAmount: "5000000",
-                            takerAmount: "100000000",
-                            side: "BUY",
-                            expiration: "1709948026",
-                            nonce: "0",
-                            feeRateBps: "0",
-                            signatureType: 2,
-                            signature: signedOrder.signature,
-                        },
-                        owner: owner,
-                        orderType: OrderType.GTD,
+                        const jsonGTDOrder = orderToJson(signedOrder, owner, OrderType.GTD);
+                        expect(jsonGTDOrder).not.null;
+                        expect(jsonGTDOrder).not.undefined;
+
+                        expect(jsonGTDOrder).deep.equal({
+                            order: {
+                                salt: parseInt(signedOrder.salt),
+                                maker: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+                                signer: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+                                taker: "0x0000000000000000000000000000000000000000",
+                                tokenId: token,
+                                makerAmount: "500000",
+                                takerAmount: "100000000",
+                                side: "BUY",
+                                expiration: "1709948026",
+                                nonce: "0",
+                                feeRateBps: "0",
+                                signatureType: 0,
+                                signature: signedOrder.signature,
+                            },
+                            owner: owner,
+                            orderType: OrderType.GTD,
+                        });
+                    });
+
+                    it("GTD BUY POLY_PROXY", async () => {
+                        const userOrder = {
+                            tokenID: token,
+                            price: 0.005,
+                            side: Side.BUY,
+                            size: 100,
+                            expiration: 1709948026,
+                        };
+                        const signedOrder = await createOrder(
+                            wallet,
+                            chainId,
+                            SignatureType.POLY_PROXY,
+                            address,
+                            userOrder,
+                            { tickSize: "0.001", negRisk: true },
+                        );
+                        expect(signedOrder).not.null;
+                        expect(signedOrder).not.undefined;
+
+                        const jsonGTDOrder = orderToJson(signedOrder, owner, OrderType.GTD);
+                        expect(jsonGTDOrder).not.null;
+                        expect(jsonGTDOrder).not.undefined;
+
+                        expect(jsonGTDOrder).deep.equal({
+                            order: {
+                                salt: parseInt(signedOrder.salt),
+                                maker: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+                                signer: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+                                taker: "0x0000000000000000000000000000000000000000",
+                                tokenId: token,
+                                makerAmount: "500000",
+                                takerAmount: "100000000",
+                                side: "BUY",
+                                expiration: "1709948026",
+                                nonce: "0",
+                                feeRateBps: "0",
+                                signatureType: 1,
+                                signature: signedOrder.signature,
+                            },
+                            owner: owner,
+                            orderType: OrderType.GTD,
+                        });
+                    });
+
+                    it("GTD BUY POLY_GNOSIS_SAFE", async () => {
+                        const userOrder = {
+                            tokenID: token,
+                            price: 0.005,
+                            side: Side.BUY,
+                            size: 100,
+                            expiration: 1709948026,
+                        };
+                        const signedOrder = await createOrder(
+                            wallet,
+                            chainId,
+                            SignatureType.POLY_GNOSIS_SAFE,
+                            address,
+                            userOrder,
+                            { tickSize: "0.001", negRisk: true },
+                        );
+                        expect(signedOrder).not.null;
+                        expect(signedOrder).not.undefined;
+
+                        const jsonGTDOrder = orderToJson(signedOrder, owner, OrderType.GTD);
+                        expect(jsonGTDOrder).not.null;
+                        expect(jsonGTDOrder).not.undefined;
+
+                        expect(jsonGTDOrder).deep.equal({
+                            order: {
+                                salt: parseInt(signedOrder.salt),
+                                maker: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+                                signer: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+                                taker: "0x0000000000000000000000000000000000000000",
+                                tokenId: token,
+                                makerAmount: "500000",
+                                takerAmount: "100000000",
+                                side: "BUY",
+                                expiration: "1709948026",
+                                nonce: "0",
+                                feeRateBps: "0",
+                                signatureType: 2,
+                                signature: signedOrder.signature,
+                            },
+                            owner: owner,
+                            orderType: OrderType.GTD,
+                        });
+                    });
+
+                    it("GTD SELL EOA", async () => {
+                        const userOrder = {
+                            tokenID: token,
+                            price: 0.005,
+                            side: Side.SELL,
+                            size: 100,
+                            expiration: 1709948026,
+                        };
+                        const signedOrder = await createOrder(
+                            wallet,
+                            chainId,
+                            SignatureType.EOA,
+                            address,
+                            userOrder,
+                            { tickSize: "0.001", negRisk: true },
+                        );
+                        expect(signedOrder).not.null;
+                        expect(signedOrder).not.undefined;
+
+                        const jsonGTDOrder = orderToJson(signedOrder, owner, OrderType.GTD);
+                        expect(jsonGTDOrder).not.null;
+                        expect(jsonGTDOrder).not.undefined;
+
+                        expect(jsonGTDOrder).deep.equal({
+                            order: {
+                                salt: parseInt(signedOrder.salt),
+                                maker: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+                                signer: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+                                taker: "0x0000000000000000000000000000000000000000",
+                                tokenId: token,
+                                makerAmount: "100000000",
+                                takerAmount: "500000",
+                                side: "SELL",
+                                expiration: "1709948026",
+                                nonce: "0",
+                                feeRateBps: "0",
+                                signatureType: 0,
+                                signature: signedOrder.signature,
+                            },
+                            owner: owner,
+                            orderType: OrderType.GTD,
+                        });
+                    });
+
+                    it("GTD SELL POLY_PROXY", async () => {
+                        const userOrder = {
+                            tokenID: token,
+                            price: 0.005,
+                            side: Side.SELL,
+                            size: 100,
+                            expiration: 1709948026,
+                        };
+                        const signedOrder = await createOrder(
+                            wallet,
+                            chainId,
+                            SignatureType.POLY_PROXY,
+                            address,
+                            userOrder,
+                            { tickSize: "0.001", negRisk: true },
+                        );
+                        expect(signedOrder).not.null;
+                        expect(signedOrder).not.undefined;
+
+                        const jsonGTDOrder = orderToJson(signedOrder, owner, OrderType.GTD);
+                        expect(jsonGTDOrder).not.null;
+                        expect(jsonGTDOrder).not.undefined;
+
+                        expect(jsonGTDOrder).deep.equal({
+                            order: {
+                                salt: parseInt(signedOrder.salt),
+                                maker: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+                                signer: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+                                taker: "0x0000000000000000000000000000000000000000",
+                                tokenId: token,
+                                makerAmount: "100000000",
+                                takerAmount: "500000",
+                                side: "SELL",
+                                expiration: "1709948026",
+                                nonce: "0",
+                                feeRateBps: "0",
+                                signatureType: 1,
+                                signature: signedOrder.signature,
+                            },
+                            owner: owner,
+                            orderType: OrderType.GTD,
+                        });
+                    });
+
+                    it("GTD SELL POLY_GNOSIS_SAFE", async () => {
+                        const userOrder = {
+                            tokenID: token,
+                            price: 0.005,
+                            side: Side.SELL,
+                            size: 100,
+                            expiration: 1709948026,
+                        };
+                        const signedOrder = await createOrder(
+                            wallet,
+                            chainId,
+                            SignatureType.POLY_GNOSIS_SAFE,
+                            address,
+                            userOrder,
+                            { tickSize: "0.001", negRisk: true },
+                        );
+                        expect(signedOrder).not.null;
+                        expect(signedOrder).not.undefined;
+
+                        const jsonGTDOrder = orderToJson(signedOrder, owner, OrderType.GTD);
+                        expect(jsonGTDOrder).not.null;
+                        expect(jsonGTDOrder).not.undefined;
+
+                        expect(jsonGTDOrder).deep.equal({
+                            order: {
+                                salt: parseInt(signedOrder.salt),
+                                maker: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+                                signer: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+                                taker: "0x0000000000000000000000000000000000000000",
+                                tokenId: token,
+                                makerAmount: "100000000",
+                                takerAmount: "500000",
+                                side: "SELL",
+                                expiration: "1709948026",
+                                nonce: "0",
+                                feeRateBps: "0",
+                                signatureType: 2,
+                                signature: signedOrder.signature,
+                            },
+                            owner: owner,
+                            orderType: OrderType.GTD,
+                        });
+                    });
+
+                    it("GTC BUY EOA", async () => {
+                        const userOrder = {
+                            tokenID: token,
+                            price: 0.005,
+                            side: Side.BUY,
+                            size: 100,
+                        };
+                        const signedOrder = await createOrder(
+                            wallet,
+                            chainId,
+                            SignatureType.EOA,
+                            address,
+                            userOrder,
+                            { tickSize: "0.001", negRisk: true },
+                        );
+                        expect(signedOrder).not.null;
+                        expect(signedOrder).not.undefined;
+
+                        const jsonGTCOrder = orderToJson(signedOrder, owner, OrderType.GTC);
+                        expect(jsonGTCOrder).not.null;
+                        expect(jsonGTCOrder).not.undefined;
+
+                        expect(jsonGTCOrder).deep.equal({
+                            order: {
+                                salt: parseInt(signedOrder.salt),
+                                maker: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+                                signer: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+                                taker: "0x0000000000000000000000000000000000000000",
+                                tokenId: token,
+                                makerAmount: "500000",
+                                takerAmount: "100000000",
+                                side: "BUY",
+                                expiration: "0",
+                                nonce: "0",
+                                feeRateBps: "0",
+                                signatureType: 0,
+                                signature: signedOrder.signature,
+                            },
+                            owner: owner,
+                            orderType: OrderType.GTC,
+                        });
+                    });
+
+                    it("GTC BUY POLY_PROXY", async () => {
+                        const userOrder = {
+                            tokenID: token,
+                            price: 0.005,
+                            side: Side.BUY,
+                            size: 100,
+                        };
+                        const signedOrder = await createOrder(
+                            wallet,
+                            chainId,
+                            SignatureType.POLY_PROXY,
+                            address,
+                            userOrder,
+                            { tickSize: "0.001", negRisk: true },
+                        );
+                        expect(signedOrder).not.null;
+                        expect(signedOrder).not.undefined;
+
+                        const jsonGTCOrder = orderToJson(signedOrder, owner, OrderType.GTC);
+                        expect(jsonGTCOrder).not.null;
+                        expect(jsonGTCOrder).not.undefined;
+
+                        expect(jsonGTCOrder).deep.equal({
+                            order: {
+                                salt: parseInt(signedOrder.salt),
+                                maker: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+                                signer: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+                                taker: "0x0000000000000000000000000000000000000000",
+                                tokenId: token,
+                                makerAmount: "500000",
+                                takerAmount: "100000000",
+                                side: "BUY",
+                                expiration: "0",
+                                nonce: "0",
+                                feeRateBps: "0",
+                                signatureType: 1,
+                                signature: signedOrder.signature,
+                            },
+                            owner: owner,
+                            orderType: OrderType.GTC,
+                        });
+                    });
+
+                    it("GTC BUY POLY_GNOSIS_SAFE", async () => {
+                        const userOrder = {
+                            tokenID: token,
+                            price: 0.005,
+                            side: Side.BUY,
+                            size: 100,
+                        };
+                        const signedOrder = await createOrder(
+                            wallet,
+                            chainId,
+                            SignatureType.POLY_GNOSIS_SAFE,
+                            address,
+                            userOrder,
+                            { tickSize: "0.001", negRisk: true },
+                        );
+                        expect(signedOrder).not.null;
+                        expect(signedOrder).not.undefined;
+
+                        const jsonGTCOrder = orderToJson(signedOrder, owner, OrderType.GTC);
+                        expect(jsonGTCOrder).not.null;
+                        expect(jsonGTCOrder).not.undefined;
+
+                        expect(jsonGTCOrder).deep.equal({
+                            order: {
+                                salt: parseInt(signedOrder.salt),
+                                maker: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+                                signer: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+                                taker: "0x0000000000000000000000000000000000000000",
+                                tokenId: token,
+                                makerAmount: "500000",
+                                takerAmount: "100000000",
+                                side: "BUY",
+                                expiration: "0",
+                                nonce: "0",
+                                feeRateBps: "0",
+                                signatureType: 2,
+                                signature: signedOrder.signature,
+                            },
+                            owner: owner,
+                            orderType: OrderType.GTC,
+                        });
+                    });
+
+                    it("GTC SELL EOA", async () => {
+                        const userOrder = {
+                            tokenID: token,
+                            price: 0.005,
+                            side: Side.SELL,
+                            size: 100,
+                        };
+                        const signedOrder = await createOrder(
+                            wallet,
+                            chainId,
+                            SignatureType.EOA,
+                            address,
+                            userOrder,
+                            { tickSize: "0.001", negRisk: true },
+                        );
+                        expect(signedOrder).not.null;
+                        expect(signedOrder).not.undefined;
+
+                        const jsonGTCOrder = orderToJson(signedOrder, owner, OrderType.GTC);
+                        expect(jsonGTCOrder).not.null;
+                        expect(jsonGTCOrder).not.undefined;
+
+                        expect(jsonGTCOrder).deep.equal({
+                            order: {
+                                salt: parseInt(signedOrder.salt),
+                                maker: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+                                signer: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+                                taker: "0x0000000000000000000000000000000000000000",
+                                tokenId: token,
+                                makerAmount: "100000000",
+                                takerAmount: "500000",
+                                side: "SELL",
+                                expiration: "0",
+                                nonce: "0",
+                                feeRateBps: "0",
+                                signatureType: 0,
+                                signature: signedOrder.signature,
+                            },
+                            owner: owner,
+                            orderType: OrderType.GTC,
+                        });
+                    });
+
+                    it("GTC SELL POLY_PROXY", async () => {
+                        const userOrder = {
+                            tokenID: token,
+                            price: 0.005,
+                            side: Side.SELL,
+                            size: 100,
+                        };
+                        const signedOrder = await createOrder(
+                            wallet,
+                            chainId,
+                            SignatureType.POLY_PROXY,
+                            address,
+                            userOrder,
+                            { tickSize: "0.001", negRisk: true },
+                        );
+                        expect(signedOrder).not.null;
+                        expect(signedOrder).not.undefined;
+
+                        const jsonGTCOrder = orderToJson(signedOrder, owner, OrderType.GTC);
+                        expect(jsonGTCOrder).not.null;
+                        expect(jsonGTCOrder).not.undefined;
+
+                        expect(jsonGTCOrder).deep.equal({
+                            order: {
+                                salt: parseInt(signedOrder.salt),
+                                maker: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+                                signer: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+                                taker: "0x0000000000000000000000000000000000000000",
+                                tokenId: token,
+                                makerAmount: "100000000",
+                                takerAmount: "500000",
+                                side: "SELL",
+                                expiration: "0",
+                                nonce: "0",
+                                feeRateBps: "0",
+                                signatureType: 1,
+                                signature: signedOrder.signature,
+                            },
+                            owner: owner,
+                            orderType: OrderType.GTC,
+                        });
+                    });
+
+                    it("GTC SELL POLY_GNOSIS_SAFE", async () => {
+                        const userOrder = {
+                            tokenID: token,
+                            price: 0.005,
+                            side: Side.SELL,
+                            size: 100,
+                        };
+                        const signedOrder = await createOrder(
+                            wallet,
+                            chainId,
+                            SignatureType.POLY_GNOSIS_SAFE,
+                            address,
+                            userOrder,
+                            { tickSize: "0.001", negRisk: true },
+                        );
+                        expect(signedOrder).not.null;
+                        expect(signedOrder).not.undefined;
+
+                        const jsonGTCOrder = orderToJson(signedOrder, owner, OrderType.GTC);
+                        expect(jsonGTCOrder).not.null;
+                        expect(jsonGTCOrder).not.undefined;
+
+                        expect(jsonGTCOrder).deep.equal({
+                            order: {
+                                salt: parseInt(signedOrder.salt),
+                                maker: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+                                signer: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+                                taker: "0x0000000000000000000000000000000000000000",
+                                tokenId: token,
+                                makerAmount: "100000000",
+                                takerAmount: "500000",
+                                side: "SELL",
+                                expiration: "0",
+                                nonce: "0",
+                                feeRateBps: "0",
+                                signatureType: 2,
+                                signature: signedOrder.signature,
+                            },
+                            owner: owner,
+                            orderType: OrderType.GTC,
+                        });
+                    });
+
+                    it("FOK BUY EOA", async () => {
+                        const userMarketOrder: UserMarketOrder = {
+                            tokenID: token,
+                            price: 0.005,
+                            amount: 100,
+                        };
+                        const signedOrder = await createMarketBuyOrder(
+                            wallet,
+                            chainId,
+                            SignatureType.EOA,
+                            address,
+                            userMarketOrder,
+                            { tickSize: "0.001", negRisk: true },
+                        );
+                        expect(signedOrder).not.null;
+                        expect(signedOrder).not.undefined;
+
+                        const jsonFOKOrder = orderToJson(signedOrder, owner, OrderType.FOK);
+                        expect(jsonFOKOrder).not.null;
+                        expect(jsonFOKOrder).not.undefined;
+
+                        expect(jsonFOKOrder).deep.equal({
+                            order: {
+                                salt: parseInt(signedOrder.salt),
+                                maker: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+                                signer: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+                                taker: "0x0000000000000000000000000000000000000000",
+                                tokenId: token,
+                                makerAmount: "100000000",
+                                takerAmount: "20000000000",
+                                side: "BUY",
+                                expiration: "0",
+                                nonce: "0",
+                                feeRateBps: "0",
+                                signatureType: 0,
+                                signature: signedOrder.signature,
+                            },
+                            owner: owner,
+                            orderType: OrderType.FOK,
+                        });
+                    });
+
+                    it("FOK BUY POLY_PROXY", async () => {
+                        const userMarketOrder = {
+                            tokenID: token,
+                            price: 0.005,
+                            amount: 100,
+                        };
+                        const signedOrder = await createMarketBuyOrder(
+                            wallet,
+                            chainId,
+                            SignatureType.POLY_PROXY,
+                            address,
+                            userMarketOrder,
+                            { tickSize: "0.001", negRisk: true },
+                        );
+                        expect(signedOrder).not.null;
+                        expect(signedOrder).not.undefined;
+
+                        const jsonFOKOrder = orderToJson(signedOrder, owner, OrderType.FOK);
+                        expect(jsonFOKOrder).not.null;
+                        expect(jsonFOKOrder).not.undefined;
+
+                        expect(jsonFOKOrder).deep.equal({
+                            order: {
+                                salt: parseInt(signedOrder.salt),
+                                maker: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+                                signer: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+                                taker: "0x0000000000000000000000000000000000000000",
+                                tokenId: token,
+                                makerAmount: "100000000",
+                                takerAmount: "20000000000",
+                                side: "BUY",
+                                expiration: "0",
+                                nonce: "0",
+                                feeRateBps: "0",
+                                signatureType: 1,
+                                signature: signedOrder.signature,
+                            },
+                            owner: owner,
+                            orderType: OrderType.FOK,
+                        });
+                    });
+
+                    it("FOK BUY POLY_GNOSIS_SAFE", async () => {
+                        const userMarketOrder = {
+                            tokenID: token,
+                            price: 0.005,
+                            amount: 100,
+                        };
+                        const signedOrder = await createMarketBuyOrder(
+                            wallet,
+                            chainId,
+                            SignatureType.POLY_GNOSIS_SAFE,
+                            address,
+                            userMarketOrder,
+                            { tickSize: "0.001", negRisk: true },
+                        );
+                        expect(signedOrder).not.null;
+                        expect(signedOrder).not.undefined;
+
+                        const jsonFOKOrder = orderToJson(signedOrder, owner, OrderType.FOK);
+                        expect(jsonFOKOrder).not.null;
+                        expect(jsonFOKOrder).not.undefined;
+
+                        expect(jsonFOKOrder).deep.equal({
+                            order: {
+                                salt: parseInt(signedOrder.salt),
+                                maker: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+                                signer: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+                                taker: "0x0000000000000000000000000000000000000000",
+                                tokenId: token,
+                                makerAmount: "100000000",
+                                takerAmount: "20000000000",
+                                side: "BUY",
+                                expiration: "0",
+                                nonce: "0",
+                                feeRateBps: "0",
+                                signatureType: 2,
+                                signature: signedOrder.signature,
+                            },
+                            owner: owner,
+                            orderType: OrderType.FOK,
+                        });
                     });
                 });
 
-                it("GTD SELL EOA", async () => {
-                    const userOrder = {
-                        tokenID: token,
-                        price: 0.05,
-                        side: Side.SELL,
-                        size: 100,
-                        expiration: 1709948026,
-                    };
-                    const signedOrder = await createOrder(
-                        wallet,
-                        chainId,
-                        SignatureType.EOA,
-                        address,
-                        userOrder,
-                        { tickSize: "0.01" },
-                    );
-                    expect(signedOrder).not.null;
-                    expect(signedOrder).not.undefined;
+                describe("0.0001", async () => {
+                    // publicly known private key
+                    const token =
+                        "1343197538147866997676250008839231694243646439454152539053893078719042421992";
+                    const privateKey =
+                        "0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80";
+                    const address = "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266";
+                    const wallet = new Wallet(privateKey);
+                    const chainId = Chain.MUMBAI;
+                    const owner = "f4f247b7-4ac7-ff29-a152-04fda0a8755a";
 
-                    const jsonGTDOrder = orderToJson(signedOrder, owner, OrderType.GTD);
-                    expect(jsonGTDOrder).not.null;
-                    expect(jsonGTDOrder).not.undefined;
+                    it("GTD BUY EOA", async () => {
+                        const userOrder: UserOrder = {
+                            tokenID: token,
+                            price: 0.0005,
+                            side: Side.BUY,
+                            size: 100,
+                            expiration: 1709948026,
+                        };
+                        const signedOrder = await createOrder(
+                            wallet,
+                            chainId,
+                            SignatureType.EOA,
+                            address,
+                            userOrder,
+                            { tickSize: "0.0001", negRisk: true },
+                        );
+                        expect(signedOrder).not.null;
+                        expect(signedOrder).not.undefined;
 
-                    expect(jsonGTDOrder).deep.equal({
-                        order: {
-                            salt: parseInt(signedOrder.salt),
-                            maker: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
-                            signer: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
-                            taker: "0x0000000000000000000000000000000000000000",
-                            tokenId: token,
-                            makerAmount: "100000000",
-                            takerAmount: "5000000",
-                            side: "SELL",
-                            expiration: "1709948026",
-                            nonce: "0",
-                            feeRateBps: "0",
-                            signatureType: 0,
-                            signature: signedOrder.signature,
-                        },
-                        owner: owner,
-                        orderType: OrderType.GTD,
+                        const jsonGTDOrder = orderToJson(signedOrder, owner, OrderType.GTD);
+                        expect(jsonGTDOrder).not.null;
+                        expect(jsonGTDOrder).not.undefined;
+
+                        expect(jsonGTDOrder).deep.equal({
+                            order: {
+                                salt: parseInt(signedOrder.salt),
+                                maker: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+                                signer: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+                                taker: "0x0000000000000000000000000000000000000000",
+                                tokenId: token,
+                                makerAmount: "50000",
+                                takerAmount: "100000000",
+                                side: "BUY",
+                                expiration: "1709948026",
+                                nonce: "0",
+                                feeRateBps: "0",
+                                signatureType: 0,
+                                signature: signedOrder.signature,
+                            },
+                            owner: owner,
+                            orderType: OrderType.GTD,
+                        });
                     });
-                });
 
-                it("GTD SELL POLY_PROXY", async () => {
-                    const userOrder = {
-                        tokenID: token,
-                        price: 0.05,
-                        side: Side.SELL,
-                        size: 100,
-                        expiration: 1709948026,
-                    };
-                    const signedOrder = await createOrder(
-                        wallet,
-                        chainId,
-                        SignatureType.POLY_PROXY,
-                        address,
-                        userOrder,
-                        { tickSize: "0.01" },
-                    );
-                    expect(signedOrder).not.null;
-                    expect(signedOrder).not.undefined;
+                    it("GTD BUY POLY_PROXY", async () => {
+                        const userOrder = {
+                            tokenID: token,
+                            price: 0.0005,
+                            side: Side.BUY,
+                            size: 100,
+                            expiration: 1709948026,
+                        };
+                        const signedOrder = await createOrder(
+                            wallet,
+                            chainId,
+                            SignatureType.POLY_PROXY,
+                            address,
+                            userOrder,
+                            { tickSize: "0.0001", negRisk: true },
+                        );
+                        expect(signedOrder).not.null;
+                        expect(signedOrder).not.undefined;
 
-                    const jsonGTDOrder = orderToJson(signedOrder, owner, OrderType.GTD);
-                    expect(jsonGTDOrder).not.null;
-                    expect(jsonGTDOrder).not.undefined;
+                        const jsonGTDOrder = orderToJson(signedOrder, owner, OrderType.GTD);
+                        expect(jsonGTDOrder).not.null;
+                        expect(jsonGTDOrder).not.undefined;
 
-                    expect(jsonGTDOrder).deep.equal({
-                        order: {
-                            salt: parseInt(signedOrder.salt),
-                            maker: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
-                            signer: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
-                            taker: "0x0000000000000000000000000000000000000000",
-                            tokenId: token,
-                            makerAmount: "100000000",
-                            takerAmount: "5000000",
-                            side: "SELL",
-                            expiration: "1709948026",
-                            nonce: "0",
-                            feeRateBps: "0",
-                            signatureType: 1,
-                            signature: signedOrder.signature,
-                        },
-                        owner: owner,
-                        orderType: OrderType.GTD,
+                        expect(jsonGTDOrder).deep.equal({
+                            order: {
+                                salt: parseInt(signedOrder.salt),
+                                maker: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+                                signer: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+                                taker: "0x0000000000000000000000000000000000000000",
+                                tokenId: token,
+                                makerAmount: "50000",
+                                takerAmount: "100000000",
+                                side: "BUY",
+                                expiration: "1709948026",
+                                nonce: "0",
+                                feeRateBps: "0",
+                                signatureType: 1,
+                                signature: signedOrder.signature,
+                            },
+                            owner: owner,
+                            orderType: OrderType.GTD,
+                        });
                     });
-                });
 
-                it("GTD SELL POLY_GNOSIS_SAFE", async () => {
-                    const userOrder = {
-                        tokenID: token,
-                        price: 0.05,
-                        side: Side.SELL,
-                        size: 100,
-                        expiration: 1709948026,
-                    };
-                    const signedOrder = await createOrder(
-                        wallet,
-                        chainId,
-                        SignatureType.POLY_GNOSIS_SAFE,
-                        address,
-                        userOrder,
-                        { tickSize: "0.01" },
-                    );
-                    expect(signedOrder).not.null;
-                    expect(signedOrder).not.undefined;
+                    it("GTD BUY POLY_GNOSIS_SAFE", async () => {
+                        const userOrder = {
+                            tokenID: token,
+                            price: 0.0005,
+                            side: Side.BUY,
+                            size: 100,
+                            expiration: 1709948026,
+                        };
+                        const signedOrder = await createOrder(
+                            wallet,
+                            chainId,
+                            SignatureType.POLY_GNOSIS_SAFE,
+                            address,
+                            userOrder,
+                            { tickSize: "0.0001", negRisk: true },
+                        );
+                        expect(signedOrder).not.null;
+                        expect(signedOrder).not.undefined;
 
-                    const jsonGTDOrder = orderToJson(signedOrder, owner, OrderType.GTD);
-                    expect(jsonGTDOrder).not.null;
-                    expect(jsonGTDOrder).not.undefined;
+                        const jsonGTDOrder = orderToJson(signedOrder, owner, OrderType.GTD);
+                        expect(jsonGTDOrder).not.null;
+                        expect(jsonGTDOrder).not.undefined;
 
-                    expect(jsonGTDOrder).deep.equal({
-                        order: {
-                            salt: parseInt(signedOrder.salt),
-                            maker: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
-                            signer: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
-                            taker: "0x0000000000000000000000000000000000000000",
-                            tokenId: token,
-                            makerAmount: "100000000",
-                            takerAmount: "5000000",
-                            side: "SELL",
-                            expiration: "1709948026",
-                            nonce: "0",
-                            feeRateBps: "0",
-                            signatureType: 2,
-                            signature: signedOrder.signature,
-                        },
-                        owner: owner,
-                        orderType: OrderType.GTD,
+                        expect(jsonGTDOrder).deep.equal({
+                            order: {
+                                salt: parseInt(signedOrder.salt),
+                                maker: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+                                signer: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+                                taker: "0x0000000000000000000000000000000000000000",
+                                tokenId: token,
+                                makerAmount: "50000",
+                                takerAmount: "100000000",
+                                side: "BUY",
+                                expiration: "1709948026",
+                                nonce: "0",
+                                feeRateBps: "0",
+                                signatureType: 2,
+                                signature: signedOrder.signature,
+                            },
+                            owner: owner,
+                            orderType: OrderType.GTD,
+                        });
                     });
-                });
 
-                it("GTC BUY EOA", async () => {
-                    const userOrder = {
-                        tokenID: token,
-                        price: 0.05,
-                        side: Side.BUY,
-                        size: 100,
-                    };
-                    const signedOrder = await createOrder(
-                        wallet,
-                        chainId,
-                        SignatureType.EOA,
-                        address,
-                        userOrder,
-                        { tickSize: "0.01" },
-                    );
-                    expect(signedOrder).not.null;
-                    expect(signedOrder).not.undefined;
+                    it("GTD SELL EOA", async () => {
+                        const userOrder = {
+                            tokenID: token,
+                            price: 0.0005,
+                            side: Side.SELL,
+                            size: 100,
+                            expiration: 1709948026,
+                        };
+                        const signedOrder = await createOrder(
+                            wallet,
+                            chainId,
+                            SignatureType.EOA,
+                            address,
+                            userOrder,
+                            { tickSize: "0.0001", negRisk: true },
+                        );
+                        expect(signedOrder).not.null;
+                        expect(signedOrder).not.undefined;
 
-                    const jsonGTCOrder = orderToJson(signedOrder, owner, OrderType.GTC);
-                    expect(jsonGTCOrder).not.null;
-                    expect(jsonGTCOrder).not.undefined;
+                        const jsonGTDOrder = orderToJson(signedOrder, owner, OrderType.GTD);
+                        expect(jsonGTDOrder).not.null;
+                        expect(jsonGTDOrder).not.undefined;
 
-                    expect(jsonGTCOrder).deep.equal({
-                        order: {
-                            salt: parseInt(signedOrder.salt),
-                            maker: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
-                            signer: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
-                            taker: "0x0000000000000000000000000000000000000000",
-                            tokenId: token,
-                            makerAmount: "5000000",
-                            takerAmount: "100000000",
-                            side: "BUY",
-                            expiration: "0",
-                            nonce: "0",
-                            feeRateBps: "0",
-                            signatureType: 0,
-                            signature: signedOrder.signature,
-                        },
-                        owner: owner,
-                        orderType: OrderType.GTC,
+                        expect(jsonGTDOrder).deep.equal({
+                            order: {
+                                salt: parseInt(signedOrder.salt),
+                                maker: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+                                signer: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+                                taker: "0x0000000000000000000000000000000000000000",
+                                tokenId: token,
+                                makerAmount: "100000000",
+                                takerAmount: "50000",
+                                side: "SELL",
+                                expiration: "1709948026",
+                                nonce: "0",
+                                feeRateBps: "0",
+                                signatureType: 0,
+                                signature: signedOrder.signature,
+                            },
+                            owner: owner,
+                            orderType: OrderType.GTD,
+                        });
                     });
-                });
 
-                it("GTC BUY POLY_PROXY", async () => {
-                    const userOrder = {
-                        tokenID: token,
-                        price: 0.05,
-                        side: Side.BUY,
-                        size: 100,
-                    };
-                    const signedOrder = await createOrder(
-                        wallet,
-                        chainId,
-                        SignatureType.POLY_PROXY,
-                        address,
-                        userOrder,
-                        { tickSize: "0.01" },
-                    );
-                    expect(signedOrder).not.null;
-                    expect(signedOrder).not.undefined;
+                    it("GTD SELL POLY_PROXY", async () => {
+                        const userOrder = {
+                            tokenID: token,
+                            price: 0.0005,
+                            side: Side.SELL,
+                            size: 100,
+                            expiration: 1709948026,
+                        };
+                        const signedOrder = await createOrder(
+                            wallet,
+                            chainId,
+                            SignatureType.POLY_PROXY,
+                            address,
+                            userOrder,
+                            { tickSize: "0.0001", negRisk: true },
+                        );
+                        expect(signedOrder).not.null;
+                        expect(signedOrder).not.undefined;
 
-                    const jsonGTCOrder = orderToJson(signedOrder, owner, OrderType.GTC);
-                    expect(jsonGTCOrder).not.null;
-                    expect(jsonGTCOrder).not.undefined;
+                        const jsonGTDOrder = orderToJson(signedOrder, owner, OrderType.GTD);
+                        expect(jsonGTDOrder).not.null;
+                        expect(jsonGTDOrder).not.undefined;
 
-                    expect(jsonGTCOrder).deep.equal({
-                        order: {
-                            salt: parseInt(signedOrder.salt),
-                            maker: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
-                            signer: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
-                            taker: "0x0000000000000000000000000000000000000000",
-                            tokenId: token,
-                            makerAmount: "5000000",
-                            takerAmount: "100000000",
-                            side: "BUY",
-                            expiration: "0",
-                            nonce: "0",
-                            feeRateBps: "0",
-                            signatureType: 1,
-                            signature: signedOrder.signature,
-                        },
-                        owner: owner,
-                        orderType: OrderType.GTC,
+                        expect(jsonGTDOrder).deep.equal({
+                            order: {
+                                salt: parseInt(signedOrder.salt),
+                                maker: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+                                signer: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+                                taker: "0x0000000000000000000000000000000000000000",
+                                tokenId: token,
+                                makerAmount: "100000000",
+                                takerAmount: "50000",
+                                side: "SELL",
+                                expiration: "1709948026",
+                                nonce: "0",
+                                feeRateBps: "0",
+                                signatureType: 1,
+                                signature: signedOrder.signature,
+                            },
+                            owner: owner,
+                            orderType: OrderType.GTD,
+                        });
                     });
-                });
 
-                it("GTC BUY POLY_GNOSIS_SAFE", async () => {
-                    const userOrder = {
-                        tokenID: token,
-                        price: 0.05,
-                        side: Side.BUY,
-                        size: 100,
-                    };
-                    const signedOrder = await createOrder(
-                        wallet,
-                        chainId,
-                        SignatureType.POLY_GNOSIS_SAFE,
-                        address,
-                        userOrder,
-                        { tickSize: "0.01" },
-                    );
-                    expect(signedOrder).not.null;
-                    expect(signedOrder).not.undefined;
+                    it("GTD SELL POLY_GNOSIS_SAFE", async () => {
+                        const userOrder = {
+                            tokenID: token,
+                            price: 0.0005,
+                            side: Side.SELL,
+                            size: 100,
+                            expiration: 1709948026,
+                        };
+                        const signedOrder = await createOrder(
+                            wallet,
+                            chainId,
+                            SignatureType.POLY_GNOSIS_SAFE,
+                            address,
+                            userOrder,
+                            { tickSize: "0.0001", negRisk: true },
+                        );
+                        expect(signedOrder).not.null;
+                        expect(signedOrder).not.undefined;
 
-                    const jsonGTCOrder = orderToJson(signedOrder, owner, OrderType.GTC);
-                    expect(jsonGTCOrder).not.null;
-                    expect(jsonGTCOrder).not.undefined;
+                        const jsonGTDOrder = orderToJson(signedOrder, owner, OrderType.GTD);
+                        expect(jsonGTDOrder).not.null;
+                        expect(jsonGTDOrder).not.undefined;
 
-                    expect(jsonGTCOrder).deep.equal({
-                        order: {
-                            salt: parseInt(signedOrder.salt),
-                            maker: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
-                            signer: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
-                            taker: "0x0000000000000000000000000000000000000000",
-                            tokenId: token,
-                            makerAmount: "5000000",
-                            takerAmount: "100000000",
-                            side: "BUY",
-                            expiration: "0",
-                            nonce: "0",
-                            feeRateBps: "0",
-                            signatureType: 2,
-                            signature: signedOrder.signature,
-                        },
-                        owner: owner,
-                        orderType: OrderType.GTC,
+                        expect(jsonGTDOrder).deep.equal({
+                            order: {
+                                salt: parseInt(signedOrder.salt),
+                                maker: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+                                signer: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+                                taker: "0x0000000000000000000000000000000000000000",
+                                tokenId: token,
+                                makerAmount: "100000000",
+                                takerAmount: "50000",
+                                side: "SELL",
+                                expiration: "1709948026",
+                                nonce: "0",
+                                feeRateBps: "0",
+                                signatureType: 2,
+                                signature: signedOrder.signature,
+                            },
+                            owner: owner,
+                            orderType: OrderType.GTD,
+                        });
                     });
-                });
 
-                it("GTC SELL EOA", async () => {
-                    const userOrder = {
-                        tokenID: token,
-                        price: 0.05,
-                        side: Side.SELL,
-                        size: 100,
-                    };
-                    const signedOrder = await createOrder(
-                        wallet,
-                        chainId,
-                        SignatureType.EOA,
-                        address,
-                        userOrder,
-                        { tickSize: "0.01" },
-                    );
-                    expect(signedOrder).not.null;
-                    expect(signedOrder).not.undefined;
+                    it("GTC BUY EOA", async () => {
+                        const userOrder = {
+                            tokenID: token,
+                            price: 0.0005,
+                            side: Side.BUY,
+                            size: 100,
+                        };
+                        const signedOrder = await createOrder(
+                            wallet,
+                            chainId,
+                            SignatureType.EOA,
+                            address,
+                            userOrder,
+                            { tickSize: "0.0001", negRisk: true },
+                        );
+                        expect(signedOrder).not.null;
+                        expect(signedOrder).not.undefined;
 
-                    const jsonGTCOrder = orderToJson(signedOrder, owner, OrderType.GTC);
-                    expect(jsonGTCOrder).not.null;
-                    expect(jsonGTCOrder).not.undefined;
+                        const jsonGTCOrder = orderToJson(signedOrder, owner, OrderType.GTC);
+                        expect(jsonGTCOrder).not.null;
+                        expect(jsonGTCOrder).not.undefined;
 
-                    expect(jsonGTCOrder).deep.equal({
-                        order: {
-                            salt: parseInt(signedOrder.salt),
-                            maker: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
-                            signer: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
-                            taker: "0x0000000000000000000000000000000000000000",
-                            tokenId: token,
-                            makerAmount: "100000000",
-                            takerAmount: "5000000",
-                            side: "SELL",
-                            expiration: "0",
-                            nonce: "0",
-                            feeRateBps: "0",
-                            signatureType: 0,
-                            signature: signedOrder.signature,
-                        },
-                        owner: owner,
-                        orderType: OrderType.GTC,
+                        expect(jsonGTCOrder).deep.equal({
+                            order: {
+                                salt: parseInt(signedOrder.salt),
+                                maker: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+                                signer: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+                                taker: "0x0000000000000000000000000000000000000000",
+                                tokenId: token,
+                                makerAmount: "50000",
+                                takerAmount: "100000000",
+                                side: "BUY",
+                                expiration: "0",
+                                nonce: "0",
+                                feeRateBps: "0",
+                                signatureType: 0,
+                                signature: signedOrder.signature,
+                            },
+                            owner: owner,
+                            orderType: OrderType.GTC,
+                        });
                     });
-                });
 
-                it("GTC SELL POLY_PROXY", async () => {
-                    const userOrder = {
-                        tokenID: token,
-                        price: 0.05,
-                        side: Side.SELL,
-                        size: 100,
-                    };
-                    const signedOrder = await createOrder(
-                        wallet,
-                        chainId,
-                        SignatureType.POLY_PROXY,
-                        address,
-                        userOrder,
-                        { tickSize: "0.01" },
-                    );
-                    expect(signedOrder).not.null;
-                    expect(signedOrder).not.undefined;
+                    it("GTC BUY POLY_PROXY", async () => {
+                        const userOrder = {
+                            tokenID: token,
+                            price: 0.0005,
+                            side: Side.BUY,
+                            size: 100,
+                        };
+                        const signedOrder = await createOrder(
+                            wallet,
+                            chainId,
+                            SignatureType.POLY_PROXY,
+                            address,
+                            userOrder,
+                            { tickSize: "0.0001", negRisk: true },
+                        );
+                        expect(signedOrder).not.null;
+                        expect(signedOrder).not.undefined;
 
-                    const jsonGTCOrder = orderToJson(signedOrder, owner, OrderType.GTC);
-                    expect(jsonGTCOrder).not.null;
-                    expect(jsonGTCOrder).not.undefined;
+                        const jsonGTCOrder = orderToJson(signedOrder, owner, OrderType.GTC);
+                        expect(jsonGTCOrder).not.null;
+                        expect(jsonGTCOrder).not.undefined;
 
-                    expect(jsonGTCOrder).deep.equal({
-                        order: {
-                            salt: parseInt(signedOrder.salt),
-                            maker: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
-                            signer: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
-                            taker: "0x0000000000000000000000000000000000000000",
-                            tokenId: token,
-                            makerAmount: "100000000",
-                            takerAmount: "5000000",
-                            side: "SELL",
-                            expiration: "0",
-                            nonce: "0",
-                            feeRateBps: "0",
-                            signatureType: 1,
-                            signature: signedOrder.signature,
-                        },
-                        owner: owner,
-                        orderType: OrderType.GTC,
+                        expect(jsonGTCOrder).deep.equal({
+                            order: {
+                                salt: parseInt(signedOrder.salt),
+                                maker: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+                                signer: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+                                taker: "0x0000000000000000000000000000000000000000",
+                                tokenId: token,
+                                makerAmount: "50000",
+                                takerAmount: "100000000",
+                                side: "BUY",
+                                expiration: "0",
+                                nonce: "0",
+                                feeRateBps: "0",
+                                signatureType: 1,
+                                signature: signedOrder.signature,
+                            },
+                            owner: owner,
+                            orderType: OrderType.GTC,
+                        });
                     });
-                });
 
-                it("GTC SELL POLY_GNOSIS_SAFE", async () => {
-                    const userOrder = {
-                        tokenID: token,
-                        price: 0.05,
-                        side: Side.SELL,
-                        size: 100,
-                    };
-                    const signedOrder = await createOrder(
-                        wallet,
-                        chainId,
-                        SignatureType.POLY_GNOSIS_SAFE,
-                        address,
-                        userOrder,
-                        { tickSize: "0.01" },
-                    );
-                    expect(signedOrder).not.null;
-                    expect(signedOrder).not.undefined;
+                    it("GTC BUY POLY_GNOSIS_SAFE", async () => {
+                        const userOrder = {
+                            tokenID: token,
+                            price: 0.0005,
+                            side: Side.BUY,
+                            size: 100,
+                        };
+                        const signedOrder = await createOrder(
+                            wallet,
+                            chainId,
+                            SignatureType.POLY_GNOSIS_SAFE,
+                            address,
+                            userOrder,
+                            { tickSize: "0.0001", negRisk: true },
+                        );
+                        expect(signedOrder).not.null;
+                        expect(signedOrder).not.undefined;
 
-                    const jsonGTCOrder = orderToJson(signedOrder, owner, OrderType.GTC);
-                    expect(jsonGTCOrder).not.null;
-                    expect(jsonGTCOrder).not.undefined;
+                        const jsonGTCOrder = orderToJson(signedOrder, owner, OrderType.GTC);
+                        expect(jsonGTCOrder).not.null;
+                        expect(jsonGTCOrder).not.undefined;
 
-                    expect(jsonGTCOrder).deep.equal({
-                        order: {
-                            salt: parseInt(signedOrder.salt),
-                            maker: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
-                            signer: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
-                            taker: "0x0000000000000000000000000000000000000000",
-                            tokenId: token,
-                            makerAmount: "100000000",
-                            takerAmount: "5000000",
-                            side: "SELL",
-                            expiration: "0",
-                            nonce: "0",
-                            feeRateBps: "0",
-                            signatureType: 2,
-                            signature: signedOrder.signature,
-                        },
-                        owner: owner,
-                        orderType: OrderType.GTC,
+                        expect(jsonGTCOrder).deep.equal({
+                            order: {
+                                salt: parseInt(signedOrder.salt),
+                                maker: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+                                signer: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+                                taker: "0x0000000000000000000000000000000000000000",
+                                tokenId: token,
+                                makerAmount: "50000",
+                                takerAmount: "100000000",
+                                side: "BUY",
+                                expiration: "0",
+                                nonce: "0",
+                                feeRateBps: "0",
+                                signatureType: 2,
+                                signature: signedOrder.signature,
+                            },
+                            owner: owner,
+                            orderType: OrderType.GTC,
+                        });
                     });
-                });
 
-                it("FOK BUY EOA", async () => {
-                    const userMarketOrder: UserMarketOrder = {
-                        tokenID: token,
-                        price: 0.05,
-                        amount: 100,
-                    };
-                    const signedOrder = await createMarketBuyOrder(
-                        wallet,
-                        chainId,
-                        SignatureType.EOA,
-                        address,
-                        userMarketOrder,
-                        { tickSize: "0.01" },
-                    );
-                    expect(signedOrder).not.null;
-                    expect(signedOrder).not.undefined;
+                    it("GTC SELL EOA", async () => {
+                        const userOrder = {
+                            tokenID: token,
+                            price: 0.0005,
+                            side: Side.SELL,
+                            size: 100,
+                        };
+                        const signedOrder = await createOrder(
+                            wallet,
+                            chainId,
+                            SignatureType.EOA,
+                            address,
+                            userOrder,
+                            { tickSize: "0.0001", negRisk: true },
+                        );
+                        expect(signedOrder).not.null;
+                        expect(signedOrder).not.undefined;
 
-                    const jsonFOKOrder = orderToJson(signedOrder, owner, OrderType.FOK);
-                    expect(jsonFOKOrder).not.null;
-                    expect(jsonFOKOrder).not.undefined;
+                        const jsonGTCOrder = orderToJson(signedOrder, owner, OrderType.GTC);
+                        expect(jsonGTCOrder).not.null;
+                        expect(jsonGTCOrder).not.undefined;
 
-                    expect(jsonFOKOrder).deep.equal({
-                        order: {
-                            salt: parseInt(signedOrder.salt),
-                            maker: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
-                            signer: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
-                            taker: "0x0000000000000000000000000000000000000000",
-                            tokenId: token,
-                            makerAmount: "100000000",
-                            takerAmount: "2000000000",
-                            side: "BUY",
-                            expiration: "0",
-                            nonce: "0",
-                            feeRateBps: "0",
-                            signatureType: 0,
-                            signature: signedOrder.signature,
-                        },
-                        owner: owner,
-                        orderType: OrderType.FOK,
+                        expect(jsonGTCOrder).deep.equal({
+                            order: {
+                                salt: parseInt(signedOrder.salt),
+                                maker: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+                                signer: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+                                taker: "0x0000000000000000000000000000000000000000",
+                                tokenId: token,
+                                makerAmount: "100000000",
+                                takerAmount: "50000",
+                                side: "SELL",
+                                expiration: "0",
+                                nonce: "0",
+                                feeRateBps: "0",
+                                signatureType: 0,
+                                signature: signedOrder.signature,
+                            },
+                            owner: owner,
+                            orderType: OrderType.GTC,
+                        });
                     });
-                });
 
-                it("FOK BUY POLY_PROXY", async () => {
-                    const userMarketOrder = {
-                        tokenID: token,
-                        price: 0.05,
-                        amount: 100,
-                    };
-                    const signedOrder = await createMarketBuyOrder(
-                        wallet,
-                        chainId,
-                        SignatureType.POLY_PROXY,
-                        address,
-                        userMarketOrder,
-                        { tickSize: "0.01" },
-                    );
-                    expect(signedOrder).not.null;
-                    expect(signedOrder).not.undefined;
+                    it("GTC SELL POLY_PROXY", async () => {
+                        const userOrder = {
+                            tokenID: token,
+                            price: 0.0005,
+                            side: Side.SELL,
+                            size: 100,
+                        };
+                        const signedOrder = await createOrder(
+                            wallet,
+                            chainId,
+                            SignatureType.POLY_PROXY,
+                            address,
+                            userOrder,
+                            { tickSize: "0.0001", negRisk: true },
+                        );
+                        expect(signedOrder).not.null;
+                        expect(signedOrder).not.undefined;
 
-                    const jsonFOKOrder = orderToJson(signedOrder, owner, OrderType.FOK);
-                    expect(jsonFOKOrder).not.null;
-                    expect(jsonFOKOrder).not.undefined;
+                        const jsonGTCOrder = orderToJson(signedOrder, owner, OrderType.GTC);
+                        expect(jsonGTCOrder).not.null;
+                        expect(jsonGTCOrder).not.undefined;
 
-                    expect(jsonFOKOrder).deep.equal({
-                        order: {
-                            salt: parseInt(signedOrder.salt),
-                            maker: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
-                            signer: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
-                            taker: "0x0000000000000000000000000000000000000000",
-                            tokenId: token,
-                            makerAmount: "100000000",
-                            takerAmount: "2000000000",
-                            side: "BUY",
-                            expiration: "0",
-                            nonce: "0",
-                            feeRateBps: "0",
-                            signatureType: 1,
-                            signature: signedOrder.signature,
-                        },
-                        owner: owner,
-                        orderType: OrderType.FOK,
+                        expect(jsonGTCOrder).deep.equal({
+                            order: {
+                                salt: parseInt(signedOrder.salt),
+                                maker: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+                                signer: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+                                taker: "0x0000000000000000000000000000000000000000",
+                                tokenId: token,
+                                makerAmount: "100000000",
+                                takerAmount: "50000",
+                                side: "SELL",
+                                expiration: "0",
+                                nonce: "0",
+                                feeRateBps: "0",
+                                signatureType: 1,
+                                signature: signedOrder.signature,
+                            },
+                            owner: owner,
+                            orderType: OrderType.GTC,
+                        });
                     });
-                });
 
-                it("FOK BUY POLY_GNOSIS_SAFE", async () => {
-                    const userMarketOrder = {
-                        tokenID: token,
-                        price: 0.05,
-                        amount: 100,
-                    };
-                    const signedOrder = await createMarketBuyOrder(
-                        wallet,
-                        chainId,
-                        SignatureType.POLY_GNOSIS_SAFE,
-                        address,
-                        userMarketOrder,
-                        { tickSize: "0.01" },
-                    );
-                    expect(signedOrder).not.null;
-                    expect(signedOrder).not.undefined;
+                    it("GTC SELL POLY_GNOSIS_SAFE", async () => {
+                        const userOrder = {
+                            tokenID: token,
+                            price: 0.0005,
+                            side: Side.SELL,
+                            size: 100,
+                        };
+                        const signedOrder = await createOrder(
+                            wallet,
+                            chainId,
+                            SignatureType.POLY_GNOSIS_SAFE,
+                            address,
+                            userOrder,
+                            { tickSize: "0.0001", negRisk: true },
+                        );
+                        expect(signedOrder).not.null;
+                        expect(signedOrder).not.undefined;
 
-                    const jsonFOKOrder = orderToJson(signedOrder, owner, OrderType.FOK);
-                    expect(jsonFOKOrder).not.null;
-                    expect(jsonFOKOrder).not.undefined;
+                        const jsonGTCOrder = orderToJson(signedOrder, owner, OrderType.GTC);
+                        expect(jsonGTCOrder).not.null;
+                        expect(jsonGTCOrder).not.undefined;
 
-                    expect(jsonFOKOrder).deep.equal({
-                        order: {
-                            salt: parseInt(signedOrder.salt),
-                            maker: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
-                            signer: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
-                            taker: "0x0000000000000000000000000000000000000000",
-                            tokenId: token,
-                            makerAmount: "100000000",
-                            takerAmount: "2000000000",
-                            side: "BUY",
-                            expiration: "0",
-                            nonce: "0",
-                            feeRateBps: "0",
-                            signatureType: 2,
-                            signature: signedOrder.signature,
-                        },
-                        owner: owner,
-                        orderType: OrderType.FOK,
+                        expect(jsonGTCOrder).deep.equal({
+                            order: {
+                                salt: parseInt(signedOrder.salt),
+                                maker: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+                                signer: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+                                taker: "0x0000000000000000000000000000000000000000",
+                                tokenId: token,
+                                makerAmount: "100000000",
+                                takerAmount: "50000",
+                                side: "SELL",
+                                expiration: "0",
+                                nonce: "0",
+                                feeRateBps: "0",
+                                signatureType: 2,
+                                signature: signedOrder.signature,
+                            },
+                            owner: owner,
+                            orderType: OrderType.GTC,
+                        });
                     });
-                });
-            });
 
-            describe("0.001", async () => {
-                // publicly known private key
-                const token =
-                    "1343197538147866997676250008839231694243646439454152539053893078719042421992";
-                const privateKey =
-                    "0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80";
-                const address = "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266";
-                const wallet = new Wallet(privateKey);
-                const chainId = Chain.MUMBAI;
-                const owner = "f4f247b7-4ac7-ff29-a152-04fda0a8755a";
+                    it("FOK BUY EOA", async () => {
+                        const userMarketOrder: UserMarketOrder = {
+                            tokenID: token,
+                            price: 0.0005,
+                            amount: 100,
+                        };
+                        const signedOrder = await createMarketBuyOrder(
+                            wallet,
+                            chainId,
+                            SignatureType.EOA,
+                            address,
+                            userMarketOrder,
+                            { tickSize: "0.0001", negRisk: true },
+                        );
+                        expect(signedOrder).not.null;
+                        expect(signedOrder).not.undefined;
 
-                it("GTD BUY EOA", async () => {
-                    const userOrder: UserOrder = {
-                        tokenID: token,
-                        price: 0.005,
-                        side: Side.BUY,
-                        size: 100,
-                        expiration: 1709948026,
-                    };
-                    const signedOrder = await createOrder(
-                        wallet,
-                        chainId,
-                        SignatureType.EOA,
-                        address,
-                        userOrder,
-                        { tickSize: "0.001" },
-                    );
-                    expect(signedOrder).not.null;
-                    expect(signedOrder).not.undefined;
+                        const jsonFOKOrder = orderToJson(signedOrder, owner, OrderType.FOK);
+                        expect(jsonFOKOrder).not.null;
+                        expect(jsonFOKOrder).not.undefined;
 
-                    const jsonGTDOrder = orderToJson(signedOrder, owner, OrderType.GTD);
-                    expect(jsonGTDOrder).not.null;
-                    expect(jsonGTDOrder).not.undefined;
-
-                    expect(jsonGTDOrder).deep.equal({
-                        order: {
-                            salt: parseInt(signedOrder.salt),
-                            maker: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
-                            signer: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
-                            taker: "0x0000000000000000000000000000000000000000",
-                            tokenId: token,
-                            makerAmount: "500000",
-                            takerAmount: "100000000",
-                            side: "BUY",
-                            expiration: "1709948026",
-                            nonce: "0",
-                            feeRateBps: "0",
-                            signatureType: 0,
-                            signature: signedOrder.signature,
-                        },
-                        owner: owner,
-                        orderType: OrderType.GTD,
+                        expect(jsonFOKOrder).deep.equal({
+                            order: {
+                                salt: parseInt(signedOrder.salt),
+                                maker: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+                                signer: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+                                taker: "0x0000000000000000000000000000000000000000",
+                                tokenId: token,
+                                makerAmount: "100000000",
+                                takerAmount: "200000000000",
+                                side: "BUY",
+                                expiration: "0",
+                                nonce: "0",
+                                feeRateBps: "0",
+                                signatureType: 0,
+                                signature: signedOrder.signature,
+                            },
+                            owner: owner,
+                            orderType: OrderType.FOK,
+                        });
                     });
-                });
 
-                it("GTD BUY POLY_PROXY", async () => {
-                    const userOrder = {
-                        tokenID: token,
-                        price: 0.005,
-                        side: Side.BUY,
-                        size: 100,
-                        expiration: 1709948026,
-                    };
-                    const signedOrder = await createOrder(
-                        wallet,
-                        chainId,
-                        SignatureType.POLY_PROXY,
-                        address,
-                        userOrder,
-                        { tickSize: "0.001" },
-                    );
-                    expect(signedOrder).not.null;
-                    expect(signedOrder).not.undefined;
+                    it("FOK BUY POLY_PROXY", async () => {
+                        const userMarketOrder = {
+                            tokenID: token,
+                            price: 0.0005,
+                            amount: 100,
+                        };
+                        const signedOrder = await createMarketBuyOrder(
+                            wallet,
+                            chainId,
+                            SignatureType.POLY_PROXY,
+                            address,
+                            userMarketOrder,
+                            { tickSize: "0.0001", negRisk: true },
+                        );
+                        expect(signedOrder).not.null;
+                        expect(signedOrder).not.undefined;
 
-                    const jsonGTDOrder = orderToJson(signedOrder, owner, OrderType.GTD);
-                    expect(jsonGTDOrder).not.null;
-                    expect(jsonGTDOrder).not.undefined;
+                        const jsonFOKOrder = orderToJson(signedOrder, owner, OrderType.FOK);
+                        expect(jsonFOKOrder).not.null;
+                        expect(jsonFOKOrder).not.undefined;
 
-                    expect(jsonGTDOrder).deep.equal({
-                        order: {
-                            salt: parseInt(signedOrder.salt),
-                            maker: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
-                            signer: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
-                            taker: "0x0000000000000000000000000000000000000000",
-                            tokenId: token,
-                            makerAmount: "500000",
-                            takerAmount: "100000000",
-                            side: "BUY",
-                            expiration: "1709948026",
-                            nonce: "0",
-                            feeRateBps: "0",
-                            signatureType: 1,
-                            signature: signedOrder.signature,
-                        },
-                        owner: owner,
-                        orderType: OrderType.GTD,
+                        expect(jsonFOKOrder).deep.equal({
+                            order: {
+                                salt: parseInt(signedOrder.salt),
+                                maker: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+                                signer: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+                                taker: "0x0000000000000000000000000000000000000000",
+                                tokenId: token,
+                                makerAmount: "100000000",
+                                takerAmount: "200000000000",
+                                side: "BUY",
+                                expiration: "0",
+                                nonce: "0",
+                                feeRateBps: "0",
+                                signatureType: 1,
+                                signature: signedOrder.signature,
+                            },
+                            owner: owner,
+                            orderType: OrderType.FOK,
+                        });
                     });
-                });
 
-                it("GTD BUY POLY_GNOSIS_SAFE", async () => {
-                    const userOrder = {
-                        tokenID: token,
-                        price: 0.005,
-                        side: Side.BUY,
-                        size: 100,
-                        expiration: 1709948026,
-                    };
-                    const signedOrder = await createOrder(
-                        wallet,
-                        chainId,
-                        SignatureType.POLY_GNOSIS_SAFE,
-                        address,
-                        userOrder,
-                        { tickSize: "0.001" },
-                    );
-                    expect(signedOrder).not.null;
-                    expect(signedOrder).not.undefined;
-
-                    const jsonGTDOrder = orderToJson(signedOrder, owner, OrderType.GTD);
-                    expect(jsonGTDOrder).not.null;
-                    expect(jsonGTDOrder).not.undefined;
-
-                    expect(jsonGTDOrder).deep.equal({
-                        order: {
-                            salt: parseInt(signedOrder.salt),
-                            maker: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
-                            signer: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
-                            taker: "0x0000000000000000000000000000000000000000",
-                            tokenId: token,
-                            makerAmount: "500000",
-                            takerAmount: "100000000",
-                            side: "BUY",
-                            expiration: "1709948026",
-                            nonce: "0",
-                            feeRateBps: "0",
-                            signatureType: 2,
-                            signature: signedOrder.signature,
-                        },
-                        owner: owner,
-                        orderType: OrderType.GTD,
-                    });
-                });
-
-                it("GTD SELL EOA", async () => {
-                    const userOrder = {
-                        tokenID: token,
-                        price: 0.005,
-                        side: Side.SELL,
-                        size: 100,
-                        expiration: 1709948026,
-                    };
-                    const signedOrder = await createOrder(
-                        wallet,
-                        chainId,
-                        SignatureType.EOA,
-                        address,
-                        userOrder,
-                        { tickSize: "0.001" },
-                    );
-                    expect(signedOrder).not.null;
-                    expect(signedOrder).not.undefined;
-
-                    const jsonGTDOrder = orderToJson(signedOrder, owner, OrderType.GTD);
-                    expect(jsonGTDOrder).not.null;
-                    expect(jsonGTDOrder).not.undefined;
-
-                    expect(jsonGTDOrder).deep.equal({
-                        order: {
-                            salt: parseInt(signedOrder.salt),
-                            maker: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
-                            signer: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
-                            taker: "0x0000000000000000000000000000000000000000",
-                            tokenId: token,
-                            makerAmount: "100000000",
-                            takerAmount: "500000",
-                            side: "SELL",
-                            expiration: "1709948026",
-                            nonce: "0",
-                            feeRateBps: "0",
-                            signatureType: 0,
-                            signature: signedOrder.signature,
-                        },
-                        owner: owner,
-                        orderType: OrderType.GTD,
-                    });
-                });
-
-                it("GTD SELL POLY_PROXY", async () => {
-                    const userOrder = {
-                        tokenID: token,
-                        price: 0.005,
-                        side: Side.SELL,
-                        size: 100,
-                        expiration: 1709948026,
-                    };
-                    const signedOrder = await createOrder(
-                        wallet,
-                        chainId,
-                        SignatureType.POLY_PROXY,
-                        address,
-                        userOrder,
-                        { tickSize: "0.001" },
-                    );
-                    expect(signedOrder).not.null;
-                    expect(signedOrder).not.undefined;
-
-                    const jsonGTDOrder = orderToJson(signedOrder, owner, OrderType.GTD);
-                    expect(jsonGTDOrder).not.null;
-                    expect(jsonGTDOrder).not.undefined;
-
-                    expect(jsonGTDOrder).deep.equal({
-                        order: {
-                            salt: parseInt(signedOrder.salt),
-                            maker: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
-                            signer: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
-                            taker: "0x0000000000000000000000000000000000000000",
-                            tokenId: token,
-                            makerAmount: "100000000",
-                            takerAmount: "500000",
-                            side: "SELL",
-                            expiration: "1709948026",
-                            nonce: "0",
-                            feeRateBps: "0",
-                            signatureType: 1,
-                            signature: signedOrder.signature,
-                        },
-                        owner: owner,
-                        orderType: OrderType.GTD,
-                    });
-                });
-
-                it("GTD SELL POLY_GNOSIS_SAFE", async () => {
-                    const userOrder = {
-                        tokenID: token,
-                        price: 0.005,
-                        side: Side.SELL,
-                        size: 100,
-                        expiration: 1709948026,
-                    };
-                    const signedOrder = await createOrder(
-                        wallet,
-                        chainId,
-                        SignatureType.POLY_GNOSIS_SAFE,
-                        address,
-                        userOrder,
-                        { tickSize: "0.001" },
-                    );
-                    expect(signedOrder).not.null;
-                    expect(signedOrder).not.undefined;
-
-                    const jsonGTDOrder = orderToJson(signedOrder, owner, OrderType.GTD);
-                    expect(jsonGTDOrder).not.null;
-                    expect(jsonGTDOrder).not.undefined;
-
-                    expect(jsonGTDOrder).deep.equal({
-                        order: {
-                            salt: parseInt(signedOrder.salt),
-                            maker: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
-                            signer: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
-                            taker: "0x0000000000000000000000000000000000000000",
-                            tokenId: token,
-                            makerAmount: "100000000",
-                            takerAmount: "500000",
-                            side: "SELL",
-                            expiration: "1709948026",
-                            nonce: "0",
-                            feeRateBps: "0",
-                            signatureType: 2,
-                            signature: signedOrder.signature,
-                        },
-                        owner: owner,
-                        orderType: OrderType.GTD,
-                    });
-                });
-
-                it("GTC BUY EOA", async () => {
-                    const userOrder = {
-                        tokenID: token,
-                        price: 0.005,
-                        side: Side.BUY,
-                        size: 100,
-                    };
-                    const signedOrder = await createOrder(
-                        wallet,
-                        chainId,
-                        SignatureType.EOA,
-                        address,
-                        userOrder,
-                        { tickSize: "0.001" },
-                    );
-                    expect(signedOrder).not.null;
-                    expect(signedOrder).not.undefined;
-
-                    const jsonGTCOrder = orderToJson(signedOrder, owner, OrderType.GTC);
-                    expect(jsonGTCOrder).not.null;
-                    expect(jsonGTCOrder).not.undefined;
-
-                    expect(jsonGTCOrder).deep.equal({
-                        order: {
-                            salt: parseInt(signedOrder.salt),
-                            maker: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
-                            signer: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
-                            taker: "0x0000000000000000000000000000000000000000",
-                            tokenId: token,
-                            makerAmount: "500000",
-                            takerAmount: "100000000",
-                            side: "BUY",
-                            expiration: "0",
-                            nonce: "0",
-                            feeRateBps: "0",
-                            signatureType: 0,
-                            signature: signedOrder.signature,
-                        },
-                        owner: owner,
-                        orderType: OrderType.GTC,
-                    });
-                });
-
-                it("GTC BUY POLY_PROXY", async () => {
-                    const userOrder = {
-                        tokenID: token,
-                        price: 0.005,
-                        side: Side.BUY,
-                        size: 100,
-                    };
-                    const signedOrder = await createOrder(
-                        wallet,
-                        chainId,
-                        SignatureType.POLY_PROXY,
-                        address,
-                        userOrder,
-                        { tickSize: "0.001" },
-                    );
-                    expect(signedOrder).not.null;
-                    expect(signedOrder).not.undefined;
-
-                    const jsonGTCOrder = orderToJson(signedOrder, owner, OrderType.GTC);
-                    expect(jsonGTCOrder).not.null;
-                    expect(jsonGTCOrder).not.undefined;
-
-                    expect(jsonGTCOrder).deep.equal({
-                        order: {
-                            salt: parseInt(signedOrder.salt),
-                            maker: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
-                            signer: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
-                            taker: "0x0000000000000000000000000000000000000000",
-                            tokenId: token,
-                            makerAmount: "500000",
-                            takerAmount: "100000000",
-                            side: "BUY",
-                            expiration: "0",
-                            nonce: "0",
-                            feeRateBps: "0",
-                            signatureType: 1,
-                            signature: signedOrder.signature,
-                        },
-                        owner: owner,
-                        orderType: OrderType.GTC,
-                    });
-                });
-
-                it("GTC BUY POLY_GNOSIS_SAFE", async () => {
-                    const userOrder = {
-                        tokenID: token,
-                        price: 0.005,
-                        side: Side.BUY,
-                        size: 100,
-                    };
-                    const signedOrder = await createOrder(
-                        wallet,
-                        chainId,
-                        SignatureType.POLY_GNOSIS_SAFE,
-                        address,
-                        userOrder,
-                        { tickSize: "0.001" },
-                    );
-                    expect(signedOrder).not.null;
-                    expect(signedOrder).not.undefined;
-
-                    const jsonGTCOrder = orderToJson(signedOrder, owner, OrderType.GTC);
-                    expect(jsonGTCOrder).not.null;
-                    expect(jsonGTCOrder).not.undefined;
-
-                    expect(jsonGTCOrder).deep.equal({
-                        order: {
-                            salt: parseInt(signedOrder.salt),
-                            maker: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
-                            signer: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
-                            taker: "0x0000000000000000000000000000000000000000",
-                            tokenId: token,
-                            makerAmount: "500000",
-                            takerAmount: "100000000",
-                            side: "BUY",
-                            expiration: "0",
-                            nonce: "0",
-                            feeRateBps: "0",
-                            signatureType: 2,
-                            signature: signedOrder.signature,
-                        },
-                        owner: owner,
-                        orderType: OrderType.GTC,
-                    });
-                });
-
-                it("GTC SELL EOA", async () => {
-                    const userOrder = {
-                        tokenID: token,
-                        price: 0.005,
-                        side: Side.SELL,
-                        size: 100,
-                    };
-                    const signedOrder = await createOrder(
-                        wallet,
-                        chainId,
-                        SignatureType.EOA,
-                        address,
-                        userOrder,
-                        { tickSize: "0.001" },
-                    );
-                    expect(signedOrder).not.null;
-                    expect(signedOrder).not.undefined;
-
-                    const jsonGTCOrder = orderToJson(signedOrder, owner, OrderType.GTC);
-                    expect(jsonGTCOrder).not.null;
-                    expect(jsonGTCOrder).not.undefined;
-
-                    expect(jsonGTCOrder).deep.equal({
-                        order: {
-                            salt: parseInt(signedOrder.salt),
-                            maker: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
-                            signer: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
-                            taker: "0x0000000000000000000000000000000000000000",
-                            tokenId: token,
-                            makerAmount: "100000000",
-                            takerAmount: "500000",
-                            side: "SELL",
-                            expiration: "0",
-                            nonce: "0",
-                            feeRateBps: "0",
-                            signatureType: 0,
-                            signature: signedOrder.signature,
-                        },
-                        owner: owner,
-                        orderType: OrderType.GTC,
-                    });
-                });
-
-                it("GTC SELL POLY_PROXY", async () => {
-                    const userOrder = {
-                        tokenID: token,
-                        price: 0.005,
-                        side: Side.SELL,
-                        size: 100,
-                    };
-                    const signedOrder = await createOrder(
-                        wallet,
-                        chainId,
-                        SignatureType.POLY_PROXY,
-                        address,
-                        userOrder,
-                        { tickSize: "0.001" },
-                    );
-                    expect(signedOrder).not.null;
-                    expect(signedOrder).not.undefined;
-
-                    const jsonGTCOrder = orderToJson(signedOrder, owner, OrderType.GTC);
-                    expect(jsonGTCOrder).not.null;
-                    expect(jsonGTCOrder).not.undefined;
-
-                    expect(jsonGTCOrder).deep.equal({
-                        order: {
-                            salt: parseInt(signedOrder.salt),
-                            maker: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
-                            signer: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
-                            taker: "0x0000000000000000000000000000000000000000",
-                            tokenId: token,
-                            makerAmount: "100000000",
-                            takerAmount: "500000",
-                            side: "SELL",
-                            expiration: "0",
-                            nonce: "0",
-                            feeRateBps: "0",
-                            signatureType: 1,
-                            signature: signedOrder.signature,
-                        },
-                        owner: owner,
-                        orderType: OrderType.GTC,
-                    });
-                });
-
-                it("GTC SELL POLY_GNOSIS_SAFE", async () => {
-                    const userOrder = {
-                        tokenID: token,
-                        price: 0.005,
-                        side: Side.SELL,
-                        size: 100,
-                    };
-                    const signedOrder = await createOrder(
-                        wallet,
-                        chainId,
-                        SignatureType.POLY_GNOSIS_SAFE,
-                        address,
-                        userOrder,
-                        { tickSize: "0.001" },
-                    );
-                    expect(signedOrder).not.null;
-                    expect(signedOrder).not.undefined;
-
-                    const jsonGTCOrder = orderToJson(signedOrder, owner, OrderType.GTC);
-                    expect(jsonGTCOrder).not.null;
-                    expect(jsonGTCOrder).not.undefined;
-
-                    expect(jsonGTCOrder).deep.equal({
-                        order: {
-                            salt: parseInt(signedOrder.salt),
-                            maker: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
-                            signer: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
-                            taker: "0x0000000000000000000000000000000000000000",
-                            tokenId: token,
-                            makerAmount: "100000000",
-                            takerAmount: "500000",
-                            side: "SELL",
-                            expiration: "0",
-                            nonce: "0",
-                            feeRateBps: "0",
-                            signatureType: 2,
-                            signature: signedOrder.signature,
-                        },
-                        owner: owner,
-                        orderType: OrderType.GTC,
-                    });
-                });
-
-                it("FOK BUY EOA", async () => {
-                    const userMarketOrder: UserMarketOrder = {
-                        tokenID: token,
-                        price: 0.005,
-                        amount: 100,
-                    };
-                    const signedOrder = await createMarketBuyOrder(
-                        wallet,
-                        chainId,
-                        SignatureType.EOA,
-                        address,
-                        userMarketOrder,
-                        { tickSize: "0.001" },
-                    );
-                    expect(signedOrder).not.null;
-                    expect(signedOrder).not.undefined;
-
-                    const jsonFOKOrder = orderToJson(signedOrder, owner, OrderType.FOK);
-                    expect(jsonFOKOrder).not.null;
-                    expect(jsonFOKOrder).not.undefined;
-
-                    expect(jsonFOKOrder).deep.equal({
-                        order: {
-                            salt: parseInt(signedOrder.salt),
-                            maker: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
-                            signer: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
-                            taker: "0x0000000000000000000000000000000000000000",
-                            tokenId: token,
-                            makerAmount: "100000000",
-                            takerAmount: "20000000000",
-                            side: "BUY",
-                            expiration: "0",
-                            nonce: "0",
-                            feeRateBps: "0",
-                            signatureType: 0,
-                            signature: signedOrder.signature,
-                        },
-                        owner: owner,
-                        orderType: OrderType.FOK,
-                    });
-                });
-
-                it("FOK BUY POLY_PROXY", async () => {
-                    const userMarketOrder = {
-                        tokenID: token,
-                        price: 0.005,
-                        amount: 100,
-                    };
-                    const signedOrder = await createMarketBuyOrder(
-                        wallet,
-                        chainId,
-                        SignatureType.POLY_PROXY,
-                        address,
-                        userMarketOrder,
-                        { tickSize: "0.001" },
-                    );
-                    expect(signedOrder).not.null;
-                    expect(signedOrder).not.undefined;
-
-                    const jsonFOKOrder = orderToJson(signedOrder, owner, OrderType.FOK);
-                    expect(jsonFOKOrder).not.null;
-                    expect(jsonFOKOrder).not.undefined;
-
-                    expect(jsonFOKOrder).deep.equal({
-                        order: {
-                            salt: parseInt(signedOrder.salt),
-                            maker: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
-                            signer: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
-                            taker: "0x0000000000000000000000000000000000000000",
-                            tokenId: token,
-                            makerAmount: "100000000",
-                            takerAmount: "20000000000",
-                            side: "BUY",
-                            expiration: "0",
-                            nonce: "0",
-                            feeRateBps: "0",
-                            signatureType: 1,
-                            signature: signedOrder.signature,
-                        },
-                        owner: owner,
-                        orderType: OrderType.FOK,
-                    });
-                });
-
-                it("FOK BUY POLY_GNOSIS_SAFE", async () => {
-                    const userMarketOrder = {
-                        tokenID: token,
-                        price: 0.005,
-                        amount: 100,
-                    };
-                    const signedOrder = await createMarketBuyOrder(
-                        wallet,
-                        chainId,
-                        SignatureType.POLY_GNOSIS_SAFE,
-                        address,
-                        userMarketOrder,
-                        { tickSize: "0.001" },
-                    );
-                    expect(signedOrder).not.null;
-                    expect(signedOrder).not.undefined;
-
-                    const jsonFOKOrder = orderToJson(signedOrder, owner, OrderType.FOK);
-                    expect(jsonFOKOrder).not.null;
-                    expect(jsonFOKOrder).not.undefined;
-
-                    expect(jsonFOKOrder).deep.equal({
-                        order: {
-                            salt: parseInt(signedOrder.salt),
-                            maker: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
-                            signer: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
-                            taker: "0x0000000000000000000000000000000000000000",
-                            tokenId: token,
-                            makerAmount: "100000000",
-                            takerAmount: "20000000000",
-                            side: "BUY",
-                            expiration: "0",
-                            nonce: "0",
-                            feeRateBps: "0",
-                            signatureType: 2,
-                            signature: signedOrder.signature,
-                        },
-                        owner: owner,
-                        orderType: OrderType.FOK,
-                    });
-                });
-            });
-
-            describe("0.0001", async () => {
-                // publicly known private key
-                const token =
-                    "1343197538147866997676250008839231694243646439454152539053893078719042421992";
-                const privateKey =
-                    "0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80";
-                const address = "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266";
-                const wallet = new Wallet(privateKey);
-                const chainId = Chain.MUMBAI;
-                const owner = "f4f247b7-4ac7-ff29-a152-04fda0a8755a";
-
-                it("GTD BUY EOA", async () => {
-                    const userOrder: UserOrder = {
-                        tokenID: token,
-                        price: 0.0005,
-                        side: Side.BUY,
-                        size: 100,
-                        expiration: 1709948026,
-                    };
-                    const signedOrder = await createOrder(
-                        wallet,
-                        chainId,
-                        SignatureType.EOA,
-                        address,
-                        userOrder,
-                        { tickSize: "0.0001" },
-                    );
-                    expect(signedOrder).not.null;
-                    expect(signedOrder).not.undefined;
-
-                    const jsonGTDOrder = orderToJson(signedOrder, owner, OrderType.GTD);
-                    expect(jsonGTDOrder).not.null;
-                    expect(jsonGTDOrder).not.undefined;
-
-                    expect(jsonGTDOrder).deep.equal({
-                        order: {
-                            salt: parseInt(signedOrder.salt),
-                            maker: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
-                            signer: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
-                            taker: "0x0000000000000000000000000000000000000000",
-                            tokenId: token,
-                            makerAmount: "50000",
-                            takerAmount: "100000000",
-                            side: "BUY",
-                            expiration: "1709948026",
-                            nonce: "0",
-                            feeRateBps: "0",
-                            signatureType: 0,
-                            signature: signedOrder.signature,
-                        },
-                        owner: owner,
-                        orderType: OrderType.GTD,
-                    });
-                });
-
-                it("GTD BUY POLY_PROXY", async () => {
-                    const userOrder = {
-                        tokenID: token,
-                        price: 0.0005,
-                        side: Side.BUY,
-                        size: 100,
-                        expiration: 1709948026,
-                    };
-                    const signedOrder = await createOrder(
-                        wallet,
-                        chainId,
-                        SignatureType.POLY_PROXY,
-                        address,
-                        userOrder,
-                        { tickSize: "0.0001" },
-                    );
-                    expect(signedOrder).not.null;
-                    expect(signedOrder).not.undefined;
-
-                    const jsonGTDOrder = orderToJson(signedOrder, owner, OrderType.GTD);
-                    expect(jsonGTDOrder).not.null;
-                    expect(jsonGTDOrder).not.undefined;
-
-                    expect(jsonGTDOrder).deep.equal({
-                        order: {
-                            salt: parseInt(signedOrder.salt),
-                            maker: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
-                            signer: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
-                            taker: "0x0000000000000000000000000000000000000000",
-                            tokenId: token,
-                            makerAmount: "50000",
-                            takerAmount: "100000000",
-                            side: "BUY",
-                            expiration: "1709948026",
-                            nonce: "0",
-                            feeRateBps: "0",
-                            signatureType: 1,
-                            signature: signedOrder.signature,
-                        },
-                        owner: owner,
-                        orderType: OrderType.GTD,
-                    });
-                });
-
-                it("GTD BUY POLY_GNOSIS_SAFE", async () => {
-                    const userOrder = {
-                        tokenID: token,
-                        price: 0.0005,
-                        side: Side.BUY,
-                        size: 100,
-                        expiration: 1709948026,
-                    };
-                    const signedOrder = await createOrder(
-                        wallet,
-                        chainId,
-                        SignatureType.POLY_GNOSIS_SAFE,
-                        address,
-                        userOrder,
-                        { tickSize: "0.0001" },
-                    );
-                    expect(signedOrder).not.null;
-                    expect(signedOrder).not.undefined;
-
-                    const jsonGTDOrder = orderToJson(signedOrder, owner, OrderType.GTD);
-                    expect(jsonGTDOrder).not.null;
-                    expect(jsonGTDOrder).not.undefined;
-
-                    expect(jsonGTDOrder).deep.equal({
-                        order: {
-                            salt: parseInt(signedOrder.salt),
-                            maker: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
-                            signer: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
-                            taker: "0x0000000000000000000000000000000000000000",
-                            tokenId: token,
-                            makerAmount: "50000",
-                            takerAmount: "100000000",
-                            side: "BUY",
-                            expiration: "1709948026",
-                            nonce: "0",
-                            feeRateBps: "0",
-                            signatureType: 2,
-                            signature: signedOrder.signature,
-                        },
-                        owner: owner,
-                        orderType: OrderType.GTD,
-                    });
-                });
-
-                it("GTD SELL EOA", async () => {
-                    const userOrder = {
-                        tokenID: token,
-                        price: 0.0005,
-                        side: Side.SELL,
-                        size: 100,
-                        expiration: 1709948026,
-                    };
-                    const signedOrder = await createOrder(
-                        wallet,
-                        chainId,
-                        SignatureType.EOA,
-                        address,
-                        userOrder,
-                        { tickSize: "0.0001" },
-                    );
-                    expect(signedOrder).not.null;
-                    expect(signedOrder).not.undefined;
-
-                    const jsonGTDOrder = orderToJson(signedOrder, owner, OrderType.GTD);
-                    expect(jsonGTDOrder).not.null;
-                    expect(jsonGTDOrder).not.undefined;
-
-                    expect(jsonGTDOrder).deep.equal({
-                        order: {
-                            salt: parseInt(signedOrder.salt),
-                            maker: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
-                            signer: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
-                            taker: "0x0000000000000000000000000000000000000000",
-                            tokenId: token,
-                            makerAmount: "100000000",
-                            takerAmount: "50000",
-                            side: "SELL",
-                            expiration: "1709948026",
-                            nonce: "0",
-                            feeRateBps: "0",
-                            signatureType: 0,
-                            signature: signedOrder.signature,
-                        },
-                        owner: owner,
-                        orderType: OrderType.GTD,
-                    });
-                });
-
-                it("GTD SELL POLY_PROXY", async () => {
-                    const userOrder = {
-                        tokenID: token,
-                        price: 0.0005,
-                        side: Side.SELL,
-                        size: 100,
-                        expiration: 1709948026,
-                    };
-                    const signedOrder = await createOrder(
-                        wallet,
-                        chainId,
-                        SignatureType.POLY_PROXY,
-                        address,
-                        userOrder,
-                        { tickSize: "0.0001" },
-                    );
-                    expect(signedOrder).not.null;
-                    expect(signedOrder).not.undefined;
-
-                    const jsonGTDOrder = orderToJson(signedOrder, owner, OrderType.GTD);
-                    expect(jsonGTDOrder).not.null;
-                    expect(jsonGTDOrder).not.undefined;
-
-                    expect(jsonGTDOrder).deep.equal({
-                        order: {
-                            salt: parseInt(signedOrder.salt),
-                            maker: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
-                            signer: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
-                            taker: "0x0000000000000000000000000000000000000000",
-                            tokenId: token,
-                            makerAmount: "100000000",
-                            takerAmount: "50000",
-                            side: "SELL",
-                            expiration: "1709948026",
-                            nonce: "0",
-                            feeRateBps: "0",
-                            signatureType: 1,
-                            signature: signedOrder.signature,
-                        },
-                        owner: owner,
-                        orderType: OrderType.GTD,
-                    });
-                });
-
-                it("GTD SELL POLY_GNOSIS_SAFE", async () => {
-                    const userOrder = {
-                        tokenID: token,
-                        price: 0.0005,
-                        side: Side.SELL,
-                        size: 100,
-                        expiration: 1709948026,
-                    };
-                    const signedOrder = await createOrder(
-                        wallet,
-                        chainId,
-                        SignatureType.POLY_GNOSIS_SAFE,
-                        address,
-                        userOrder,
-                        { tickSize: "0.0001" },
-                    );
-                    expect(signedOrder).not.null;
-                    expect(signedOrder).not.undefined;
-
-                    const jsonGTDOrder = orderToJson(signedOrder, owner, OrderType.GTD);
-                    expect(jsonGTDOrder).not.null;
-                    expect(jsonGTDOrder).not.undefined;
-
-                    expect(jsonGTDOrder).deep.equal({
-                        order: {
-                            salt: parseInt(signedOrder.salt),
-                            maker: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
-                            signer: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
-                            taker: "0x0000000000000000000000000000000000000000",
-                            tokenId: token,
-                            makerAmount: "100000000",
-                            takerAmount: "50000",
-                            side: "SELL",
-                            expiration: "1709948026",
-                            nonce: "0",
-                            feeRateBps: "0",
-                            signatureType: 2,
-                            signature: signedOrder.signature,
-                        },
-                        owner: owner,
-                        orderType: OrderType.GTD,
-                    });
-                });
-
-                it("GTC BUY EOA", async () => {
-                    const userOrder = {
-                        tokenID: token,
-                        price: 0.0005,
-                        side: Side.BUY,
-                        size: 100,
-                    };
-                    const signedOrder = await createOrder(
-                        wallet,
-                        chainId,
-                        SignatureType.EOA,
-                        address,
-                        userOrder,
-                        { tickSize: "0.0001" },
-                    );
-                    expect(signedOrder).not.null;
-                    expect(signedOrder).not.undefined;
-
-                    const jsonGTCOrder = orderToJson(signedOrder, owner, OrderType.GTC);
-                    expect(jsonGTCOrder).not.null;
-                    expect(jsonGTCOrder).not.undefined;
-
-                    expect(jsonGTCOrder).deep.equal({
-                        order: {
-                            salt: parseInt(signedOrder.salt),
-                            maker: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
-                            signer: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
-                            taker: "0x0000000000000000000000000000000000000000",
-                            tokenId: token,
-                            makerAmount: "50000",
-                            takerAmount: "100000000",
-                            side: "BUY",
-                            expiration: "0",
-                            nonce: "0",
-                            feeRateBps: "0",
-                            signatureType: 0,
-                            signature: signedOrder.signature,
-                        },
-                        owner: owner,
-                        orderType: OrderType.GTC,
-                    });
-                });
-
-                it("GTC BUY POLY_PROXY", async () => {
-                    const userOrder = {
-                        tokenID: token,
-                        price: 0.0005,
-                        side: Side.BUY,
-                        size: 100,
-                    };
-                    const signedOrder = await createOrder(
-                        wallet,
-                        chainId,
-                        SignatureType.POLY_PROXY,
-                        address,
-                        userOrder,
-                        { tickSize: "0.0001" },
-                    );
-                    expect(signedOrder).not.null;
-                    expect(signedOrder).not.undefined;
-
-                    const jsonGTCOrder = orderToJson(signedOrder, owner, OrderType.GTC);
-                    expect(jsonGTCOrder).not.null;
-                    expect(jsonGTCOrder).not.undefined;
-
-                    expect(jsonGTCOrder).deep.equal({
-                        order: {
-                            salt: parseInt(signedOrder.salt),
-                            maker: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
-                            signer: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
-                            taker: "0x0000000000000000000000000000000000000000",
-                            tokenId: token,
-                            makerAmount: "50000",
-                            takerAmount: "100000000",
-                            side: "BUY",
-                            expiration: "0",
-                            nonce: "0",
-                            feeRateBps: "0",
-                            signatureType: 1,
-                            signature: signedOrder.signature,
-                        },
-                        owner: owner,
-                        orderType: OrderType.GTC,
-                    });
-                });
-
-                it("GTC BUY POLY_GNOSIS_SAFE", async () => {
-                    const userOrder = {
-                        tokenID: token,
-                        price: 0.0005,
-                        side: Side.BUY,
-                        size: 100,
-                    };
-                    const signedOrder = await createOrder(
-                        wallet,
-                        chainId,
-                        SignatureType.POLY_GNOSIS_SAFE,
-                        address,
-                        userOrder,
-                        { tickSize: "0.0001" },
-                    );
-                    expect(signedOrder).not.null;
-                    expect(signedOrder).not.undefined;
-
-                    const jsonGTCOrder = orderToJson(signedOrder, owner, OrderType.GTC);
-                    expect(jsonGTCOrder).not.null;
-                    expect(jsonGTCOrder).not.undefined;
-
-                    expect(jsonGTCOrder).deep.equal({
-                        order: {
-                            salt: parseInt(signedOrder.salt),
-                            maker: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
-                            signer: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
-                            taker: "0x0000000000000000000000000000000000000000",
-                            tokenId: token,
-                            makerAmount: "50000",
-                            takerAmount: "100000000",
-                            side: "BUY",
-                            expiration: "0",
-                            nonce: "0",
-                            feeRateBps: "0",
-                            signatureType: 2,
-                            signature: signedOrder.signature,
-                        },
-                        owner: owner,
-                        orderType: OrderType.GTC,
-                    });
-                });
-
-                it("GTC SELL EOA", async () => {
-                    const userOrder = {
-                        tokenID: token,
-                        price: 0.0005,
-                        side: Side.SELL,
-                        size: 100,
-                    };
-                    const signedOrder = await createOrder(
-                        wallet,
-                        chainId,
-                        SignatureType.EOA,
-                        address,
-                        userOrder,
-                        { tickSize: "0.0001" },
-                    );
-                    expect(signedOrder).not.null;
-                    expect(signedOrder).not.undefined;
-
-                    const jsonGTCOrder = orderToJson(signedOrder, owner, OrderType.GTC);
-                    expect(jsonGTCOrder).not.null;
-                    expect(jsonGTCOrder).not.undefined;
-
-                    expect(jsonGTCOrder).deep.equal({
-                        order: {
-                            salt: parseInt(signedOrder.salt),
-                            maker: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
-                            signer: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
-                            taker: "0x0000000000000000000000000000000000000000",
-                            tokenId: token,
-                            makerAmount: "100000000",
-                            takerAmount: "50000",
-                            side: "SELL",
-                            expiration: "0",
-                            nonce: "0",
-                            feeRateBps: "0",
-                            signatureType: 0,
-                            signature: signedOrder.signature,
-                        },
-                        owner: owner,
-                        orderType: OrderType.GTC,
-                    });
-                });
-
-                it("GTC SELL POLY_PROXY", async () => {
-                    const userOrder = {
-                        tokenID: token,
-                        price: 0.0005,
-                        side: Side.SELL,
-                        size: 100,
-                    };
-                    const signedOrder = await createOrder(
-                        wallet,
-                        chainId,
-                        SignatureType.POLY_PROXY,
-                        address,
-                        userOrder,
-                        { tickSize: "0.0001" },
-                    );
-                    expect(signedOrder).not.null;
-                    expect(signedOrder).not.undefined;
-
-                    const jsonGTCOrder = orderToJson(signedOrder, owner, OrderType.GTC);
-                    expect(jsonGTCOrder).not.null;
-                    expect(jsonGTCOrder).not.undefined;
-
-                    expect(jsonGTCOrder).deep.equal({
-                        order: {
-                            salt: parseInt(signedOrder.salt),
-                            maker: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
-                            signer: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
-                            taker: "0x0000000000000000000000000000000000000000",
-                            tokenId: token,
-                            makerAmount: "100000000",
-                            takerAmount: "50000",
-                            side: "SELL",
-                            expiration: "0",
-                            nonce: "0",
-                            feeRateBps: "0",
-                            signatureType: 1,
-                            signature: signedOrder.signature,
-                        },
-                        owner: owner,
-                        orderType: OrderType.GTC,
-                    });
-                });
-
-                it("GTC SELL POLY_GNOSIS_SAFE", async () => {
-                    const userOrder = {
-                        tokenID: token,
-                        price: 0.0005,
-                        side: Side.SELL,
-                        size: 100,
-                    };
-                    const signedOrder = await createOrder(
-                        wallet,
-                        chainId,
-                        SignatureType.POLY_GNOSIS_SAFE,
-                        address,
-                        userOrder,
-                        { tickSize: "0.0001" },
-                    );
-                    expect(signedOrder).not.null;
-                    expect(signedOrder).not.undefined;
-
-                    const jsonGTCOrder = orderToJson(signedOrder, owner, OrderType.GTC);
-                    expect(jsonGTCOrder).not.null;
-                    expect(jsonGTCOrder).not.undefined;
-
-                    expect(jsonGTCOrder).deep.equal({
-                        order: {
-                            salt: parseInt(signedOrder.salt),
-                            maker: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
-                            signer: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
-                            taker: "0x0000000000000000000000000000000000000000",
-                            tokenId: token,
-                            makerAmount: "100000000",
-                            takerAmount: "50000",
-                            side: "SELL",
-                            expiration: "0",
-                            nonce: "0",
-                            feeRateBps: "0",
-                            signatureType: 2,
-                            signature: signedOrder.signature,
-                        },
-                        owner: owner,
-                        orderType: OrderType.GTC,
-                    });
-                });
-
-                it("FOK BUY EOA", async () => {
-                    const userMarketOrder: UserMarketOrder = {
-                        tokenID: token,
-                        price: 0.0005,
-                        amount: 100,
-                    };
-                    const signedOrder = await createMarketBuyOrder(
-                        wallet,
-                        chainId,
-                        SignatureType.EOA,
-                        address,
-                        userMarketOrder,
-                        { tickSize: "0.0001" },
-                    );
-                    expect(signedOrder).not.null;
-                    expect(signedOrder).not.undefined;
-
-                    const jsonFOKOrder = orderToJson(signedOrder, owner, OrderType.FOK);
-                    expect(jsonFOKOrder).not.null;
-                    expect(jsonFOKOrder).not.undefined;
-
-                    expect(jsonFOKOrder).deep.equal({
-                        order: {
-                            salt: parseInt(signedOrder.salt),
-                            maker: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
-                            signer: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
-                            taker: "0x0000000000000000000000000000000000000000",
-                            tokenId: token,
-                            makerAmount: "100000000",
-                            takerAmount: "200000000000",
-                            side: "BUY",
-                            expiration: "0",
-                            nonce: "0",
-                            feeRateBps: "0",
-                            signatureType: 0,
-                            signature: signedOrder.signature,
-                        },
-                        owner: owner,
-                        orderType: OrderType.FOK,
-                    });
-                });
-
-                it("FOK BUY POLY_PROXY", async () => {
-                    const userMarketOrder = {
-                        tokenID: token,
-                        price: 0.0005,
-                        amount: 100,
-                    };
-                    const signedOrder = await createMarketBuyOrder(
-                        wallet,
-                        chainId,
-                        SignatureType.POLY_PROXY,
-                        address,
-                        userMarketOrder,
-                        { tickSize: "0.0001" },
-                    );
-                    expect(signedOrder).not.null;
-                    expect(signedOrder).not.undefined;
-
-                    const jsonFOKOrder = orderToJson(signedOrder, owner, OrderType.FOK);
-                    expect(jsonFOKOrder).not.null;
-                    expect(jsonFOKOrder).not.undefined;
-
-                    expect(jsonFOKOrder).deep.equal({
-                        order: {
-                            salt: parseInt(signedOrder.salt),
-                            maker: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
-                            signer: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
-                            taker: "0x0000000000000000000000000000000000000000",
-                            tokenId: token,
-                            makerAmount: "100000000",
-                            takerAmount: "200000000000",
-                            side: "BUY",
-                            expiration: "0",
-                            nonce: "0",
-                            feeRateBps: "0",
-                            signatureType: 1,
-                            signature: signedOrder.signature,
-                        },
-                        owner: owner,
-                        orderType: OrderType.FOK,
-                    });
-                });
-
-                it("FOK BUY POLY_GNOSIS_SAFE", async () => {
-                    const userMarketOrder = {
-                        tokenID: token,
-                        price: 0.0005,
-                        amount: 100,
-                    };
-                    const signedOrder = await createMarketBuyOrder(
-                        wallet,
-                        chainId,
-                        SignatureType.POLY_GNOSIS_SAFE,
-                        address,
-                        userMarketOrder,
-                        { tickSize: "0.0001" },
-                    );
-                    expect(signedOrder).not.null;
-                    expect(signedOrder).not.undefined;
-
-                    const jsonFOKOrder = orderToJson(signedOrder, owner, OrderType.FOK);
-                    expect(jsonFOKOrder).not.null;
-                    expect(jsonFOKOrder).not.undefined;
-
-                    expect(jsonFOKOrder).deep.equal({
-                        order: {
-                            salt: parseInt(signedOrder.salt),
-                            maker: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
-                            signer: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
-                            taker: "0x0000000000000000000000000000000000000000",
-                            tokenId: token,
-                            makerAmount: "100000000",
-                            takerAmount: "200000000000",
-                            side: "BUY",
-                            expiration: "0",
-                            nonce: "0",
-                            feeRateBps: "0",
-                            signatureType: 2,
-                            signature: signedOrder.signature,
-                        },
-                        owner: owner,
-                        orderType: OrderType.FOK,
+                    it("FOK BUY POLY_GNOSIS_SAFE", async () => {
+                        const userMarketOrder = {
+                            tokenID: token,
+                            price: 0.0005,
+                            amount: 100,
+                        };
+                        const signedOrder = await createMarketBuyOrder(
+                            wallet,
+                            chainId,
+                            SignatureType.POLY_GNOSIS_SAFE,
+                            address,
+                            userMarketOrder,
+                            { tickSize: "0.0001", negRisk: true },
+                        );
+                        expect(signedOrder).not.null;
+                        expect(signedOrder).not.undefined;
+
+                        const jsonFOKOrder = orderToJson(signedOrder, owner, OrderType.FOK);
+                        expect(jsonFOKOrder).not.null;
+                        expect(jsonFOKOrder).not.undefined;
+
+                        expect(jsonFOKOrder).deep.equal({
+                            order: {
+                                salt: parseInt(signedOrder.salt),
+                                maker: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+                                signer: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+                                taker: "0x0000000000000000000000000000000000000000",
+                                tokenId: token,
+                                makerAmount: "100000000",
+                                takerAmount: "200000000000",
+                                side: "BUY",
+                                expiration: "0",
+                                nonce: "0",
+                                feeRateBps: "0",
+                                signatureType: 2,
+                                signature: signedOrder.signature,
+                            },
+                            owner: owner,
+                            orderType: OrderType.FOK,
+                        });
                     });
                 });
             });
