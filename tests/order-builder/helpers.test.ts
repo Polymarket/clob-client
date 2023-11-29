@@ -11,25 +11,20 @@ import {
     getMarketBuyOrderRawAmounts,
     ROUNDING_CONFIG,
 } from "../../src/order-builder/helpers";
-import {
-    OrderData,
-    SignatureType,
-    Side as UtilsSide,
-    Contracts,
-    getContracts,
-} from "@polymarket/order-utils";
+import { OrderData, SignatureType, Side as UtilsSide } from "@polymarket/order-utils";
 import { Wallet } from "@ethersproject/wallet";
 import { decimalPlaces, roundDown, roundNormal } from "../../src/utilities";
+import { ContractConfig, getContractConfig } from "../../src/config";
 
 describe("helpers", () => {
     const chainId = Chain.MUMBAI;
     let wallet: Wallet;
-    let contracts: Contracts;
+    let contractConfig: ContractConfig;
     beforeEach(() => {
         // publicly known private key
         const privateKey = "0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80";
         wallet = new Wallet(privateKey);
-        contracts = getContracts(chainId);
+        contractConfig = getContractConfig(chainId);
     });
 
     describe("buildOrder", () => {
@@ -57,7 +52,7 @@ describe("helpers", () => {
 
                 const signedOrder = await buildOrder(
                     wallet,
-                    contracts.Exchange,
+                    contractConfig.exchange,
                     chainId,
                     orderData,
                 );
@@ -102,7 +97,7 @@ describe("helpers", () => {
 
                 const signedOrder = await buildOrder(
                     wallet,
-                    contracts.Exchange,
+                    contractConfig.exchange,
                     chainId,
                     orderData,
                 );
@@ -147,7 +142,7 @@ describe("helpers", () => {
 
                 const signedOrder = await buildOrder(
                     wallet,
-                    contracts.Exchange,
+                    contractConfig.exchange,
                     chainId,
                     orderData,
                 );
@@ -192,7 +187,7 @@ describe("helpers", () => {
 
                 const signedOrder = await buildOrder(
                     wallet,
-                    contracts.Exchange,
+                    contractConfig.exchange,
                     chainId,
                     orderData,
                 );
@@ -237,7 +232,7 @@ describe("helpers", () => {
 
                 const signedOrder = await buildOrder(
                     wallet,
-                    contracts.Exchange,
+                    contractConfig.exchange,
                     chainId,
                     orderData,
                 );
@@ -283,7 +278,7 @@ describe("helpers", () => {
 
                 const signedOrder = await buildOrder(
                     wallet,
-                    contracts.Exchange,
+                    contractConfig.exchange,
                     chainId,
                     orderData,
                 );
@@ -327,7 +322,7 @@ describe("helpers", () => {
 
                 const signedOrder = await buildOrder(
                     wallet,
-                    contracts.Exchange,
+                    contractConfig.exchange,
                     chainId,
                     orderData,
                 );
@@ -371,7 +366,7 @@ describe("helpers", () => {
 
                 const signedOrder = await buildOrder(
                     wallet,
-                    contracts.Exchange,
+                    contractConfig.exchange,
                     chainId,
                     orderData,
                 );
@@ -415,7 +410,7 @@ describe("helpers", () => {
 
                 const signedOrder = await buildOrder(
                     wallet,
-                    contracts.Exchange,
+                    contractConfig.exchange,
                     chainId,
                     orderData,
                 );
