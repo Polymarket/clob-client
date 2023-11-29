@@ -5,6 +5,7 @@ import {
     ApiKeyCreds,
     ApiKeysResponse,
     Chain,
+    CreateOrderOptions,
     MarketPrice,
     OpenOrderParams,
     OpenOrdersResponse,
@@ -416,30 +417,43 @@ export class ClobClient {
         return this.get(`${this.host}${endpoint}`, { headers, params });
     }
 
-    public async createOrder(userOrder: UserOrder, tickSize?: TickSize): Promise<SignedOrder> {
+    public async createOrder(
+        userOrder: UserOrder,
+        options?: Partial<CreateOrderOptions>,
+    ): Promise<SignedOrder> {
         this.canL1Auth();
 
         const { tokenID } = userOrder;
-        tickSize = await this._resolveTickSize(tokenID, tickSize);
 
-        return this.orderBuilder.buildOrder(userOrder, tickSize);
+        const tickSize = await this._resolveTickSize(tokenID, options?.tickSize);
+        const negRisk = options?.negRisk ?? false;
+
+        return this.orderBuilder.buildOrder(userOrder, {
+            tickSize,
+            negRisk,
+        });
     }
 
     public async createMarketBuyOrder(
         userMarketOrder: UserMarketOrder,
-        tickSize?: TickSize,
+        options?: CreateOrderOptions,
     ): Promise<SignedOrder> {
         this.canL1Auth();
 
         const { tokenID } = userMarketOrder;
-        tickSize = await this._resolveTickSize(tokenID, tickSize);
+
+        const tickSize = await this._resolveTickSize(tokenID, options?.tickSize);
+        const negRisk = options?.negRisk ?? false;
 
         if (!userMarketOrder.price) {
             const marketPrice = await this.getPrice(tokenID, Side.BUY);
             userMarketOrder.price = parseFloat(marketPrice);
         }
 
-        return this.orderBuilder.buildMarketOrder(userMarketOrder, tickSize);
+        return this.orderBuilder.buildMarketOrder(userMarketOrder, {
+            tickSize,
+            negRisk,
+        });
     }
 
     public async getOpenOrders(params?: OpenOrderParams): Promise<OpenOrdersResponse> {

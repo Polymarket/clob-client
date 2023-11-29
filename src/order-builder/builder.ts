@@ -2,7 +2,7 @@ import { Wallet } from "@ethersproject/wallet";
 import { JsonRpcSigner } from "@ethersproject/providers";
 import { SignedOrder, SignatureType } from "@polymarket/order-utils";
 import { createMarketBuyOrder, createOrder } from "./helpers";
-import { Chain, TickSize, UserMarketOrder, UserOrder } from "../types";
+import { Chain, CreateOrderOptions, UserMarketOrder, UserOrder } from "../types";
 
 export class OrderBuilder {
     readonly signer: Wallet | JsonRpcSigner;
@@ -32,14 +32,17 @@ export class OrderBuilder {
     /**
      * Generate and sign a order
      */
-    public async buildOrder(userOrder: UserOrder, tickSize: TickSize): Promise<SignedOrder> {
+    public async buildOrder(
+        userOrder: UserOrder,
+        options: CreateOrderOptions,
+    ): Promise<SignedOrder> {
         return createOrder(
             this.signer,
             this.chainId,
             this.signatureType,
             this.funderAddress,
             userOrder,
-            tickSize,
+            options,
         );
     }
 
@@ -48,7 +51,7 @@ export class OrderBuilder {
      */
     public async buildMarketOrder(
         userMarketOrder: UserMarketOrder,
-        tickSize: TickSize,
+        options: CreateOrderOptions,
     ): Promise<SignedOrder> {
         return createMarketBuyOrder(
             this.signer,
@@ -56,7 +59,7 @@ export class OrderBuilder {
             this.signatureType,
             this.funderAddress,
             userMarketOrder,
-            tickSize,
+            options,
         );
     }
 }

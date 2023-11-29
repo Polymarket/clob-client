@@ -30,7 +30,7 @@ async function main() {
             nonce: 0,
             expiration: 0,
         },
-        "0.01",
+        { tickSize: "0.01" },
     );
     console.log("Created Order", order);
 

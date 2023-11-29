@@ -3,16 +3,26 @@ import { Wallet } from "@ethersproject/wallet";
 import { parseUnits } from "@ethersproject/units";
 import {
     ExchangeOrderBuilder,
-    getContracts,
     OrderData,
     SignatureType,
     SignedOrder,
     Side as UtilsSide,
+} from "@polymarket/order-utils";
+import {
+    UserOrder,
+    Side,
+    Chain,
+    UserMarketOrder,
+    TickSize,
+    RoundConfig,
+    CreateOrderOptions,
+} from "../types";
+import { decimalPlaces, roundDown, roundNormal, roundUp } from "../utilities";
+import {
     COLLATERAL_TOKEN_DECIMALS,
     CONDITIONAL_TOKEN_DECIMALS,
-} from "@polymarket/order-utils";
-import { UserOrder, Side, Chain, UserMarketOrder, TickSize, RoundConfig } from "../types";
-import { decimalPlaces, roundDown, roundNormal, roundUp } from "../utilities";
+    getContractConfig,
+} from "../config";
 
 export const ROUNDING_CONFIG: Record<TickSize, RoundConfig> = {
     "0.1": {
@@ -41,18 +51,18 @@ export const ROUNDING_CONFIG: Record<TickSize, RoundConfig> = {
  * Generate and sign a order
  *
  * @param signer
- * @param contractAddress ctf exchange contract address
+ * @param exchangeAddress ctf exchange contract address
  * @param chainId
  * @param OrderData
  * @returns SignedOrder
  */
 export const buildOrder = async (
     signer: Wallet | JsonRpcSigner,
-    contractAddress: string,
+    exchangeAddress: string,
     chainId: number,
     orderData: OrderData,
 ): Promise<SignedOrder> => {
-    const cTFExchangeOrderBuilder = new ExchangeOrderBuilder(contractAddress, chainId, signer);
+    const cTFExchangeOrderBuilder = new ExchangeOrderBuilder(exchangeAddress, chainId, signer);
     return cTFExchangeOrderBuilder.buildSignedOrder(orderData);
 };
 
@@ -162,22 +172,27 @@ export const createOrder = async (
     signatureType: SignatureType,
     funderAddress: string | undefined,
     userOrder: UserOrder,
-    tickSize: TickSize,
+    options: CreateOrderOptions,
 ): Promise<SignedOrder> => {
     const eoaSignerAddress = await eoaSigner.getAddress();
 
     // If funder address is not given, use the signer address
     const maker = funderAddress === undefined ? eoaSignerAddress : funderAddress;
-    const clobContracts = getContracts(chainId);
+    const contractConfig = getContractConfig(chainId);
 
     const orderData = await buildOrderCreationArgs(
         eoaSignerAddress,
         maker,
         signatureType,
         userOrder,
-        ROUNDING_CONFIG[tickSize],
+        ROUNDING_CONFIG[options.tickSize],
     );
-    return buildOrder(eoaSigner, clobContracts.Exchange, chainId, orderData);
+
+    const exchangeContract = options.negRisk
+        ? contractConfig.negRiskExchange
+        : contractConfig.exchange;
+
+    return buildOrder(eoaSigner, exchangeContract, chainId, orderData);
 };
 
 export const getMarketBuyOrderRawAmounts = (
@@ -264,20 +279,25 @@ export const createMarketBuyOrder = async (
     signatureType: SignatureType,
     funderAddress: string | undefined,
     userMarketOrder: UserMarketOrder,
-    tickSize: TickSize,
+    options: CreateOrderOptions,
 ): Promise<SignedOrder> => {
     const eoaSignerAddress = await eoaSigner.getAddress();
 
     // If funder address is not given, use the signer address
     const maker = funderAddress === undefined ? eoaSignerAddress : funderAddress;
-    const clobContracts = getContracts(chainId);
+    const contractConfig = getContractConfig(chainId);
 
     const orderData = await buildMarketBuyOrderCreationArgs(
         eoaSignerAddress,
         maker,
         signatureType,
         userMarketOrder,
-        ROUNDING_CONFIG[tickSize],
+        ROUNDING_CONFIG[options.tickSize],
     );
-    return buildOrder(eoaSigner, clobContracts.Exchange, chainId, orderData);
+
+    const exchangeContract = options.negRisk
+        ? contractConfig.negRiskExchange
+        : contractConfig.exchange;
+
+    return buildOrder(eoaSigner, exchangeContract, chainId, orderData);
 };
