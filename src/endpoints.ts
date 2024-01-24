@@ -14,9 +14,13 @@ export const GET_SIMPLIFIED_MARKETS = "/simplified-markets";
 export const GET_MARKETS = "/markets";
 export const GET_MARKET = "/markets/";
 export const GET_ORDER_BOOK = "/book";
+export const GET_ORDER_BOOKS = "/books";
 export const GET_MIDPOINT = "/midpoint";
+export const GET_MIDPOINTS = "/midpoints";
 export const GET_PRICE = "/price";
+export const GET_PRICES = "/prices";
 export const GET_LAST_TRADE_PRICE = "/last-trade-price";
+export const GET_LAST_TRADES_PRICES = "/last-trades-prices";
 export const GET_TICK_SIZE = "/tick-size";
 
 // Order endpoints

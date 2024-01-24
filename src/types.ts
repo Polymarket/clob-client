@@ -383,3 +383,8 @@ export interface MarketTradeEvent {
     transaction_hash: string;
     timestamp: string;
 }
+
+export interface BookParams {
+    token_id: string;
+    side: Side;
+}
