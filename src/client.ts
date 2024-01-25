@@ -32,6 +32,7 @@ import {
     PaginationPayload,
     MarketTradeEvent,
     DropNotificationParams,
+    BookParams,
 } from "./types";
 import { createL1Headers, createL2Headers } from "./headers";
 import {
@@ -79,6 +80,10 @@ import {
     GET_SAMPLING_SIMPLIFIED_MARKETS,
     GET_SAMPLING_MARKETS,
     GET_MARKET_TRADES_EVENTS,
+    GET_ORDER_BOOKS,
+    GET_MIDPOINTS,
+    GET_PRICES,
+    GET_LAST_TRADES_PRICES,
 } from "./endpoints";
 import { OrderBuilder } from "./order-builder/builder";
 
@@ -170,6 +175,12 @@ export class ClobClient {
         });
     }
 
+    public async getOrderBooks(params: BookParams[]): Promise<OrderBookSummary[]> {
+        return this.get(`${this.host}${GET_ORDER_BOOKS}`, {
+            data: params,
+        });
+    }
+
     public async getTickSize(tokenID: string): Promise<TickSize> {
         if (tokenID in this.tickSizes) {
             return this.tickSizes[tokenID];
@@ -198,15 +209,33 @@ export class ClobClient {
         });
     }
 
+    public async getMidpoints(params: BookParams[]): Promise<any> {
+        return this.get(`${this.host}${GET_MIDPOINTS}`, {
+            data: params,
+        });
+    }
+
     public async getPrice(tokenID: string, side: string): Promise<any> {
         return this.get(`${this.host}${GET_PRICE}`, {
             params: { token_id: tokenID, side: side },
         });
     }
 
+    public async getPrices(params: BookParams[]): Promise<any> {
+        return this.get(`${this.host}${GET_PRICES}`, {
+            data: params,
+        });
+    }
+
     public async getLastTradePrice(tokenID: string): Promise<any> {
         return this.get(`${this.host}${GET_LAST_TRADE_PRICE}`, {
             params: { token_id: tokenID },
+        });
+    }
+
+    public async getLastTradesPrices(params: BookParams[]): Promise<any> {
+        return this.get(`${this.host}${GET_LAST_TRADES_PRICES}`, {
+            data: params,
         });
     }
 
