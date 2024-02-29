@@ -47,7 +47,12 @@ import {
     RequestOptions,
 } from "./http-helpers";
 import { L1_AUTH_UNAVAILABLE_ERROR, L2_AUTH_NOT_AVAILABLE } from "./errors";
-import { generateOrderBookSummaryHash, isTickSizeSmaller, orderToJson } from "./utilities";
+import {
+    generateOrderBookSummaryHash,
+    isTickSizeSmaller,
+    orderToJson,
+    priceValid,
+} from "./utilities";
 import {
     CANCEL_ALL,
     CANCEL_ORDER,
@@ -457,6 +462,14 @@ export class ClobClient {
         const tickSize = await this._resolveTickSize(tokenID, options?.tickSize);
         const negRisk = options?.negRisk ?? false;
 
+        if (!priceValid(userOrder.price, tickSize)) {
+            throw new Error(
+                `invalid price (${userOrder.price}), min: ${parseFloat(tickSize)} - max: ${
+                    1 - parseFloat(tickSize)
+                }`,
+            );
+        }
+
         return this.orderBuilder.buildOrder(userOrder, {
             tickSize,
             negRisk,
@@ -477,6 +490,14 @@ export class ClobClient {
         if (!userMarketOrder.price) {
             const marketPrice = await this.getPrice(tokenID, Side.BUY);
             userMarketOrder.price = parseFloat(marketPrice);
+        }
+
+        if (!priceValid(userMarketOrder.price, tickSize)) {
+            throw new Error(
+                `invalid price (${userMarketOrder.price}), min: ${parseFloat(tickSize)} - max: ${
+                    1 - parseFloat(tickSize)
+                }`,
+            );
         }
 
         return this.orderBuilder.buildMarketOrder(userMarketOrder, {
