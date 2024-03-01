@@ -6,6 +6,7 @@ import {
     generateOrderBookSummaryHash,
     isTickSizeSmaller,
     orderToJson,
+    priceValid,
     roundDown,
 } from "../src/utilities";
 import { Side as UtilsSide, SignatureType } from "@polymarket/order-utils";
@@ -5616,5 +5617,51 @@ describe("utilities", () => {
         expect(isTickSizeSmaller("0.0001", "0.01")).to.be.true;
         expect(isTickSizeSmaller("0.0001", "0.001")).to.be.true;
         expect(isTickSizeSmaller("0.0001", "0.0001")).to.be.false;
+    });
+
+    it("priceValid", () => {
+        expect(priceValid(0.00001, "0.0001")).to.be.false;
+        expect(priceValid(0.0001, "0.0001")).to.be.true;
+        expect(priceValid(0.001, "0.0001")).to.be.true;
+        expect(priceValid(0.01, "0.0001")).to.be.true;
+        expect(priceValid(0.1, "0.0001")).to.be.true;
+        expect(priceValid(0.9, "0.0001")).to.be.true;
+        expect(priceValid(0.99, "0.0001")).to.be.true;
+        expect(priceValid(0.999, "0.0001")).to.be.true;
+        expect(priceValid(0.9999, "0.0001")).to.be.true;
+        expect(priceValid(0.99999, "0.0001")).to.be.false;
+
+        expect(priceValid(0.00001, "0.001")).to.be.false;
+        expect(priceValid(0.0001, "0.001")).to.be.false;
+        expect(priceValid(0.001, "0.001")).to.be.true;
+        expect(priceValid(0.01, "0.001")).to.be.true;
+        expect(priceValid(0.1, "0.001")).to.be.true;
+        expect(priceValid(0.9, "0.001")).to.be.true;
+        expect(priceValid(0.99, "0.001")).to.be.true;
+        expect(priceValid(0.999, "0.001")).to.be.true;
+        expect(priceValid(0.9999, "0.001")).to.be.false;
+        expect(priceValid(0.99999, "0.001")).to.be.false;
+
+        expect(priceValid(0.00001, "0.01")).to.be.false;
+        expect(priceValid(0.0001, "0.01")).to.be.false;
+        expect(priceValid(0.001, "0.01")).to.be.false;
+        expect(priceValid(0.01, "0.01")).to.be.true;
+        expect(priceValid(0.1, "0.01")).to.be.true;
+        expect(priceValid(0.9, "0.01")).to.be.true;
+        expect(priceValid(0.99, "0.01")).to.be.true;
+        expect(priceValid(0.999, "0.01")).to.be.false;
+        expect(priceValid(0.9999, "0.01")).to.be.false;
+        expect(priceValid(0.99999, "0.01")).to.be.false;
+
+        expect(priceValid(0.00001, "0.1")).to.be.false;
+        expect(priceValid(0.0001, "0.1")).to.be.false;
+        expect(priceValid(0.001, "0.1")).to.be.false;
+        expect(priceValid(0.01, "0.1")).to.be.false;
+        expect(priceValid(0.1, "0.1")).to.be.true;
+        expect(priceValid(0.9, "0.1")).to.be.true;
+        expect(priceValid(0.99, "0.1")).to.be.false;
+        expect(priceValid(0.999, "0.1")).to.be.false;
+        expect(priceValid(0.9999, "0.1")).to.be.false;
+        expect(priceValid(0.99999, "0.1")).to.be.false;
     });
 });

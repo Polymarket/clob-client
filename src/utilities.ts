@@ -84,3 +84,7 @@ export const generateOrderBookSummaryHash = (orderbook: OrderBookSummary): strin
 export const isTickSizeSmaller = (a: TickSize, b: TickSize): boolean => {
     return parseFloat(a) < parseFloat(b);
 };
+
+export const priceValid = (price: number, tickSize: TickSize): boolean => {
+    return price >= parseFloat(tickSize) && price <= 1 - parseFloat(tickSize);
+};
