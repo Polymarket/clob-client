@@ -163,6 +163,8 @@ export interface OrderResponse {
     orderID: string;
     transactionsHashes: string[];
     status: string;
+    takingAmount: string;
+    makingAmount: string;
 }
 
 export interface OpenOrder {
