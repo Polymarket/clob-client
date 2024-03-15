@@ -448,7 +448,12 @@ export class ClobClient {
             headerArgs,
         );
 
-        return this.get(`${this.host}${endpoint}`, { headers, params });
+        const _params = {
+            ...params,
+            signature_type: this.orderBuilder.signatureType,
+        };
+
+        return this.get(`${this.host}${endpoint}`, { headers, params: _params });
     }
 
     public async createOrder(
