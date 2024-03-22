@@ -89,6 +89,10 @@ import {
     GET_MIDPOINTS,
     GET_PRICES,
     GET_LAST_TRADES_PRICES,
+    GET_EARNINGS_FOR_USER_FOR_DAY,
+    GET_LIQUIDITY_REWARD_PERCENTAGES,
+    GET_REWARDS_MARKETS_CURRENT,
+    GET_REWARDS_MARKETS,
 } from "./endpoints";
 import { OrderBuilder } from "./order-builder/builder";
 
@@ -655,6 +659,60 @@ export class ClobClient {
             headers,
             params: parseOrdersScoringParams(params),
         });
+    }
+
+    // Rewards
+    public async getEarningsForUserForDay(date: string): Promise<any> {
+        this.canL2Auth();
+
+        const endpoint = GET_EARNINGS_FOR_USER_FOR_DAY;
+        const headerArgs = {
+            method: GET,
+            requestPath: endpoint,
+        };
+
+        const headers = await createL2Headers(
+            this.signer as Wallet | JsonRpcSigner,
+            this.creds as ApiKeyCreds,
+            headerArgs,
+        );
+
+        const _params = {
+            date,
+            signature_type: this.orderBuilder.signatureType,
+        };
+
+        return this.get(`${this.host}${endpoint}`, { headers, params: _params });
+    }
+
+    public async getLiquidityRewardPercentages(): Promise<any> {
+        this.canL2Auth();
+
+        const endpoint = GET_LIQUIDITY_REWARD_PERCENTAGES;
+        const headerArgs = {
+            method: GET,
+            requestPath: endpoint,
+        };
+
+        const headers = await createL2Headers(
+            this.signer as Wallet | JsonRpcSigner,
+            this.creds as ApiKeyCreds,
+            headerArgs,
+        );
+
+        const _params = {
+            signature_type: this.orderBuilder.signatureType,
+        };
+
+        return this.get(`${this.host}${endpoint}`, { headers, params: _params });
+    }
+
+    public async getCurrentRewards(): Promise<any> {
+        return this.get(`${this.host}${GET_REWARDS_MARKETS_CURRENT}`);
+    }
+
+    public async getRawRewardsForMarket(conditionId: string): Promise<any> {
+        return this.get(`${this.host}${GET_REWARDS_MARKETS}${conditionId}`);
     }
 
     public async getMarketTradesEvents(conditionID: string): Promise<MarketTradeEvent[]> {
