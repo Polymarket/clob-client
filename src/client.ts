@@ -33,6 +33,10 @@ import {
     MarketTradeEvent,
     DropNotificationParams,
     BookParams,
+    UserEarning,
+    RewardsPercentages,
+    CurrentReward,
+    MarketReward,
 } from "./types";
 import { createL1Headers, createL2Headers } from "./headers";
 import {
@@ -662,7 +666,7 @@ export class ClobClient {
     }
 
     // Rewards
-    public async getEarningsForUserForDay(date: string): Promise<any> {
+    public async getEarningsForUserForDay(date: string): Promise<UserEarning[]> {
         this.canL2Auth();
 
         const endpoint = GET_EARNINGS_FOR_USER_FOR_DAY;
@@ -685,7 +689,7 @@ export class ClobClient {
         return this.get(`${this.host}${endpoint}`, { headers, params: _params });
     }
 
-    public async getLiquidityRewardPercentages(): Promise<any> {
+    public async getLiquidityRewardPercentages(): Promise<RewardsPercentages> {
         this.canL2Auth();
 
         const endpoint = GET_LIQUIDITY_REWARD_PERCENTAGES;
@@ -707,11 +711,11 @@ export class ClobClient {
         return this.get(`${this.host}${endpoint}`, { headers, params: _params });
     }
 
-    public async getCurrentRewards(): Promise<any> {
+    public async getCurrentRewards(): Promise<CurrentReward[]> {
         return this.get(`${this.host}${GET_REWARDS_MARKETS_CURRENT}`);
     }
 
-    public async getRawRewardsForMarket(conditionId: string): Promise<any> {
+    public async getRawRewardsForMarket(conditionId: string): Promise<MarketReward[]> {
         return this.get(`${this.host}${GET_REWARDS_MARKETS}${conditionId}`);
     }
 
