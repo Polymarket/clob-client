@@ -99,6 +99,7 @@ import {
     GET_REWARDS_MARKETS,
 } from "./endpoints";
 import { OrderBuilder } from "./order-builder/builder";
+import { END_CURSOR, INITIAL_CURSOR } from "./constants";
 
 export class ClobClient {
     readonly host: string;
@@ -154,25 +155,27 @@ export class ClobClient {
         return this.get(`${this.host}${TIME}`);
     }
 
-    public async getSamplingSimplifiedMarkets(next_cursor = "MA=="): Promise<PaginationPayload> {
+    public async getSamplingSimplifiedMarkets(
+        next_cursor = INITIAL_CURSOR,
+    ): Promise<PaginationPayload> {
         return this.get(`${this.host}${GET_SAMPLING_SIMPLIFIED_MARKETS}`, {
             params: { next_cursor },
         });
     }
 
-    public async getSamplingMarkets(next_cursor = "MA=="): Promise<PaginationPayload> {
+    public async getSamplingMarkets(next_cursor = INITIAL_CURSOR): Promise<PaginationPayload> {
         return this.get(`${this.host}${GET_SAMPLING_MARKETS}`, {
             params: { next_cursor },
         });
     }
 
-    public async getSimplifiedMarkets(next_cursor = "MA=="): Promise<PaginationPayload> {
+    public async getSimplifiedMarkets(next_cursor = INITIAL_CURSOR): Promise<PaginationPayload> {
         return this.get(`${this.host}${GET_SIMPLIFIED_MARKETS}`, {
             params: { next_cursor },
         });
     }
 
-    public async getMarkets(next_cursor = "MA=="): Promise<PaginationPayload> {
+    public async getMarkets(next_cursor = INITIAL_CURSOR): Promise<PaginationPayload> {
         return this.get(`${this.host}${GET_MARKETS}`, {
             params: { next_cursor },
         });
@@ -681,12 +684,23 @@ export class ClobClient {
             headerArgs,
         );
 
-        const _params = {
-            date,
-            signature_type: this.orderBuilder.signatureType,
-        };
+        let results: UserEarning[] = [];
+        let next_cursor = INITIAL_CURSOR;
+        while (next_cursor != END_CURSOR) {
+            const params = {
+                date,
+                signature_type: this.orderBuilder.signatureType,
+                next_cursor,
+            };
 
-        return this.get(`${this.host}${endpoint}`, { headers, params: _params });
+            const response = await this.get(`${this.host}${endpoint}`, {
+                headers,
+                params,
+            });
+            next_cursor = response.next_cursor;
+            results = [...results, ...response.data];
+        }
+        return results;
     }
 
     public async getLiquidityRewardPercentages(): Promise<RewardsPercentages> {
@@ -712,11 +726,29 @@ export class ClobClient {
     }
 
     public async getCurrentRewards(): Promise<CurrentReward[]> {
-        return this.get(`${this.host}${GET_REWARDS_MARKETS_CURRENT}`);
+        let results: CurrentReward[] = [];
+        let next_cursor = INITIAL_CURSOR;
+        while (next_cursor != END_CURSOR) {
+            const response = await this.get(`${this.host}${GET_REWARDS_MARKETS_CURRENT}`, {
+                params: { next_cursor },
+            });
+            next_cursor = response.next_cursor;
+            results = [...results, ...response.data];
+        }
+        return results;
     }
 
     public async getRawRewardsForMarket(conditionId: string): Promise<MarketReward[]> {
-        return this.get(`${this.host}${GET_REWARDS_MARKETS}${conditionId}`);
+        let results: MarketReward[] = [];
+        let next_cursor = INITIAL_CURSOR;
+        while (next_cursor != END_CURSOR) {
+            const response = await this.get(`${this.host}${GET_REWARDS_MARKETS}${conditionId}`, {
+                params: { next_cursor },
+            });
+            next_cursor = response.next_cursor;
+            results = [...results, ...response.data];
+        }
+        return results;
     }
 
     public async getMarketTradesEvents(conditionID: string): Promise<MarketTradeEvent[]> {
