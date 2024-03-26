@@ -703,7 +703,7 @@ export class ClobClient {
         return results;
     }
 
-    public async getLiquidityRewardPercentages(): Promise<RewardsPercentages> {
+    public async getLRewardPercentages(): Promise<RewardsPercentages> {
         this.canL2Auth();
 
         const endpoint = GET_LIQUIDITY_REWARD_PERCENTAGES;
