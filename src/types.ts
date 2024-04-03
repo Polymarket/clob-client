@@ -397,6 +397,7 @@ export interface UserEarning {
     asset_address: string;
     maker_address: string;
     earnings: number;
+    asset_rate: number;
 }
 
 export interface RewardsPercentages {

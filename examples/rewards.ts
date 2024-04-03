@@ -20,7 +20,7 @@ async function main() {
 
     console.log(
         "today earnings",
-        await clobClient.getEarningsForUserForDay("2024-03-22" /* UTC TIME */),
+        await clobClient.getEarningsForUserForDay("2024-04-03" /* UTC TIME */),
     );
     console.log("rewards percentages", await clobClient.getLRewardPercentages());
     console.log("current rewards", await clobClient.getCurrentRewards());
