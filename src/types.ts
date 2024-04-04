@@ -390,3 +390,36 @@ export interface BookParams {
     token_id: string;
     side: Side;
 }
+
+export interface UserEarning {
+    date: string;
+    market: string;
+    asset_address: string;
+    maker_address: string;
+    earnings: number;
+    asset_rate: number;
+}
+
+export interface RewardsPercentages {
+    [market: string]: number;
+}
+
+export interface CurrentReward {
+    market: string;
+    asset_address: string;
+    start_date: string;
+    end_date: string;
+    current_rewards_per_day: number;
+    total_reward_amount: number;
+    remaining_reward_amount: number;
+}
+
+export interface MarketReward {
+    market: string;
+    asset_address: string;
+    start_date: string;
+    end_date: string;
+    rate_per_day: number;
+    total_rewards: number;
+    total_days: number;
+}
