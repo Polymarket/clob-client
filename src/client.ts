@@ -35,8 +35,8 @@ import {
     BookParams,
     UserEarning,
     RewardsPercentages,
-    CurrentReward,
     MarketReward,
+    UserRewardsEarning,
 } from "./types";
 import { createL1Headers, createL2Headers } from "./headers";
 import {
@@ -97,6 +97,7 @@ import {
     GET_LIQUIDITY_REWARD_PERCENTAGES,
     GET_REWARDS_MARKETS_CURRENT,
     GET_REWARDS_MARKETS,
+    GET_REWARDS_EARNINGS_PERCENTAGES,
 } from "./endpoints";
 import { OrderBuilder } from "./order-builder/builder";
 import { END_CURSOR, INITIAL_CURSOR } from "./constants";
@@ -703,7 +704,47 @@ export class ClobClient {
         return results;
     }
 
-    public async getLRewardPercentages(): Promise<RewardsPercentages> {
+    public async getUserEarningsAndMarketsConfig(
+        date: string,
+        order_by = "",
+        position = "",
+    ): Promise<UserRewardsEarning[]> {
+        this.canL2Auth();
+
+        const endpoint = GET_REWARDS_EARNINGS_PERCENTAGES;
+        const headerArgs = {
+            method: GET,
+            requestPath: endpoint,
+        };
+
+        const headers = await createL2Headers(
+            this.signer as Wallet | JsonRpcSigner,
+            this.creds as ApiKeyCreds,
+            headerArgs,
+        );
+
+        let results: UserRewardsEarning[] = [];
+        let next_cursor = INITIAL_CURSOR;
+        while (next_cursor != END_CURSOR) {
+            const params = {
+                date,
+                signature_type: this.orderBuilder.signatureType,
+                next_cursor,
+                order_by,
+                position,
+            };
+
+            const response = await this.get(`${this.host}${endpoint}`, {
+                headers,
+                params,
+            });
+            next_cursor = response.next_cursor;
+            results = [...results, ...response.data];
+        }
+        return results;
+    }
+
+    public async getRewardPercentages(): Promise<RewardsPercentages> {
         this.canL2Auth();
 
         const endpoint = GET_LIQUIDITY_REWARD_PERCENTAGES;
@@ -725,8 +766,8 @@ export class ClobClient {
         return this.get(`${this.host}${endpoint}`, { headers, params: _params });
     }
 
-    public async getCurrentRewards(): Promise<CurrentReward[]> {
-        let results: CurrentReward[] = [];
+    public async getCurrentRewards(): Promise<MarketReward[]> {
+        let results: MarketReward[] = [];
         let next_cursor = INITIAL_CURSOR;
         while (next_cursor != END_CURSOR) {
             const response = await this.get(`${this.host}${GET_REWARDS_MARKETS_CURRENT}`, {

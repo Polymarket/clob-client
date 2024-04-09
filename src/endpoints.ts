@@ -54,3 +54,4 @@ export const GET_EARNINGS_FOR_USER_FOR_DAY = "/rewards/user";
 export const GET_LIQUIDITY_REWARD_PERCENTAGES = "/rewards/user/percentages";
 export const GET_REWARDS_MARKETS_CURRENT = "/rewards/markets/current";
 export const GET_REWARDS_MARKETS = "/rewards/markets/";
+export const GET_REWARDS_EARNINGS_PERCENTAGES = "/rewards/user/markets";
