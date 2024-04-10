@@ -37,6 +37,7 @@ import {
     RewardsPercentages,
     MarketReward,
     UserRewardsEarning,
+    TotalUserEarning,
 } from "./types";
 import { createL1Headers, createL2Headers } from "./headers";
 import {
@@ -98,6 +99,7 @@ import {
     GET_REWARDS_MARKETS_CURRENT,
     GET_REWARDS_MARKETS,
     GET_REWARDS_EARNINGS_PERCENTAGES,
+    GET_TOTAL_EARNINGS_FOR_USER_FOR_DAY,
 } from "./endpoints";
 import { OrderBuilder } from "./order-builder/builder";
 import { END_CURSOR, INITIAL_CURSOR } from "./constants";
@@ -702,6 +704,32 @@ export class ClobClient {
             results = [...results, ...response.data];
         }
         return results;
+    }
+
+    public async getTotalEarningsForUserForDay(date: string): Promise<TotalUserEarning[]> {
+        this.canL2Auth();
+
+        const endpoint = GET_TOTAL_EARNINGS_FOR_USER_FOR_DAY;
+        const headerArgs = {
+            method: GET,
+            requestPath: endpoint,
+        };
+
+        const headers = await createL2Headers(
+            this.signer as Wallet | JsonRpcSigner,
+            this.creds as ApiKeyCreds,
+            headerArgs,
+        );
+
+        const params = {
+            date,
+            signature_type: this.orderBuilder.signatureType,
+        };
+
+        return await this.get(`${this.host}${endpoint}`, {
+            headers,
+            params,
+        });
     }
 
     public async getUserEarningsAndMarketsConfig(

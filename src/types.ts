@@ -400,6 +400,14 @@ export interface UserEarning {
     asset_rate: number;
 }
 
+export interface TotalUserEarning {
+    date: string;
+    asset_address: string;
+    maker_address: string;
+    earnings: number;
+    asset_rate: number;
+}
+
 export interface RewardsPercentages {
     [market: string]: number;
 }

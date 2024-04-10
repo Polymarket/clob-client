@@ -51,6 +51,7 @@ export const GET_MARKET_TRADES_EVENTS = "/live-activity/events/";
 
 // Rewards
 export const GET_EARNINGS_FOR_USER_FOR_DAY = "/rewards/user";
+export const GET_TOTAL_EARNINGS_FOR_USER_FOR_DAY = "/rewards/user/total";
 export const GET_LIQUIDITY_REWARD_PERCENTAGES = "/rewards/user/percentages";
 export const GET_REWARDS_MARKETS_CURRENT = "/rewards/markets/current";
 export const GET_REWARDS_MARKETS = "/rewards/markets/";

@@ -22,6 +22,10 @@ async function main() {
         "today earnings",
         await clobClient.getEarningsForUserForDay("2024-04-09" /* UTC TIME */),
     );
+    console.log(
+        "total earnings",
+        await clobClient.getTotalEarningsForUserForDay("2024-04-09" /* UTC TIME */),
+    );
     console.log("rewards percentages", await clobClient.getRewardPercentages());
     console.log("current rewards", await clobClient.getCurrentRewards());
     console.log(
