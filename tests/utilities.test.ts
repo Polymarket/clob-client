@@ -246,7 +246,7 @@ describe("utilities", () => {
                         "0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80";
                     const address = "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266";
                     const wallet = new Wallet(privateKey);
-                    const chainId = Chain.MUMBAI;
+                    const chainId = Chain.AMOY;
                     const owner = "f4f247b7-4ac7-ff29-a152-04fda0a8755a";
 
                     it("GTD BUY EOA", async () => {
@@ -906,7 +906,7 @@ describe("utilities", () => {
                         "0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80";
                     const address = "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266";
                     const wallet = new Wallet(privateKey);
-                    const chainId = Chain.MUMBAI;
+                    const chainId = Chain.AMOY;
                     const owner = "f4f247b7-4ac7-ff29-a152-04fda0a8755a";
 
                     it("GTD BUY EOA", async () => {
@@ -1566,7 +1566,7 @@ describe("utilities", () => {
                         "0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80";
                     const address = "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266";
                     const wallet = new Wallet(privateKey);
-                    const chainId = Chain.MUMBAI;
+                    const chainId = Chain.AMOY;
                     const owner = "f4f247b7-4ac7-ff29-a152-04fda0a8755a";
 
                     it("GTD BUY EOA", async () => {
@@ -2226,7 +2226,7 @@ describe("utilities", () => {
                         "0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80";
                     const address = "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266";
                     const wallet = new Wallet(privateKey);
-                    const chainId = Chain.MUMBAI;
+                    const chainId = Chain.AMOY;
                     const owner = "f4f247b7-4ac7-ff29-a152-04fda0a8755a";
 
                     it("GTD BUY EOA", async () => {
@@ -2888,7 +2888,7 @@ describe("utilities", () => {
                         "0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80";
                     const address = "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266";
                     const wallet = new Wallet(privateKey);
-                    const chainId = Chain.MUMBAI;
+                    const chainId = Chain.AMOY;
                     const owner = "f4f247b7-4ac7-ff29-a152-04fda0a8755a";
 
                     it("GTD BUY EOA", async () => {
@@ -3548,7 +3548,7 @@ describe("utilities", () => {
                         "0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80";
                     const address = "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266";
                     const wallet = new Wallet(privateKey);
-                    const chainId = Chain.MUMBAI;
+                    const chainId = Chain.AMOY;
                     const owner = "f4f247b7-4ac7-ff29-a152-04fda0a8755a";
 
                     it("GTD BUY EOA", async () => {
@@ -4208,7 +4208,7 @@ describe("utilities", () => {
                         "0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80";
                     const address = "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266";
                     const wallet = new Wallet(privateKey);
-                    const chainId = Chain.MUMBAI;
+                    const chainId = Chain.AMOY;
                     const owner = "f4f247b7-4ac7-ff29-a152-04fda0a8755a";
 
                     it("GTD BUY EOA", async () => {
@@ -4868,7 +4868,7 @@ describe("utilities", () => {
                         "0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80";
                     const address = "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266";
                     const wallet = new Wallet(privateKey);
-                    const chainId = Chain.MUMBAI;
+                    const chainId = Chain.AMOY;
                     const owner = "f4f247b7-4ac7-ff29-a152-04fda0a8755a";
 
                     it("GTD BUY EOA", async () => {

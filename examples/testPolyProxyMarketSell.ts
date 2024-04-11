@@ -31,7 +31,7 @@ async function populateBook(client: ClobClient) {
 
 async function main() {
     const wallet = new ethers.Wallet(`${process.env.PK}`);
-    const chainId = parseInt(`${process.env.CHAIN_ID || Chain.MUMBAI}`) as Chain;
+    const chainId = parseInt(`${process.env.CHAIN_ID || Chain.AMOY}`) as Chain;
     console.log(`Address: ${await wallet.getAddress()}, chainId: ${chainId}`);
 
     const host = process.env.CLOB_API_URL || "http://localhost:8080";

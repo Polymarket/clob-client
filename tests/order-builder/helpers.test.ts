@@ -17,7 +17,7 @@ import { decimalPlaces, roundDown, roundNormal } from "../../src/utilities";
 import { ContractConfig, getContractConfig } from "../../src/config";
 
 describe("helpers", () => {
-    const chainId = Chain.MUMBAI;
+    const chainId = Chain.AMOY;
     let wallet: Wallet;
     let contractConfig: ContractConfig;
     beforeEach(() => {
@@ -1788,7 +1788,7 @@ describe("helpers", () => {
 
                     const signedOrder = await createOrder(
                         wallet,
-                        Chain.MUMBAI,
+                        Chain.AMOY,
                         SignatureType.EOA,
                         "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
                         order,
@@ -1825,7 +1825,7 @@ describe("helpers", () => {
 
                     const signedOrder = await createOrder(
                         wallet,
-                        Chain.MUMBAI,
+                        Chain.AMOY,
                         SignatureType.EOA,
                         "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
                         order,
@@ -1862,7 +1862,7 @@ describe("helpers", () => {
 
                     const signedOrder = await createOrder(
                         wallet,
-                        Chain.MUMBAI,
+                        Chain.AMOY,
                         SignatureType.EOA,
                         "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
                         order,
@@ -1899,7 +1899,7 @@ describe("helpers", () => {
 
                     const signedOrder = await createOrder(
                         wallet,
-                        Chain.MUMBAI,
+                        Chain.AMOY,
                         SignatureType.EOA,
                         "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
                         order,
@@ -1937,7 +1937,7 @@ describe("helpers", () => {
 
                     const signedOrder = await createOrder(
                         wallet,
-                        Chain.MUMBAI,
+                        Chain.AMOY,
                         SignatureType.POLY_GNOSIS_SAFE,
                         "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
                         order,
@@ -1971,7 +1971,7 @@ describe("helpers", () => {
 
                     const signedOrder = await createOrder(
                         wallet,
-                        Chain.MUMBAI,
+                        Chain.AMOY,
                         SignatureType.POLY_GNOSIS_SAFE,
                         "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
                         order,
@@ -2005,7 +2005,7 @@ describe("helpers", () => {
 
                     const signedOrder = await createOrder(
                         wallet,
-                        Chain.MUMBAI,
+                        Chain.AMOY,
                         SignatureType.POLY_GNOSIS_SAFE,
                         "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
                         order,
@@ -2039,7 +2039,7 @@ describe("helpers", () => {
 
                     const signedOrder = await createOrder(
                         wallet,
-                        Chain.MUMBAI,
+                        Chain.AMOY,
                         SignatureType.POLY_GNOSIS_SAFE,
                         "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
                         order,
@@ -2078,7 +2078,7 @@ describe("helpers", () => {
 
                     const signedOrder = await createOrder(
                         wallet,
-                        Chain.MUMBAI,
+                        Chain.AMOY,
                         SignatureType.EOA,
                         "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
                         order,
@@ -2115,7 +2115,7 @@ describe("helpers", () => {
 
                     const signedOrder = await createOrder(
                         wallet,
-                        Chain.MUMBAI,
+                        Chain.AMOY,
                         SignatureType.EOA,
                         "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
                         order,
@@ -2152,7 +2152,7 @@ describe("helpers", () => {
 
                     const signedOrder = await createOrder(
                         wallet,
-                        Chain.MUMBAI,
+                        Chain.AMOY,
                         SignatureType.EOA,
                         "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
                         order,
@@ -2189,7 +2189,7 @@ describe("helpers", () => {
 
                     const signedOrder = await createOrder(
                         wallet,
-                        Chain.MUMBAI,
+                        Chain.AMOY,
                         SignatureType.EOA,
                         "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
                         order,
@@ -2227,7 +2227,7 @@ describe("helpers", () => {
 
                     const signedOrder = await createOrder(
                         wallet,
-                        Chain.MUMBAI,
+                        Chain.AMOY,
                         SignatureType.POLY_GNOSIS_SAFE,
                         "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
                         order,
@@ -2261,7 +2261,7 @@ describe("helpers", () => {
 
                     const signedOrder = await createOrder(
                         wallet,
-                        Chain.MUMBAI,
+                        Chain.AMOY,
                         SignatureType.POLY_GNOSIS_SAFE,
                         "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
                         order,
@@ -2295,7 +2295,7 @@ describe("helpers", () => {
 
                     const signedOrder = await createOrder(
                         wallet,
-                        Chain.MUMBAI,
+                        Chain.AMOY,
                         SignatureType.POLY_GNOSIS_SAFE,
                         "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
                         order,
@@ -2329,7 +2329,7 @@ describe("helpers", () => {
 
                     const signedOrder = await createOrder(
                         wallet,
-                        Chain.MUMBAI,
+                        Chain.AMOY,
                         SignatureType.POLY_GNOSIS_SAFE,
                         "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
                         order,
@@ -3355,7 +3355,7 @@ describe("helpers", () => {
 
                     const signedOrder = await createMarketBuyOrder(
                         wallet,
-                        Chain.MUMBAI,
+                        Chain.AMOY,
                         SignatureType.EOA,
                         "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
                         order,
@@ -3391,7 +3391,7 @@ describe("helpers", () => {
 
                     const signedOrder = await createMarketBuyOrder(
                         wallet,
-                        Chain.MUMBAI,
+                        Chain.AMOY,
                         SignatureType.EOA,
                         "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
                         order,
@@ -3427,7 +3427,7 @@ describe("helpers", () => {
 
                     const signedOrder = await createMarketBuyOrder(
                         wallet,
-                        Chain.MUMBAI,
+                        Chain.AMOY,
                         SignatureType.EOA,
                         "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
                         order,
@@ -3463,7 +3463,7 @@ describe("helpers", () => {
 
                     const signedOrder = await createMarketBuyOrder(
                         wallet,
-                        Chain.MUMBAI,
+                        Chain.AMOY,
                         SignatureType.EOA,
                         "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
                         order,
@@ -3503,7 +3503,7 @@ describe("helpers", () => {
 
                     const signedOrder = await createMarketBuyOrder(
                         wallet,
-                        Chain.MUMBAI,
+                        Chain.AMOY,
                         SignatureType.EOA,
                         "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
                         order,
@@ -3539,7 +3539,7 @@ describe("helpers", () => {
 
                     const signedOrder = await createMarketBuyOrder(
                         wallet,
-                        Chain.MUMBAI,
+                        Chain.AMOY,
                         SignatureType.EOA,
                         "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
                         order,
@@ -3575,7 +3575,7 @@ describe("helpers", () => {
 
                     const signedOrder = await createMarketBuyOrder(
                         wallet,
-                        Chain.MUMBAI,
+                        Chain.AMOY,
                         SignatureType.EOA,
                         "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
                         order,
@@ -3611,7 +3611,7 @@ describe("helpers", () => {
 
                     const signedOrder = await createMarketBuyOrder(
                         wallet,
-                        Chain.MUMBAI,
+                        Chain.AMOY,
                         SignatureType.EOA,
                         "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
                         order,

@@ -6,7 +6,7 @@ dotenvConfig({ path: resolve(__dirname, "../.env") });
 
 async function main() {
     const host = process.env.CLOB_API_URL || "http://localhost:8080";
-    const chainId = parseInt(`${process.env.CHAIN_ID || Chain.MUMBAI}`) as Chain;
+    const chainId = parseInt(`${process.env.CHAIN_ID || Chain.AMOY}`) as Chain;
     const clobClient = new ClobClient(host, chainId);
 
     console.log(`Server time: ${await clobClient.getServerTime()}`);
