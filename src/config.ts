@@ -6,12 +6,12 @@ type ContractConfig = {
     conditionalTokens: string;
 };
 
-const MUMBAI_CONTRACTS: ContractConfig = {
-    exchange: "0x4bFb41d5B3570DeFd03C39a9A4D8dE6Bd8B8982E",
-    negRiskAdapter: "0x9A6930BB811fe3dFE1c35e4502134B38EC54399C",
-    negRiskExchange: "0x87d1A0DdB4C63a6301916F02090A51a7241571e4",
-    collateral: "0x2E8DCfE708D44ae2e406a1c02DFE2Fa13012f961",
-    conditionalTokens: "0x7D8610E9567d2a6C9FBf66a5A13E9Ba8bb120d43",
+const AMOY_CONTRACTS: ContractConfig = {
+    exchange: "0xdFE02Eb6733538f8Ea35D585af8DE5958AD99E40",
+    negRiskAdapter: "0xd91E80cF2E7be2e162c6513ceD06f1dD0dA35296",
+    negRiskExchange: "0xC5d563A36AE78145C45a50134d48A1215220f80a",
+    collateral: "0x9c4e1703476e875070ee25b56a58b008cfb8fa78",
+    conditionalTokens: "0x69308FB512518e39F9b16112fA8d994F4e2Bf8bB",
 };
 
 const MATIC_CONTRACTS: ContractConfig = {
@@ -29,8 +29,8 @@ const getContractConfig = (chainID: number): ContractConfig => {
     switch (chainID) {
         case 137:
             return MATIC_CONTRACTS;
-        case 80001:
-            return MUMBAI_CONTRACTS;
+        case 80002:
+            return AMOY_CONTRACTS;
         default:
             throw new Error("Invalid network");
     }

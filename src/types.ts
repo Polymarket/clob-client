@@ -254,7 +254,7 @@ export interface Trade {
 
 export enum Chain {
     POLYGON = 137,
-    MUMBAI = 80001,
+    AMOY = 80002,
 }
 
 export interface MarketPrice {

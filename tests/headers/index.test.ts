@@ -5,7 +5,7 @@ import { Wallet } from "ethers";
 import { ApiKeyCreds, Chain } from "../../src/types";
 
 describe("headers", () => {
-    const chainId = Chain.MUMBAI;
+    const chainId = Chain.AMOY;
     let wallet: Wallet;
     let creds: ApiKeyCreds;
     beforeEach(() => {
