@@ -20,14 +20,26 @@ async function main() {
 
     console.log(
         "today earnings",
-        await clobClient.getEarningsForUserForDay("2024-04-03" /* UTC TIME */),
+        await clobClient.getEarningsForUserForDay("2024-04-09" /* UTC TIME */),
     );
-    console.log("rewards percentages", await clobClient.getLRewardPercentages());
+    console.log(
+        "total earnings",
+        await clobClient.getTotalEarningsForUserForDay("2024-04-09" /* UTC TIME */),
+    );
+    console.log("rewards percentages", await clobClient.getRewardPercentages());
     console.log("current rewards", await clobClient.getCurrentRewards());
     console.log(
         "rewards for market",
         await clobClient.getRawRewardsForMarket(
             "0xbd31dc8a20211944f6b70f31557f1001557b59905b7738480ca09bd4532f84af",
+        ),
+    );
+    console.log(
+        "rewards",
+        await clobClient.getUserEarningsAndMarketsConfig(
+            "2024-04-09" /* UTC TIME */,
+            "earnings",
+            "DESC",
         ),
     );
 }

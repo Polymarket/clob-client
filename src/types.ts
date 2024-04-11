@@ -393,7 +393,15 @@ export interface BookParams {
 
 export interface UserEarning {
     date: string;
-    market: string;
+    condition_id: string;
+    asset_address: string;
+    maker_address: string;
+    earnings: number;
+    asset_rate: number;
+}
+
+export interface TotalUserEarning {
+    date: string;
     asset_address: string;
     maker_address: string;
     earnings: number;
@@ -404,22 +412,58 @@ export interface RewardsPercentages {
     [market: string]: number;
 }
 
-export interface CurrentReward {
-    market: string;
-    asset_address: string;
-    start_date: string;
-    end_date: string;
-    current_rewards_per_day: number;
-    total_reward_amount: number;
-    remaining_reward_amount: number;
+export interface Token {
+    token_id: string;
+    outcome: string;
+    price: number;
 }
 
-export interface MarketReward {
-    market: string;
+export interface RewardsConfig {
     asset_address: string;
     start_date: string;
     end_date: string;
     rate_per_day: number;
     total_rewards: number;
-    total_days: number;
+    remaining_reward_amount: number;
+}
+
+export interface MarketReward {
+    condition_id: string;
+    market_id: number;
+    question: string;
+    market_slug: string;
+    event_slug: string;
+    active: boolean;
+    archived: boolean;
+    closed: boolean;
+    image: string;
+    rewards_max_spread: number;
+    rewards_min_size: number;
+    tokens: Token[];
+    rewards_config: RewardsConfig[];
+}
+
+export interface Earning {
+    asset_address: string;
+    earnings: number;
+    asset_rate: number;
+}
+
+export interface UserRewardsEarning {
+    condition_id: string;
+    market_id: number;
+    question: string;
+    market_slug: string;
+    event_slug: string;
+    active: boolean;
+    archived: boolean;
+    closed: boolean;
+    image: string;
+    rewards_max_spread: number;
+    rewards_min_size: number;
+    tokens: Token[];
+    rewards_config: RewardsConfig[];
+    maker_address: string;
+    earning_percentage: number;
+    earnings: Earning[];
 }
