@@ -20,7 +20,7 @@ export function getWallet(mainnetQ: boolean): ethers.Wallet {
     if (mainnetQ) {
         rpcUrl = `https://polygon-mainnet.g.alchemy.com/v2/${rpcToken}`;
     } else {
-        rpcUrl = `https://polygon-mumbai.g.alchemy.com/v2/${rpcToken}`;
+        rpcUrl = `https://polygon-amoy.g.alchemy.com/v2/${rpcToken}`;
     }
     const provider = new ethers.providers.JsonRpcProvider(rpcUrl);
     let wallet = new ethers.Wallet(pk);
@@ -29,24 +29,24 @@ export function getWallet(mainnetQ: boolean): ethers.Wallet {
 }
 
 export function getUsdcContract(mainnetQ: boolean, wallet: ethers.Wallet): ethers.Contract {
-    const chainId = mainnetQ ? 137 : 80001;
+    const chainId = mainnetQ ? 137 : 80002;
     const contractConfig = getContractConfig(chainId);
     return new ethers.Contract(contractConfig.collateral, usdcAbi, wallet);
 }
 
 export function getCtfContract(mainnetQ: boolean, wallet: ethers.Wallet): ethers.Contract {
-    const chainId = mainnetQ ? 137 : 80001;
+    const chainId = mainnetQ ? 137 : 80002;
     const contractConfig = getContractConfig(chainId);
     return new ethers.Contract(contractConfig.conditionalTokens, ctfAbi, wallet);
 }
 
 async function main() {
     // --------------------------
-    // SET MAINNET OR MUMBAI HERE
+    // SET MAINNET OR AMOY HERE
     const isMainnet = false;
     // --------------------------
     const wallet = getWallet(isMainnet);
-    const chainId = parseInt(`${process.env.CHAIN_ID || Chain.MUMBAI}`) as Chain;
+    const chainId = parseInt(`${process.env.CHAIN_ID || Chain.AMOY}`) as Chain;
     console.log(`Address: ${await wallet.getAddress()}, chainId: ${chainId}`);
 
     const contractConfig = getContractConfig(chainId);
