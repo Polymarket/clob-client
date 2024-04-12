@@ -195,7 +195,7 @@ export class ClobClient {
     }
 
     public async getOrderBooks(params: BookParams[]): Promise<OrderBookSummary[]> {
-        return this.get(`${this.host}${GET_ORDER_BOOKS}`, {
+        return this.post(`${this.host}${GET_ORDER_BOOKS}`, {
             data: params,
         });
     }
@@ -229,7 +229,7 @@ export class ClobClient {
     }
 
     public async getMidpoints(params: BookParams[]): Promise<any> {
-        return this.get(`${this.host}${GET_MIDPOINTS}`, {
+        return this.post(`${this.host}${GET_MIDPOINTS}`, {
             data: params,
         });
     }
@@ -241,7 +241,7 @@ export class ClobClient {
     }
 
     public async getPrices(params: BookParams[]): Promise<any> {
-        return this.get(`${this.host}${GET_PRICES}`, {
+        return this.post(`${this.host}${GET_PRICES}`, {
             data: params,
         });
     }
@@ -253,7 +253,7 @@ export class ClobClient {
     }
 
     public async getLastTradesPrices(params: BookParams[]): Promise<any> {
-        return this.get(`${this.host}${GET_LAST_TRADES_PRICES}`, {
+        return this.post(`${this.host}${GET_LAST_TRADES_PRICES}`, {
             data: params,
         });
     }
