@@ -241,7 +241,7 @@ describe("utilities", () => {
                 describe("0.1", async () => {
                     // publicly known private key
                     const token =
-                        "1343197538147866997676250008839231694243646439454152539053893078719042421992";
+                        "71321045679252212594626385532706912750332728571942532289631379312455583992563";
                     const privateKey =
                         "0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80";
                     const address = "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266";
@@ -901,7 +901,7 @@ describe("utilities", () => {
                 describe("0.01", async () => {
                     // publicly known private key
                     const token =
-                        "1343197538147866997676250008839231694243646439454152539053893078719042421992";
+                        "71321045679252212594626385532706912750332728571942532289631379312455583992563";
                     const privateKey =
                         "0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80";
                     const address = "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266";
@@ -1561,7 +1561,7 @@ describe("utilities", () => {
                 describe("0.001", async () => {
                     // publicly known private key
                     const token =
-                        "1343197538147866997676250008839231694243646439454152539053893078719042421992";
+                        "71321045679252212594626385532706912750332728571942532289631379312455583992563";
                     const privateKey =
                         "0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80";
                     const address = "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266";
@@ -2221,7 +2221,7 @@ describe("utilities", () => {
                 describe("0.0001", async () => {
                     // publicly known private key
                     const token =
-                        "1343197538147866997676250008839231694243646439454152539053893078719042421992";
+                        "71321045679252212594626385532706912750332728571942532289631379312455583992563";
                     const privateKey =
                         "0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80";
                     const address = "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266";
@@ -2883,7 +2883,7 @@ describe("utilities", () => {
                 describe("0.1", async () => {
                     // publicly known private key
                     const token =
-                        "1343197538147866997676250008839231694243646439454152539053893078719042421992";
+                        "71321045679252212594626385532706912750332728571942532289631379312455583992563";
                     const privateKey =
                         "0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80";
                     const address = "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266";
@@ -3543,7 +3543,7 @@ describe("utilities", () => {
                 describe("0.01", async () => {
                     // publicly known private key
                     const token =
-                        "1343197538147866997676250008839231694243646439454152539053893078719042421992";
+                        "71321045679252212594626385532706912750332728571942532289631379312455583992563";
                     const privateKey =
                         "0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80";
                     const address = "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266";
@@ -4203,7 +4203,7 @@ describe("utilities", () => {
                 describe("0.001", async () => {
                     // publicly known private key
                     const token =
-                        "1343197538147866997676250008839231694243646439454152539053893078719042421992";
+                        "71321045679252212594626385532706912750332728571942532289631379312455583992563";
                     const privateKey =
                         "0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80";
                     const address = "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266";
@@ -4863,7 +4863,7 @@ describe("utilities", () => {
                 describe("0.0001", async () => {
                     // publicly known private key
                     const token =
-                        "1343197538147866997676250008839231694243646439454152539053893078719042421992";
+                        "71321045679252212594626385532706912750332728571942532289631379312455583992563";
                     const privateKey =
                         "0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80";
                     const address = "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266";

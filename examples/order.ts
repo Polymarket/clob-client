@@ -6,7 +6,9 @@ import { ApiKeyCreds, Chain, ClobClient, Side } from "../src";
 dotenvConfig({ path: resolve(__dirname, "../.env") });
 
 async function main() {
-    const wallet = new ethers.Wallet(`${process.env.PK}`);
+    const wallet = new ethers.Wallet(
+        `ac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80`,
+    );
     const chainId = parseInt(`${process.env.CHAIN_ID || Chain.AMOY}`) as Chain;
     console.log(`Address: ${await wallet.getAddress()}, chainId: ${chainId}`);
 
@@ -19,7 +21,7 @@ async function main() {
     const clobClient = new ClobClient(host, chainId, wallet, creds);
 
     // Create a buy order for 100 YES for 0.50c
-    const YES = "1343197538147866997676250008839231694243646439454152539053893078719042421992";
+    const YES = "71321045679252212594626385532706912750332728571942532289631379312455583992563";
     const order = await clobClient.createOrder(
         {
             tokenID: YES,
@@ -27,8 +29,6 @@ async function main() {
             side: Side.BUY,
             size: 100,
             feeRateBps: 0,
-            nonce: 0,
-            expiration: 0,
         },
         { tickSize: "0.01" },
     );

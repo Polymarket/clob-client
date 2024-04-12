@@ -18,7 +18,7 @@ async function populateBook(client: ClobClient) {
             await client.createOrder({
                 tokenID:
                     // eslint-disable-next-line max-len
-                    "16678291189211314787145083999015737376658799626183230671758641503291735614088", // NO
+                    "52114319501245915516055106046884209969926127482827954674443846427813813222426", // NO
                 side: newOrder.side,
                 price: newOrder.price,
                 size: newOrder.size,

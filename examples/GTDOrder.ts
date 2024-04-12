@@ -20,7 +20,7 @@ async function main() {
 
     // Create a buy order for 100 YES for 0.50c with an expiration of 1 minute
     // We add an extra 10s because Clob has a security threshold of 10 seconds before canceling it.
-    const YES = "1343197538147866997676250008839231694243646439454152539053893078719042421992";
+    const YES = "71321045679252212594626385532706912750332728571942532289631379312455583992563";
     const oneMinute = parseInt(((new Date().getTime() + 60 * 1000 + 10 * 1000) / 1000).toString());
 
     const order = await clobClient.createOrder({

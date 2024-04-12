@@ -31,7 +31,7 @@ async function main() {
     console.log(
         "rewards for market",
         await clobClient.getRawRewardsForMarket(
-            "0xbd31dc8a20211944f6b70f31557f1001557b59905b7738480ca09bd4532f84af",
+            "0x5f65177b394277fd294cd75650044e32ba009a95022d88a0c1d565897d72f8f1",
         ),
     );
     console.log(

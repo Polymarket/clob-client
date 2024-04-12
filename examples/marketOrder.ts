@@ -19,7 +19,7 @@ async function main() {
     const clobClient = new ClobClient(host, chainId, wallet, creds);
 
     // Create a YES market buy order for the equivalent of 100 USDC for the market price
-    const YES = "1343197538147866997676250008839231694243646439454152539053893078719042421992";
+    const YES = "71321045679252212594626385532706912750332728571942532289631379312455583992563";
     const marketOrder = await clobClient.createMarketBuyOrder({
         tokenID: YES,
         amount: 100,

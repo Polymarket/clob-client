@@ -29,7 +29,7 @@ async function main() {
     );
 
     // Create a buy order for 100 YES for 0.50c
-    const YES = "1343197538147866997676250008839231694243646439454152539053893078719042421992";
+    const YES = "71321045679252212594626385532706912750332728571942532289631379312455583992563";
     const order = await clobClient.createOrder(
         {
             tokenID: YES,

@@ -15,7 +15,7 @@ const creds: ApiKeyCreds = {
     key: `${process.env.CLOB_API_KEY}`,
     secret: `${process.env.CLOB_SECRET}`,
     passphrase: `${process.env.CLOB_PASS_PHRASE}`,
-}
+};
 
 // Initialize the clob client
 // NOTE: the signer must be approved on the CTFExchange contract
@@ -23,7 +23,7 @@ const clobClient = new ClobClient(host, signer, creds);
 
 // Create a buy order for 100 NO for 0.50c
 const order = await clobClient.createOrder({
-    tokenId: "16678291189211314787145083999015737376658799626183230671758641503291735614088",
+    tokenId: "52114319501245915516055106046884209969926127482827954674443846427813813222426",
     price: 0.5,
     side: Side.Buy,
     size: 100,
