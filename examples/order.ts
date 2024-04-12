@@ -6,9 +6,7 @@ import { ApiKeyCreds, Chain, ClobClient, Side } from "../src";
 dotenvConfig({ path: resolve(__dirname, "../.env") });
 
 async function main() {
-    const wallet = new ethers.Wallet(
-        `ac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80`,
-    );
+    const wallet = new ethers.Wallet(`${process.env.PK}`);
     const chainId = parseInt(`${process.env.CHAIN_ID || Chain.AMOY}`) as Chain;
     console.log(`Address: ${await wallet.getAddress()}, chainId: ${chainId}`);
 
