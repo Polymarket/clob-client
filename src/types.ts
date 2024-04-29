@@ -297,9 +297,9 @@ export interface OrderMarketCancelParams {
 export interface OrderBookSummary {
     market: string;
     asset_id: string;
+    hash: string;
     bids: OrderSummary[];
     asks: OrderSummary[];
-    hash: string;
 }
 
 export interface OrderSummary {
