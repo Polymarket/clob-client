@@ -416,6 +416,7 @@ export interface Token {
     token_id: string;
     outcome: string;
     price: number;
+    outcome_index: number;
 }
 
 export interface RewardsConfig {
