@@ -208,7 +208,7 @@ export class ClobClient {
         const result = await this.get(`${this.host}${GET_TICK_SIZE}`, {
             params: { token_id: tokenID },
         });
-        this.tickSizes[tokenID] = result.minimum_tick_size as TickSize;
+        this.tickSizes[tokenID] = result.minimum_tick_size.toString() as TickSize;
 
         return this.tickSizes[tokenID];
     }
