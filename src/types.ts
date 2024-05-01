@@ -424,18 +424,13 @@ export interface RewardsConfig {
     end_date: string;
     rate_per_day: number;
     total_rewards: number;
-    remaining_reward_amount: number;
 }
 
 export interface MarketReward {
     condition_id: string;
-    market_id: number;
     question: string;
     market_slug: string;
     event_slug: string;
-    active: boolean;
-    archived: boolean;
-    closed: boolean;
     image: string;
     rewards_max_spread: number;
     rewards_min_size: number;
@@ -451,13 +446,9 @@ export interface Earning {
 
 export interface UserRewardsEarning {
     condition_id: string;
-    market_id: number;
     question: string;
     market_slug: string;
     event_slug: string;
-    active: boolean;
-    archived: boolean;
-    closed: boolean;
     image: string;
     rewards_max_spread: number;
     rewards_min_size: number;
