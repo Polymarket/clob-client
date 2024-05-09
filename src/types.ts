@@ -177,9 +177,8 @@ export interface OpenOrder {
     original_size: string;
     size_matched: string;
     price: string;
-    associate_trades: Trade[];
+    associate_trades: string[];
     outcome: string;
-    outcome_index: number;
     created_at: number;
     expiration: string;
     type: string;
@@ -187,25 +186,12 @@ export interface OpenOrder {
 
 export type OpenOrdersResponse = OpenOrder[];
 
-export interface FilterParams {
-    owner?: string;
-    max?: number;
-    market?: string;
-    side?: Side;
-    startTs?: number;
-    endTs?: number;
-    minValue?: string;
-    fidelity?: number;
-}
-
 export interface TradeParams {
     id?: string;
     owner?: string;
-    taker?: string;
-    maker?: string;
+    maker_address?: string;
     market?: string;
     asset_id?: string;
-    limit?: number;
     before?: string;
     after?: string;
 }
@@ -219,14 +205,12 @@ export interface OpenOrderParams {
 
 export interface MakerOrder {
     order_id: string;
-    owner: string;
     maker_address: string;
     matched_amount: string;
     price: string;
     fee_rate_bps: string;
     asset_id: string;
     outcome: string;
-    outcome_index: string;
 }
 
 export interface Trade {
@@ -239,17 +223,17 @@ export interface Trade {
     side: number | string;
     size: string;
     fee_rate_bps: string;
-    status: string;
     price: string;
+    status: string;
     match_time: string;
     last_update: string;
     outcome: string;
-    outcome_index: number;
     bucket_index: number;
     owner: string;
     maker_address: string;
     maker_orders: MakerOrder[];
     transaction_hash: string;
+    type: "TAKER" | "MAKER";
 }
 
 export enum Chain {
