@@ -170,7 +170,7 @@ export interface OrderResponse {
 export interface OpenOrder {
     id: string;
     status: string;
-    owner: string;
+    maker_address: string;
     market: string;
     asset_id: string;
     side: string;
@@ -229,7 +229,6 @@ export interface Trade {
     last_update: string;
     outcome: string;
     bucket_index: number;
-    owner: string;
     maker_address: string;
     maker_orders: MakerOrder[];
     transaction_hash: string;
