@@ -30,7 +30,6 @@ export const CANCEL_ORDERS = "/orders";
 export const GET_ORDER = "/history/order/";
 export const CANCEL_ALL = "/cancel-all";
 export const CANCEL_MARKET_ORDERS = "/cancel-market-orders";
-export const GET_LARGE_ORDERS = "/large-orders";
 export const GET_OPEN_ORDERS = "/history/orders";
 export const GET_TRADES = "/history/trades";
 export const IS_ORDER_SCORING = "/order-scoring";

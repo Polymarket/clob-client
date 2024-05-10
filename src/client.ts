@@ -74,7 +74,6 @@ import {
     GET_OPEN_ORDERS,
     DERIVE_API_KEY,
     GET_LAST_TRADE_PRICE,
-    GET_LARGE_ORDERS,
     GET_MARKETS,
     GET_MARKET,
     GET_PRICES_HISTORY,
@@ -255,12 +254,6 @@ export class ClobClient {
     public async getLastTradesPrices(params: BookParams[]): Promise<any> {
         return this.post(`${this.host}${GET_LAST_TRADES_PRICES}`, {
             data: params,
-        });
-    }
-
-    public async getLargeOrders(minValue = ""): Promise<any> {
-        return this.get(`${this.host}${GET_LARGE_ORDERS}`, {
-            params: { min_value: minValue },
         });
     }
 
