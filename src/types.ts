@@ -188,7 +188,6 @@ export type OpenOrdersResponse = OpenOrder[];
 
 export interface TradeParams {
     id?: string;
-    owner?: string;
     maker_address?: string;
     market?: string;
     asset_id?: string;
@@ -198,7 +197,6 @@ export interface TradeParams {
 
 export interface OpenOrderParams {
     id?: string;
-    owner?: string;
     market?: string;
     asset_id?: string;
 }
