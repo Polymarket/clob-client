@@ -98,6 +98,8 @@ import {
     GET_REWARDS_MARKETS,
     GET_REWARDS_EARNINGS_PERCENTAGES,
     GET_TOTAL_EARNINGS_FOR_USER_FOR_DAY,
+    GET_SPREAD,
+    GET_SPREADS,
 } from "./endpoints";
 import { OrderBuilder } from "./order-builder/builder";
 import { END_CURSOR, INITIAL_CURSOR } from "./constants";
@@ -240,6 +242,18 @@ export class ClobClient {
 
     public async getPrices(params: BookParams[]): Promise<any> {
         return this.post(`${this.host}${GET_PRICES}`, {
+            data: params,
+        });
+    }
+
+    public async getSpread(tokenID: string): Promise<any> {
+        return this.get(`${this.host}${GET_SPREAD}`, {
+            params: { token_id: tokenID },
+        });
+    }
+
+    public async getSpreads(params: BookParams[]): Promise<any> {
+        return this.post(`${this.host}${GET_SPREADS}`, {
             data: params,
         });
     }
