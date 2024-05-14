@@ -46,7 +46,6 @@ import {
     GET,
     get,
     parseDropNotificationParams,
-    parseOrdersScoringParams,
     POST,
     post,
     RequestOptions,
@@ -678,9 +677,11 @@ export class ClobClient {
         this.canL2Auth();
 
         const endpoint = ARE_ORDERS_SCORING;
+        const payload = JSON.stringify(params?.orderIds);
         const headerArgs = {
-            method: GET,
+            method: POST,
             requestPath: endpoint,
+            body: payload,
         };
 
         const headers = await createL2Headers(
@@ -689,9 +690,9 @@ export class ClobClient {
             headerArgs,
         );
 
-        return this.get(`${this.host}${endpoint}`, {
+        return this.post(`${this.host}${endpoint}`, {
             headers,
-            params: parseOrdersScoringParams(params),
+            data: payload,
         });
     }
 
