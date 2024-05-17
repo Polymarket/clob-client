@@ -2475,7 +2475,6 @@ describe("helpers", () => {
                     amount: 100,
                     feeRateBps: 111,
                     nonce: 123,
-                    expiration: 50000,
                 };
                 const orderData: OrderData = await buildMarketBuyOrderCreationArgs(
                     "0x0000000000000000000000000000000000000001",
@@ -2494,7 +2493,7 @@ describe("helpers", () => {
                     feeRateBps: "111",
                     nonce: "123",
                     signer: "0x0000000000000000000000000000000000000001",
-                    expiration: "50000",
+                    expiration: "0",
                     signatureType: SignatureType.EOA,
                 });
             });
@@ -2506,7 +2505,6 @@ describe("helpers", () => {
                     amount: 100,
                     feeRateBps: 111,
                     nonce: 123,
-                    expiration: 50000,
                 };
                 const orderData: OrderData = await buildMarketBuyOrderCreationArgs(
                     "0x0000000000000000000000000000000000000001",
@@ -2525,7 +2523,7 @@ describe("helpers", () => {
                     feeRateBps: "111",
                     nonce: "123",
                     signer: "0x0000000000000000000000000000000000000001",
-                    expiration: "50000",
+                    expiration: "0",
                     signatureType: SignatureType.EOA,
                 });
             });
@@ -2537,7 +2535,6 @@ describe("helpers", () => {
                     amount: 100,
                     feeRateBps: 111,
                     nonce: 123,
-                    expiration: 50000,
                 };
                 const orderData: OrderData = await buildMarketBuyOrderCreationArgs(
                     "0x0000000000000000000000000000000000000001",
@@ -2556,7 +2553,7 @@ describe("helpers", () => {
                     feeRateBps: "111",
                     nonce: "123",
                     signer: "0x0000000000000000000000000000000000000001",
-                    expiration: "50000",
+                    expiration: "0",
                     signatureType: SignatureType.EOA,
                 });
             });
@@ -2568,7 +2565,6 @@ describe("helpers", () => {
                     amount: 100,
                     feeRateBps: 111,
                     nonce: 123,
-                    expiration: 50000,
                 };
                 const orderData: OrderData = await buildMarketBuyOrderCreationArgs(
                     "0x0000000000000000000000000000000000000001",
@@ -2587,7 +2583,7 @@ describe("helpers", () => {
                     feeRateBps: "111",
                     nonce: "123",
                     signer: "0x0000000000000000000000000000000000000001",
-                    expiration: "50000",
+                    expiration: "0",
                     signatureType: SignatureType.EOA,
                 });
             });
@@ -2602,7 +2598,6 @@ describe("helpers", () => {
                         amount: 100,
                         feeRateBps: 111,
                         nonce: 123,
-                        expiration: 50000,
                     };
                     const orderData: OrderData = await buildMarketBuyOrderCreationArgs(
                         "0x0000000000000000000000000000000000000001",
@@ -2621,7 +2616,7 @@ describe("helpers", () => {
                         feeRateBps: "111",
                         nonce: "123",
                         signer: "0x0000000000000000000000000000000000000001",
-                        expiration: "50000",
+                        expiration: "0",
                         signatureType: SignatureType.EOA,
                     });
                 });
@@ -2788,7 +2783,6 @@ describe("helpers", () => {
                         amount: 100,
                         feeRateBps: 111,
                         nonce: 123,
-                        expiration: 50000,
                     };
                     const orderData: OrderData = await buildMarketBuyOrderCreationArgs(
                         "0x0000000000000000000000000000000000000001",
@@ -2807,7 +2801,7 @@ describe("helpers", () => {
                         feeRateBps: "111",
                         nonce: "123",
                         signer: "0x0000000000000000000000000000000000000001",
-                        expiration: "50000",
+                        expiration: "0",
                         signatureType: SignatureType.EOA,
                     });
                 });
@@ -2974,7 +2968,6 @@ describe("helpers", () => {
                         amount: 100,
                         feeRateBps: 111,
                         nonce: 123,
-                        expiration: 50000,
                     };
                     const orderData: OrderData = await buildMarketBuyOrderCreationArgs(
                         "0x0000000000000000000000000000000000000001",
@@ -2993,7 +2986,7 @@ describe("helpers", () => {
                         feeRateBps: "111",
                         nonce: "123",
                         signer: "0x0000000000000000000000000000000000000001",
-                        expiration: "50000",
+                        expiration: "0",
                         signatureType: SignatureType.EOA,
                     });
                 });
@@ -3160,7 +3153,6 @@ describe("helpers", () => {
                         amount: 100,
                         feeRateBps: 111,
                         nonce: 123,
-                        expiration: 50000,
                     };
                     const orderData: OrderData = await buildMarketBuyOrderCreationArgs(
                         "0x0000000000000000000000000000000000000001",
@@ -3179,7 +3171,7 @@ describe("helpers", () => {
                         feeRateBps: "111",
                         nonce: "123",
                         signer: "0x0000000000000000000000000000000000000001",
-                        expiration: "50000",
+                        expiration: "0",
                         signatureType: SignatureType.EOA,
                     });
                 });
@@ -3350,7 +3342,6 @@ describe("helpers", () => {
                         amount: 100,
                         feeRateBps: 111,
                         nonce: 123,
-                        expiration: 50000,
                     };
 
                     const signedOrder = await createMarketBuyOrder(
@@ -3372,7 +3363,7 @@ describe("helpers", () => {
                     expect(signedOrder.makerAmount).equal("100000000");
                     expect(signedOrder.takerAmount).equal("200000000");
                     expect(signedOrder.side).equal(UtilsSide.BUY);
-                    expect(signedOrder.expiration).equal("50000");
+                    expect(signedOrder.expiration).equal("0");
                     expect(signedOrder.nonce).equal("123");
                     expect(signedOrder.feeRateBps).equal("111");
                     expect(signedOrder.signatureType).equal(SignatureType.EOA);
@@ -3386,7 +3377,6 @@ describe("helpers", () => {
                         amount: 100,
                         feeRateBps: 111,
                         nonce: 123,
-                        expiration: 50000,
                     };
 
                     const signedOrder = await createMarketBuyOrder(
@@ -3408,7 +3398,7 @@ describe("helpers", () => {
                     expect(signedOrder.makerAmount).equal("100000000");
                     expect(signedOrder.takerAmount).equal("178571400");
                     expect(signedOrder.side).equal(UtilsSide.BUY);
-                    expect(signedOrder.expiration).equal("50000");
+                    expect(signedOrder.expiration).equal("0");
                     expect(signedOrder.nonce).equal("123");
                     expect(signedOrder.feeRateBps).equal("111");
                     expect(signedOrder.signatureType).equal(SignatureType.EOA);
@@ -3422,7 +3412,6 @@ describe("helpers", () => {
                         amount: 100,
                         feeRateBps: 111,
                         nonce: 123,
-                        expiration: 50000,
                     };
 
                     const signedOrder = await createMarketBuyOrder(
@@ -3444,7 +3433,7 @@ describe("helpers", () => {
                     expect(signedOrder.makerAmount).equal("100000000");
                     expect(signedOrder.takerAmount).equal("1785714280");
                     expect(signedOrder.side).equal(UtilsSide.BUY);
-                    expect(signedOrder.expiration).equal("50000");
+                    expect(signedOrder.expiration).equal("0");
                     expect(signedOrder.nonce).equal("123");
                     expect(signedOrder.feeRateBps).equal("111");
                     expect(signedOrder.signatureType).equal(SignatureType.EOA);
@@ -3458,7 +3447,6 @@ describe("helpers", () => {
                         amount: 100,
                         feeRateBps: 111,
                         nonce: 123,
-                        expiration: 50000,
                     };
 
                     const signedOrder = await createMarketBuyOrder(
@@ -3480,7 +3468,7 @@ describe("helpers", () => {
                     expect(signedOrder.makerAmount).equal("100000000");
                     expect(signedOrder.takerAmount).equal("17857142857");
                     expect(signedOrder.side).equal(UtilsSide.BUY);
-                    expect(signedOrder.expiration).equal("50000");
+                    expect(signedOrder.expiration).equal("0");
                     expect(signedOrder.nonce).equal("123");
                     expect(signedOrder.feeRateBps).equal("111");
                     expect(signedOrder.signatureType).equal(SignatureType.EOA);
@@ -3498,7 +3486,6 @@ describe("helpers", () => {
                         amount: 100,
                         feeRateBps: 111,
                         nonce: 123,
-                        expiration: 50000,
                     };
 
                     const signedOrder = await createMarketBuyOrder(
@@ -3520,7 +3507,7 @@ describe("helpers", () => {
                     expect(signedOrder.makerAmount).equal("100000000");
                     expect(signedOrder.takerAmount).equal("200000000");
                     expect(signedOrder.side).equal(UtilsSide.BUY);
-                    expect(signedOrder.expiration).equal("50000");
+                    expect(signedOrder.expiration).equal("0");
                     expect(signedOrder.nonce).equal("123");
                     expect(signedOrder.feeRateBps).equal("111");
                     expect(signedOrder.signatureType).equal(SignatureType.EOA);
@@ -3534,7 +3521,6 @@ describe("helpers", () => {
                         amount: 100,
                         feeRateBps: 111,
                         nonce: 123,
-                        expiration: 50000,
                     };
 
                     const signedOrder = await createMarketBuyOrder(
@@ -3556,7 +3542,7 @@ describe("helpers", () => {
                     expect(signedOrder.makerAmount).equal("100000000");
                     expect(signedOrder.takerAmount).equal("178571400");
                     expect(signedOrder.side).equal(UtilsSide.BUY);
-                    expect(signedOrder.expiration).equal("50000");
+                    expect(signedOrder.expiration).equal("0");
                     expect(signedOrder.nonce).equal("123");
                     expect(signedOrder.feeRateBps).equal("111");
                     expect(signedOrder.signatureType).equal(SignatureType.EOA);
@@ -3570,7 +3556,6 @@ describe("helpers", () => {
                         amount: 100,
                         feeRateBps: 111,
                         nonce: 123,
-                        expiration: 50000,
                     };
 
                     const signedOrder = await createMarketBuyOrder(
@@ -3592,7 +3577,7 @@ describe("helpers", () => {
                     expect(signedOrder.makerAmount).equal("100000000");
                     expect(signedOrder.takerAmount).equal("1785714280");
                     expect(signedOrder.side).equal(UtilsSide.BUY);
-                    expect(signedOrder.expiration).equal("50000");
+                    expect(signedOrder.expiration).equal("0");
                     expect(signedOrder.nonce).equal("123");
                     expect(signedOrder.feeRateBps).equal("111");
                     expect(signedOrder.signatureType).equal(SignatureType.EOA);
@@ -3606,7 +3591,6 @@ describe("helpers", () => {
                         amount: 100,
                         feeRateBps: 111,
                         nonce: 123,
-                        expiration: 50000,
                     };
 
                     const signedOrder = await createMarketBuyOrder(
@@ -3628,7 +3612,7 @@ describe("helpers", () => {
                     expect(signedOrder.makerAmount).equal("100000000");
                     expect(signedOrder.takerAmount).equal("17857142857");
                     expect(signedOrder.side).equal(UtilsSide.BUY);
-                    expect(signedOrder.expiration).equal("50000");
+                    expect(signedOrder.expiration).equal("0");
                     expect(signedOrder.nonce).equal("123");
                     expect(signedOrder.feeRateBps).equal("111");
                     expect(signedOrder.signatureType).equal(SignatureType.EOA);

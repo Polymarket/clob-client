@@ -268,7 +268,7 @@ export const buildMarketBuyOrderCreationArgs = async (
         feeRateBps,
         nonce,
         signer,
-        expiration: (userMarketOrder.expiration || 0).toString(),
+        expiration: "0",
         signatureType,
     } as OrderData;
 };

@@ -139,11 +139,6 @@ export interface UserMarketOrder {
     nonce?: number;
 
     /**
-     * Timestamp after which the order is expired.
-     */
-    expiration?: number;
-
-    /**
      * Address of the order taker. The zero address is used to indicate a public order
      */
     taker?: string;
