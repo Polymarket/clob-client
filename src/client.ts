@@ -507,7 +507,7 @@ export class ClobClient {
         const negRisk = options?.negRisk ?? false;
 
         if (!userMarketOrder.price) {
-            const marketPrice = await this.getPrice(tokenID, Side.BUY);
+            const marketPrice = await this.getPrice(tokenID, Side.SELL);
             userMarketOrder.price = parseFloat(marketPrice);
         }
 
