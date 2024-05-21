@@ -1,3 +1,4 @@
+/* eslint-disable max-depth */
 import axios, { AxiosRequestHeaders, Method } from "axios";
 import { DropNotificationParams, OrdersScoringParams } from "src/types";
 import { isBrowser } from "browser-or-node";
@@ -35,26 +36,8 @@ export const request = async (
     data?: any,
     params?: any,
 ): Promise<any> => {
-    try {
-        overloadHeaders(method, headers);
-        const response = await axios({ method, url: endpoint, headers, data, params });
-        return response;
-    } catch (err) {
-        if (axios.isAxiosError(err)) {
-            if (err.response) {
-                console.error("request error", {
-                    status: err.response?.status,
-                    statusText: err.response?.statusText,
-                    data: err.response?.data,
-                });
-                return err.response?.data;
-            } else {
-                return { error: "connection error" };
-            }
-        }
-
-        return { error: err };
-    }
+    overloadHeaders(method, headers);
+    return await axios({ method, url: endpoint, headers, data, params });
 };
 
 export type QueryParams = Record<string, any>;
@@ -66,18 +49,84 @@ export interface RequestOptions {
 }
 
 export const post = async (endpoint: string, options?: RequestOptions): Promise<any> => {
-    const resp = await request(endpoint, POST, options?.headers, options?.data, options?.params);
-    return "error" in resp ? resp : resp.data;
+    try {
+        const resp = await request(
+            endpoint,
+            POST,
+            options?.headers,
+            options?.data,
+            options?.params,
+        );
+        return resp.data;
+    } catch (err: unknown) {
+        return errorHandling(err);
+    }
 };
 
 export const get = async (endpoint: string, options?: RequestOptions): Promise<any> => {
-    const resp = await request(endpoint, GET, options?.headers, options?.data, options?.params);
-    return "error" in resp ? resp : resp.data;
+    try {
+        const resp = await request(endpoint, GET, options?.headers, options?.data, options?.params);
+        return resp.data;
+    } catch (err: unknown) {
+        return errorHandling(err);
+    }
 };
 
 export const del = async (endpoint: string, options?: RequestOptions): Promise<any> => {
-    const resp = await request(endpoint, DELETE, options?.headers, options?.data, options?.params);
-    return "error" in resp ? resp : resp.data;
+    try {
+        const resp = await request(
+            endpoint,
+            DELETE,
+            options?.headers,
+            options?.data,
+            options?.params,
+        );
+        return resp.data;
+    } catch (err: unknown) {
+        return errorHandling(err);
+    }
+};
+
+const errorHandling = (err: unknown) => {
+    if (axios.isAxiosError(err)) {
+        if (err.response) {
+            console.error(
+                "[CLOB Client] request error",
+                JSON.stringify({
+                    status: err.response?.status,
+                    statusText: err.response?.statusText,
+                    data: err.response?.data,
+                    config: err.response?.config,
+                }),
+            );
+            if (err.response?.data) {
+                if (
+                    typeof err.response?.data === "string" ||
+                    err.response?.data instanceof String
+                ) {
+                    return { error: err.response?.data };
+                }
+                if (!Object.prototype.hasOwnProperty.call(err.response?.data, "error")) {
+                    return { error: err.response?.data };
+                }
+                // in this case the field 'error' is included
+                return err.response?.data;
+            }
+        }
+
+        if (err.message) {
+            console.error(
+                "[CLOB Client] request error",
+                JSON.stringify({
+                    error: err.message,
+                }),
+            );
+            return { error: err.message };
+        }
+    }
+
+    console.error("[CLOB Client] request error", err);
+    return { error: err };
 };
 
 export const parseOrdersScoringParams = (orderScoringParams?: OrdersScoringParams): QueryParams => {
