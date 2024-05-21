@@ -101,6 +101,7 @@ import {
 } from "./endpoints";
 import { OrderBuilder } from "./order-builder/builder";
 import { END_CURSOR, INITIAL_CURSOR } from "./constants";
+import { calculateMarketPrice } from "./order-builder/helpers";
 
 export class ClobClient {
     readonly host: string;
@@ -513,8 +514,11 @@ export class ClobClient {
         const negRisk = options?.negRisk ?? false;
 
         if (!userMarketOrder.price) {
-            const marketPrice = await this.getPrice(tokenID, Side.BUY);
-            userMarketOrder.price = parseFloat(marketPrice);
+            userMarketOrder.price = await this.calculateMarketPrice(
+                tokenID,
+                Side.BUY,
+                userMarketOrder.amount,
+            );
         }
 
         if (!priceValid(userMarketOrder.price, tickSize)) {
@@ -847,6 +851,28 @@ export class ClobClient {
 
     public async getMarketTradesEvents(conditionID: string): Promise<MarketTradeEvent[]> {
         return this.get(`${this.host}${GET_MARKET_TRADES_EVENTS}${conditionID}`);
+    }
+
+    public async calculateMarketPrice(
+        tokenID: string,
+        side: Side,
+        amount: number,
+    ): Promise<number> {
+        const book = await this.getOrderBook(tokenID);
+        if (!book) {
+            throw new Error("no orderbook");
+        }
+        if (side === Side.BUY) {
+            if (!book.asks) {
+                throw new Error("no match");
+            }
+            return calculateMarketPrice(book.asks, amount);
+        } else {
+            if (!book.bids) {
+                throw new Error("no match");
+            }
+            return calculateMarketPrice(book.bids, amount);
+        }
     }
 
     private canL1Auth(): void {
