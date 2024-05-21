@@ -1,6 +1,6 @@
 import "mocha";
 import { expect } from "chai";
-import { UserOrder, Side, Chain, UserMarketOrder } from "../../src/types";
+import { UserOrder, Side, Chain, UserMarketOrder, OrderSummary } from "../../src/types";
 import {
     buildOrderCreationArgs,
     buildOrder,
@@ -10,6 +10,7 @@ import {
     getOrderRawAmounts,
     getMarketBuyOrderRawAmounts,
     ROUNDING_CONFIG,
+    calculateMarketPrice,
 } from "../../src/order-builder/helpers";
 import { OrderData, SignatureType, Side as UtilsSide } from "@polymarket/order-utils";
 import { Wallet } from "@ethersproject/wallet";
@@ -3477,7 +3478,7 @@ describe("helpers", () => {
             });
         });
 
-        describe("CTF Exchange", () => {
+        describe("Neg Risk CTF Exchange", () => {
             describe("buy order", async () => {
                 it("0.1", async () => {
                     const order: UserMarketOrder = {
@@ -3618,6 +3619,98 @@ describe("helpers", () => {
                     expect(signedOrder.signatureType).equal(SignatureType.EOA);
                     expect(signedOrder.signature).not.empty;
                 });
+            });
+        });
+    });
+
+    describe.only("calculateMarketPrice", () => {
+        describe("BUY", () => {
+            it("empty orderbook", () => {
+                expect(() => calculateMarketPrice([], 100)).to.throw("no match");
+            });
+            it("not enough", () => {
+                const positions = [
+                    { price: "0.5", size: "100" },
+                    { price: "0.4", size: "100" },
+                ] as OrderSummary[];
+                expect(() => calculateMarketPrice(positions, 100)).to.throw("no match");
+            });
+            it("ok", () => {
+                let positions = [
+                    { price: "0.5", size: "100" },
+                    { price: "0.4", size: "100" },
+                    { price: "0.3", size: "100" },
+                ] as OrderSummary[];
+                expect(calculateMarketPrice(positions, 100)).equal(0.3);
+
+                positions = [
+                    { price: "0.5", size: "100" },
+                    { price: "0.4", size: "200" },
+                    { price: "0.3", size: "100" },
+                ] as OrderSummary[];
+                expect(calculateMarketPrice(positions, 100)).equal(0.4);
+
+                positions = [
+                    { price: "0.5", size: "120" },
+                    { price: "0.4", size: "100" },
+                    { price: "0.3", size: "100" },
+                ] as OrderSummary[];
+                expect(calculateMarketPrice(positions, 100)).equal(0.4);
+
+                positions = [
+                    { price: "0.5", size: "200" },
+                    { price: "0.4", size: "100" },
+                    { price: "0.3", size: "100" },
+                ] as OrderSummary[];
+                expect(calculateMarketPrice(positions, 100)).equal(0.5);
+            });
+        });
+        describe("SELL", () => {
+            it("empty orderbook", () => {
+                expect(() => calculateMarketPrice([], 100)).to.throw("no match");
+            });
+            it("not enough", () => {
+                const positions = [
+                    { price: "0.4", size: "100" },
+                    { price: "0.5", size: "100" },
+                ] as OrderSummary[];
+                expect(() => calculateMarketPrice(positions, 100)).to.throw("no match");
+            });
+            it("ok", () => {
+                let positions = [
+                    { price: "0.3", size: "100" },
+                    { price: "0.4", size: "100" },
+                    { price: "0.5", size: "100" },
+                ] as OrderSummary[];
+                expect(calculateMarketPrice(positions, 100)).equal(0.5);
+
+                positions = [
+                    { price: "0.3", size: "100" },
+                    { price: "0.4", size: "300" },
+                    { price: "0.5", size: "100" },
+                ] as OrderSummary[];
+                expect(calculateMarketPrice(positions, 100)).equal(0.4);
+
+                positions = [
+                    { price: "0.3", size: "100" },
+                    { price: "0.4", size: "200" },
+                    { price: "0.5", size: "100" },
+                ] as OrderSummary[];
+                expect(calculateMarketPrice(positions, 100)).equal(0.4);
+
+                positions = [
+                    { price: "0.3", size: "300" },
+                    { price: "0.4", size: "100" },
+                    { price: "0.5", size: "100" },
+                ] as OrderSummary[];
+                expect(calculateMarketPrice(positions, 100)).equal(0.4);
+
+                positions = [
+                    { price: "0.3", size: "334" },
+                    { price: "0.4", size: "100" },
+                    { price: "0.5", size: "100" },
+                ] as OrderSummary[];
+                expect(calculateMarketPrice(positions, 100)).equal(0.3);
             });
         });
     });

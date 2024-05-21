@@ -16,6 +16,7 @@ import {
     TickSize,
     RoundConfig,
     CreateOrderOptions,
+    OrderSummary,
 } from "../types";
 import { decimalPlaces, roundDown, roundNormal, roundUp } from "../utilities";
 import {
@@ -300,4 +301,16 @@ export const createMarketBuyOrder = async (
         : contractConfig.exchange;
 
     return buildOrder(eoaSigner, exchangeContract, chainId, orderData);
+};
+
+export const calculateMarketPrice = (positions: OrderSummary[], amountToMatch: number) => {
+    let sum = 0;
+    for (let i = 0; i < positions.length; i++) {
+        const p = positions[i];
+        sum += parseFloat(p.size) * parseFloat(p.price);
+        if (sum >= amountToMatch) {
+            return parseFloat(p.price);
+        }
+    }
+    throw new Error("no match");
 };
