@@ -177,7 +177,7 @@ export interface OpenOrder {
     outcome: string;
     created_at: number;
     expiration: string;
-    type: string;
+    order_type: string;
 }
 
 export type OpenOrdersResponse = OpenOrder[];
