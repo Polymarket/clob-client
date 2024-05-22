@@ -165,6 +165,7 @@ export interface OrderResponse {
 export interface OpenOrder {
     id: string;
     status: string;
+    owner: string;
     maker_address: string;
     market: string;
     asset_id: string;
@@ -198,6 +199,7 @@ export interface OpenOrderParams {
 
 export interface MakerOrder {
     order_id: string;
+    owner: string;
     maker_address: string;
     matched_amount: string;
     price: string;
@@ -209,7 +211,7 @@ export interface MakerOrder {
 export interface Trade {
     id: string;
 
-    taker_order: string;
+    taker_order_id: string;
 
     market: string;
     asset_id: string;
@@ -222,10 +224,11 @@ export interface Trade {
     last_update: string;
     outcome: string;
     bucket_index: number;
+    owner: string;
     maker_address: string;
     maker_orders: MakerOrder[];
     transaction_hash: string;
-    type: "TAKER" | "MAKER";
+    trader_side: "TAKER" | "MAKER";
 }
 
 export enum Chain {
