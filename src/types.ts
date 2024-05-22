@@ -165,6 +165,7 @@ export interface OrderResponse {
 export interface OpenOrder {
     id: string;
     status: string;
+    owner: string;
     maker_address: string;
     market: string;
     asset_id: string;
