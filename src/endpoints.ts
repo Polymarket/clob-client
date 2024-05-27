@@ -27,12 +27,11 @@ export const GET_TICK_SIZE = "/tick-size";
 export const POST_ORDER = "/order";
 export const CANCEL_ORDER = "/order";
 export const CANCEL_ORDERS = "/orders";
-export const GET_ORDER = "/order/";
+export const GET_ORDER = "/data/order/";
 export const CANCEL_ALL = "/cancel-all";
 export const CANCEL_MARKET_ORDERS = "/cancel-market-orders";
-export const GET_LARGE_ORDERS = "/large-orders";
-export const GET_OPEN_ORDERS = "/orders";
-export const GET_TRADES = "/trades";
+export const GET_OPEN_ORDERS = "/data/orders";
+export const GET_TRADES = "/data/trades";
 export const IS_ORDER_SCORING = "/order-scoring";
 export const ARE_ORDERS_SCORING = "/orders-scoring";
 

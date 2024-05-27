@@ -46,7 +46,6 @@ import {
     GET,
     get,
     parseDropNotificationParams,
-    parseOrdersScoringParams,
     POST,
     post,
     RequestOptions,
@@ -74,7 +73,6 @@ import {
     GET_OPEN_ORDERS,
     DERIVE_API_KEY,
     GET_LAST_TRADE_PRICE,
-    GET_LARGE_ORDERS,
     GET_MARKETS,
     GET_MARKET,
     GET_PRICES_HISTORY,
@@ -259,12 +257,6 @@ export class ClobClient {
         });
     }
 
-    public async getLargeOrders(minValue = ""): Promise<any> {
-        return this.get(`${this.host}${GET_LARGE_ORDERS}`, {
-            params: { min_value: minValue },
-        });
-    }
-
     public async getPricesHistory(params: PriceHistoryFilterParams): Promise<MarketPrice[]> {
         return this.get(`${this.host}${GET_PRICES_HISTORY}`, {
             params,
@@ -386,7 +378,7 @@ export class ClobClient {
         return this.get(`${this.host}${endpoint}`, { headers });
     }
 
-    public async getTrades(params?: TradeParams): Promise<Trade[]> {
+    public async getTrades(params?: TradeParams, next_cursor?: string): Promise<Trade[]> {
         this.canL2Auth();
 
         const endpoint = GET_TRADES;
@@ -401,7 +393,21 @@ export class ClobClient {
             headerArgs,
         );
 
-        return this.get(`${this.host}${endpoint}`, { headers, params });
+        let results: Trade[] = [];
+        next_cursor = next_cursor || INITIAL_CURSOR;
+        while (next_cursor != END_CURSOR) {
+            const _params: any = {
+                ...params,
+                next_cursor,
+            };
+            const response = await this.get(`${this.host}${endpoint}`, {
+                headers,
+                params: _params,
+            });
+            next_cursor = response.next_cursor;
+            results = [...results, ...response.data];
+        }
+        return results;
     }
 
     public async getNotifications(): Promise<Notification[]> {
@@ -529,7 +535,10 @@ export class ClobClient {
         });
     }
 
-    public async getOpenOrders(params?: OpenOrderParams): Promise<OpenOrdersResponse> {
+    public async getOpenOrders(
+        params?: OpenOrderParams,
+        next_cursor?: string,
+    ): Promise<OpenOrdersResponse> {
         this.canL2Auth();
         const endpoint = GET_OPEN_ORDERS;
         const l2HeaderArgs = {
@@ -543,7 +552,21 @@ export class ClobClient {
             l2HeaderArgs,
         );
 
-        return this.get(`${this.host}${endpoint}`, { headers, params });
+        let results: OpenOrder[] = [];
+        next_cursor = next_cursor || INITIAL_CURSOR;
+        while (next_cursor != END_CURSOR) {
+            const _params: any = {
+                ...params,
+                next_cursor,
+            };
+            const response = await this.get(`${this.host}${endpoint}`, {
+                headers,
+                params: _params,
+            });
+            next_cursor = response.next_cursor;
+            results = [...results, ...response.data];
+        }
+        return results;
     }
 
     public async postOrder<T extends OrderType = OrderType.GTC>(
@@ -658,9 +681,11 @@ export class ClobClient {
         this.canL2Auth();
 
         const endpoint = ARE_ORDERS_SCORING;
+        const payload = JSON.stringify(params?.orderIds);
         const headerArgs = {
-            method: GET,
+            method: POST,
             requestPath: endpoint,
+            body: payload,
         };
 
         const headers = await createL2Headers(
@@ -669,9 +694,9 @@ export class ClobClient {
             headerArgs,
         );
 
-        return this.get(`${this.host}${endpoint}`, {
+        return this.post(`${this.host}${endpoint}`, {
             headers,
-            params: parseOrdersScoringParams(params),
+            data: payload,
         });
     }
 

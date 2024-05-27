@@ -23,7 +23,6 @@ async function main() {
             asset_id:
                 // eslint-disable-next-line max-len
                 "52114319501245915516055106046884209969926127482827954674443846427813813222426", // NO
-            owner: creds.key,
         }),
     );
     console.log(
@@ -31,14 +30,12 @@ async function main() {
             asset_id:
                 // eslint-disable-next-line max-len
                 "71321045679252212594626385532706912750332728571942532289631379312455583992563", // YES
-            owner: creds.key,
         }),
     );
 
     console.log(
         await clobClient.getOpenOrders({
             market: "0x5f65177b394277fd294cd75650044e32ba009a95022d88a0c1d565897d72f8f1",
-            owner: creds.key,
         }),
     );
 }
