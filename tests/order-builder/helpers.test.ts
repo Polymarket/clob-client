@@ -3623,7 +3623,7 @@ describe("helpers", () => {
         });
     });
 
-    describe.only("calculateMarketPrice", () => {
+    describe("calculateMarketPrice", () => {
         describe("BUY", () => {
             it("empty orderbook", () => {
                 expect(() => calculateMarketPrice([], 100)).to.throw("no match");
