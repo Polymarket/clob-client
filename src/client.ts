@@ -100,6 +100,7 @@ import {
     GET_TOTAL_EARNINGS_FOR_USER_FOR_DAY,
     GET_SPREAD,
     GET_SPREADS,
+    UPDATE_BALANCE_ALLOWANCE,
 } from "./endpoints";
 import { OrderBuilder } from "./order-builder/builder";
 import { END_CURSOR, INITIAL_CURSOR } from "./constants";
@@ -472,6 +473,29 @@ export class ClobClient {
         this.canL2Auth();
 
         const endpoint = GET_BALANCE_ALLOWANCE;
+        const headerArgs = {
+            method: GET,
+            requestPath: endpoint,
+        };
+
+        const headers = await createL2Headers(
+            this.signer as Wallet | JsonRpcSigner,
+            this.creds as ApiKeyCreds,
+            headerArgs,
+        );
+
+        const _params = {
+            ...params,
+            signature_type: this.orderBuilder.signatureType,
+        };
+
+        return this.get(`${this.host}${endpoint}`, { headers, params: _params });
+    }
+
+    public async updateBalanceAllowance(params?: BalanceAllowanceParams): Promise<void> {
+        this.canL2Auth();
+
+        const endpoint = UPDATE_BALANCE_ALLOWANCE;
         const headerArgs = {
             method: GET,
             requestPath: endpoint,
