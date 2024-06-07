@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 import { config as dotenvConfig } from "dotenv";
 import { resolve } from "path";
 dotenvConfig({ path: resolve(__dirname, "../.env") });
@@ -62,7 +63,7 @@ async function main(type: "user" | "market" | "live-activity") {
         }
     }
 
-    ws.on("error", function (_: any, err: Error) {
+    ws.on("error", function (err: Error) {
         console.log("error SOCKET", "error", err);
         process.exit(1);
     });

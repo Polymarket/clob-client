@@ -46,6 +46,7 @@ export const DROP_NOTIFICATIONS = "/notifications";
 
 // Balance
 export const GET_BALANCE_ALLOWANCE = "/balance-allowance";
+export const UPDATE_BALANCE_ALLOWANCE = "/balance-allowance/update";
 
 // Live activity
 export const GET_MARKET_TRADES_EVENTS = "/live-activity/events/";
