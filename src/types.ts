@@ -332,6 +332,10 @@ export interface TickSizes {
     [tokenId: string]: TickSize;
 }
 
+export interface NegRisk {
+    [tokenId: string]: boolean;
+}
+
 export interface PaginationPayload {
     readonly limit: number;
     readonly count: number;

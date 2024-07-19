@@ -38,6 +38,7 @@ import {
     MarketReward,
     UserRewardsEarning,
     TotalUserEarning,
+    NegRisk,
 } from "./types";
 import { createL1Headers, createL2Headers } from "./headers";
 import {
@@ -83,6 +84,7 @@ import {
     GET_BALANCE_ALLOWANCE,
     IS_ORDER_SCORING,
     GET_TICK_SIZE,
+    GET_NEG_RISK,
     ARE_ORDERS_SCORING,
     GET_SIMPLIFIED_MARKETS,
     GET_SAMPLING_SIMPLIFIED_MARKETS,
@@ -121,6 +123,8 @@ export class ClobClient {
 
     readonly tickSizes: TickSizes;
 
+    readonly negRisk: NegRisk;
+
     readonly geoBlockToken?: string;
 
     constructor(
@@ -148,6 +152,7 @@ export class ClobClient {
             funderAddress,
         );
         this.tickSizes = {};
+        this.negRisk = {};
         this.geoBlockToken = geoBlockToken;
     }
 
@@ -213,6 +218,19 @@ export class ClobClient {
         this.tickSizes[tokenID] = result.minimum_tick_size.toString() as TickSize;
 
         return this.tickSizes[tokenID];
+    }
+
+    public async getNegRisk(tokenID: string): Promise<boolean> {
+        if (tokenID in this.negRisk) {
+            return this.negRisk[tokenID];
+        }
+
+        const result = await this.get(`${this.host}${GET_NEG_RISK}`, {
+            params: { token_id: tokenID },
+        });
+        this.negRisk[tokenID] = result.neg_risk as boolean;
+
+        return this.negRisk[tokenID];
     }
 
     /**
@@ -524,7 +542,6 @@ export class ClobClient {
         const { tokenID } = userOrder;
 
         const tickSize = await this._resolveTickSize(tokenID, options?.tickSize);
-        const negRisk = options?.negRisk ?? false;
 
         if (!priceValid(userOrder.price, tickSize)) {
             throw new Error(
@@ -533,6 +550,8 @@ export class ClobClient {
                 }`,
             );
         }
+
+        const negRisk = options?.negRisk ?? await this.getNegRisk(tokenID);
 
         return this.orderBuilder.buildOrder(userOrder, {
             tickSize,
