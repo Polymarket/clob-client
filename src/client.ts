@@ -561,14 +561,13 @@ export class ClobClient {
 
     public async createMarketBuyOrder(
         userMarketOrder: UserMarketOrder,
-        options?: CreateOrderOptions,
+        options?: Partial<CreateOrderOptions>,
     ): Promise<SignedOrder> {
         this.canL1Auth();
 
         const { tokenID } = userMarketOrder;
 
         const tickSize = await this._resolveTickSize(tokenID, options?.tickSize);
-        const negRisk = options?.negRisk ?? false;
 
         if (!userMarketOrder.price) {
             userMarketOrder.price = await this.calculateMarketPrice(
@@ -585,6 +584,8 @@ export class ClobClient {
                 }`,
             );
         }
+
+        const negRisk = options?.negRisk ?? await this.getNegRisk(tokenID);
 
         return this.orderBuilder.buildMarketOrder(userMarketOrder, {
             tickSize,
