@@ -28,6 +28,7 @@ import {
     TickSizes,
     TickSize,
     OrdersScoringParams,
+    OrdersScoring,
     PriceHistoryFilterParams,
     PaginationPayload,
     MarketTradeEvent,
@@ -735,7 +736,7 @@ export class ClobClient {
         return this.get(`${this.host}${endpoint}`, { headers, params });
     }
 
-    public async areOrdersScoring(params?: OrdersScoringParams): Promise<OrderScoring> {
+    public async areOrdersScoring(params?: OrdersScoringParams): Promise<OrdersScoring> {
         this.canL2Auth();
 
         const endpoint = ARE_ORDERS_SCORING;
