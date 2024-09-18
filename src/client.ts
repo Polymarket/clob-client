@@ -128,6 +128,8 @@ export class ClobClient {
 
     readonly geoBlockToken?: string;
 
+    readonly useServerTime?: boolean;
+
     constructor(
         host: string,
         chainId: Chain,
@@ -136,6 +138,7 @@ export class ClobClient {
         signatureType?: SignatureType,
         funderAddress?: string,
         geoBlockToken?: string,
+        useServerTime?: boolean,
     ) {
         this.host = host.endsWith("/") ? host.slice(0, -1) : host;
         this.chainId = chainId;
@@ -155,6 +158,7 @@ export class ClobClient {
         this.tickSizes = {};
         this.negRisk = {};
         this.geoBlockToken = geoBlockToken;
+        this.useServerTime = useServerTime;
     }
 
     // Public endpoints
@@ -162,7 +166,7 @@ export class ClobClient {
         return this.get(`${this.host}/`);
     }
 
-    public async getServerTime(): Promise<any> {
+    public async getServerTime(): Promise<number> {
         return this.get(`${this.host}${TIME}`);
     }
 
@@ -312,6 +316,7 @@ export class ClobClient {
             this.signer as Wallet | JsonRpcSigner,
             this.chainId,
             nonce,
+            this.useServerTime ? await this.getServerTime() : undefined,
         );
 
         return await this.post(endpoint, { headers }).then((apiKeyRaw: ApiKeyRaw) => {
@@ -337,6 +342,7 @@ export class ClobClient {
             this.signer as Wallet | JsonRpcSigner,
             this.chainId,
             nonce,
+            this.useServerTime ? await this.getServerTime() : undefined,
         );
 
         return await this.get(endpoint, { headers }).then((apiKeyRaw: ApiKeyRaw) => {
@@ -371,6 +377,7 @@ export class ClobClient {
             this.signer as Wallet | JsonRpcSigner,
             this.creds as ApiKeyCreds,
             headerArgs,
+            this.useServerTime ? await this.getServerTime() : undefined,
         );
 
         return this.get(`${this.host}${endpoint}`, { headers });
@@ -389,6 +396,7 @@ export class ClobClient {
             this.signer as Wallet | JsonRpcSigner,
             this.creds as ApiKeyCreds,
             headerArgs,
+            this.useServerTime ? await this.getServerTime() : undefined,
         );
 
         return this.del(`${this.host}${endpoint}`, { headers });
@@ -407,6 +415,7 @@ export class ClobClient {
             this.signer as Wallet | JsonRpcSigner,
             this.creds as ApiKeyCreds,
             headerArgs,
+            this.useServerTime ? await this.getServerTime() : undefined,
         );
 
         return this.get(`${this.host}${endpoint}`, { headers });
@@ -425,6 +434,7 @@ export class ClobClient {
             this.signer as Wallet | JsonRpcSigner,
             this.creds as ApiKeyCreds,
             headerArgs,
+            this.useServerTime ? await this.getServerTime() : undefined,
         );
 
         let results: Trade[] = [];
@@ -457,6 +467,7 @@ export class ClobClient {
             this.signer as Wallet | JsonRpcSigner,
             this.creds as ApiKeyCreds,
             headerArgs,
+            this.useServerTime ? await this.getServerTime() : undefined,
         );
 
         return this.get(`${this.host}${endpoint}`, {
@@ -478,6 +489,7 @@ export class ClobClient {
             this.signer as Wallet | JsonRpcSigner,
             this.creds as ApiKeyCreds,
             l2HeaderArgs,
+            this.useServerTime ? await this.getServerTime() : undefined,
         );
 
         return this.del(`${this.host}${endpoint}`, {
@@ -501,6 +513,7 @@ export class ClobClient {
             this.signer as Wallet | JsonRpcSigner,
             this.creds as ApiKeyCreds,
             headerArgs,
+            this.useServerTime ? await this.getServerTime() : undefined,
         );
 
         const _params = {
@@ -524,6 +537,7 @@ export class ClobClient {
             this.signer as Wallet | JsonRpcSigner,
             this.creds as ApiKeyCreds,
             headerArgs,
+            this.useServerTime ? await this.getServerTime() : undefined,
         );
 
         const _params = {
@@ -552,7 +566,7 @@ export class ClobClient {
             );
         }
 
-        const negRisk = options?.negRisk ?? await this.getNegRisk(tokenID);
+        const negRisk = options?.negRisk ?? (await this.getNegRisk(tokenID));
 
         return this.orderBuilder.buildOrder(userOrder, {
             tickSize,
@@ -586,7 +600,7 @@ export class ClobClient {
             );
         }
 
-        const negRisk = options?.negRisk ?? await this.getNegRisk(tokenID);
+        const negRisk = options?.negRisk ?? (await this.getNegRisk(tokenID));
 
         return this.orderBuilder.buildMarketOrder(userMarketOrder, {
             tickSize,
@@ -609,6 +623,7 @@ export class ClobClient {
             this.signer as Wallet | JsonRpcSigner,
             this.creds as ApiKeyCreds,
             l2HeaderArgs,
+            this.useServerTime ? await this.getServerTime() : undefined,
         );
 
         let results: OpenOrder[] = [];
@@ -646,6 +661,7 @@ export class ClobClient {
             this.signer as Wallet | JsonRpcSigner,
             this.creds as ApiKeyCreds,
             l2HeaderArgs,
+            this.useServerTime ? await this.getServerTime() : undefined,
         );
 
         return this.post(`${this.host}${endpoint}`, { headers, data: orderPayload });
@@ -664,6 +680,7 @@ export class ClobClient {
             this.signer as Wallet | JsonRpcSigner,
             this.creds as ApiKeyCreds,
             l2HeaderArgs,
+            this.useServerTime ? await this.getServerTime() : undefined,
         );
         return this.del(`${this.host}${endpoint}`, { headers, data: payload });
     }
@@ -681,6 +698,7 @@ export class ClobClient {
             this.signer as Wallet | JsonRpcSigner,
             this.creds as ApiKeyCreds,
             l2HeaderArgs,
+            this.useServerTime ? await this.getServerTime() : undefined,
         );
         return this.del(`${this.host}${endpoint}`, { headers, data: ordersHashes });
     }
@@ -697,6 +715,7 @@ export class ClobClient {
             this.signer as Wallet | JsonRpcSigner,
             this.creds as ApiKeyCreds,
             l2HeaderArgs,
+            this.useServerTime ? await this.getServerTime() : undefined,
         );
         return this.del(`${this.host}${endpoint}`, { headers });
     }
@@ -714,6 +733,7 @@ export class ClobClient {
             this.signer as Wallet | JsonRpcSigner,
             this.creds as ApiKeyCreds,
             l2HeaderArgs,
+            this.useServerTime ? await this.getServerTime() : undefined,
         );
         return this.del(`${this.host}${endpoint}`, { headers, data: payload });
     }
@@ -731,6 +751,7 @@ export class ClobClient {
             this.signer as Wallet | JsonRpcSigner,
             this.creds as ApiKeyCreds,
             headerArgs,
+            this.useServerTime ? await this.getServerTime() : undefined,
         );
 
         return this.get(`${this.host}${endpoint}`, { headers, params });
@@ -751,6 +772,7 @@ export class ClobClient {
             this.signer as Wallet | JsonRpcSigner,
             this.creds as ApiKeyCreds,
             headerArgs,
+            this.useServerTime ? await this.getServerTime() : undefined,
         );
 
         return this.post(`${this.host}${endpoint}`, {
@@ -773,6 +795,7 @@ export class ClobClient {
             this.signer as Wallet | JsonRpcSigner,
             this.creds as ApiKeyCreds,
             headerArgs,
+            this.useServerTime ? await this.getServerTime() : undefined,
         );
 
         let results: UserEarning[] = [];
@@ -807,6 +830,7 @@ export class ClobClient {
             this.signer as Wallet | JsonRpcSigner,
             this.creds as ApiKeyCreds,
             headerArgs,
+            this.useServerTime ? await this.getServerTime() : undefined,
         );
 
         const params = {
@@ -837,6 +861,7 @@ export class ClobClient {
             this.signer as Wallet | JsonRpcSigner,
             this.creds as ApiKeyCreds,
             headerArgs,
+            this.useServerTime ? await this.getServerTime() : undefined,
         );
 
         let results: UserRewardsEarning[] = [];
@@ -873,6 +898,7 @@ export class ClobClient {
             this.signer as Wallet | JsonRpcSigner,
             this.creds as ApiKeyCreds,
             headerArgs,
+            this.useServerTime ? await this.getServerTime() : undefined,
         );
 
         const _params = {
