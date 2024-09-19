@@ -130,6 +130,7 @@ export class ClobClient {
 
     readonly useServerTime?: boolean;
 
+    // eslint-disable-next-line max-params
     constructor(
         host: string,
         chainId: Chain,
