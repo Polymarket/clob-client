@@ -7,8 +7,12 @@ export const createL1Headers = async (
     signer: Wallet | JsonRpcSigner,
     chainId: Chain,
     nonce?: number,
+    timestamp?: number,
 ): Promise<L1PolyHeader> => {
-    const ts = Math.floor(Date.now() / 1000);
+    let ts = Math.floor(Date.now() / 1000);
+    if (timestamp !== undefined) {
+        ts = timestamp;
+    }
     let n = 0; // Default nonce is 0
     if (nonce !== undefined) {
         n = nonce;
@@ -30,9 +34,13 @@ export const createL2Headers = async (
     signer: Wallet | JsonRpcSigner,
     creds: ApiKeyCreds,
     l2HeaderArgs: L2HeaderArgs,
+    timestamp?: number,
 ): Promise<L2PolyHeader> => {
+    let ts = Math.floor(Date.now() / 1000);
+    if (timestamp !== undefined) {
+        ts = timestamp;
+    }
     const address = await signer.getAddress();
-    const ts = Math.floor(Date.now() / 1000);
 
     const sig = buildPolyHmacSignature(
         creds.secret,
