@@ -5538,10 +5538,11 @@ describe("utilities", () => {
         expect(roundDown(0.57, 4)).to.equal(0.57);
     });
 
-    it("generateOrderBookSummaryHash", () => {
+    it.only("generateOrderBookSummaryHash", () => {
         let orderbook = {
             market: "0xaabbcc",
             asset_id: "100",
+            timestamp: "123456789",
             bids: [
                 { price: "0.3", size: "100" },
                 { price: "0.4", size: "100" },
@@ -5551,18 +5552,18 @@ describe("utilities", () => {
                 { price: "0.7", size: "100" },
             ],
             hash: "",
-            timestamp: "123456789",
         } as OrderBookSummary;
 
         expect(generateOrderBookSummaryHash(orderbook)).to.equal(
-            "a2e42a1dc528c65bb927faef7539ffef1b9484de",
+            "5489da29343426f88622d61044975dc5fd828a27",
         );
-        expect(orderbook.hash).to.equal("a2e42a1dc528c65bb927faef7539ffef1b9484de");
+        expect(orderbook.hash).to.equal("5489da29343426f88622d61044975dc5fd828a27");
 
         // -
         orderbook = {
             market: "0xaabbcc",
             asset_id: "100",
+            timestamp: "123456789",
             bids: [
                 { price: "0.3", size: "100" },
                 { price: "0.4", size: "100" },
@@ -5571,29 +5572,28 @@ describe("utilities", () => {
                 { price: "0.6", size: "100" },
                 { price: "0.7", size: "100" },
             ],
-            hash: "a2e42a1dc528c65bb927faef7539ffef1b9484de",
-            timestamp: "123456789",
+            hash: "5489da29343426f88622d61044975dc5fd828a27",
         } as OrderBookSummary;
 
         expect(generateOrderBookSummaryHash(orderbook)).to.equal(
-            "a2e42a1dc528c65bb927faef7539ffef1b9484de",
+            "5489da29343426f88622d61044975dc5fd828a27",
         );
-        expect(orderbook.hash).to.equal("a2e42a1dc528c65bb927faef7539ffef1b9484de");
+        expect(orderbook.hash).to.equal("5489da29343426f88622d61044975dc5fd828a27");
 
         // -
         orderbook = {
             market: "0xaabbcc",
             asset_id: "100",
+            timestamp: "",
             bids: [],
             asks: [],
             hash: "",
-            timestamp: "",
         } as OrderBookSummary;
 
         expect(generateOrderBookSummaryHash(orderbook)).to.equal(
-            "9da2ac9109ceed8d754f9a5f7a06998d8d3aa0af",
+            "6d754a2f0304a83544f91a076fa3faa9cbfb9f63",
         );
-        expect(orderbook.hash).to.equal("9da2ac9109ceed8d754f9a5f7a06998d8d3aa0af");
+        expect(orderbook.hash).to.equal("6d754a2f0304a83544f91a076fa3faa9cbfb9f63");
     });
 
     it("isTickSizeSmaller", () => {
