@@ -20,7 +20,7 @@ async function main() {
 
     // Send it to the server
     const resp = await clobClient.cancelOrder({
-        orderID: "0x920cb5fc73e8cce1d8ee00c90beca3d7cc4195adc82a8c94ea96134eaefefe39", // Order ID
+        orderID: "0x989af24e7bdf0f815e464d5560a0657735a9199fa3a6cd7fb968c85cc65d18b4", // Order ID
     });
     console.log(resp);
     console.log(`Done!`);
