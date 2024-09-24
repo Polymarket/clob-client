@@ -19,7 +19,7 @@ async function main() {
     const clobClient = new ClobClient(host, chainId, wallet, creds);
 
     const order = await clobClient.getOrder(
-        "0xb816482a5187a3d3db49cbaf6fe3ddf24f53e6c712b5a4bf5e01d0ec7b11dabc",
+        "0x831680cb77da95792af5a052c87c8abf9d2ae5cb21f275670bc0ff58f2823c5c",
     );
     console.log(order);
 }

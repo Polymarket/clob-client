@@ -20,10 +20,17 @@ async function main() {
 
     // Send it to the server
     const resp = await clobClient.cancelOrders([
-        "0xd4f32972ee7fbf7f8e666bd63e02ad0cc8a23596f72ba5f0f1b3e437b8cc6459",
+        "0x7ce769d075f4f1263603fde09862f5998f5e6ae4a39a16f3780f0bd708d3fc1c",
     ]);
     console.log(resp);
     console.log(`Done!`);
+    /*
+
+  bids: [ { price: '0.5', size: '66240' } ],
+  asks: [
+    { price: '0.56', size: '1000' },
+    { price: '0.55', size: '9701387.74' }
+     */
 }
 
 main();
