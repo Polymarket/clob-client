@@ -24,13 +24,6 @@ async function main() {
     ]);
     console.log(resp);
     console.log(`Done!`);
-    /*
-
-  bids: [ { price: '0.5', size: '66240' } ],
-  asks: [
-    { price: '0.56', size: '1000' },
-    { price: '0.55', size: '9701387.74' }
-     */
 }
 
 main();

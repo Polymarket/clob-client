@@ -1,9 +1,7 @@
-/* eslint-disable no-constant-condition */
 import { ethers } from "ethers";
 import { config as dotenvConfig } from "dotenv";
 import { resolve } from "path";
 import { ApiKeyCreds, Chain, ClobClient, Side } from "../src";
-import { SignedOrder } from "@polymarket/order-utils";
 
 dotenvConfig({ path: resolve(__dirname, "../.env") });
 
@@ -22,23 +20,21 @@ async function main() {
 
     // Create a buy order for 100 YES for 0.50c
     const YES = "71321045679252212594626385532706912750332728571942532289631379312455583992563";
-    const promises: Promise<SignedOrder>[] = [];
-    for (let i = 0; i < 1; i++) {
-        promises.push(
-            clobClient
-                .createOrder(
-                    {
-                        tokenID: YES,
-                        price: 0.5,
-                        side: Side.SELL,
-                        size: 100,
-                    },
-                    { tickSize: "0.01" },
-                )
-                .then(o => clobClient.postOrder(o)),
-        );
-    }
-    await Promise.all(promises);
+    const order = await clobClient.createOrder(
+        {
+            tokenID: YES,
+            price: 0.5,
+            side: Side.BUY,
+            size: 100,
+            feeRateBps: 0,
+        },
+        { tickSize: "0.01" },
+    );
+    console.log("Created Order", order);
+
+    // Send it to the server
+    const resp = await clobClient.postOrder(order);
+    console.log(resp);
 }
 
 main();

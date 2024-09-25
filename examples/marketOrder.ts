@@ -22,19 +22,16 @@ async function main() {
     const YES = "71321045679252212594626385532706912750332728571942532289631379312455583992563";
     const marketOrder = await clobClient.createMarketBuyOrder({
         tokenID: YES,
-        amount: 0.1,
+        amount: 100,
+        feeRateBps: 0,
+        nonce: 0,
+        price: 0.5,
     });
     console.log("Created Market Order", marketOrder);
 
     // Send it to the server
     const resp = await clobClient.postOrder(marketOrder, OrderType.FOK);
     console.log(resp);
-    /*
-
-  asks: [
-    { price: '0.56', size: '1000' },
-    { price: '0.55', size: '9701369.36' }
-  ],*/
 }
 
 main();
