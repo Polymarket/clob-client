@@ -5538,7 +5538,7 @@ describe("utilities", () => {
         expect(roundDown(0.57, 4)).to.equal(0.57);
     });
 
-    it.only("generateOrderBookSummaryHash", () => {
+    it("generateOrderBookSummaryHash", () => {
         let orderbook = {
             market: "0xaabbcc",
             asset_id: "100",
