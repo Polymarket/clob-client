@@ -40,6 +40,16 @@ async function main() {
             maker_address: await wallet.getAddress(),
         }),
     );
+
+    // only first page - do not paginate
+    console.log(
+        await clobClient.getTrades(
+            {
+                market: "0x5f65177b394277fd294cd75650044e32ba009a95022d88a0c1d565897d72f8f1",
+            },
+            true,
+        ),
+    );
 }
 
 main();

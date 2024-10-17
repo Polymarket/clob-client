@@ -422,7 +422,11 @@ export class ClobClient {
         return this.get(`${this.host}${endpoint}`, { headers });
     }
 
-    public async getTrades(params?: TradeParams, next_cursor?: string): Promise<Trade[]> {
+    public async getTrades(
+        params?: TradeParams,
+        only_first_page = false,
+        next_cursor?: string,
+    ): Promise<Trade[]> {
         this.canL2Auth();
 
         const endpoint = GET_TRADES;
@@ -440,7 +444,7 @@ export class ClobClient {
 
         let results: Trade[] = [];
         next_cursor = next_cursor || INITIAL_CURSOR;
-        while (next_cursor != END_CURSOR) {
+        while (next_cursor != END_CURSOR && (next_cursor === INITIAL_CURSOR || !only_first_page)) {
             const _params: any = {
                 ...params,
                 next_cursor,
@@ -611,6 +615,7 @@ export class ClobClient {
 
     public async getOpenOrders(
         params?: OpenOrderParams,
+        only_first_page = false,
         next_cursor?: string,
     ): Promise<OpenOrdersResponse> {
         this.canL2Auth();
@@ -629,7 +634,7 @@ export class ClobClient {
 
         let results: OpenOrder[] = [];
         next_cursor = next_cursor || INITIAL_CURSOR;
-        while (next_cursor != END_CURSOR) {
+        while (next_cursor != END_CURSOR && (next_cursor === INITIAL_CURSOR || !only_first_page)) {
             const _params: any = {
                 ...params,
                 next_cursor,
