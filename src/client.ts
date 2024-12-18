@@ -297,9 +297,11 @@ export class ClobClient {
     }
 
     public async getPricesHistory(params: PriceHistoryFilterParams): Promise<MarketPrice[]> {
-        return this.get(`${this.host}${GET_PRICES_HISTORY}`, {
+        const result = await this.get(`${this.host}${GET_PRICES_HISTORY}`, {
             params,
         });
+
+        return result.history;
     }
 
     // L1 Authed
