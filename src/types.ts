@@ -129,6 +129,11 @@ export interface UserMarketOrder {
     amount: number;
 
     /**
+     * Side of the order
+     */
+    side: Side;
+
+    /**
      * Fee rate, in basis points, charged to the order maker, charged on proceeds
      */
     feeRateBps?: number;

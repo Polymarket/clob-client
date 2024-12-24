@@ -459,12 +459,11 @@ export class ClobClient {
         return results;
     }
 
-
-	public async getTradesPaginated(
-		params?: TradeParams, 
-		next_cursor?: string
-	): Promise<{trades: Trade[], next_cursor: string, limit: number, count: number }> {
-		this.canL2Auth();
+    public async getTradesPaginated(
+        params?: TradeParams,
+        next_cursor?: string,
+    ): Promise<{ trades: Trade[]; next_cursor: string; limit: number; count: number }> {
+        this.canL2Auth();
 
         const endpoint = GET_TRADES;
         const headerArgs = {
@@ -483,18 +482,21 @@ export class ClobClient {
 
         const _params: any = { ...params, next_cursor };
 
-        const {data, ...rest }: {
-			data: Trade[], 
-			next_cursor: string, 
-			limit: number, 
-			count: number
-		} = await this.get(`${this.host}${endpoint}`, {
+        const {
+            data,
+            ...rest
+        }: {
+            data: Trade[];
+            next_cursor: string;
+            limit: number;
+            count: number;
+        } = await this.get(`${this.host}${endpoint}`, {
             headers,
             params: _params,
         });
 
-        return { trades: Array.isArray(data) ? [...data] :[], ...rest} 
-	}
+        return { trades: Array.isArray(data) ? [...data] : [], ...rest };
+    }
 
     public async getNotifications(): Promise<Notification[]> {
         this.canL2Auth();
@@ -616,7 +618,7 @@ export class ClobClient {
         });
     }
 
-    public async createMarketBuyOrder(
+    public async createMarketOrder(
         userMarketOrder: UserMarketOrder,
         options?: Partial<CreateOrderOptions>,
     ): Promise<SignedOrder> {
@@ -629,7 +631,7 @@ export class ClobClient {
         if (!userMarketOrder.price) {
             userMarketOrder.price = await this.calculateMarketPrice(
                 tokenID,
-                Side.BUY,
+                userMarketOrder.side,
                 userMarketOrder.amount,
             );
         }
