@@ -461,7 +461,7 @@ export class ClobClient {
 
 
 	public async getTradesPaginated(
-		params?: TradeParams, 
+		params?: TradeParams,
 		next_cursor?: string
 	): Promise<{trades: Trade[], next_cursor: string, limit: number, count: number }> {
 		this.canL2Auth();
@@ -484,16 +484,16 @@ export class ClobClient {
         const _params: any = { ...params, next_cursor };
 
         const {data, ...rest }: {
-			data: Trade[], 
-			next_cursor: string, 
-			limit: number, 
+			data: Trade[],
+			next_cursor: string,
+			limit: number,
 			count: number
 		} = await this.get(`${this.host}${endpoint}`, {
             headers,
             params: _params,
         });
 
-        return { trades: Array.isArray(data) ? [...data] :[], ...rest} 
+        return { trades: Array.isArray(data) ? [...data] :[], ...rest}
 	}
 
     public async getNotifications(): Promise<Notification[]> {
@@ -634,13 +634,8 @@ export class ClobClient {
             );
         }
 
-        if (!priceValid(userMarketOrder.price, tickSize)) {
-            throw new Error(
-                `invalid price (${userMarketOrder.price}), min: ${parseFloat(tickSize)} - max: ${
-                    1 - parseFloat(tickSize)
-                }`,
-            );
-        }
+        userMarketOrder.price = Math.min(userMarketOrder.price, 1 - parseFloat(tickSize));
+        userMarketOrder.price = Math.max(userMarketOrder.price, parseFloat(tickSize));
 
         const negRisk = options?.negRisk ?? (await this.getNegRisk(tokenID));
 
