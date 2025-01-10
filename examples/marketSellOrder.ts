@@ -19,33 +19,16 @@ async function main() {
     const clobClient = new ClobClient(host, chainId, wallet, creds);
 
     const YES = "71321045679252212594626385532706912750332728571942532289631379312455583992563";
-    // Create a YES market buy order for the equivalent of 100 USDC for the market price
+    // Create a YES market sell order for the equivalent of 100 shares for the market price
     const marketBuyOrder = await clobClient.createMarketOrder({
         tokenID: YES,
-        amount: 100,
-        feeRateBps: 0,
-        side: Side.BUY,
-        nonce: 0,
-        price: 0.5,
+        amount: 110, // SHARES
+        side: Side.SELL,
     });
-    console.log("Created Market BUY Order", marketBuyOrder);
+    console.log("Created Market SELL Order", marketBuyOrder);
 
     // Send it to the server
     console.log(await clobClient.postOrder(marketBuyOrder, OrderType.FOK));
-
-    // Create a YES market buy order for the equivalent of 100 USDC for the market price
-    const marketSellOrder = await clobClient.createMarketOrder({
-        tokenID: YES,
-        amount: 100,
-        feeRateBps: 0,
-        side: Side.SELL,
-        nonce: 0,
-        price: 0.5,
-    });
-    console.log("Created Market SELL Order", marketSellOrder);
-
-    // Send it to the server
-    console.log(await clobClient.postOrder(marketSellOrder, OrderType.FOK));
 }
 
 main();

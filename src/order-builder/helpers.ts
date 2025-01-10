@@ -216,12 +216,12 @@ export const getMarketOrderRawAmounts = (
             rawTakerAmt,
         };
     } else {
-        const rawTakerAmt = roundDown(amount, roundConfig.size);
-        let rawMakerAmt = rawTakerAmt / rawPrice;
-        if (decimalPlaces(rawMakerAmt) > roundConfig.amount) {
-            rawMakerAmt = roundUp(rawMakerAmt, roundConfig.amount + 4);
-            if (decimalPlaces(rawMakerAmt) > roundConfig.amount) {
-                rawMakerAmt = roundDown(rawMakerAmt, roundConfig.amount);
+        const rawMakerAmt = roundDown(amount, roundConfig.size);
+        let rawTakerAmt = rawMakerAmt * rawPrice;
+        if (decimalPlaces(rawTakerAmt) > roundConfig.amount) {
+            rawTakerAmt = roundUp(rawTakerAmt, roundConfig.amount + 4);
+            if (decimalPlaces(rawTakerAmt) > roundConfig.amount) {
+                rawTakerAmt = roundDown(rawTakerAmt, roundConfig.amount);
             }
         }
 
@@ -318,11 +318,35 @@ export const createMarketOrder = async (
     return buildOrder(eoaSigner, exchangeContract, chainId, orderData);
 };
 
-export const calculateMarketPrice = (positions: OrderSummary[], amountToMatch: number) => {
-    let sum = 0;
+/**
+ * calculateBuyMarketPrice calculates the market price to buy a $$ amount
+ * @param positions
+ * @param amountToMatch worth to buy
+ * @returns
+ */
+export const calculateBuyMarketPrice = (positions: OrderSummary[], amountToMatch: number) => {
+    const sum = 0;
     for (let i = 0; i < positions.length; i++) {
         const p = positions[i];
-        sum += parseFloat(p.size) * parseFloat(p.price);
+        console.log({ size: p.size, price: p.price, sum });
+        if (sum >= amountToMatch) {
+            return parseFloat(p.price);
+        }
+    }
+    throw new Error("no match");
+};
+
+/**
+ * calculateSellMarketPrice calculates the market price to sell a shares
+ * @param positions
+ * @param amountToMatch sells to share
+ * @returns
+ */
+export const calculateSellMarketPrice = (positions: OrderSummary[], amountToMatch: number) => {
+    let sum = 0;
+    for (let i = positions.length - 1; i >= 0; i--) {
+        const p = positions[i];
+        sum += parseFloat(p.size);
         if (sum >= amountToMatch) {
             return parseFloat(p.price);
         }
