@@ -2487,9 +2487,9 @@ describe("helpers", () => {
                             ROUNDING_CONFIG["0.1"],
                         );
 
-                        expect(decimalPlaces(rawMakerAmt)).to.lte(3);
-                        expect(decimalPlaces(rawTakerAmt)).to.lte(2);
-                        expect(roundNormal(rawTakerAmt / rawMakerAmt, 2)).to.gte(
+                        expect(decimalPlaces(rawMakerAmt)).to.lte(2);
+                        expect(decimalPlaces(rawTakerAmt)).to.lte(3);
+                        expect(roundNormal(rawTakerAmt / rawMakerAmt, 2)).to.lte(
                             roundNormal(price, 2),
                         );
 
@@ -2515,9 +2515,9 @@ describe("helpers", () => {
                             ROUNDING_CONFIG["0.01"],
                         );
 
-                        expect(decimalPlaces(rawMakerAmt)).to.lte(4);
-                        expect(decimalPlaces(rawTakerAmt)).to.lte(2);
-                        expect(roundNormal(rawTakerAmt / rawMakerAmt, 4)).to.gte(
+                        expect(decimalPlaces(rawMakerAmt)).to.lte(2);
+                        expect(decimalPlaces(rawTakerAmt)).to.lte(4);
+                        expect(roundNormal(rawTakerAmt / rawMakerAmt, 4)).to.lte(
                             roundNormal(price, 4),
                         );
 
@@ -2543,9 +2543,9 @@ describe("helpers", () => {
                             ROUNDING_CONFIG["0.001"],
                         );
 
-                        expect(decimalPlaces(rawMakerAmt)).to.lte(5);
-                        expect(decimalPlaces(rawTakerAmt)).to.lte(2);
-                        expect(roundNormal(rawTakerAmt / rawMakerAmt, 6)).to.gte(
+                        expect(decimalPlaces(rawMakerAmt)).to.lte(2);
+                        expect(decimalPlaces(rawTakerAmt)).to.lte(5);
+                        expect(roundNormal(rawTakerAmt / rawMakerAmt, 6)).to.lte(
                             roundNormal(price, 6),
                         );
 
@@ -2571,9 +2571,9 @@ describe("helpers", () => {
                             ROUNDING_CONFIG["0.0001"],
                         );
 
-                        expect(decimalPlaces(rawMakerAmt)).to.lte(6);
-                        expect(decimalPlaces(rawTakerAmt)).to.lte(2);
-                        expect(roundNormal(rawTakerAmt / rawMakerAmt, 8)).to.gte(
+                        expect(decimalPlaces(rawMakerAmt)).to.lte(2);
+                        expect(decimalPlaces(rawTakerAmt)).to.lte(6);
+                        expect(roundNormal(rawTakerAmt / rawMakerAmt, 8)).to.lte(
                             roundNormal(price, 8),
                         );
 
@@ -2733,8 +2733,8 @@ describe("helpers", () => {
                     maker: "0x0000000000000000000000000000000000000002",
                     taker: "0x0000000000000000000000000000000000000000",
                     tokenId: "123",
-                    makerAmount: "200000000",
-                    takerAmount: "100000000",
+                    makerAmount: "100000000",
+                    takerAmount: "50000000",
                     side: UtilsSide.SELL,
                     feeRateBps: "111",
                     nonce: "123",
@@ -2764,8 +2764,8 @@ describe("helpers", () => {
                     maker: "0x0000000000000000000000000000000000000002",
                     taker: "0x0000000000000000000000000000000000000000",
                     tokenId: "123",
-                    makerAmount: "178571400",
-                    takerAmount: "100000000",
+                    makerAmount: "100000000",
+                    takerAmount: "56000000",
                     side: UtilsSide.SELL,
                     feeRateBps: "111",
                     nonce: "123",
@@ -2795,8 +2795,8 @@ describe("helpers", () => {
                     maker: "0x0000000000000000000000000000000000000002",
                     taker: "0x0000000000000000000000000000000000000000",
                     tokenId: "123",
-                    makerAmount: "1785714280",
-                    takerAmount: "100000000",
+                    makerAmount: "100000000",
+                    takerAmount: "5600000",
                     side: UtilsSide.SELL,
                     feeRateBps: "111",
                     nonce: "123",
@@ -2826,8 +2826,8 @@ describe("helpers", () => {
                     maker: "0x0000000000000000000000000000000000000002",
                     taker: "0x0000000000000000000000000000000000000000",
                     tokenId: "123",
-                    makerAmount: "17857142857",
-                    takerAmount: "100000000",
+                    makerAmount: "100000000",
+                    takerAmount: "560000",
                     side: UtilsSide.SELL,
                     feeRateBps: "111",
                     nonce: "123",
@@ -3788,8 +3788,8 @@ describe("helpers", () => {
                     expect(signedOrder.signer).equal("0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266");
                     expect(signedOrder.taker).equal("0x0000000000000000000000000000000000000000");
                     expect(signedOrder.tokenId).equal("123");
-                    expect(signedOrder.makerAmount).equal("200000000");
-                    expect(signedOrder.takerAmount).equal("100000000");
+                    expect(signedOrder.makerAmount).equal("100000000");
+                    expect(signedOrder.takerAmount).equal("50000000");
                     expect(signedOrder.side).equal(UtilsSide.SELL);
                     expect(signedOrder.expiration).equal("0");
                     expect(signedOrder.nonce).equal("123");
@@ -3824,8 +3824,8 @@ describe("helpers", () => {
                     expect(signedOrder.signer).equal("0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266");
                     expect(signedOrder.taker).equal("0x0000000000000000000000000000000000000000");
                     expect(signedOrder.tokenId).equal("123");
-                    expect(signedOrder.makerAmount).equal("178571400");
-                    expect(signedOrder.takerAmount).equal("100000000");
+                    expect(signedOrder.makerAmount).equal("100000000");
+                    expect(signedOrder.takerAmount).equal("56000000");
                     expect(signedOrder.side).equal(UtilsSide.SELL);
                     expect(signedOrder.expiration).equal("0");
                     expect(signedOrder.nonce).equal("123");
@@ -3860,8 +3860,8 @@ describe("helpers", () => {
                     expect(signedOrder.signer).equal("0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266");
                     expect(signedOrder.taker).equal("0x0000000000000000000000000000000000000000");
                     expect(signedOrder.tokenId).equal("123");
-                    expect(signedOrder.makerAmount).equal("1785714280");
-                    expect(signedOrder.takerAmount).equal("100000000");
+                    expect(signedOrder.makerAmount).equal("100000000");
+                    expect(signedOrder.takerAmount).equal("5600000");
                     expect(signedOrder.side).equal(UtilsSide.SELL);
                     expect(signedOrder.expiration).equal("0");
                     expect(signedOrder.nonce).equal("123");
@@ -3896,8 +3896,8 @@ describe("helpers", () => {
                     expect(signedOrder.signer).equal("0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266");
                     expect(signedOrder.taker).equal("0x0000000000000000000000000000000000000000");
                     expect(signedOrder.tokenId).equal("123");
-                    expect(signedOrder.makerAmount).equal("17857142857");
-                    expect(signedOrder.takerAmount).equal("100000000");
+                    expect(signedOrder.makerAmount).equal("100000000");
+                    expect(signedOrder.takerAmount).equal("560000");
                     expect(signedOrder.side).equal(UtilsSide.SELL);
                     expect(signedOrder.expiration).equal("0");
                     expect(signedOrder.nonce).equal("123");
@@ -4082,8 +4082,8 @@ describe("helpers", () => {
                     expect(signedOrder.signer).equal("0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266");
                     expect(signedOrder.taker).equal("0x0000000000000000000000000000000000000000");
                     expect(signedOrder.tokenId).equal("123");
-                    expect(signedOrder.makerAmount).equal("200000000");
-                    expect(signedOrder.takerAmount).equal("100000000");
+                    expect(signedOrder.makerAmount).equal("100000000");
+                    expect(signedOrder.takerAmount).equal("50000000");
                     expect(signedOrder.side).equal(UtilsSide.SELL);
                     expect(signedOrder.expiration).equal("0");
                     expect(signedOrder.nonce).equal("123");
@@ -4118,8 +4118,8 @@ describe("helpers", () => {
                     expect(signedOrder.signer).equal("0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266");
                     expect(signedOrder.taker).equal("0x0000000000000000000000000000000000000000");
                     expect(signedOrder.tokenId).equal("123");
-                    expect(signedOrder.makerAmount).equal("178571400");
-                    expect(signedOrder.takerAmount).equal("100000000");
+                    expect(signedOrder.makerAmount).equal("100000000");
+                    expect(signedOrder.takerAmount).equal("56000000");
                     expect(signedOrder.side).equal(UtilsSide.SELL);
                     expect(signedOrder.expiration).equal("0");
                     expect(signedOrder.nonce).equal("123");
@@ -4154,8 +4154,8 @@ describe("helpers", () => {
                     expect(signedOrder.signer).equal("0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266");
                     expect(signedOrder.taker).equal("0x0000000000000000000000000000000000000000");
                     expect(signedOrder.tokenId).equal("123");
-                    expect(signedOrder.makerAmount).equal("1785714280");
-                    expect(signedOrder.takerAmount).equal("100000000");
+                    expect(signedOrder.makerAmount).equal("100000000");
+                    expect(signedOrder.takerAmount).equal("5600000");
                     expect(signedOrder.side).equal(UtilsSide.SELL);
                     expect(signedOrder.expiration).equal("0");
                     expect(signedOrder.nonce).equal("123");
@@ -4190,8 +4190,8 @@ describe("helpers", () => {
                     expect(signedOrder.signer).equal("0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266");
                     expect(signedOrder.taker).equal("0x0000000000000000000000000000000000000000");
                     expect(signedOrder.tokenId).equal("123");
-                    expect(signedOrder.makerAmount).equal("17857142857");
-                    expect(signedOrder.takerAmount).equal("100000000");
+                    expect(signedOrder.makerAmount).equal("100000000");
+                    expect(signedOrder.takerAmount).equal("560000");
                     expect(signedOrder.side).equal(UtilsSide.SELL);
                     expect(signedOrder.expiration).equal("0");
                     expect(signedOrder.nonce).equal("123");

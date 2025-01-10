@@ -325,10 +325,10 @@ export const createMarketOrder = async (
  * @returns
  */
 export const calculateBuyMarketPrice = (positions: OrderSummary[], amountToMatch: number) => {
-    const sum = 0;
+    let sum = 0;
     for (let i = 0; i < positions.length; i++) {
         const p = positions[i];
-        console.log({ size: p.size, price: p.price, sum });
+        sum += parseFloat(p.size) * parseFloat(p.price);
         if (sum >= amountToMatch) {
             return parseFloat(p.price);
         }
