@@ -40,6 +40,7 @@ import {
     UserRewardsEarning,
     TotalUserEarning,
     NegRisk,
+    BanStatus,
 } from "./types";
 import { createL1Headers, createL2Headers } from "./headers";
 import {
@@ -64,6 +65,7 @@ import {
     CANCEL_ORDER,
     CREATE_API_KEY,
     GET_API_KEYS,
+    CLOSED_ONLY,
     GET_ORDER,
     POST_ORDER,
     TIME,
@@ -384,6 +386,25 @@ export class ClobClient {
         return this.get(`${this.host}${endpoint}`, { headers });
     }
 
+    public async getClosedOnlyMode(): Promise<BanStatus> {
+        this.canL2Auth();
+
+        const endpoint = CLOSED_ONLY;
+        const headerArgs = {
+            method: GET,
+            requestPath: endpoint,
+        };
+
+        const headers = await createL2Headers(
+            this.signer as Wallet | JsonRpcSigner,
+            this.creds as ApiKeyCreds,
+            headerArgs,
+            this.useServerTime ? await this.getServerTime() : undefined,
+        );
+
+        return this.get(`${this.host}${endpoint}`, { headers });
+    }
+
     public async deleteApiKey(): Promise<any> {
         this.canL2Auth();
 
@@ -459,12 +480,11 @@ export class ClobClient {
         return results;
     }
 
-
-	public async getTradesPaginated(
-		params?: TradeParams, 
-		next_cursor?: string
-	): Promise<{trades: Trade[], next_cursor: string, limit: number, count: number }> {
-		this.canL2Auth();
+    public async getTradesPaginated(
+        params?: TradeParams,
+        next_cursor?: string,
+    ): Promise<{ trades: Trade[]; next_cursor: string; limit: number; count: number }> {
+        this.canL2Auth();
 
         const endpoint = GET_TRADES;
         const headerArgs = {
@@ -483,18 +503,21 @@ export class ClobClient {
 
         const _params: any = { ...params, next_cursor };
 
-        const {data, ...rest }: {
-			data: Trade[], 
-			next_cursor: string, 
-			limit: number, 
-			count: number
-		} = await this.get(`${this.host}${endpoint}`, {
+        const {
+            data,
+            ...rest
+        }: {
+            data: Trade[];
+            next_cursor: string;
+            limit: number;
+            count: number;
+        } = await this.get(`${this.host}${endpoint}`, {
             headers,
             params: _params,
         });
 
-        return { trades: Array.isArray(data) ? [...data] :[], ...rest} 
-	}
+        return { trades: Array.isArray(data) ? [...data] : [], ...rest };
+    }
 
     public async getNotifications(): Promise<Notification[]> {
         this.canL2Auth();

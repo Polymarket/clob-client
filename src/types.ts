@@ -152,6 +152,10 @@ export interface ApiKeysResponse {
     apiKeys: ApiKeyCreds[];
 }
 
+export interface BanStatus {
+    closed_only: boolean;
+}
+
 export interface OrderResponse {
     success: boolean;
     errorMsg: string;
