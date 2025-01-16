@@ -12,7 +12,7 @@ import {
 import { Side as UtilsSide, SignatureType } from "@polymarket/order-utils";
 import { Chain, OrderBookSummary, OrderType, Side, UserMarketOrder, UserOrder } from "../src";
 import { Wallet } from "@ethersproject/wallet";
-import { createMarketBuyOrder, createOrder } from "../src/order-builder/helpers";
+import { createMarketOrder, createOrder } from "../src/order-builder/helpers";
 
 describe("utilities", () => {
     describe("orderToJson", () => {
@@ -225,6 +225,50 @@ describe("utilities", () => {
                     makerAmount: "100000000",
                     takerAmount: "200000000",
                     side: "BUY",
+                    expiration: "0",
+                    nonce: "1",
+                    feeRateBps: "100",
+                    signatureType: 2,
+                    signature: "0x",
+                },
+                owner: "aaaa-bbbb-cccc-dddd",
+                orderType: "FOK",
+            });
+        });
+
+        it("FOK sell", () => {
+            const jsonOrder = orderToJson(
+                {
+                    salt: "1000",
+                    maker: "0x0000000000000000000000000000000000000001",
+                    signer: "0x0000000000000000000000000000000000000002",
+                    taker: "0x0000000000000000000000000000000000000003",
+                    tokenId: "1",
+                    makerAmount: "200000000",
+                    takerAmount: "100000000",
+                    side: UtilsSide.SELL,
+                    expiration: "0",
+                    nonce: "1",
+                    feeRateBps: "100",
+                    signatureType: SignatureType.POLY_GNOSIS_SAFE,
+                    signature: "0x",
+                },
+                "aaaa-bbbb-cccc-dddd",
+                OrderType.FOK,
+            );
+            expect(jsonOrder).not.null;
+            expect(jsonOrder).not.undefined;
+
+            expect(jsonOrder).deep.equal({
+                order: {
+                    salt: 1000,
+                    maker: "0x0000000000000000000000000000000000000001",
+                    signer: "0x0000000000000000000000000000000000000002",
+                    taker: "0x0000000000000000000000000000000000000003",
+                    tokenId: "1",
+                    makerAmount: "200000000",
+                    takerAmount: "100000000",
+                    side: "SELL",
                     expiration: "0",
                     nonce: "1",
                     feeRateBps: "100",
@@ -773,11 +817,12 @@ describe("utilities", () => {
 
                     it("FOK BUY EOA", async () => {
                         const userMarketOrder: UserMarketOrder = {
+                            side: Side.BUY,
                             tokenID: token,
                             price: 0.5,
                             amount: 100,
                         };
-                        const signedOrder = await createMarketBuyOrder(
+                        const signedOrder = await createMarketOrder(
                             wallet,
                             chainId,
                             SignatureType.EOA,
@@ -814,12 +859,13 @@ describe("utilities", () => {
                     });
 
                     it("FOK BUY POLY_PROXY", async () => {
-                        const userMarketOrder = {
+                        const userMarketOrder: UserMarketOrder = {
+                            side: Side.BUY,
                             tokenID: token,
                             price: 0.5,
                             amount: 100,
                         };
-                        const signedOrder = await createMarketBuyOrder(
+                        const signedOrder = await createMarketOrder(
                             wallet,
                             chainId,
                             SignatureType.POLY_PROXY,
@@ -856,12 +902,13 @@ describe("utilities", () => {
                     });
 
                     it("FOK BUY POLY_GNOSIS_SAFE", async () => {
-                        const userMarketOrder = {
+                        const userMarketOrder: UserMarketOrder = {
+                            side: Side.BUY,
                             tokenID: token,
                             price: 0.5,
                             amount: 100,
                         };
-                        const signedOrder = await createMarketBuyOrder(
+                        const signedOrder = await createMarketOrder(
                             wallet,
                             chainId,
                             SignatureType.POLY_GNOSIS_SAFE,
@@ -886,6 +933,135 @@ describe("utilities", () => {
                                 makerAmount: "100000000",
                                 takerAmount: "200000000",
                                 side: "BUY",
+                                expiration: "0",
+                                nonce: "0",
+                                feeRateBps: "0",
+                                signatureType: 2,
+                                signature: signedOrder.signature,
+                            },
+                            owner: owner,
+                            orderType: OrderType.FOK,
+                        });
+                    });
+
+                    it("FOK SELL EOA", async () => {
+                        const userMarketOrder: UserMarketOrder = {
+                            side: Side.SELL,
+                            tokenID: token,
+                            price: 0.5,
+                            amount: 100,
+                        };
+                        const signedOrder = await createMarketOrder(
+                            wallet,
+                            chainId,
+                            SignatureType.EOA,
+                            address,
+                            userMarketOrder,
+                            { tickSize: "0.1", negRisk: false },
+                        );
+                        expect(signedOrder).not.null;
+                        expect(signedOrder).not.undefined;
+
+                        const jsonFOKOrder = orderToJson(signedOrder, owner, OrderType.FOK);
+                        expect(jsonFOKOrder).not.null;
+                        expect(jsonFOKOrder).not.undefined;
+
+                        expect(jsonFOKOrder).deep.equal({
+                            order: {
+                                salt: parseInt(signedOrder.salt),
+                                maker: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+                                signer: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+                                taker: "0x0000000000000000000000000000000000000000",
+                                tokenId: token,
+                                makerAmount: "100000000",
+                                takerAmount: "50000000",
+                                side: "SELL",
+                                expiration: "0",
+                                nonce: "0",
+                                feeRateBps: "0",
+                                signatureType: 0,
+                                signature: signedOrder.signature,
+                            },
+                            owner: owner,
+                            orderType: OrderType.FOK,
+                        });
+                    });
+
+                    it("FOK SELL POLY_PROXY", async () => {
+                        const userMarketOrder: UserMarketOrder = {
+                            side: Side.SELL,
+                            tokenID: token,
+                            price: 0.5,
+                            amount: 100,
+                        };
+                        const signedOrder = await createMarketOrder(
+                            wallet,
+                            chainId,
+                            SignatureType.POLY_PROXY,
+                            address,
+                            userMarketOrder,
+                            { tickSize: "0.1", negRisk: false },
+                        );
+                        expect(signedOrder).not.null;
+                        expect(signedOrder).not.undefined;
+
+                        const jsonFOKOrder = orderToJson(signedOrder, owner, OrderType.FOK);
+                        expect(jsonFOKOrder).not.null;
+                        expect(jsonFOKOrder).not.undefined;
+
+                        expect(jsonFOKOrder).deep.equal({
+                            order: {
+                                salt: parseInt(signedOrder.salt),
+                                maker: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+                                signer: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+                                taker: "0x0000000000000000000000000000000000000000",
+                                tokenId: token,
+                                makerAmount: "100000000",
+                                takerAmount: "50000000",
+                                side: "SELL",
+                                expiration: "0",
+                                nonce: "0",
+                                feeRateBps: "0",
+                                signatureType: 1,
+                                signature: signedOrder.signature,
+                            },
+                            owner: owner,
+                            orderType: OrderType.FOK,
+                        });
+                    });
+
+                    it("FOK SELL POLY_GNOSIS_SAFE", async () => {
+                        const userMarketOrder: UserMarketOrder = {
+                            side: Side.SELL,
+                            tokenID: token,
+                            price: 0.5,
+                            amount: 100,
+                        };
+                        const signedOrder = await createMarketOrder(
+                            wallet,
+                            chainId,
+                            SignatureType.POLY_GNOSIS_SAFE,
+                            address,
+                            userMarketOrder,
+                            { tickSize: "0.1", negRisk: false },
+                        );
+                        expect(signedOrder).not.null;
+                        expect(signedOrder).not.undefined;
+
+                        const jsonFOKOrder = orderToJson(signedOrder, owner, OrderType.FOK);
+                        expect(jsonFOKOrder).not.null;
+                        expect(jsonFOKOrder).not.undefined;
+
+                        expect(jsonFOKOrder).deep.equal({
+                            order: {
+                                salt: parseInt(signedOrder.salt),
+                                maker: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+                                signer: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+                                taker: "0x0000000000000000000000000000000000000000",
+                                tokenId: token,
+                                makerAmount: "100000000",
+                                takerAmount: "50000000",
+                                side: "SELL",
                                 expiration: "0",
                                 nonce: "0",
                                 feeRateBps: "0",
@@ -1433,11 +1609,12 @@ describe("utilities", () => {
 
                     it("FOK BUY EOA", async () => {
                         const userMarketOrder: UserMarketOrder = {
+                            side: Side.BUY,
                             tokenID: token,
                             price: 0.05,
                             amount: 100,
                         };
-                        const signedOrder = await createMarketBuyOrder(
+                        const signedOrder = await createMarketOrder(
                             wallet,
                             chainId,
                             SignatureType.EOA,
@@ -1474,12 +1651,13 @@ describe("utilities", () => {
                     });
 
                     it("FOK BUY POLY_PROXY", async () => {
-                        const userMarketOrder = {
+                        const userMarketOrder: UserMarketOrder = {
+                            side: Side.BUY,
                             tokenID: token,
                             price: 0.05,
                             amount: 100,
                         };
-                        const signedOrder = await createMarketBuyOrder(
+                        const signedOrder = await createMarketOrder(
                             wallet,
                             chainId,
                             SignatureType.POLY_PROXY,
@@ -1516,12 +1694,13 @@ describe("utilities", () => {
                     });
 
                     it("FOK BUY POLY_GNOSIS_SAFE", async () => {
-                        const userMarketOrder = {
+                        const userMarketOrder: UserMarketOrder = {
+                            side: Side.BUY,
                             tokenID: token,
                             price: 0.05,
                             amount: 100,
                         };
-                        const signedOrder = await createMarketBuyOrder(
+                        const signedOrder = await createMarketOrder(
                             wallet,
                             chainId,
                             SignatureType.POLY_GNOSIS_SAFE,
@@ -1546,6 +1725,135 @@ describe("utilities", () => {
                                 makerAmount: "100000000",
                                 takerAmount: "2000000000",
                                 side: "BUY",
+                                expiration: "0",
+                                nonce: "0",
+                                feeRateBps: "0",
+                                signatureType: 2,
+                                signature: signedOrder.signature,
+                            },
+                            owner: owner,
+                            orderType: OrderType.FOK,
+                        });
+                    });
+
+                    it("FOK SELL EOA", async () => {
+                        const userMarketOrder: UserMarketOrder = {
+                            side: Side.SELL,
+                            tokenID: token,
+                            price: 0.05,
+                            amount: 100,
+                        };
+                        const signedOrder = await createMarketOrder(
+                            wallet,
+                            chainId,
+                            SignatureType.EOA,
+                            address,
+                            userMarketOrder,
+                            { tickSize: "0.01", negRisk: false },
+                        );
+                        expect(signedOrder).not.null;
+                        expect(signedOrder).not.undefined;
+
+                        const jsonFOKOrder = orderToJson(signedOrder, owner, OrderType.FOK);
+                        expect(jsonFOKOrder).not.null;
+                        expect(jsonFOKOrder).not.undefined;
+
+                        expect(jsonFOKOrder).deep.equal({
+                            order: {
+                                salt: parseInt(signedOrder.salt),
+                                maker: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+                                signer: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+                                taker: "0x0000000000000000000000000000000000000000",
+                                tokenId: token,
+                                makerAmount: "100000000",
+                                takerAmount: "5000000",
+                                side: "SELL",
+                                expiration: "0",
+                                nonce: "0",
+                                feeRateBps: "0",
+                                signatureType: 0,
+                                signature: signedOrder.signature,
+                            },
+                            owner: owner,
+                            orderType: OrderType.FOK,
+                        });
+                    });
+
+                    it("FOK SELL POLY_PROXY", async () => {
+                        const userMarketOrder: UserMarketOrder = {
+                            side: Side.SELL,
+                            tokenID: token,
+                            price: 0.05,
+                            amount: 100,
+                        };
+                        const signedOrder = await createMarketOrder(
+                            wallet,
+                            chainId,
+                            SignatureType.POLY_PROXY,
+                            address,
+                            userMarketOrder,
+                            { tickSize: "0.01", negRisk: false },
+                        );
+                        expect(signedOrder).not.null;
+                        expect(signedOrder).not.undefined;
+
+                        const jsonFOKOrder = orderToJson(signedOrder, owner, OrderType.FOK);
+                        expect(jsonFOKOrder).not.null;
+                        expect(jsonFOKOrder).not.undefined;
+
+                        expect(jsonFOKOrder).deep.equal({
+                            order: {
+                                salt: parseInt(signedOrder.salt),
+                                maker: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+                                signer: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+                                taker: "0x0000000000000000000000000000000000000000",
+                                tokenId: token,
+                                makerAmount: "100000000",
+                                takerAmount: "5000000",
+                                side: "SELL",
+                                expiration: "0",
+                                nonce: "0",
+                                feeRateBps: "0",
+                                signatureType: 1,
+                                signature: signedOrder.signature,
+                            },
+                            owner: owner,
+                            orderType: OrderType.FOK,
+                        });
+                    });
+
+                    it("FOK SELL POLY_GNOSIS_SAFE", async () => {
+                        const userMarketOrder: UserMarketOrder = {
+                            side: Side.SELL,
+                            tokenID: token,
+                            price: 0.05,
+                            amount: 100,
+                        };
+                        const signedOrder = await createMarketOrder(
+                            wallet,
+                            chainId,
+                            SignatureType.POLY_GNOSIS_SAFE,
+                            address,
+                            userMarketOrder,
+                            { tickSize: "0.01", negRisk: false },
+                        );
+                        expect(signedOrder).not.null;
+                        expect(signedOrder).not.undefined;
+
+                        const jsonFOKOrder = orderToJson(signedOrder, owner, OrderType.FOK);
+                        expect(jsonFOKOrder).not.null;
+                        expect(jsonFOKOrder).not.undefined;
+
+                        expect(jsonFOKOrder).deep.equal({
+                            order: {
+                                salt: parseInt(signedOrder.salt),
+                                maker: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+                                signer: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+                                taker: "0x0000000000000000000000000000000000000000",
+                                tokenId: token,
+                                makerAmount: "100000000",
+                                takerAmount: "5000000",
+                                side: "SELL",
                                 expiration: "0",
                                 nonce: "0",
                                 feeRateBps: "0",
@@ -2093,11 +2401,12 @@ describe("utilities", () => {
 
                     it("FOK BUY EOA", async () => {
                         const userMarketOrder: UserMarketOrder = {
+                            side: Side.BUY,
                             tokenID: token,
                             price: 0.005,
                             amount: 100,
                         };
-                        const signedOrder = await createMarketBuyOrder(
+                        const signedOrder = await createMarketOrder(
                             wallet,
                             chainId,
                             SignatureType.EOA,
@@ -2134,12 +2443,13 @@ describe("utilities", () => {
                     });
 
                     it("FOK BUY POLY_PROXY", async () => {
-                        const userMarketOrder = {
+                        const userMarketOrder: UserMarketOrder = {
+                            side: Side.BUY,
                             tokenID: token,
                             price: 0.005,
                             amount: 100,
                         };
-                        const signedOrder = await createMarketBuyOrder(
+                        const signedOrder = await createMarketOrder(
                             wallet,
                             chainId,
                             SignatureType.POLY_PROXY,
@@ -2176,12 +2486,13 @@ describe("utilities", () => {
                     });
 
                     it("FOK BUY POLY_GNOSIS_SAFE", async () => {
-                        const userMarketOrder = {
+                        const userMarketOrder: UserMarketOrder = {
+                            side: Side.BUY,
                             tokenID: token,
                             price: 0.005,
                             amount: 100,
                         };
-                        const signedOrder = await createMarketBuyOrder(
+                        const signedOrder = await createMarketOrder(
                             wallet,
                             chainId,
                             SignatureType.POLY_GNOSIS_SAFE,
@@ -2206,6 +2517,135 @@ describe("utilities", () => {
                                 makerAmount: "100000000",
                                 takerAmount: "20000000000",
                                 side: "BUY",
+                                expiration: "0",
+                                nonce: "0",
+                                feeRateBps: "0",
+                                signatureType: 2,
+                                signature: signedOrder.signature,
+                            },
+                            owner: owner,
+                            orderType: OrderType.FOK,
+                        });
+                    });
+
+                    it("FOK SELL EOA", async () => {
+                        const userMarketOrder: UserMarketOrder = {
+                            side: Side.SELL,
+                            tokenID: token,
+                            price: 0.005,
+                            amount: 100,
+                        };
+                        const signedOrder = await createMarketOrder(
+                            wallet,
+                            chainId,
+                            SignatureType.EOA,
+                            address,
+                            userMarketOrder,
+                            { tickSize: "0.001", negRisk: false },
+                        );
+                        expect(signedOrder).not.null;
+                        expect(signedOrder).not.undefined;
+
+                        const jsonFOKOrder = orderToJson(signedOrder, owner, OrderType.FOK);
+                        expect(jsonFOKOrder).not.null;
+                        expect(jsonFOKOrder).not.undefined;
+
+                        expect(jsonFOKOrder).deep.equal({
+                            order: {
+                                salt: parseInt(signedOrder.salt),
+                                maker: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+                                signer: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+                                taker: "0x0000000000000000000000000000000000000000",
+                                tokenId: token,
+                                makerAmount: "100000000",
+                                takerAmount: "500000",
+                                side: "SELL",
+                                expiration: "0",
+                                nonce: "0",
+                                feeRateBps: "0",
+                                signatureType: 0,
+                                signature: signedOrder.signature,
+                            },
+                            owner: owner,
+                            orderType: OrderType.FOK,
+                        });
+                    });
+
+                    it("FOK SELL POLY_PROXY", async () => {
+                        const userMarketOrder: UserMarketOrder = {
+                            side: Side.SELL,
+                            tokenID: token,
+                            price: 0.005,
+                            amount: 100,
+                        };
+                        const signedOrder = await createMarketOrder(
+                            wallet,
+                            chainId,
+                            SignatureType.POLY_PROXY,
+                            address,
+                            userMarketOrder,
+                            { tickSize: "0.001", negRisk: false },
+                        );
+                        expect(signedOrder).not.null;
+                        expect(signedOrder).not.undefined;
+
+                        const jsonFOKOrder = orderToJson(signedOrder, owner, OrderType.FOK);
+                        expect(jsonFOKOrder).not.null;
+                        expect(jsonFOKOrder).not.undefined;
+
+                        expect(jsonFOKOrder).deep.equal({
+                            order: {
+                                salt: parseInt(signedOrder.salt),
+                                maker: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+                                signer: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+                                taker: "0x0000000000000000000000000000000000000000",
+                                tokenId: token,
+                                makerAmount: "100000000",
+                                takerAmount: "500000",
+                                side: "SELL",
+                                expiration: "0",
+                                nonce: "0",
+                                feeRateBps: "0",
+                                signatureType: 1,
+                                signature: signedOrder.signature,
+                            },
+                            owner: owner,
+                            orderType: OrderType.FOK,
+                        });
+                    });
+
+                    it("FOK SELL POLY_GNOSIS_SAFE", async () => {
+                        const userMarketOrder: UserMarketOrder = {
+                            side: Side.SELL,
+                            tokenID: token,
+                            price: 0.005,
+                            amount: 100,
+                        };
+                        const signedOrder = await createMarketOrder(
+                            wallet,
+                            chainId,
+                            SignatureType.POLY_GNOSIS_SAFE,
+                            address,
+                            userMarketOrder,
+                            { tickSize: "0.001", negRisk: false },
+                        );
+                        expect(signedOrder).not.null;
+                        expect(signedOrder).not.undefined;
+
+                        const jsonFOKOrder = orderToJson(signedOrder, owner, OrderType.FOK);
+                        expect(jsonFOKOrder).not.null;
+                        expect(jsonFOKOrder).not.undefined;
+
+                        expect(jsonFOKOrder).deep.equal({
+                            order: {
+                                salt: parseInt(signedOrder.salt),
+                                maker: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+                                signer: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+                                taker: "0x0000000000000000000000000000000000000000",
+                                tokenId: token,
+                                makerAmount: "100000000",
+                                takerAmount: "500000",
+                                side: "SELL",
                                 expiration: "0",
                                 nonce: "0",
                                 feeRateBps: "0",
@@ -2753,11 +3193,12 @@ describe("utilities", () => {
 
                     it("FOK BUY EOA", async () => {
                         const userMarketOrder: UserMarketOrder = {
+                            side: Side.BUY,
                             tokenID: token,
                             price: 0.0005,
                             amount: 100,
                         };
-                        const signedOrder = await createMarketBuyOrder(
+                        const signedOrder = await createMarketOrder(
                             wallet,
                             chainId,
                             SignatureType.EOA,
@@ -2794,12 +3235,13 @@ describe("utilities", () => {
                     });
 
                     it("FOK BUY POLY_PROXY", async () => {
-                        const userMarketOrder = {
+                        const userMarketOrder: UserMarketOrder = {
+                            side: Side.BUY,
                             tokenID: token,
                             price: 0.0005,
                             amount: 100,
                         };
-                        const signedOrder = await createMarketBuyOrder(
+                        const signedOrder = await createMarketOrder(
                             wallet,
                             chainId,
                             SignatureType.POLY_PROXY,
@@ -2836,12 +3278,13 @@ describe("utilities", () => {
                     });
 
                     it("FOK BUY POLY_GNOSIS_SAFE", async () => {
-                        const userMarketOrder = {
+                        const userMarketOrder: UserMarketOrder = {
+                            side: Side.BUY,
                             tokenID: token,
                             price: 0.0005,
                             amount: 100,
                         };
-                        const signedOrder = await createMarketBuyOrder(
+                        const signedOrder = await createMarketOrder(
                             wallet,
                             chainId,
                             SignatureType.POLY_GNOSIS_SAFE,
@@ -2866,6 +3309,135 @@ describe("utilities", () => {
                                 makerAmount: "100000000",
                                 takerAmount: "200000000000",
                                 side: "BUY",
+                                expiration: "0",
+                                nonce: "0",
+                                feeRateBps: "0",
+                                signatureType: 2,
+                                signature: signedOrder.signature,
+                            },
+                            owner: owner,
+                            orderType: OrderType.FOK,
+                        });
+                    });
+
+                    it("FOK SELL EOA", async () => {
+                        const userMarketOrder: UserMarketOrder = {
+                            side: Side.SELL,
+                            tokenID: token,
+                            price: 0.0005,
+                            amount: 100,
+                        };
+                        const signedOrder = await createMarketOrder(
+                            wallet,
+                            chainId,
+                            SignatureType.EOA,
+                            address,
+                            userMarketOrder,
+                            { tickSize: "0.0001", negRisk: false },
+                        );
+                        expect(signedOrder).not.null;
+                        expect(signedOrder).not.undefined;
+
+                        const jsonFOKOrder = orderToJson(signedOrder, owner, OrderType.FOK);
+                        expect(jsonFOKOrder).not.null;
+                        expect(jsonFOKOrder).not.undefined;
+
+                        expect(jsonFOKOrder).deep.equal({
+                            order: {
+                                salt: parseInt(signedOrder.salt),
+                                maker: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+                                signer: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+                                taker: "0x0000000000000000000000000000000000000000",
+                                tokenId: token,
+                                makerAmount: "100000000",
+                                takerAmount: "50000",
+                                side: "SELL",
+                                expiration: "0",
+                                nonce: "0",
+                                feeRateBps: "0",
+                                signatureType: 0,
+                                signature: signedOrder.signature,
+                            },
+                            owner: owner,
+                            orderType: OrderType.FOK,
+                        });
+                    });
+
+                    it("FOK SELL POLY_PROXY", async () => {
+                        const userMarketOrder: UserMarketOrder = {
+                            side: Side.SELL,
+                            tokenID: token,
+                            price: 0.0005,
+                            amount: 100,
+                        };
+                        const signedOrder = await createMarketOrder(
+                            wallet,
+                            chainId,
+                            SignatureType.POLY_PROXY,
+                            address,
+                            userMarketOrder,
+                            { tickSize: "0.0001", negRisk: false },
+                        );
+                        expect(signedOrder).not.null;
+                        expect(signedOrder).not.undefined;
+
+                        const jsonFOKOrder = orderToJson(signedOrder, owner, OrderType.FOK);
+                        expect(jsonFOKOrder).not.null;
+                        expect(jsonFOKOrder).not.undefined;
+
+                        expect(jsonFOKOrder).deep.equal({
+                            order: {
+                                salt: parseInt(signedOrder.salt),
+                                maker: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+                                signer: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+                                taker: "0x0000000000000000000000000000000000000000",
+                                tokenId: token,
+                                makerAmount: "100000000",
+                                takerAmount: "50000",
+                                side: "SELL",
+                                expiration: "0",
+                                nonce: "0",
+                                feeRateBps: "0",
+                                signatureType: 1,
+                                signature: signedOrder.signature,
+                            },
+                            owner: owner,
+                            orderType: OrderType.FOK,
+                        });
+                    });
+
+                    it("FOK SELL POLY_GNOSIS_SAFE", async () => {
+                        const userMarketOrder: UserMarketOrder = {
+                            side: Side.SELL,
+                            tokenID: token,
+                            price: 0.0005,
+                            amount: 100,
+                        };
+                        const signedOrder = await createMarketOrder(
+                            wallet,
+                            chainId,
+                            SignatureType.POLY_GNOSIS_SAFE,
+                            address,
+                            userMarketOrder,
+                            { tickSize: "0.0001", negRisk: false },
+                        );
+                        expect(signedOrder).not.null;
+                        expect(signedOrder).not.undefined;
+
+                        const jsonFOKOrder = orderToJson(signedOrder, owner, OrderType.FOK);
+                        expect(jsonFOKOrder).not.null;
+                        expect(jsonFOKOrder).not.undefined;
+
+                        expect(jsonFOKOrder).deep.equal({
+                            order: {
+                                salt: parseInt(signedOrder.salt),
+                                maker: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+                                signer: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+                                taker: "0x0000000000000000000000000000000000000000",
+                                tokenId: token,
+                                makerAmount: "100000000",
+                                takerAmount: "50000",
+                                side: "SELL",
                                 expiration: "0",
                                 nonce: "0",
                                 feeRateBps: "0",
@@ -3415,11 +3987,12 @@ describe("utilities", () => {
 
                     it("FOK BUY EOA", async () => {
                         const userMarketOrder: UserMarketOrder = {
+                            side: Side.BUY,
                             tokenID: token,
                             price: 0.5,
                             amount: 100,
                         };
-                        const signedOrder = await createMarketBuyOrder(
+                        const signedOrder = await createMarketOrder(
                             wallet,
                             chainId,
                             SignatureType.EOA,
@@ -3456,12 +4029,13 @@ describe("utilities", () => {
                     });
 
                     it("FOK BUY POLY_PROXY", async () => {
-                        const userMarketOrder = {
+                        const userMarketOrder: UserMarketOrder = {
+                            side: Side.BUY,
                             tokenID: token,
                             price: 0.5,
                             amount: 100,
                         };
-                        const signedOrder = await createMarketBuyOrder(
+                        const signedOrder = await createMarketOrder(
                             wallet,
                             chainId,
                             SignatureType.POLY_PROXY,
@@ -3498,12 +4072,13 @@ describe("utilities", () => {
                     });
 
                     it("FOK BUY POLY_GNOSIS_SAFE", async () => {
-                        const userMarketOrder = {
+                        const userMarketOrder: UserMarketOrder = {
+                            side: Side.BUY,
                             tokenID: token,
                             price: 0.5,
                             amount: 100,
                         };
-                        const signedOrder = await createMarketBuyOrder(
+                        const signedOrder = await createMarketOrder(
                             wallet,
                             chainId,
                             SignatureType.POLY_GNOSIS_SAFE,
@@ -3528,6 +4103,135 @@ describe("utilities", () => {
                                 makerAmount: "100000000",
                                 takerAmount: "200000000",
                                 side: "BUY",
+                                expiration: "0",
+                                nonce: "0",
+                                feeRateBps: "0",
+                                signatureType: 2,
+                                signature: signedOrder.signature,
+                            },
+                            owner: owner,
+                            orderType: OrderType.FOK,
+                        });
+                    });
+
+                    it("FOK SELL EOA", async () => {
+                        const userMarketOrder: UserMarketOrder = {
+                            side: Side.SELL,
+                            tokenID: token,
+                            price: 0.5,
+                            amount: 100,
+                        };
+                        const signedOrder = await createMarketOrder(
+                            wallet,
+                            chainId,
+                            SignatureType.EOA,
+                            address,
+                            userMarketOrder,
+                            { tickSize: "0.1", negRisk: true },
+                        );
+                        expect(signedOrder).not.null;
+                        expect(signedOrder).not.undefined;
+
+                        const jsonFOKOrder = orderToJson(signedOrder, owner, OrderType.FOK);
+                        expect(jsonFOKOrder).not.null;
+                        expect(jsonFOKOrder).not.undefined;
+
+                        expect(jsonFOKOrder).deep.equal({
+                            order: {
+                                salt: parseInt(signedOrder.salt),
+                                maker: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+                                signer: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+                                taker: "0x0000000000000000000000000000000000000000",
+                                tokenId: token,
+                                makerAmount: "100000000",
+                                takerAmount: "50000000",
+                                side: "SELL",
+                                expiration: "0",
+                                nonce: "0",
+                                feeRateBps: "0",
+                                signatureType: 0,
+                                signature: signedOrder.signature,
+                            },
+                            owner: owner,
+                            orderType: OrderType.FOK,
+                        });
+                    });
+
+                    it("FOK SELL POLY_PROXY", async () => {
+                        const userMarketOrder: UserMarketOrder = {
+                            side: Side.SELL,
+                            tokenID: token,
+                            price: 0.5,
+                            amount: 100,
+                        };
+                        const signedOrder = await createMarketOrder(
+                            wallet,
+                            chainId,
+                            SignatureType.POLY_PROXY,
+                            address,
+                            userMarketOrder,
+                            { tickSize: "0.1", negRisk: true },
+                        );
+                        expect(signedOrder).not.null;
+                        expect(signedOrder).not.undefined;
+
+                        const jsonFOKOrder = orderToJson(signedOrder, owner, OrderType.FOK);
+                        expect(jsonFOKOrder).not.null;
+                        expect(jsonFOKOrder).not.undefined;
+
+                        expect(jsonFOKOrder).deep.equal({
+                            order: {
+                                salt: parseInt(signedOrder.salt),
+                                maker: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+                                signer: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+                                taker: "0x0000000000000000000000000000000000000000",
+                                tokenId: token,
+                                makerAmount: "100000000",
+                                takerAmount: "50000000",
+                                side: "SELL",
+                                expiration: "0",
+                                nonce: "0",
+                                feeRateBps: "0",
+                                signatureType: 1,
+                                signature: signedOrder.signature,
+                            },
+                            owner: owner,
+                            orderType: OrderType.FOK,
+                        });
+                    });
+
+                    it("FOK SELL POLY_GNOSIS_SAFE", async () => {
+                        const userMarketOrder: UserMarketOrder = {
+                            side: Side.SELL,
+                            tokenID: token,
+                            price: 0.5,
+                            amount: 100,
+                        };
+                        const signedOrder = await createMarketOrder(
+                            wallet,
+                            chainId,
+                            SignatureType.POLY_GNOSIS_SAFE,
+                            address,
+                            userMarketOrder,
+                            { tickSize: "0.1", negRisk: true },
+                        );
+                        expect(signedOrder).not.null;
+                        expect(signedOrder).not.undefined;
+
+                        const jsonFOKOrder = orderToJson(signedOrder, owner, OrderType.FOK);
+                        expect(jsonFOKOrder).not.null;
+                        expect(jsonFOKOrder).not.undefined;
+
+                        expect(jsonFOKOrder).deep.equal({
+                            order: {
+                                salt: parseInt(signedOrder.salt),
+                                maker: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+                                signer: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+                                taker: "0x0000000000000000000000000000000000000000",
+                                tokenId: token,
+                                makerAmount: "100000000",
+                                takerAmount: "50000000",
+                                side: "SELL",
                                 expiration: "0",
                                 nonce: "0",
                                 feeRateBps: "0",
@@ -4075,11 +4779,12 @@ describe("utilities", () => {
 
                     it("FOK BUY EOA", async () => {
                         const userMarketOrder: UserMarketOrder = {
+                            side: Side.BUY,
                             tokenID: token,
                             price: 0.05,
                             amount: 100,
                         };
-                        const signedOrder = await createMarketBuyOrder(
+                        const signedOrder = await createMarketOrder(
                             wallet,
                             chainId,
                             SignatureType.EOA,
@@ -4116,12 +4821,13 @@ describe("utilities", () => {
                     });
 
                     it("FOK BUY POLY_PROXY", async () => {
-                        const userMarketOrder = {
+                        const userMarketOrder: UserMarketOrder = {
+                            side: Side.BUY,
                             tokenID: token,
                             price: 0.05,
                             amount: 100,
                         };
-                        const signedOrder = await createMarketBuyOrder(
+                        const signedOrder = await createMarketOrder(
                             wallet,
                             chainId,
                             SignatureType.POLY_PROXY,
@@ -4158,12 +4864,13 @@ describe("utilities", () => {
                     });
 
                     it("FOK BUY POLY_GNOSIS_SAFE", async () => {
-                        const userMarketOrder = {
+                        const userMarketOrder: UserMarketOrder = {
+                            side: Side.BUY,
                             tokenID: token,
                             price: 0.05,
                             amount: 100,
                         };
-                        const signedOrder = await createMarketBuyOrder(
+                        const signedOrder = await createMarketOrder(
                             wallet,
                             chainId,
                             SignatureType.POLY_GNOSIS_SAFE,
@@ -4188,6 +4895,135 @@ describe("utilities", () => {
                                 makerAmount: "100000000",
                                 takerAmount: "2000000000",
                                 side: "BUY",
+                                expiration: "0",
+                                nonce: "0",
+                                feeRateBps: "0",
+                                signatureType: 2,
+                                signature: signedOrder.signature,
+                            },
+                            owner: owner,
+                            orderType: OrderType.FOK,
+                        });
+                    });
+
+                    it("FOK SELL EOA", async () => {
+                        const userMarketOrder: UserMarketOrder = {
+                            side: Side.SELL,
+                            tokenID: token,
+                            price: 0.05,
+                            amount: 100,
+                        };
+                        const signedOrder = await createMarketOrder(
+                            wallet,
+                            chainId,
+                            SignatureType.EOA,
+                            address,
+                            userMarketOrder,
+                            { tickSize: "0.01", negRisk: true },
+                        );
+                        expect(signedOrder).not.null;
+                        expect(signedOrder).not.undefined;
+
+                        const jsonFOKOrder = orderToJson(signedOrder, owner, OrderType.FOK);
+                        expect(jsonFOKOrder).not.null;
+                        expect(jsonFOKOrder).not.undefined;
+
+                        expect(jsonFOKOrder).deep.equal({
+                            order: {
+                                salt: parseInt(signedOrder.salt),
+                                maker: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+                                signer: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+                                taker: "0x0000000000000000000000000000000000000000",
+                                tokenId: token,
+                                makerAmount: "100000000",
+                                takerAmount: "5000000",
+                                side: "SELL",
+                                expiration: "0",
+                                nonce: "0",
+                                feeRateBps: "0",
+                                signatureType: 0,
+                                signature: signedOrder.signature,
+                            },
+                            owner: owner,
+                            orderType: OrderType.FOK,
+                        });
+                    });
+
+                    it("FOK SELL POLY_PROXY", async () => {
+                        const userMarketOrder: UserMarketOrder = {
+                            side: Side.SELL,
+                            tokenID: token,
+                            price: 0.05,
+                            amount: 100,
+                        };
+                        const signedOrder = await createMarketOrder(
+                            wallet,
+                            chainId,
+                            SignatureType.POLY_PROXY,
+                            address,
+                            userMarketOrder,
+                            { tickSize: "0.01", negRisk: true },
+                        );
+                        expect(signedOrder).not.null;
+                        expect(signedOrder).not.undefined;
+
+                        const jsonFOKOrder = orderToJson(signedOrder, owner, OrderType.FOK);
+                        expect(jsonFOKOrder).not.null;
+                        expect(jsonFOKOrder).not.undefined;
+
+                        expect(jsonFOKOrder).deep.equal({
+                            order: {
+                                salt: parseInt(signedOrder.salt),
+                                maker: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+                                signer: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+                                taker: "0x0000000000000000000000000000000000000000",
+                                tokenId: token,
+                                makerAmount: "100000000",
+                                takerAmount: "5000000",
+                                side: "SELL",
+                                expiration: "0",
+                                nonce: "0",
+                                feeRateBps: "0",
+                                signatureType: 1,
+                                signature: signedOrder.signature,
+                            },
+                            owner: owner,
+                            orderType: OrderType.FOK,
+                        });
+                    });
+
+                    it("FOK SELL POLY_GNOSIS_SAFE", async () => {
+                        const userMarketOrder: UserMarketOrder = {
+                            side: Side.SELL,
+                            tokenID: token,
+                            price: 0.05,
+                            amount: 100,
+                        };
+                        const signedOrder = await createMarketOrder(
+                            wallet,
+                            chainId,
+                            SignatureType.POLY_GNOSIS_SAFE,
+                            address,
+                            userMarketOrder,
+                            { tickSize: "0.01", negRisk: true },
+                        );
+                        expect(signedOrder).not.null;
+                        expect(signedOrder).not.undefined;
+
+                        const jsonFOKOrder = orderToJson(signedOrder, owner, OrderType.FOK);
+                        expect(jsonFOKOrder).not.null;
+                        expect(jsonFOKOrder).not.undefined;
+
+                        expect(jsonFOKOrder).deep.equal({
+                            order: {
+                                salt: parseInt(signedOrder.salt),
+                                maker: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+                                signer: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+                                taker: "0x0000000000000000000000000000000000000000",
+                                tokenId: token,
+                                makerAmount: "100000000",
+                                takerAmount: "5000000",
+                                side: "SELL",
                                 expiration: "0",
                                 nonce: "0",
                                 feeRateBps: "0",
@@ -4735,11 +5571,12 @@ describe("utilities", () => {
 
                     it("FOK BUY EOA", async () => {
                         const userMarketOrder: UserMarketOrder = {
+                            side: Side.BUY,
                             tokenID: token,
                             price: 0.005,
                             amount: 100,
                         };
-                        const signedOrder = await createMarketBuyOrder(
+                        const signedOrder = await createMarketOrder(
                             wallet,
                             chainId,
                             SignatureType.EOA,
@@ -4776,12 +5613,13 @@ describe("utilities", () => {
                     });
 
                     it("FOK BUY POLY_PROXY", async () => {
-                        const userMarketOrder = {
+                        const userMarketOrder: UserMarketOrder = {
+                            side: Side.BUY,
                             tokenID: token,
                             price: 0.005,
                             amount: 100,
                         };
-                        const signedOrder = await createMarketBuyOrder(
+                        const signedOrder = await createMarketOrder(
                             wallet,
                             chainId,
                             SignatureType.POLY_PROXY,
@@ -4818,12 +5656,13 @@ describe("utilities", () => {
                     });
 
                     it("FOK BUY POLY_GNOSIS_SAFE", async () => {
-                        const userMarketOrder = {
+                        const userMarketOrder: UserMarketOrder = {
+                            side: Side.BUY,
                             tokenID: token,
                             price: 0.005,
                             amount: 100,
                         };
-                        const signedOrder = await createMarketBuyOrder(
+                        const signedOrder = await createMarketOrder(
                             wallet,
                             chainId,
                             SignatureType.POLY_GNOSIS_SAFE,
@@ -4848,6 +5687,135 @@ describe("utilities", () => {
                                 makerAmount: "100000000",
                                 takerAmount: "20000000000",
                                 side: "BUY",
+                                expiration: "0",
+                                nonce: "0",
+                                feeRateBps: "0",
+                                signatureType: 2,
+                                signature: signedOrder.signature,
+                            },
+                            owner: owner,
+                            orderType: OrderType.FOK,
+                        });
+                    });
+
+                    it("FOK SELL EOA", async () => {
+                        const userMarketOrder: UserMarketOrder = {
+                            side: Side.SELL,
+                            tokenID: token,
+                            price: 0.005,
+                            amount: 100,
+                        };
+                        const signedOrder = await createMarketOrder(
+                            wallet,
+                            chainId,
+                            SignatureType.EOA,
+                            address,
+                            userMarketOrder,
+                            { tickSize: "0.001", negRisk: true },
+                        );
+                        expect(signedOrder).not.null;
+                        expect(signedOrder).not.undefined;
+
+                        const jsonFOKOrder = orderToJson(signedOrder, owner, OrderType.FOK);
+                        expect(jsonFOKOrder).not.null;
+                        expect(jsonFOKOrder).not.undefined;
+
+                        expect(jsonFOKOrder).deep.equal({
+                            order: {
+                                salt: parseInt(signedOrder.salt),
+                                maker: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+                                signer: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+                                taker: "0x0000000000000000000000000000000000000000",
+                                tokenId: token,
+                                makerAmount: "100000000",
+                                takerAmount: "500000",
+                                side: "SELL",
+                                expiration: "0",
+                                nonce: "0",
+                                feeRateBps: "0",
+                                signatureType: 0,
+                                signature: signedOrder.signature,
+                            },
+                            owner: owner,
+                            orderType: OrderType.FOK,
+                        });
+                    });
+
+                    it("FOK SELL POLY_PROXY", async () => {
+                        const userMarketOrder: UserMarketOrder = {
+                            side: Side.SELL,
+                            tokenID: token,
+                            price: 0.005,
+                            amount: 100,
+                        };
+                        const signedOrder = await createMarketOrder(
+                            wallet,
+                            chainId,
+                            SignatureType.POLY_PROXY,
+                            address,
+                            userMarketOrder,
+                            { tickSize: "0.001", negRisk: true },
+                        );
+                        expect(signedOrder).not.null;
+                        expect(signedOrder).not.undefined;
+
+                        const jsonFOKOrder = orderToJson(signedOrder, owner, OrderType.FOK);
+                        expect(jsonFOKOrder).not.null;
+                        expect(jsonFOKOrder).not.undefined;
+
+                        expect(jsonFOKOrder).deep.equal({
+                            order: {
+                                salt: parseInt(signedOrder.salt),
+                                maker: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+                                signer: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+                                taker: "0x0000000000000000000000000000000000000000",
+                                tokenId: token,
+                                makerAmount: "100000000",
+                                takerAmount: "500000",
+                                side: "SELL",
+                                expiration: "0",
+                                nonce: "0",
+                                feeRateBps: "0",
+                                signatureType: 1,
+                                signature: signedOrder.signature,
+                            },
+                            owner: owner,
+                            orderType: OrderType.FOK,
+                        });
+                    });
+
+                    it("FOK SELL POLY_GNOSIS_SAFE", async () => {
+                        const userMarketOrder: UserMarketOrder = {
+                            side: Side.SELL,
+                            tokenID: token,
+                            price: 0.005,
+                            amount: 100,
+                        };
+                        const signedOrder = await createMarketOrder(
+                            wallet,
+                            chainId,
+                            SignatureType.POLY_GNOSIS_SAFE,
+                            address,
+                            userMarketOrder,
+                            { tickSize: "0.001", negRisk: true },
+                        );
+                        expect(signedOrder).not.null;
+                        expect(signedOrder).not.undefined;
+
+                        const jsonFOKOrder = orderToJson(signedOrder, owner, OrderType.FOK);
+                        expect(jsonFOKOrder).not.null;
+                        expect(jsonFOKOrder).not.undefined;
+
+                        expect(jsonFOKOrder).deep.equal({
+                            order: {
+                                salt: parseInt(signedOrder.salt),
+                                maker: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+                                signer: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+                                taker: "0x0000000000000000000000000000000000000000",
+                                tokenId: token,
+                                makerAmount: "100000000",
+                                takerAmount: "500000",
+                                side: "SELL",
                                 expiration: "0",
                                 nonce: "0",
                                 feeRateBps: "0",
@@ -5395,11 +6363,12 @@ describe("utilities", () => {
 
                     it("FOK BUY EOA", async () => {
                         const userMarketOrder: UserMarketOrder = {
+                            side: Side.BUY,
                             tokenID: token,
                             price: 0.0005,
                             amount: 100,
                         };
-                        const signedOrder = await createMarketBuyOrder(
+                        const signedOrder = await createMarketOrder(
                             wallet,
                             chainId,
                             SignatureType.EOA,
@@ -5436,12 +6405,13 @@ describe("utilities", () => {
                     });
 
                     it("FOK BUY POLY_PROXY", async () => {
-                        const userMarketOrder = {
+                        const userMarketOrder: UserMarketOrder = {
+                            side: Side.BUY,
                             tokenID: token,
                             price: 0.0005,
                             amount: 100,
                         };
-                        const signedOrder = await createMarketBuyOrder(
+                        const signedOrder = await createMarketOrder(
                             wallet,
                             chainId,
                             SignatureType.POLY_PROXY,
@@ -5478,12 +6448,13 @@ describe("utilities", () => {
                     });
 
                     it("FOK BUY POLY_GNOSIS_SAFE", async () => {
-                        const userMarketOrder = {
+                        const userMarketOrder: UserMarketOrder = {
+                            side: Side.BUY,
                             tokenID: token,
                             price: 0.0005,
                             amount: 100,
                         };
-                        const signedOrder = await createMarketBuyOrder(
+                        const signedOrder = await createMarketOrder(
                             wallet,
                             chainId,
                             SignatureType.POLY_GNOSIS_SAFE,
@@ -5508,6 +6479,135 @@ describe("utilities", () => {
                                 makerAmount: "100000000",
                                 takerAmount: "200000000000",
                                 side: "BUY",
+                                expiration: "0",
+                                nonce: "0",
+                                feeRateBps: "0",
+                                signatureType: 2,
+                                signature: signedOrder.signature,
+                            },
+                            owner: owner,
+                            orderType: OrderType.FOK,
+                        });
+                    });
+
+                    it("FOK SELL EOA", async () => {
+                        const userMarketOrder: UserMarketOrder = {
+                            side: Side.SELL,
+                            tokenID: token,
+                            price: 0.0005,
+                            amount: 100,
+                        };
+                        const signedOrder = await createMarketOrder(
+                            wallet,
+                            chainId,
+                            SignatureType.EOA,
+                            address,
+                            userMarketOrder,
+                            { tickSize: "0.0001", negRisk: true },
+                        );
+                        expect(signedOrder).not.null;
+                        expect(signedOrder).not.undefined;
+
+                        const jsonFOKOrder = orderToJson(signedOrder, owner, OrderType.FOK);
+                        expect(jsonFOKOrder).not.null;
+                        expect(jsonFOKOrder).not.undefined;
+
+                        expect(jsonFOKOrder).deep.equal({
+                            order: {
+                                salt: parseInt(signedOrder.salt),
+                                maker: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+                                signer: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+                                taker: "0x0000000000000000000000000000000000000000",
+                                tokenId: token,
+                                makerAmount: "100000000",
+                                takerAmount: "50000",
+                                side: "SELL",
+                                expiration: "0",
+                                nonce: "0",
+                                feeRateBps: "0",
+                                signatureType: 0,
+                                signature: signedOrder.signature,
+                            },
+                            owner: owner,
+                            orderType: OrderType.FOK,
+                        });
+                    });
+
+                    it("FOK SELL POLY_PROXY", async () => {
+                        const userMarketOrder: UserMarketOrder = {
+                            side: Side.SELL,
+                            tokenID: token,
+                            price: 0.0005,
+                            amount: 100,
+                        };
+                        const signedOrder = await createMarketOrder(
+                            wallet,
+                            chainId,
+                            SignatureType.POLY_PROXY,
+                            address,
+                            userMarketOrder,
+                            { tickSize: "0.0001", negRisk: true },
+                        );
+                        expect(signedOrder).not.null;
+                        expect(signedOrder).not.undefined;
+
+                        const jsonFOKOrder = orderToJson(signedOrder, owner, OrderType.FOK);
+                        expect(jsonFOKOrder).not.null;
+                        expect(jsonFOKOrder).not.undefined;
+
+                        expect(jsonFOKOrder).deep.equal({
+                            order: {
+                                salt: parseInt(signedOrder.salt),
+                                maker: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+                                signer: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+                                taker: "0x0000000000000000000000000000000000000000",
+                                tokenId: token,
+                                makerAmount: "100000000",
+                                takerAmount: "50000",
+                                side: "SELL",
+                                expiration: "0",
+                                nonce: "0",
+                                feeRateBps: "0",
+                                signatureType: 1,
+                                signature: signedOrder.signature,
+                            },
+                            owner: owner,
+                            orderType: OrderType.FOK,
+                        });
+                    });
+
+                    it("FOK SELL POLY_GNOSIS_SAFE", async () => {
+                        const userMarketOrder: UserMarketOrder = {
+                            side: Side.SELL,
+                            tokenID: token,
+                            price: 0.0005,
+                            amount: 100,
+                        };
+                        const signedOrder = await createMarketOrder(
+                            wallet,
+                            chainId,
+                            SignatureType.POLY_GNOSIS_SAFE,
+                            address,
+                            userMarketOrder,
+                            { tickSize: "0.0001", negRisk: true },
+                        );
+                        expect(signedOrder).not.null;
+                        expect(signedOrder).not.undefined;
+
+                        const jsonFOKOrder = orderToJson(signedOrder, owner, OrderType.FOK);
+                        expect(jsonFOKOrder).not.null;
+                        expect(jsonFOKOrder).not.undefined;
+
+                        expect(jsonFOKOrder).deep.equal({
+                            order: {
+                                salt: parseInt(signedOrder.salt),
+                                maker: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+                                signer: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+                                taker: "0x0000000000000000000000000000000000000000",
+                                tokenId: token,
+                                makerAmount: "100000000",
+                                takerAmount: "50000",
+                                side: "SELL",
                                 expiration: "0",
                                 nonce: "0",
                                 feeRateBps: "0",

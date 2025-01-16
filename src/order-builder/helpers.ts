@@ -19,11 +19,7 @@ import {
     OrderSummary,
 } from "../types";
 import { decimalPlaces, roundDown, roundNormal, roundUp } from "../utilities";
-import {
-    COLLATERAL_TOKEN_DECIMALS,
-    CONDITIONAL_TOKEN_DECIMALS,
-    getContractConfig,
-} from "../config";
+import { COLLATERAL_TOKEN_DECIMALS, getContractConfig } from "../config";
 
 export const ROUNDING_CONFIG: Record<TickSize, RoundConfig> = {
     "0.1": {
@@ -129,7 +125,7 @@ export const buildOrderCreationArgs = async (
     );
 
     const makerAmount = parseUnits(rawMakerAmt.toString(), COLLATERAL_TOKEN_DECIMALS).toString();
-    const takerAmount = parseUnits(rawTakerAmt.toString(), CONDITIONAL_TOKEN_DECIMALS).toString();
+    const takerAmount = parseUnits(rawTakerAmt.toString(), COLLATERAL_TOKEN_DECIMALS).toString();
 
     let taker;
     if (typeof userOrder.taker !== "undefined" && userOrder.taker) {
@@ -196,47 +192,66 @@ export const createOrder = async (
     return buildOrder(eoaSigner, exchangeContract, chainId, orderData);
 };
 
-export const getMarketBuyOrderRawAmounts = (
+export const getMarketOrderRawAmounts = (
+    side: Side,
     amount: number,
     price: number,
     roundConfig: RoundConfig,
-): { rawMakerAmt: number; rawTakerAmt: number } => {
+): { side: UtilsSide; rawMakerAmt: number; rawTakerAmt: number } => {
     // force 2 decimals places
-    const rawMakerAmt = roundDown(amount, roundConfig.size);
     const rawPrice = roundDown(price, roundConfig.price);
 
-    let rawTakerAmt = rawMakerAmt / rawPrice;
-    if (decimalPlaces(rawTakerAmt) > roundConfig.amount) {
-        rawTakerAmt = roundUp(rawTakerAmt, roundConfig.amount + 4);
+    if (side === Side.BUY) {
+        const rawMakerAmt = roundDown(amount, roundConfig.size);
+        let rawTakerAmt = rawMakerAmt / rawPrice;
         if (decimalPlaces(rawTakerAmt) > roundConfig.amount) {
-            rawTakerAmt = roundDown(rawTakerAmt, roundConfig.amount);
+            rawTakerAmt = roundUp(rawTakerAmt, roundConfig.amount + 4);
+            if (decimalPlaces(rawTakerAmt) > roundConfig.amount) {
+                rawTakerAmt = roundDown(rawTakerAmt, roundConfig.amount);
+            }
         }
-    }
+        return {
+            side: UtilsSide.BUY,
+            rawMakerAmt,
+            rawTakerAmt,
+        };
+    } else {
+        const rawMakerAmt = roundDown(amount, roundConfig.size);
+        let rawTakerAmt = rawMakerAmt * rawPrice;
+        if (decimalPlaces(rawTakerAmt) > roundConfig.amount) {
+            rawTakerAmt = roundUp(rawTakerAmt, roundConfig.amount + 4);
+            if (decimalPlaces(rawTakerAmt) > roundConfig.amount) {
+                rawTakerAmt = roundDown(rawTakerAmt, roundConfig.amount);
+            }
+        }
 
-    return {
-        rawMakerAmt,
-        rawTakerAmt,
-    };
+        return {
+            side: UtilsSide.SELL,
+            rawMakerAmt,
+            rawTakerAmt,
+        };
+    }
 };
 
 /**
  * Translate simple user market order to args used to generate Orders
  */
-export const buildMarketBuyOrderCreationArgs = async (
+export const buildMarketOrderCreationArgs = async (
     signer: string,
     maker: string,
     signatureType: SignatureType,
     userMarketOrder: UserMarketOrder,
     roundConfig: RoundConfig,
 ): Promise<OrderData> => {
-    const { rawMakerAmt, rawTakerAmt } = getMarketBuyOrderRawAmounts(
+    const { side, rawMakerAmt, rawTakerAmt } = getMarketOrderRawAmounts(
+        userMarketOrder.side,
         userMarketOrder.amount,
         userMarketOrder.price || 1,
         roundConfig,
     );
 
     const makerAmount = parseUnits(rawMakerAmt.toString(), COLLATERAL_TOKEN_DECIMALS).toString();
-    const takerAmount = parseUnits(rawTakerAmt.toString(), CONDITIONAL_TOKEN_DECIMALS).toString();
+    const takerAmount = parseUnits(rawTakerAmt.toString(), COLLATERAL_TOKEN_DECIMALS).toString();
 
     let taker;
     if (typeof userMarketOrder.taker !== "undefined" && userMarketOrder.taker) {
@@ -265,7 +280,7 @@ export const buildMarketBuyOrderCreationArgs = async (
         tokenId: userMarketOrder.tokenID,
         makerAmount,
         takerAmount,
-        side: UtilsSide.BUY,
+        side,
         feeRateBps,
         nonce,
         signer,
@@ -274,7 +289,7 @@ export const buildMarketBuyOrderCreationArgs = async (
     } as OrderData;
 };
 
-export const createMarketBuyOrder = async (
+export const createMarketOrder = async (
     eoaSigner: Wallet | JsonRpcSigner,
     chainId: Chain,
     signatureType: SignatureType,
@@ -288,7 +303,7 @@ export const createMarketBuyOrder = async (
     const maker = funderAddress === undefined ? eoaSignerAddress : funderAddress;
     const contractConfig = getContractConfig(chainId);
 
-    const orderData = await buildMarketBuyOrderCreationArgs(
+    const orderData = await buildMarketOrderCreationArgs(
         eoaSignerAddress,
         maker,
         signatureType,
@@ -303,11 +318,35 @@ export const createMarketBuyOrder = async (
     return buildOrder(eoaSigner, exchangeContract, chainId, orderData);
 };
 
-export const calculateMarketPrice = (positions: OrderSummary[], amountToMatch: number) => {
+/**
+ * calculateBuyMarketPrice calculates the market price to buy a $$ amount
+ * @param positions
+ * @param amountToMatch worth to buy
+ * @returns
+ */
+export const calculateBuyMarketPrice = (positions: OrderSummary[], amountToMatch: number) => {
     let sum = 0;
     for (let i = 0; i < positions.length; i++) {
         const p = positions[i];
         sum += parseFloat(p.size) * parseFloat(p.price);
+        if (sum >= amountToMatch) {
+            return parseFloat(p.price);
+        }
+    }
+    throw new Error("no match");
+};
+
+/**
+ * calculateSellMarketPrice calculates the market price to sell a shares
+ * @param positions
+ * @param amountToMatch sells to share
+ * @returns
+ */
+export const calculateSellMarketPrice = (positions: OrderSummary[], amountToMatch: number) => {
+    let sum = 0;
+    for (let i = positions.length - 1; i >= 0; i--) {
+        const p = positions[i];
+        sum += parseFloat(p.size);
         if (sum >= amountToMatch) {
             return parseFloat(p.price);
         }

@@ -5,12 +5,13 @@ import {
     buildOrderCreationArgs,
     buildOrder,
     createOrder,
-    buildMarketBuyOrderCreationArgs,
-    createMarketBuyOrder,
+    buildMarketOrderCreationArgs,
+    createMarketOrder,
     getOrderRawAmounts,
-    getMarketBuyOrderRawAmounts,
+    getMarketOrderRawAmounts,
     ROUNDING_CONFIG,
-    calculateMarketPrice,
+    calculateBuyMarketPrice,
+    calculateSellMarketPrice,
 } from "../../src/order-builder/helpers";
 import { OrderData, SignatureType, Side as UtilsSide } from "@polymarket/order-utils";
 import { Wallet } from "@ethersproject/wallet";
@@ -2355,7 +2356,7 @@ describe("helpers", () => {
         });
     });
 
-    describe("getMarketBuyOrderRawAmounts", async () => {
+    describe("getMarketOrderRawAmounts", async () => {
         describe("market buy", async () => {
             it("0.1", async () => {
                 const delta_price = 0.1;
@@ -2366,7 +2367,8 @@ describe("helpers", () => {
                     let price = 0.1;
                     for (; price <= 1; ) {
                         price = roundNormal(price, 8);
-                        const { rawMakerAmt, rawTakerAmt } = getMarketBuyOrderRawAmounts(
+                        const { rawMakerAmt, rawTakerAmt } = getMarketOrderRawAmounts(
+                            Side.BUY,
                             size,
                             price,
                             ROUNDING_CONFIG["0.1"],
@@ -2393,7 +2395,8 @@ describe("helpers", () => {
                     let price = 0.01;
                     for (; price <= 1; ) {
                         price = roundNormal(price, 8);
-                        const { rawMakerAmt, rawTakerAmt } = getMarketBuyOrderRawAmounts(
+                        const { rawMakerAmt, rawTakerAmt } = getMarketOrderRawAmounts(
+                            Side.BUY,
                             size,
                             price,
                             ROUNDING_CONFIG["0.01"],
@@ -2420,7 +2423,8 @@ describe("helpers", () => {
                     let price = 0.001;
                     for (; price <= 1; ) {
                         price = roundNormal(price, 8);
-                        const { rawMakerAmt, rawTakerAmt } = getMarketBuyOrderRawAmounts(
+                        const { rawMakerAmt, rawTakerAmt } = getMarketOrderRawAmounts(
+                            Side.BUY,
                             size,
                             price,
                             ROUNDING_CONFIG["0.001"],
@@ -2447,7 +2451,8 @@ describe("helpers", () => {
                     let price = 0.0001;
                     for (; price <= 1; ) {
                         price = roundNormal(price, 8);
-                        const { rawMakerAmt, rawTakerAmt } = getMarketBuyOrderRawAmounts(
+                        const { rawMakerAmt, rawTakerAmt } = getMarketOrderRawAmounts(
+                            Side.BUY,
                             size,
                             price,
                             ROUNDING_CONFIG["0.0001"],
@@ -2465,19 +2470,133 @@ describe("helpers", () => {
                 }
             });
         });
+        describe("market sell", async () => {
+            it("0.1", async () => {
+                const delta_price = 0.1;
+                const delta_size = 0.01;
+                let size = 0.01;
+
+                for (; size <= 1000; ) {
+                    let price = 0.1;
+                    for (; price <= 1; ) {
+                        price = roundNormal(price, 8);
+                        const { rawMakerAmt, rawTakerAmt } = getMarketOrderRawAmounts(
+                            Side.SELL,
+                            size,
+                            price,
+                            ROUNDING_CONFIG["0.1"],
+                        );
+
+                        expect(decimalPlaces(rawMakerAmt)).to.lte(2);
+                        expect(decimalPlaces(rawTakerAmt)).to.lte(3);
+                        expect(roundNormal(rawTakerAmt / rawMakerAmt, 2)).to.lte(
+                            roundNormal(price, 2),
+                        );
+
+                        price += delta_price;
+                    }
+                    size += delta_size;
+                }
+            });
+
+            it("0.01", async () => {
+                const delta_price = 0.01;
+                const delta_size = 0.01;
+                let size = 0.01;
+
+                for (; size <= 100; ) {
+                    let price = 0.01;
+                    for (; price <= 1; ) {
+                        price = roundNormal(price, 8);
+                        const { rawMakerAmt, rawTakerAmt } = getMarketOrderRawAmounts(
+                            Side.SELL,
+                            size,
+                            price,
+                            ROUNDING_CONFIG["0.01"],
+                        );
+
+                        expect(decimalPlaces(rawMakerAmt)).to.lte(2);
+                        expect(decimalPlaces(rawTakerAmt)).to.lte(4);
+                        expect(roundNormal(rawTakerAmt / rawMakerAmt, 4)).to.lte(
+                            roundNormal(price, 4),
+                        );
+
+                        price += delta_price;
+                    }
+                    size += delta_size;
+                }
+            });
+
+            it("0.001", async () => {
+                const delta_price = 0.001;
+                const delta_size = 0.01;
+                let size = 0.01;
+
+                for (; size <= 10; ) {
+                    let price = 0.001;
+                    for (; price <= 1; ) {
+                        price = roundNormal(price, 8);
+                        const { rawMakerAmt, rawTakerAmt } = getMarketOrderRawAmounts(
+                            Side.SELL,
+                            size,
+                            price,
+                            ROUNDING_CONFIG["0.001"],
+                        );
+
+                        expect(decimalPlaces(rawMakerAmt)).to.lte(2);
+                        expect(decimalPlaces(rawTakerAmt)).to.lte(5);
+                        expect(roundNormal(rawTakerAmt / rawMakerAmt, 6)).to.lte(
+                            roundNormal(price, 6),
+                        );
+
+                        price += delta_price;
+                    }
+                    size += delta_size;
+                }
+            });
+
+            it("0.0001", async () => {
+                const delta_price = 0.0001;
+                const delta_size = 0.01;
+                let size = 0.01;
+
+                for (; size <= 1; ) {
+                    let price = 0.0001;
+                    for (; price <= 1; ) {
+                        price = roundNormal(price, 8);
+                        const { rawMakerAmt, rawTakerAmt } = getMarketOrderRawAmounts(
+                            Side.SELL,
+                            size,
+                            price,
+                            ROUNDING_CONFIG["0.0001"],
+                        );
+
+                        expect(decimalPlaces(rawMakerAmt)).to.lte(2);
+                        expect(decimalPlaces(rawTakerAmt)).to.lte(6);
+                        expect(roundNormal(rawTakerAmt / rawMakerAmt, 8)).to.lte(
+                            roundNormal(price, 8),
+                        );
+
+                        price += delta_price;
+                    }
+                    size += delta_size;
+                }
+            });
+        });
     });
 
-    describe("buildMarketBuyOrderCreationArgs", () => {
+    describe("buildMarketOrderCreationArgs", () => {
         describe("market buy order", async () => {
             it("0.1", async () => {
                 const order: UserMarketOrder = {
+                    side: Side.BUY,
                     tokenID: "123",
                     price: 0.5,
                     amount: 100,
                     feeRateBps: 111,
                     nonce: 123,
                 };
-                const orderData: OrderData = await buildMarketBuyOrderCreationArgs(
+                const orderData: OrderData = await buildMarketOrderCreationArgs(
                     "0x0000000000000000000000000000000000000001",
                     "0x0000000000000000000000000000000000000002",
                     SignatureType.EOA,
@@ -2501,13 +2620,14 @@ describe("helpers", () => {
 
             it("0.01", async () => {
                 const order: UserMarketOrder = {
+                    side: Side.BUY,
                     tokenID: "123",
                     price: 0.56,
                     amount: 100,
                     feeRateBps: 111,
                     nonce: 123,
                 };
-                const orderData: OrderData = await buildMarketBuyOrderCreationArgs(
+                const orderData: OrderData = await buildMarketOrderCreationArgs(
                     "0x0000000000000000000000000000000000000001",
                     "0x0000000000000000000000000000000000000002",
                     SignatureType.EOA,
@@ -2531,13 +2651,14 @@ describe("helpers", () => {
 
             it("0.001", async () => {
                 const order: UserMarketOrder = {
+                    side: Side.BUY,
                     tokenID: "123",
                     price: 0.056,
                     amount: 100,
                     feeRateBps: 111,
                     nonce: 123,
                 };
-                const orderData: OrderData = await buildMarketBuyOrderCreationArgs(
+                const orderData: OrderData = await buildMarketOrderCreationArgs(
                     "0x0000000000000000000000000000000000000001",
                     "0x0000000000000000000000000000000000000002",
                     SignatureType.EOA,
@@ -2561,13 +2682,14 @@ describe("helpers", () => {
 
             it("0.0001", async () => {
                 const order: UserMarketOrder = {
+                    side: Side.BUY,
                     tokenID: "123",
                     price: 0.0056,
                     amount: 100,
                     feeRateBps: 111,
                     nonce: 123,
                 };
-                const orderData: OrderData = await buildMarketBuyOrderCreationArgs(
+                const orderData: OrderData = await buildMarketOrderCreationArgs(
                     "0x0000000000000000000000000000000000000001",
                     "0x0000000000000000000000000000000000000002",
                     SignatureType.EOA,
@@ -2590,17 +2712,144 @@ describe("helpers", () => {
             });
         });
 
+        describe("market sell order", async () => {
+            it("0.1", async () => {
+                const order: UserMarketOrder = {
+                    side: Side.SELL,
+                    tokenID: "123",
+                    price: 0.5,
+                    amount: 100,
+                    feeRateBps: 111,
+                    nonce: 123,
+                };
+                const orderData: OrderData = await buildMarketOrderCreationArgs(
+                    "0x0000000000000000000000000000000000000001",
+                    "0x0000000000000000000000000000000000000002",
+                    SignatureType.EOA,
+                    order,
+                    ROUNDING_CONFIG["0.1"],
+                );
+                expect(orderData).deep.equal({
+                    maker: "0x0000000000000000000000000000000000000002",
+                    taker: "0x0000000000000000000000000000000000000000",
+                    tokenId: "123",
+                    makerAmount: "100000000",
+                    takerAmount: "50000000",
+                    side: UtilsSide.SELL,
+                    feeRateBps: "111",
+                    nonce: "123",
+                    signer: "0x0000000000000000000000000000000000000001",
+                    expiration: "0",
+                    signatureType: SignatureType.EOA,
+                });
+            });
+
+            it("0.01", async () => {
+                const order: UserMarketOrder = {
+                    side: Side.SELL,
+                    tokenID: "123",
+                    price: 0.56,
+                    amount: 100,
+                    feeRateBps: 111,
+                    nonce: 123,
+                };
+                const orderData: OrderData = await buildMarketOrderCreationArgs(
+                    "0x0000000000000000000000000000000000000001",
+                    "0x0000000000000000000000000000000000000002",
+                    SignatureType.EOA,
+                    order,
+                    ROUNDING_CONFIG["0.01"],
+                );
+                expect(orderData).deep.equal({
+                    maker: "0x0000000000000000000000000000000000000002",
+                    taker: "0x0000000000000000000000000000000000000000",
+                    tokenId: "123",
+                    makerAmount: "100000000",
+                    takerAmount: "56000000",
+                    side: UtilsSide.SELL,
+                    feeRateBps: "111",
+                    nonce: "123",
+                    signer: "0x0000000000000000000000000000000000000001",
+                    expiration: "0",
+                    signatureType: SignatureType.EOA,
+                });
+            });
+
+            it("0.001", async () => {
+                const order: UserMarketOrder = {
+                    side: Side.SELL,
+                    tokenID: "123",
+                    price: 0.056,
+                    amount: 100,
+                    feeRateBps: 111,
+                    nonce: 123,
+                };
+                const orderData: OrderData = await buildMarketOrderCreationArgs(
+                    "0x0000000000000000000000000000000000000001",
+                    "0x0000000000000000000000000000000000000002",
+                    SignatureType.EOA,
+                    order,
+                    ROUNDING_CONFIG["0.001"],
+                );
+                expect(orderData).deep.equal({
+                    maker: "0x0000000000000000000000000000000000000002",
+                    taker: "0x0000000000000000000000000000000000000000",
+                    tokenId: "123",
+                    makerAmount: "100000000",
+                    takerAmount: "5600000",
+                    side: UtilsSide.SELL,
+                    feeRateBps: "111",
+                    nonce: "123",
+                    signer: "0x0000000000000000000000000000000000000001",
+                    expiration: "0",
+                    signatureType: SignatureType.EOA,
+                });
+            });
+
+            it("0.0001", async () => {
+                const order: UserMarketOrder = {
+                    side: Side.SELL,
+                    tokenID: "123",
+                    price: 0.0056,
+                    amount: 100,
+                    feeRateBps: 111,
+                    nonce: 123,
+                };
+                const orderData: OrderData = await buildMarketOrderCreationArgs(
+                    "0x0000000000000000000000000000000000000001",
+                    "0x0000000000000000000000000000000000000002",
+                    SignatureType.EOA,
+                    order,
+                    ROUNDING_CONFIG["0.0001"],
+                );
+                expect(orderData).deep.equal({
+                    maker: "0x0000000000000000000000000000000000000002",
+                    taker: "0x0000000000000000000000000000000000000000",
+                    tokenId: "123",
+                    makerAmount: "100000000",
+                    takerAmount: "560000",
+                    side: UtilsSide.SELL,
+                    feeRateBps: "111",
+                    nonce: "123",
+                    signer: "0x0000000000000000000000000000000000000001",
+                    expiration: "0",
+                    signatureType: SignatureType.EOA,
+                });
+            });
+        });
+
         describe("real cases", async () => {
             describe("0.1", async () => {
                 it("market buy order with a different price", async () => {
                     const order: UserMarketOrder = {
+                        side: Side.BUY,
                         tokenID: "123",
                         price: 0.5,
                         amount: 100,
                         feeRateBps: 111,
                         nonce: 123,
                     };
-                    const orderData: OrderData = await buildMarketBuyOrderCreationArgs(
+                    const orderData: OrderData = await buildMarketOrderCreationArgs(
                         "0x0000000000000000000000000000000000000001",
                         "0x0000000000000000000000000000000000000002",
                         SignatureType.EOA,
@@ -2624,13 +2873,14 @@ describe("helpers", () => {
 
                 it("correctly rounds price amounts for validity buy", async () => {
                     const order: UserMarketOrder = {
+                        side: Side.BUY,
                         tokenID: "123",
                         price: 0.5,
                         amount: 21.04,
                         feeRateBps: 100,
                         nonce: 0,
                     };
-                    const orderData: OrderData = await buildMarketBuyOrderCreationArgs(
+                    const orderData: OrderData = await buildMarketOrderCreationArgs(
                         "",
                         "",
                         SignatureType.EOA,
@@ -2650,11 +2900,12 @@ describe("helpers", () => {
 
                 it("correctly rounds price amounts for validity buy - 2", async () => {
                     const order: UserMarketOrder = {
+                        side: Side.BUY,
                         tokenID: "123",
                         price: 0.7,
                         amount: 119,
                     };
-                    const orderData: OrderData = await buildMarketBuyOrderCreationArgs(
+                    const orderData: OrderData = await buildMarketOrderCreationArgs(
                         "",
                         "",
                         SignatureType.EOA,
@@ -2677,11 +2928,12 @@ describe("helpers", () => {
 
                 it("correctly rounds price amounts for validity buy - 3", async () => {
                     const order: UserMarketOrder = {
+                        side: Side.BUY,
                         tokenID: "123",
                         price: 0.8,
                         amount: 82.8,
                     };
-                    const orderData: OrderData = await buildMarketBuyOrderCreationArgs(
+                    const orderData: OrderData = await buildMarketOrderCreationArgs(
                         "",
                         "",
                         SignatureType.EOA,
@@ -2697,11 +2949,12 @@ describe("helpers", () => {
 
                 it("correctly rounds price amounts for validity buy - 4", async () => {
                     const order: UserMarketOrder = {
+                        side: Side.BUY,
                         tokenID: "123",
                         price: 0.7,
                         amount: 9.9996,
                     };
-                    const orderData: OrderData = await buildMarketBuyOrderCreationArgs(
+                    const orderData: OrderData = await buildMarketOrderCreationArgs(
                         "",
                         "",
                         SignatureType.EOA,
@@ -2717,11 +2970,12 @@ describe("helpers", () => {
 
                 it("correctly rounds price amounts for validity buy - 5", async () => {
                     const order: UserMarketOrder = {
+                        side: Side.BUY,
                         tokenID: "123",
                         price: 0.3,
                         amount: 949.9971,
                     };
-                    const orderData: OrderData = await buildMarketBuyOrderCreationArgs(
+                    const orderData: OrderData = await buildMarketOrderCreationArgs(
                         "",
                         "",
                         SignatureType.EOA,
@@ -2737,11 +2991,12 @@ describe("helpers", () => {
 
                 it("correctly rounds price amounts for validity buy - 6", async () => {
                     const order: UserMarketOrder = {
+                        side: Side.BUY,
                         tokenID: "123",
                         price: 0.5,
                         amount: 1,
                     };
-                    const orderData: OrderData = await buildMarketBuyOrderCreationArgs(
+                    const orderData: OrderData = await buildMarketOrderCreationArgs(
                         "",
                         "",
                         SignatureType.EOA,
@@ -2757,11 +3012,12 @@ describe("helpers", () => {
 
                 it("correctly rounds price amounts for validity buy - 7", async () => {
                     const order: UserMarketOrder = {
+                        side: Side.BUY,
                         tokenID: "123",
                         price: 0.5,
                         amount: 1,
                     };
-                    const orderData: OrderData = await buildMarketBuyOrderCreationArgs(
+                    const orderData: OrderData = await buildMarketOrderCreationArgs(
                         "",
                         "",
                         SignatureType.EOA,
@@ -2779,13 +3035,14 @@ describe("helpers", () => {
             describe("0.01", async () => {
                 it("market buy order with a different price", async () => {
                     const order: UserMarketOrder = {
+                        side: Side.BUY,
                         tokenID: "123",
                         price: 0.05,
                         amount: 100,
                         feeRateBps: 111,
                         nonce: 123,
                     };
-                    const orderData: OrderData = await buildMarketBuyOrderCreationArgs(
+                    const orderData: OrderData = await buildMarketOrderCreationArgs(
                         "0x0000000000000000000000000000000000000001",
                         "0x0000000000000000000000000000000000000002",
                         SignatureType.EOA,
@@ -2809,13 +3066,14 @@ describe("helpers", () => {
 
                 it("correctly rounds price amounts for validity buy", async () => {
                     const order: UserMarketOrder = {
+                        side: Side.BUY,
                         tokenID: "123",
                         price: 0.56,
                         amount: 21.04,
                         feeRateBps: 100,
                         nonce: 0,
                     };
-                    const orderData: OrderData = await buildMarketBuyOrderCreationArgs(
+                    const orderData: OrderData = await buildMarketOrderCreationArgs(
                         "",
                         "",
                         SignatureType.EOA,
@@ -2835,11 +3093,12 @@ describe("helpers", () => {
 
                 it("correctly rounds price amounts for validity buy - 2", async () => {
                     const order: UserMarketOrder = {
+                        side: Side.BUY,
                         tokenID: "123",
                         price: 0.07,
                         amount: 119,
                     };
-                    const orderData: OrderData = await buildMarketBuyOrderCreationArgs(
+                    const orderData: OrderData = await buildMarketOrderCreationArgs(
                         "",
                         "",
                         SignatureType.EOA,
@@ -2862,11 +3121,12 @@ describe("helpers", () => {
 
                 it("correctly rounds price amounts for validity buy - 3", async () => {
                     const order: UserMarketOrder = {
+                        side: Side.BUY,
                         tokenID: "123",
                         price: 0.82,
                         amount: 82.82,
                     };
-                    const orderData: OrderData = await buildMarketBuyOrderCreationArgs(
+                    const orderData: OrderData = await buildMarketOrderCreationArgs(
                         "",
                         "",
                         SignatureType.EOA,
@@ -2882,11 +3142,12 @@ describe("helpers", () => {
 
                 it("correctly rounds price amounts for validity buy - 4", async () => {
                     const order: UserMarketOrder = {
+                        side: Side.BUY,
                         tokenID: "123",
                         price: 0.78,
                         amount: 9.9996,
                     };
-                    const orderData: OrderData = await buildMarketBuyOrderCreationArgs(
+                    const orderData: OrderData = await buildMarketOrderCreationArgs(
                         "",
                         "",
                         SignatureType.EOA,
@@ -2902,11 +3163,12 @@ describe("helpers", () => {
 
                 it("correctly rounds price amounts for validity buy - 5", async () => {
                     const order: UserMarketOrder = {
+                        side: Side.BUY,
                         tokenID: "123",
                         price: 0.39,
                         amount: 949.9971,
                     };
-                    const orderData: OrderData = await buildMarketBuyOrderCreationArgs(
+                    const orderData: OrderData = await buildMarketOrderCreationArgs(
                         "",
                         "",
                         SignatureType.EOA,
@@ -2922,11 +3184,12 @@ describe("helpers", () => {
 
                 it("correctly rounds price amounts for validity buy - 6", async () => {
                     const order: UserMarketOrder = {
+                        side: Side.BUY,
                         tokenID: "123",
                         price: 0.56,
                         amount: 1,
                     };
-                    const orderData: OrderData = await buildMarketBuyOrderCreationArgs(
+                    const orderData: OrderData = await buildMarketOrderCreationArgs(
                         "",
                         "",
                         SignatureType.EOA,
@@ -2942,11 +3205,12 @@ describe("helpers", () => {
 
                 it("correctly rounds price amounts for validity buy - 7", async () => {
                     const order: UserMarketOrder = {
+                        side: Side.BUY,
                         tokenID: "123",
                         price: 0.57,
                         amount: 1,
                     };
-                    const orderData: OrderData = await buildMarketBuyOrderCreationArgs(
+                    const orderData: OrderData = await buildMarketOrderCreationArgs(
                         "",
                         "",
                         SignatureType.EOA,
@@ -2964,13 +3228,14 @@ describe("helpers", () => {
             describe("0.001", async () => {
                 it("market buy order with a different price", async () => {
                     const order: UserMarketOrder = {
+                        side: Side.BUY,
                         tokenID: "123",
                         price: 0.005,
                         amount: 100,
                         feeRateBps: 111,
                         nonce: 123,
                     };
-                    const orderData: OrderData = await buildMarketBuyOrderCreationArgs(
+                    const orderData: OrderData = await buildMarketOrderCreationArgs(
                         "0x0000000000000000000000000000000000000001",
                         "0x0000000000000000000000000000000000000002",
                         SignatureType.EOA,
@@ -2994,13 +3259,14 @@ describe("helpers", () => {
 
                 it("correctly rounds price amounts for validity buy", async () => {
                     const order: UserMarketOrder = {
+                        side: Side.BUY,
                         tokenID: "123",
                         price: 0.056,
                         amount: 21.04,
                         feeRateBps: 100,
                         nonce: 0,
                     };
-                    const orderData: OrderData = await buildMarketBuyOrderCreationArgs(
+                    const orderData: OrderData = await buildMarketOrderCreationArgs(
                         "",
                         "",
                         SignatureType.EOA,
@@ -3020,11 +3286,12 @@ describe("helpers", () => {
 
                 it("correctly rounds price amounts for validity buy - 2", async () => {
                     const order: UserMarketOrder = {
+                        side: Side.BUY,
                         tokenID: "123",
                         price: 0.007,
                         amount: 119,
                     };
-                    const orderData: OrderData = await buildMarketBuyOrderCreationArgs(
+                    const orderData: OrderData = await buildMarketOrderCreationArgs(
                         "",
                         "",
                         SignatureType.EOA,
@@ -3047,11 +3314,12 @@ describe("helpers", () => {
 
                 it("correctly rounds price amounts for validity buy - 3", async () => {
                     const order: UserMarketOrder = {
+                        side: Side.BUY,
                         tokenID: "123",
                         price: 0.082,
                         amount: 82.82,
                     };
-                    const orderData: OrderData = await buildMarketBuyOrderCreationArgs(
+                    const orderData: OrderData = await buildMarketOrderCreationArgs(
                         "",
                         "",
                         SignatureType.EOA,
@@ -3067,11 +3335,12 @@ describe("helpers", () => {
 
                 it("correctly rounds price amounts for validity buy - 4", async () => {
                     const order: UserMarketOrder = {
+                        side: Side.BUY,
                         tokenID: "123",
                         price: 0.078,
                         amount: 9.9996,
                     };
-                    const orderData: OrderData = await buildMarketBuyOrderCreationArgs(
+                    const orderData: OrderData = await buildMarketOrderCreationArgs(
                         "",
                         "",
                         SignatureType.EOA,
@@ -3087,11 +3356,12 @@ describe("helpers", () => {
 
                 it("correctly rounds price amounts for validity buy - 5", async () => {
                     const order: UserMarketOrder = {
+                        side: Side.BUY,
                         tokenID: "123",
                         price: 0.039,
                         amount: 949.9971,
                     };
-                    const orderData: OrderData = await buildMarketBuyOrderCreationArgs(
+                    const orderData: OrderData = await buildMarketOrderCreationArgs(
                         "",
                         "",
                         SignatureType.EOA,
@@ -3107,11 +3377,12 @@ describe("helpers", () => {
 
                 it("correctly rounds price amounts for validity buy - 6", async () => {
                     const order: UserMarketOrder = {
+                        side: Side.BUY,
                         tokenID: "123",
                         price: 0.056,
                         amount: 1,
                     };
-                    const orderData: OrderData = await buildMarketBuyOrderCreationArgs(
+                    const orderData: OrderData = await buildMarketOrderCreationArgs(
                         "",
                         "",
                         SignatureType.EOA,
@@ -3127,11 +3398,12 @@ describe("helpers", () => {
 
                 it("correctly rounds price amounts for validity buy - 7", async () => {
                     const order: UserMarketOrder = {
+                        side: Side.BUY,
                         tokenID: "123",
                         price: 0.057,
                         amount: 1,
                     };
-                    const orderData: OrderData = await buildMarketBuyOrderCreationArgs(
+                    const orderData: OrderData = await buildMarketOrderCreationArgs(
                         "",
                         "",
                         SignatureType.EOA,
@@ -3149,13 +3421,14 @@ describe("helpers", () => {
             describe("0.0001", async () => {
                 it("market buy order with a different price", async () => {
                     const order: UserMarketOrder = {
+                        side: Side.BUY,
                         tokenID: "123",
                         price: 0.0005,
                         amount: 100,
                         feeRateBps: 111,
                         nonce: 123,
                     };
-                    const orderData: OrderData = await buildMarketBuyOrderCreationArgs(
+                    const orderData: OrderData = await buildMarketOrderCreationArgs(
                         "0x0000000000000000000000000000000000000001",
                         "0x0000000000000000000000000000000000000002",
                         SignatureType.EOA,
@@ -3179,13 +3452,14 @@ describe("helpers", () => {
 
                 it("correctly rounds price amounts for validity buy", async () => {
                     const order: UserMarketOrder = {
+                        side: Side.BUY,
                         tokenID: "123",
                         price: 0.0056,
                         amount: 21.04,
                         feeRateBps: 100,
                         nonce: 0,
                     };
-                    const orderData: OrderData = await buildMarketBuyOrderCreationArgs(
+                    const orderData: OrderData = await buildMarketOrderCreationArgs(
                         "",
                         "",
                         SignatureType.EOA,
@@ -3205,11 +3479,12 @@ describe("helpers", () => {
 
                 it("correctly rounds price amounts for validity buy - 2", async () => {
                     const order: UserMarketOrder = {
+                        side: Side.BUY,
                         tokenID: "123",
                         price: 0.0007,
                         amount: 119,
                     };
-                    const orderData: OrderData = await buildMarketBuyOrderCreationArgs(
+                    const orderData: OrderData = await buildMarketOrderCreationArgs(
                         "",
                         "",
                         SignatureType.EOA,
@@ -3232,11 +3507,12 @@ describe("helpers", () => {
 
                 it("correctly rounds price amounts for validity buy - 3", async () => {
                     const order: UserMarketOrder = {
+                        side: Side.BUY,
                         tokenID: "123",
                         price: 0.0082,
                         amount: 82.82,
                     };
-                    const orderData: OrderData = await buildMarketBuyOrderCreationArgs(
+                    const orderData: OrderData = await buildMarketOrderCreationArgs(
                         "",
                         "",
                         SignatureType.EOA,
@@ -3252,11 +3528,12 @@ describe("helpers", () => {
 
                 it("correctly rounds price amounts for validity buy - 4", async () => {
                     const order: UserMarketOrder = {
+                        side: Side.BUY,
                         tokenID: "123",
                         price: 0.0078,
                         amount: 9.9996,
                     };
-                    const orderData: OrderData = await buildMarketBuyOrderCreationArgs(
+                    const orderData: OrderData = await buildMarketOrderCreationArgs(
                         "",
                         "",
                         SignatureType.EOA,
@@ -3272,11 +3549,12 @@ describe("helpers", () => {
 
                 it("correctly rounds price amounts for validity buy - 5", async () => {
                     const order: UserMarketOrder = {
+                        side: Side.BUY,
                         tokenID: "123",
                         price: 0.0039,
                         amount: 949.9971,
                     };
-                    const orderData: OrderData = await buildMarketBuyOrderCreationArgs(
+                    const orderData: OrderData = await buildMarketOrderCreationArgs(
                         "",
                         "",
                         SignatureType.EOA,
@@ -3292,11 +3570,12 @@ describe("helpers", () => {
 
                 it("correctly rounds price amounts for validity buy - 6", async () => {
                     const order: UserMarketOrder = {
+                        side: Side.BUY,
                         tokenID: "123",
                         price: 0.0056,
                         amount: 1,
                     };
-                    const orderData: OrderData = await buildMarketBuyOrderCreationArgs(
+                    const orderData: OrderData = await buildMarketOrderCreationArgs(
                         "",
                         "",
                         SignatureType.EOA,
@@ -3312,11 +3591,12 @@ describe("helpers", () => {
 
                 it("correctly rounds price amounts for validity buy - 7", async () => {
                     const order: UserMarketOrder = {
+                        side: Side.BUY,
                         tokenID: "123",
                         price: 0.0057,
                         amount: 1,
                     };
-                    const orderData: OrderData = await buildMarketBuyOrderCreationArgs(
+                    const orderData: OrderData = await buildMarketOrderCreationArgs(
                         "",
                         "",
                         SignatureType.EOA,
@@ -3333,11 +3613,12 @@ describe("helpers", () => {
         });
     });
 
-    describe("createMarketBuyOrder", () => {
+    describe("createMarketOrder", () => {
         describe("CTF Exchange", () => {
             describe("buy order", async () => {
                 it("0.1", async () => {
                     const order: UserMarketOrder = {
+                        side: Side.BUY,
                         tokenID: "123",
                         price: 0.5,
                         amount: 100,
@@ -3345,7 +3626,7 @@ describe("helpers", () => {
                         nonce: 123,
                     };
 
-                    const signedOrder = await createMarketBuyOrder(
+                    const signedOrder = await createMarketOrder(
                         wallet,
                         Chain.AMOY,
                         SignatureType.EOA,
@@ -3373,6 +3654,7 @@ describe("helpers", () => {
 
                 it("0.01", async () => {
                     const order: UserMarketOrder = {
+                        side: Side.BUY,
                         tokenID: "123",
                         price: 0.56,
                         amount: 100,
@@ -3380,7 +3662,7 @@ describe("helpers", () => {
                         nonce: 123,
                     };
 
-                    const signedOrder = await createMarketBuyOrder(
+                    const signedOrder = await createMarketOrder(
                         wallet,
                         Chain.AMOY,
                         SignatureType.EOA,
@@ -3408,6 +3690,7 @@ describe("helpers", () => {
 
                 it("0.001", async () => {
                     const order: UserMarketOrder = {
+                        side: Side.BUY,
                         tokenID: "123",
                         price: 0.056,
                         amount: 100,
@@ -3415,7 +3698,7 @@ describe("helpers", () => {
                         nonce: 123,
                     };
 
-                    const signedOrder = await createMarketBuyOrder(
+                    const signedOrder = await createMarketOrder(
                         wallet,
                         Chain.AMOY,
                         SignatureType.EOA,
@@ -3443,6 +3726,7 @@ describe("helpers", () => {
 
                 it("0.0001", async () => {
                     const order: UserMarketOrder = {
+                        side: Side.BUY,
                         tokenID: "123",
                         price: 0.0056,
                         amount: 100,
@@ -3450,7 +3734,7 @@ describe("helpers", () => {
                         nonce: 123,
                     };
 
-                    const signedOrder = await createMarketBuyOrder(
+                    const signedOrder = await createMarketOrder(
                         wallet,
                         Chain.AMOY,
                         SignatureType.EOA,
@@ -3476,12 +3760,11 @@ describe("helpers", () => {
                     expect(signedOrder.signature).not.empty;
                 });
             });
-        });
 
-        describe("Neg Risk CTF Exchange", () => {
-            describe("buy order", async () => {
+            describe("sell order", async () => {
                 it("0.1", async () => {
                     const order: UserMarketOrder = {
+                        side: Side.SELL,
                         tokenID: "123",
                         price: 0.5,
                         amount: 100,
@@ -3489,7 +3772,155 @@ describe("helpers", () => {
                         nonce: 123,
                     };
 
-                    const signedOrder = await createMarketBuyOrder(
+                    const signedOrder = await createMarketOrder(
+                        wallet,
+                        Chain.AMOY,
+                        SignatureType.EOA,
+                        "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+                        order,
+                        { tickSize: "0.1", negRisk: false },
+                    );
+                    expect(signedOrder).not.null;
+                    expect(signedOrder).not.undefined;
+
+                    expect(signedOrder.salt).not.empty;
+                    expect(signedOrder.maker).equal("0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266");
+                    expect(signedOrder.signer).equal("0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266");
+                    expect(signedOrder.taker).equal("0x0000000000000000000000000000000000000000");
+                    expect(signedOrder.tokenId).equal("123");
+                    expect(signedOrder.makerAmount).equal("100000000");
+                    expect(signedOrder.takerAmount).equal("50000000");
+                    expect(signedOrder.side).equal(UtilsSide.SELL);
+                    expect(signedOrder.expiration).equal("0");
+                    expect(signedOrder.nonce).equal("123");
+                    expect(signedOrder.feeRateBps).equal("111");
+                    expect(signedOrder.signatureType).equal(SignatureType.EOA);
+                    expect(signedOrder.signature).not.empty;
+                });
+
+                it("0.01", async () => {
+                    const order: UserMarketOrder = {
+                        side: Side.SELL,
+                        tokenID: "123",
+                        price: 0.56,
+                        amount: 100,
+                        feeRateBps: 111,
+                        nonce: 123,
+                    };
+
+                    const signedOrder = await createMarketOrder(
+                        wallet,
+                        Chain.AMOY,
+                        SignatureType.EOA,
+                        "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+                        order,
+                        { tickSize: "0.01", negRisk: false },
+                    );
+                    expect(signedOrder).not.null;
+                    expect(signedOrder).not.undefined;
+
+                    expect(signedOrder.salt).not.empty;
+                    expect(signedOrder.maker).equal("0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266");
+                    expect(signedOrder.signer).equal("0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266");
+                    expect(signedOrder.taker).equal("0x0000000000000000000000000000000000000000");
+                    expect(signedOrder.tokenId).equal("123");
+                    expect(signedOrder.makerAmount).equal("100000000");
+                    expect(signedOrder.takerAmount).equal("56000000");
+                    expect(signedOrder.side).equal(UtilsSide.SELL);
+                    expect(signedOrder.expiration).equal("0");
+                    expect(signedOrder.nonce).equal("123");
+                    expect(signedOrder.feeRateBps).equal("111");
+                    expect(signedOrder.signatureType).equal(SignatureType.EOA);
+                    expect(signedOrder.signature).not.empty;
+                });
+
+                it("0.001", async () => {
+                    const order: UserMarketOrder = {
+                        side: Side.SELL,
+                        tokenID: "123",
+                        price: 0.056,
+                        amount: 100,
+                        feeRateBps: 111,
+                        nonce: 123,
+                    };
+
+                    const signedOrder = await createMarketOrder(
+                        wallet,
+                        Chain.AMOY,
+                        SignatureType.EOA,
+                        "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+                        order,
+                        { tickSize: "0.001", negRisk: false },
+                    );
+                    expect(signedOrder).not.null;
+                    expect(signedOrder).not.undefined;
+
+                    expect(signedOrder.salt).not.empty;
+                    expect(signedOrder.maker).equal("0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266");
+                    expect(signedOrder.signer).equal("0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266");
+                    expect(signedOrder.taker).equal("0x0000000000000000000000000000000000000000");
+                    expect(signedOrder.tokenId).equal("123");
+                    expect(signedOrder.makerAmount).equal("100000000");
+                    expect(signedOrder.takerAmount).equal("5600000");
+                    expect(signedOrder.side).equal(UtilsSide.SELL);
+                    expect(signedOrder.expiration).equal("0");
+                    expect(signedOrder.nonce).equal("123");
+                    expect(signedOrder.feeRateBps).equal("111");
+                    expect(signedOrder.signatureType).equal(SignatureType.EOA);
+                    expect(signedOrder.signature).not.empty;
+                });
+
+                it("0.0001", async () => {
+                    const order: UserMarketOrder = {
+                        side: Side.SELL,
+                        tokenID: "123",
+                        price: 0.0056,
+                        amount: 100,
+                        feeRateBps: 111,
+                        nonce: 123,
+                    };
+
+                    const signedOrder = await createMarketOrder(
+                        wallet,
+                        Chain.AMOY,
+                        SignatureType.EOA,
+                        "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+                        order,
+                        { tickSize: "0.0001", negRisk: false },
+                    );
+                    expect(signedOrder).not.null;
+                    expect(signedOrder).not.undefined;
+
+                    expect(signedOrder.salt).not.empty;
+                    expect(signedOrder.maker).equal("0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266");
+                    expect(signedOrder.signer).equal("0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266");
+                    expect(signedOrder.taker).equal("0x0000000000000000000000000000000000000000");
+                    expect(signedOrder.tokenId).equal("123");
+                    expect(signedOrder.makerAmount).equal("100000000");
+                    expect(signedOrder.takerAmount).equal("560000");
+                    expect(signedOrder.side).equal(UtilsSide.SELL);
+                    expect(signedOrder.expiration).equal("0");
+                    expect(signedOrder.nonce).equal("123");
+                    expect(signedOrder.feeRateBps).equal("111");
+                    expect(signedOrder.signatureType).equal(SignatureType.EOA);
+                    expect(signedOrder.signature).not.empty;
+                });
+            });
+        });
+
+        describe("Neg Risk CTF Exchange", () => {
+            describe("buy order", async () => {
+                it("0.1", async () => {
+                    const order: UserMarketOrder = {
+                        side: Side.BUY,
+                        tokenID: "123",
+                        price: 0.5,
+                        amount: 100,
+                        feeRateBps: 111,
+                        nonce: 123,
+                    };
+
+                    const signedOrder = await createMarketOrder(
                         wallet,
                         Chain.AMOY,
                         SignatureType.EOA,
@@ -3517,6 +3948,7 @@ describe("helpers", () => {
 
                 it("0.01", async () => {
                     const order: UserMarketOrder = {
+                        side: Side.BUY,
                         tokenID: "123",
                         price: 0.56,
                         amount: 100,
@@ -3524,7 +3956,7 @@ describe("helpers", () => {
                         nonce: 123,
                     };
 
-                    const signedOrder = await createMarketBuyOrder(
+                    const signedOrder = await createMarketOrder(
                         wallet,
                         Chain.AMOY,
                         SignatureType.EOA,
@@ -3552,6 +3984,7 @@ describe("helpers", () => {
 
                 it("0.001", async () => {
                     const order: UserMarketOrder = {
+                        side: Side.BUY,
                         tokenID: "123",
                         price: 0.056,
                         amount: 100,
@@ -3559,7 +3992,7 @@ describe("helpers", () => {
                         nonce: 123,
                     };
 
-                    const signedOrder = await createMarketBuyOrder(
+                    const signedOrder = await createMarketOrder(
                         wallet,
                         Chain.AMOY,
                         SignatureType.EOA,
@@ -3587,6 +4020,7 @@ describe("helpers", () => {
 
                 it("0.0001", async () => {
                     const order: UserMarketOrder = {
+                        side: Side.BUY,
                         tokenID: "123",
                         price: 0.0056,
                         amount: 100,
@@ -3594,7 +4028,7 @@ describe("helpers", () => {
                         nonce: 123,
                     };
 
-                    const signedOrder = await createMarketBuyOrder(
+                    const signedOrder = await createMarketOrder(
                         wallet,
                         Chain.AMOY,
                         SignatureType.EOA,
@@ -3620,98 +4054,235 @@ describe("helpers", () => {
                     expect(signedOrder.signature).not.empty;
                 });
             });
+
+            describe("sell order", async () => {
+                it("0.1", async () => {
+                    const order: UserMarketOrder = {
+                        side: Side.SELL,
+                        tokenID: "123",
+                        price: 0.5,
+                        amount: 100,
+                        feeRateBps: 111,
+                        nonce: 123,
+                    };
+
+                    const signedOrder = await createMarketOrder(
+                        wallet,
+                        Chain.AMOY,
+                        SignatureType.EOA,
+                        "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+                        order,
+                        { tickSize: "0.1", negRisk: true },
+                    );
+                    expect(signedOrder).not.null;
+                    expect(signedOrder).not.undefined;
+
+                    expect(signedOrder.salt).not.empty;
+                    expect(signedOrder.maker).equal("0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266");
+                    expect(signedOrder.signer).equal("0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266");
+                    expect(signedOrder.taker).equal("0x0000000000000000000000000000000000000000");
+                    expect(signedOrder.tokenId).equal("123");
+                    expect(signedOrder.makerAmount).equal("100000000");
+                    expect(signedOrder.takerAmount).equal("50000000");
+                    expect(signedOrder.side).equal(UtilsSide.SELL);
+                    expect(signedOrder.expiration).equal("0");
+                    expect(signedOrder.nonce).equal("123");
+                    expect(signedOrder.feeRateBps).equal("111");
+                    expect(signedOrder.signatureType).equal(SignatureType.EOA);
+                    expect(signedOrder.signature).not.empty;
+                });
+
+                it("0.01", async () => {
+                    const order: UserMarketOrder = {
+                        side: Side.SELL,
+                        tokenID: "123",
+                        price: 0.56,
+                        amount: 100,
+                        feeRateBps: 111,
+                        nonce: 123,
+                    };
+
+                    const signedOrder = await createMarketOrder(
+                        wallet,
+                        Chain.AMOY,
+                        SignatureType.EOA,
+                        "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+                        order,
+                        { tickSize: "0.01", negRisk: true },
+                    );
+                    expect(signedOrder).not.null;
+                    expect(signedOrder).not.undefined;
+
+                    expect(signedOrder.salt).not.empty;
+                    expect(signedOrder.maker).equal("0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266");
+                    expect(signedOrder.signer).equal("0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266");
+                    expect(signedOrder.taker).equal("0x0000000000000000000000000000000000000000");
+                    expect(signedOrder.tokenId).equal("123");
+                    expect(signedOrder.makerAmount).equal("100000000");
+                    expect(signedOrder.takerAmount).equal("56000000");
+                    expect(signedOrder.side).equal(UtilsSide.SELL);
+                    expect(signedOrder.expiration).equal("0");
+                    expect(signedOrder.nonce).equal("123");
+                    expect(signedOrder.feeRateBps).equal("111");
+                    expect(signedOrder.signatureType).equal(SignatureType.EOA);
+                    expect(signedOrder.signature).not.empty;
+                });
+
+                it("0.001", async () => {
+                    const order: UserMarketOrder = {
+                        side: Side.SELL,
+                        tokenID: "123",
+                        price: 0.056,
+                        amount: 100,
+                        feeRateBps: 111,
+                        nonce: 123,
+                    };
+
+                    const signedOrder = await createMarketOrder(
+                        wallet,
+                        Chain.AMOY,
+                        SignatureType.EOA,
+                        "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+                        order,
+                        { tickSize: "0.001", negRisk: true },
+                    );
+                    expect(signedOrder).not.null;
+                    expect(signedOrder).not.undefined;
+
+                    expect(signedOrder.salt).not.empty;
+                    expect(signedOrder.maker).equal("0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266");
+                    expect(signedOrder.signer).equal("0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266");
+                    expect(signedOrder.taker).equal("0x0000000000000000000000000000000000000000");
+                    expect(signedOrder.tokenId).equal("123");
+                    expect(signedOrder.makerAmount).equal("100000000");
+                    expect(signedOrder.takerAmount).equal("5600000");
+                    expect(signedOrder.side).equal(UtilsSide.SELL);
+                    expect(signedOrder.expiration).equal("0");
+                    expect(signedOrder.nonce).equal("123");
+                    expect(signedOrder.feeRateBps).equal("111");
+                    expect(signedOrder.signatureType).equal(SignatureType.EOA);
+                    expect(signedOrder.signature).not.empty;
+                });
+
+                it("0.0001", async () => {
+                    const order: UserMarketOrder = {
+                        side: Side.SELL,
+                        tokenID: "123",
+                        price: 0.0056,
+                        amount: 100,
+                        feeRateBps: 111,
+                        nonce: 123,
+                    };
+
+                    const signedOrder = await createMarketOrder(
+                        wallet,
+                        Chain.AMOY,
+                        SignatureType.EOA,
+                        "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+                        order,
+                        { tickSize: "0.0001", negRisk: true },
+                    );
+                    expect(signedOrder).not.null;
+                    expect(signedOrder).not.undefined;
+
+                    expect(signedOrder.salt).not.empty;
+                    expect(signedOrder.maker).equal("0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266");
+                    expect(signedOrder.signer).equal("0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266");
+                    expect(signedOrder.taker).equal("0x0000000000000000000000000000000000000000");
+                    expect(signedOrder.tokenId).equal("123");
+                    expect(signedOrder.makerAmount).equal("100000000");
+                    expect(signedOrder.takerAmount).equal("560000");
+                    expect(signedOrder.side).equal(UtilsSide.SELL);
+                    expect(signedOrder.expiration).equal("0");
+                    expect(signedOrder.nonce).equal("123");
+                    expect(signedOrder.feeRateBps).equal("111");
+                    expect(signedOrder.signatureType).equal(SignatureType.EOA);
+                    expect(signedOrder.signature).not.empty;
+                });
+            });
         });
     });
 
-    describe("calculateMarketPrice", () => {
-        describe("BUY", () => {
-            it("empty orderbook", () => {
-                expect(() => calculateMarketPrice([], 100)).to.throw("no match");
-            });
-            it("not enough", () => {
-                const positions = [
-                    { price: "0.5", size: "100" },
-                    { price: "0.4", size: "100" },
-                ] as OrderSummary[];
-                expect(() => calculateMarketPrice(positions, 100)).to.throw("no match");
-            });
-            it("ok", () => {
-                let positions = [
-                    { price: "0.5", size: "100" },
-                    { price: "0.4", size: "100" },
-                    { price: "0.3", size: "100" },
-                ] as OrderSummary[];
-                expect(calculateMarketPrice(positions, 100)).equal(0.3);
-
-                positions = [
-                    { price: "0.5", size: "100" },
-                    { price: "0.4", size: "200" },
-                    { price: "0.3", size: "100" },
-                ] as OrderSummary[];
-                expect(calculateMarketPrice(positions, 100)).equal(0.4);
-
-                positions = [
-                    { price: "0.5", size: "120" },
-                    { price: "0.4", size: "100" },
-                    { price: "0.3", size: "100" },
-                ] as OrderSummary[];
-                expect(calculateMarketPrice(positions, 100)).equal(0.4);
-
-                positions = [
-                    { price: "0.5", size: "200" },
-                    { price: "0.4", size: "100" },
-                    { price: "0.3", size: "100" },
-                ] as OrderSummary[];
-                expect(calculateMarketPrice(positions, 100)).equal(0.5);
-            });
+    describe("calculateBuyMarketPrice", () => {
+        it("empty orderbook", () => {
+            expect(() => calculateBuyMarketPrice([], 100)).to.throw("no match");
         });
-        describe("SELL", () => {
-            it("empty orderbook", () => {
-                expect(() => calculateMarketPrice([], 100)).to.throw("no match");
-            });
-            it("not enough", () => {
-                const positions = [
-                    { price: "0.4", size: "100" },
-                    { price: "0.5", size: "100" },
-                ] as OrderSummary[];
-                expect(() => calculateMarketPrice(positions, 100)).to.throw("no match");
-            });
-            it("ok", () => {
-                let positions = [
-                    { price: "0.3", size: "100" },
-                    { price: "0.4", size: "100" },
-                    { price: "0.5", size: "100" },
-                ] as OrderSummary[];
-                expect(calculateMarketPrice(positions, 100)).equal(0.5);
+        it("not enough", () => {
+            const positions = [
+                { price: "0.5", size: "100" },
+                { price: "0.4", size: "100" },
+            ] as OrderSummary[];
+            expect(() => calculateBuyMarketPrice(positions, 100)).to.throw("no match");
+        });
+        it("ok", () => {
+            let positions = [
+                { price: "0.5", size: "100" },
+                { price: "0.4", size: "100" },
+                { price: "0.3", size: "100" },
+            ] as OrderSummary[];
+            expect(calculateBuyMarketPrice(positions, 100)).equal(0.3);
 
-                positions = [
-                    { price: "0.3", size: "100" },
-                    { price: "0.4", size: "300" },
-                    { price: "0.5", size: "100" },
-                ] as OrderSummary[];
-                expect(calculateMarketPrice(positions, 100)).equal(0.4);
+            positions = [
+                { price: "0.5", size: "100" },
+                { price: "0.4", size: "200" },
+                { price: "0.3", size: "100" },
+            ] as OrderSummary[];
+            expect(calculateBuyMarketPrice(positions, 100)).equal(0.4);
 
-                positions = [
-                    { price: "0.3", size: "100" },
-                    { price: "0.4", size: "200" },
-                    { price: "0.5", size: "100" },
-                ] as OrderSummary[];
-                expect(calculateMarketPrice(positions, 100)).equal(0.4);
+            positions = [
+                { price: "0.5", size: "120" },
+                { price: "0.4", size: "100" },
+                { price: "0.3", size: "100" },
+            ] as OrderSummary[];
+            expect(calculateBuyMarketPrice(positions, 100)).equal(0.4);
 
-                positions = [
-                    { price: "0.3", size: "300" },
-                    { price: "0.4", size: "100" },
-                    { price: "0.5", size: "100" },
-                ] as OrderSummary[];
-                expect(calculateMarketPrice(positions, 100)).equal(0.4);
+            positions = [
+                { price: "0.5", size: "200" },
+                { price: "0.4", size: "100" },
+                { price: "0.3", size: "100" },
+            ] as OrderSummary[];
+            expect(calculateBuyMarketPrice(positions, 100)).equal(0.5);
+        });
+    });
+    describe("calculateSellMarketPrice", () => {
+        it("empty orderbook", () => {
+            expect(() => calculateBuyMarketPrice([], 100)).to.throw("no match");
+        });
+        it("not enough", () => {
+            const positions = [
+                { price: "0.4", size: "100" },
+                { price: "0.5", size: "100" },
+            ] as OrderSummary[];
+            expect(() => calculateBuyMarketPrice(positions, 100)).to.throw("no match");
+        });
+        it("ok", () => {
+            let positions = [
+                { price: "0.3", size: "100" },
+                { price: "0.4", size: "100" },
+                { price: "0.5", size: "100" },
+            ] as OrderSummary[];
+            expect(calculateSellMarketPrice(positions, 100)).equal(0.5);
 
-                positions = [
-                    { price: "0.3", size: "334" },
-                    { price: "0.4", size: "100" },
-                    { price: "0.5", size: "100" },
-                ] as OrderSummary[];
-                expect(calculateMarketPrice(positions, 100)).equal(0.3);
-            });
+            positions = [
+                { price: "0.3", size: "100" },
+                { price: "0.4", size: "100" },
+                { price: "0.5", size: "100" },
+            ] as OrderSummary[];
+            expect(calculateSellMarketPrice(positions, 300)).equal(0.3);
+
+            positions = [
+                { price: "0.3", size: "100" },
+                { price: "0.4", size: "200" },
+                { price: "0.5", size: "100" },
+            ] as OrderSummary[];
+            expect(calculateSellMarketPrice(positions, 300)).equal(0.4);
+
+            positions = [
+                { price: "0.3", size: "334" },
+                { price: "0.4", size: "100" },
+                { price: "0.5", size: "1000" },
+            ] as OrderSummary[];
+            expect(calculateSellMarketPrice(positions, 600)).equal(0.5);
         });
     });
 });

@@ -124,9 +124,15 @@ export interface UserMarketOrder {
     price?: number;
 
     /**
-     * Amount in terms of Collateral
+     * BUY orders: $$$ Amount to buy
+     * SELL orders: Shares to sell
      */
     amount: number;
+
+    /**
+     * Side of the order
+     */
+    side: Side;
 
     /**
      * Fee rate, in basis points, charged to the order maker, charged on proceeds

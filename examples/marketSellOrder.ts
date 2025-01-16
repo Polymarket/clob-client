@@ -1,7 +1,7 @@
 import { ethers } from "ethers";
 import { config as dotenvConfig } from "dotenv";
 import { resolve } from "path";
-import { ApiKeyCreds, Chain, ClobClient, OrderType } from "../src";
+import { ApiKeyCreds, Chain, ClobClient, OrderType, Side } from "../src";
 
 dotenvConfig({ path: resolve(__dirname, "../.env") });
 
@@ -18,20 +18,17 @@ async function main() {
     };
     const clobClient = new ClobClient(host, chainId, wallet, creds);
 
-    // Create a YES market buy order for the equivalent of 100 USDC for the market price
     const YES = "71321045679252212594626385532706912750332728571942532289631379312455583992563";
-    const marketOrder = await clobClient.createMarketBuyOrder({
+    // Create a YES market sell order for the equivalent of 100 shares for the market price
+    const marketBuyOrder = await clobClient.createMarketOrder({
         tokenID: YES,
-        amount: 100,
-        feeRateBps: 0,
-        nonce: 0,
-        price: 0.5,
+        amount: 110, // SHARES
+        side: Side.SELL,
     });
-    console.log("Created Market Order", marketOrder);
+    console.log("Created Market SELL Order", marketBuyOrder);
 
     // Send it to the server
-    const resp = await clobClient.postOrder(marketOrder, OrderType.FOK);
-    console.log(resp);
+    console.log(await clobClient.postOrder(marketBuyOrder, OrderType.FOK));
 }
 
 main();

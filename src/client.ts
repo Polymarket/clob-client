@@ -109,7 +109,7 @@ import {
 } from "./endpoints";
 import { OrderBuilder } from "./order-builder/builder";
 import { END_CURSOR, INITIAL_CURSOR } from "./constants";
-import { calculateMarketPrice } from "./order-builder/helpers";
+import { calculateBuyMarketPrice, calculateSellMarketPrice } from "./order-builder/helpers";
 
 export class ClobClient {
     readonly host: string;
@@ -639,7 +639,7 @@ export class ClobClient {
         });
     }
 
-    public async createMarketBuyOrder(
+    public async createMarketOrder(
         userMarketOrder: UserMarketOrder,
         options?: Partial<CreateOrderOptions>,
     ): Promise<SignedOrder> {
@@ -652,7 +652,7 @@ export class ClobClient {
         if (!userMarketOrder.price) {
             userMarketOrder.price = await this.calculateMarketPrice(
                 tokenID,
-                Side.BUY,
+                userMarketOrder.side,
                 userMarketOrder.amount,
             );
         }
@@ -1017,12 +1017,12 @@ export class ClobClient {
             if (!book.asks) {
                 throw new Error("no match");
             }
-            return calculateMarketPrice(book.asks, amount);
+            return calculateBuyMarketPrice(book.asks, amount);
         } else {
             if (!book.bids) {
                 throw new Error("no match");
             }
-            return calculateMarketPrice(book.bids, amount);
+            return calculateSellMarketPrice(book.bids, amount);
         }
     }
 
