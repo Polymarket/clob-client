@@ -914,6 +914,7 @@ export class ClobClient {
         date: string,
         order_by = "",
         position = "",
+        no_competition = false,
     ): Promise<UserRewardsEarning[]> {
         this.canL2Auth();
 
@@ -939,6 +940,7 @@ export class ClobClient {
                 next_cursor,
                 order_by,
                 position,
+                no_competition,
             };
 
             const response = await this.get(`${this.host}${endpoint}`, {
