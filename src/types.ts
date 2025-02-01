@@ -446,6 +446,7 @@ export interface UserRewardsEarning {
     image: string;
     rewards_max_spread: number;
     rewards_min_size: number;
+    market_competitiveness: number;
     tokens: Token[];
     rewards_config: RewardsConfig[];
     maker_address: string;

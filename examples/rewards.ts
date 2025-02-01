@@ -37,9 +37,10 @@ async function main() {
     console.log(
         "rewards",
         await clobClient.getUserEarningsAndMarketsConfig(
-            "2024-04-09" /* UTC TIME */,
+            "2025-01-31" /* UTC TIME */,
             "earnings",
             "DESC",
+            true,
         ),
     );
 }
