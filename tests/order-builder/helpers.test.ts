@@ -7,6 +7,7 @@ import {
     UserMarketOrder,
     OrderSummary,
     RfqRequestParams,
+	RfqUserOrder,
 } from "../../src/types";
 import {
     buildOrderCreationArgs,
@@ -4297,14 +4298,11 @@ describe("helpers", () => {
     describe("buildRfqRequestArgs", () => {
         describe("buy order", async () => {
             it("0.1", async () => {
-                const order: UserOrder = {
+                const order: RfqUserOrder = {
                     tokenID: "123",
                     price: 0.5,
                     size: 21.04,
                     side: Side.BUY,
-                    feeRateBps: 111,
-                    nonce: 123,
-                    expiration: 50000,
                 };
                 const orderData: RfqRequestParams = await buildRfqRequestArgs(
                     order,
@@ -4321,14 +4319,11 @@ describe("helpers", () => {
             });
 
             it("0.01", async () => {
-                const order: UserOrder = {
+                const order: RfqUserOrder = {
                     tokenID: "123",
                     price: 0.56,
                     size: 21.04,
                     side: Side.BUY,
-                    feeRateBps: 111,
-                    nonce: 123,
-                    expiration: 50000,
                 };
                 const orderData: RfqRequestParams = await buildRfqRequestArgs(
                     order,
@@ -4345,14 +4340,11 @@ describe("helpers", () => {
             });
 
             it("0.001", async () => {
-                const order: UserOrder = {
+                const order: RfqUserOrder = {
                     tokenID: "123",
                     price: 0.056,
                     size: 21.04,
                     side: Side.BUY,
-                    feeRateBps: 111,
-                    nonce: 123,
-                    expiration: 50000,
                 };
                 const orderData: RfqRequestParams = await buildRfqRequestArgs(
                     order,
@@ -4371,13 +4363,11 @@ describe("helpers", () => {
 
         describe("sell order", async () => {
             it("0.1", async () => {
-                const order: UserOrder = {
+                const order: RfqUserOrder = {
                     tokenID: "5",
                     price: 0.5,
                     size: 21.04,
                     side: Side.SELL,
-                    feeRateBps: 0,
-                    nonce: 0,
                 };
                 const orderData: RfqRequestParams = await buildRfqRequestArgs(
                     order,
@@ -4394,13 +4384,11 @@ describe("helpers", () => {
             });
 
             it("0.01", async () => {
-                const order: UserOrder = {
+                const order: RfqUserOrder = {
                     tokenID: "5",
                     price: 0.56,
                     size: 21.04,
                     side: Side.SELL,
-                    feeRateBps: 0,
-                    nonce: 0,
                 };
                 const orderData: RfqRequestParams = await buildRfqRequestArgs(
                     order,
@@ -4417,13 +4405,11 @@ describe("helpers", () => {
             });
 
             it("0.001", async () => {
-                const order: UserOrder = {
+                const order: RfqUserOrder = {
                     tokenID: "5",
                     price: 0.056,
                     size: 21.04,
                     side: Side.SELL,
-                    feeRateBps: 0,
-                    nonce: 0,
                 };
                 const orderData: RfqRequestParams = await buildRfqRequestArgs(
                     order,
