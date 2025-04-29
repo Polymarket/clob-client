@@ -106,10 +106,15 @@ import {
     GET_SPREAD,
     GET_SPREADS,
     UPDATE_BALANCE_ALLOWANCE,
+    RFQ_ORDER,
 } from "./endpoints";
 import { OrderBuilder } from "./order-builder/builder";
 import { END_CURSOR, INITIAL_CURSOR } from "./constants";
-import { calculateBuyMarketPrice, calculateSellMarketPrice } from "./order-builder/helpers";
+import {
+    calculateBuyMarketPrice,
+    calculateSellMarketPrice,
+    getRfqPayload,
+} from "./order-builder/helpers";
 
 export class ClobClient {
     readonly host: string;
@@ -611,6 +616,27 @@ export class ClobClient {
         };
 
         return this.get(`${this.host}${endpoint}`, { headers, params: _params });
+    }
+
+    public async postRfqRequest(order: SignedOrder): Promise<any> {
+        this.canL2Auth();
+        const endpoint = RFQ_ORDER;
+        const payload = getRfqPayload(order);
+
+        const l2HeaderArgs = {
+            method: POST,
+            requestPath: endpoint,
+            body: JSON.stringify(payload),
+        };
+
+        const headers = await createL2Headers(
+            this.signer as Wallet | JsonRpcSigner,
+            this.creds as ApiKeyCreds,
+            l2HeaderArgs,
+            this.useServerTime ? await this.getServerTime() : undefined,
+        );
+
+        return this.post(`${this.host}${endpoint}`, { headers, data: payload });
     }
 
     public async createOrder(

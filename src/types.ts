@@ -453,3 +453,11 @@ export interface UserRewardsEarning {
     earning_percentage: number;
     earnings: Earning[];
 }
+
+export interface RfqRequestParams {
+    assetIn: string;
+    assetOut: string;
+    amountIn: string;
+    amountOut: string;
+    userType: number;
+}
