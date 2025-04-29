@@ -17,7 +17,7 @@ import {
     RoundConfig,
     CreateOrderOptions,
     OrderSummary,
-	RfqRequestParams,
+    RfqRequestParams,
 } from "../types";
 import { decimalPlaces, roundDown, roundNormal, roundUp } from "../utilities";
 import { COLLATERAL_TOKEN_DECIMALS, getContractConfig } from "../config";
@@ -106,6 +106,39 @@ export const getOrderRawAmounts = (
             rawTakerAmt,
         };
     }
+};
+
+export const buildRfqRequestArgs = (
+    userOrder: UserOrder,
+    signatureType: SignatureType,
+    roundConfig: RoundConfig,
+): RfqRequestParams => {
+    const { side, rawMakerAmt, rawTakerAmt } = getOrderRawAmounts(
+        userOrder.side,
+        userOrder.size,
+        userOrder.price,
+        roundConfig,
+    );
+
+    const makerAmount = parseUnits(rawMakerAmt.toString(), COLLATERAL_TOKEN_DECIMALS).toString();
+    const takerAmount = parseUnits(rawTakerAmt.toString(), COLLATERAL_TOKEN_DECIMALS).toString();
+
+    if (side === UtilsSide.BUY) {
+        return {
+            amountIn: makerAmount,
+            assetIn: userOrder.tokenID,
+            amountOut: takerAmount,
+            assetOut: "0",
+            userType: signatureType,
+        };
+    }
+    return {
+        amountIn: takerAmount,
+        assetIn: "0",
+        amountOut: makerAmount,
+        assetOut: userOrder.tokenID,
+        userType: signatureType,
+    };
 };
 
 /**
@@ -357,7 +390,7 @@ export const calculateSellMarketPrice = (positions: OrderSummary[], amountToMatc
 
 /**
  * Given a signed order payload, structure the payload for an RFQ request for quote
- * @param order a signed order 
+ * @param order a signed order
  */
 export const getRfqPayload = (order: SignedOrder): RfqRequestParams => {
     if (order.side === UtilsSide.BUY) {

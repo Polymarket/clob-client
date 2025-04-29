@@ -41,6 +41,7 @@ import {
     TotalUserEarning,
     NegRisk,
     BanStatus,
+    RfqRequestParams,
 } from "./types";
 import { createL1Headers, createL2Headers } from "./headers";
 import {
@@ -111,9 +112,10 @@ import {
 import { OrderBuilder } from "./order-builder/builder";
 import { END_CURSOR, INITIAL_CURSOR } from "./constants";
 import {
+    buildRfqRequestArgs,
     calculateBuyMarketPrice,
     calculateSellMarketPrice,
-    getRfqPayload,
+    ROUNDING_CONFIG,
 } from "./order-builder/helpers";
 
 export class ClobClient {
@@ -618,10 +620,22 @@ export class ClobClient {
         return this.get(`${this.host}${endpoint}`, { headers, params: _params });
     }
 
-    public async postRfqRequest(order: SignedOrder): Promise<any> {
+    public async createRfqRequest(
+        userOrder: UserOrder,
+        options?: Partial<CreateOrderOptions>,
+    ): Promise<RfqRequestParams> {
+        const { tokenID } = userOrder;
+        const tickSize = await this._resolveTickSize(tokenID, options?.tickSize);
+        return buildRfqRequestArgs(
+            userOrder,
+            this.orderBuilder.signatureType,
+            ROUNDING_CONFIG[tickSize],
+        );
+    }
+
+    public async postRfqRequest(payload: RfqRequestParams): Promise<any> {
         this.canL2Auth();
         const endpoint = RFQ_ORDER;
-        const payload = getRfqPayload(order);
 
         const l2HeaderArgs = {
             method: POST,

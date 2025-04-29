@@ -20,7 +20,7 @@ async function main() {
 	
 	// Create a buy order for 12 YES at 0.50 for $6 (min amount is 5 shares and $5)
 	const YES = "34097058504275310827233323421517291090691602969494795225921954353603704046623";
-	const order = await clobClient.createOrder(
+	const request = await clobClient.createRfqRequest(
 		{
 			tokenID: YES,
 			price: 0.5,
@@ -30,11 +30,11 @@ async function main() {
 		},
 		{ tickSize: "0.01" },
 	);
-	console.log("Created Order", order);
+	console.log("rfqRequest - Request", request);
 
 	// Send it to the server
-	const resp = await clobClient.postRfqRequest(order)
-	console.log("RFQ resp", resp);
+	const resp = await clobClient.postRfqRequest(request)
+	console.log("rfqRequest - Response", resp);
 }
 
 main();
