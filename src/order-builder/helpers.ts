@@ -21,6 +21,7 @@ import {
 } from "../types";
 import { decimalPlaces, roundDown, roundNormal, roundUp } from "../utilities";
 import { COLLATERAL_TOKEN_DECIMALS, getContractConfig } from "../config";
+import { RfqUserOrder } from '../types';
 
 export const ROUNDING_CONFIG: Record<TickSize, RoundConfig> = {
     "0.1": {
@@ -109,7 +110,7 @@ export const getOrderRawAmounts = (
 };
 
 export const buildRfqRequestArgs = (
-    userOrder: UserOrder,
+    userOrder: RfqUserOrder,
     signatureType: SignatureType,
     roundConfig: RoundConfig,
 ): RfqRequestParams => {

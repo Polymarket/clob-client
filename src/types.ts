@@ -461,3 +461,5 @@ export interface RfqRequestParams {
     amountOut: string;
     userType: number;
 }
+
+export type RfqUserOrder = Pick<UserOrder, "price" | "size" | "side" | "tokenID">

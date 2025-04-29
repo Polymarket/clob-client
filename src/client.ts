@@ -42,6 +42,7 @@ import {
     NegRisk,
     BanStatus,
     RfqRequestParams,
+	RfqUserOrder,
 } from "./types";
 import { createL1Headers, createL2Headers } from "./headers";
 import {
@@ -621,7 +622,7 @@ export class ClobClient {
     }
 
     public async createRfqRequest(
-        userOrder: UserOrder,
+        userOrder: RfqUserOrder,
         options?: Partial<CreateOrderOptions>,
     ): Promise<RfqRequestParams> {
         const { tokenID } = userOrder;
