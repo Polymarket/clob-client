@@ -8,7 +8,7 @@ on:
 jobs:
     build-lint-test:
         name: Build, Lint, and Test
-        runs-on: ubuntu-20.04
+        runs-on: ubuntu-22.04
         steps:
             - name: Checkout Code
               uses: actions/checkout@v4.1.4
@@ -20,7 +20,7 @@ jobs:
 
     all-jobs-pass:
         name: All jobs pass
-        runs-on: ubuntu-20.04
+        runs-on: ubuntu-22.04
         needs:
             - build-lint-test
         steps:
