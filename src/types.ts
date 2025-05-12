@@ -462,4 +462,27 @@ export interface RfqRequestParams {
     userType: number;
 }
 
+export interface RfqQuoteParams {
+    requestId: string;
+    assetIn: string;
+    assetOut: string;
+    amountIn: string;
+    amountOut: string;
+    userType: number;
+}
+export interface CreateRfqQuoteParams {
+    requestId: string;
+    assetIn: string;
+    assetOut: string;
+    amountIn: string;
+    amountOut: string;
+    userType: number;
+}
+export interface ImproveRfqQuoteParams {
+    quoteId: string;
+    amountOut: string;
+}
+export interface CancelRfqQuoteParams {
+    quoteId: string;
+}
 export type RfqUserOrder = Pick<UserOrder, "price" | "size" | "side" | "tokenID">
