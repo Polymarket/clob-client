@@ -114,6 +114,9 @@ import {
     GET_SPREADS,
     UPDATE_BALANCE_ALLOWANCE,
     RFQ_ORDER,
+    CANCEL_RFQ_QUOTE,
+    CREATE_RFQ_QUOTE,
+    IMPROVE_RFQ_QUOTE
 } from "./endpoints";
 import { OrderBuilder } from "./order-builder/builder";
 import { END_CURSOR, INITIAL_CURSOR } from "./constants";
@@ -644,7 +647,7 @@ export class ClobClient {
         quote: CreateRfqQuoteParams
     ): Promise<any> {
         this.canL2Auth();
-        const endpoint = "/rfq/quote";
+        const endpoint = CREATE_RFQ_QUOTE;
         const payload = JSON.stringify(quote);
 
         const l2HeaderArgs = {
@@ -667,7 +670,7 @@ export class ClobClient {
         quote: ImproveRfqQuoteParams
     ): Promise<any> {
         this.canL2Auth();
-        const endpoint = "/rfq/quote";
+        const endpoint = IMPROVE_RFQ_QUOTE;
         const payload = JSON.stringify(quote);
 
         const l2HeaderArgs = {
@@ -689,7 +692,7 @@ export class ClobClient {
         quote: CancelRfqQuoteParams
     ): Promise<any> {
         this.canL2Auth();
-        const endpoint = "/rfq/quote";
+        const endpoint = CANCEL_RFQ_QUOTE;
         const payload = JSON.stringify(quote);
 
         const l2HeaderArgs = {
