@@ -1,7 +1,7 @@
 {
     "name": "@polymarket/clob-client",
     "description": "Typescript client for Polymarket's CLOB",
-    "version": "4.15.0",
+    "version": "4.16.0",
     "contributors": [
         {
             "name": "Jonathan Amenechi",
@@ -22,6 +22,10 @@
         {
             "name": "Mike Shrieve",
             "url": "https://github.com/mshrieve"
+        },
+        {
+            "name": "Danny Dresner",
+            "url": "https://github.com/ddresner-pm"
         }
     ],
     "main": "dist/index.js",
