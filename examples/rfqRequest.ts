@@ -26,7 +26,7 @@ async function main() {
 			price: 0.5,
 			side: Side.BUY,
 			size: 12,
-			feeRateBps: 0,
+			// feeRateBps: 0,
 		},
 		{ tickSize: "0.01" },
 	);
