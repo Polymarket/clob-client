@@ -1,14 +1,6 @@
 import "mocha";
 import { expect } from "chai";
-import {
-    UserOrder,
-    Side,
-    Chain,
-    UserMarketOrder,
-    OrderSummary,
-    RfqRequestParams,
-	RfqUserOrder,
-} from "../../src/types";
+import { UserOrder, Side, Chain, UserMarketOrder, OrderSummary } from "../../src/types";
 import {
     buildOrderCreationArgs,
     buildOrder,
@@ -20,7 +12,6 @@ import {
     ROUNDING_CONFIG,
     calculateBuyMarketPrice,
     calculateSellMarketPrice,
-    buildRfqRequestArgs,
 } from "../../src/order-builder/helpers";
 import { OrderData, SignatureType, Side as UtilsSide } from "@polymarket/order-utils";
 import { Wallet } from "@ethersproject/wallet";
@@ -4292,138 +4283,6 @@ describe("helpers", () => {
                 { price: "0.5", size: "1000" },
             ] as OrderSummary[];
             expect(calculateSellMarketPrice(positions, 600)).equal(0.5);
-        });
-    });
-
-    describe("buildRfqRequestArgs", () => {
-        describe("buy order", async () => {
-            it("0.1", async () => {
-                const order: RfqUserOrder = {
-                    tokenID: "123",
-                    price: 0.5,
-                    size: 21.04,
-                    side: Side.BUY,
-                };
-                const orderData: RfqRequestParams = await buildRfqRequestArgs(
-                    order,
-                    SignatureType.EOA,
-                    ROUNDING_CONFIG["0.1"],
-                );
-                expect(orderData).deep.equal({
-                    amountIn: "10520000",
-                    amountOut: "21040000",
-                    assetIn: "123",
-                    assetOut: "0",
-                    userType: 0,
-                });
-            });
-
-            it("0.01", async () => {
-                const order: RfqUserOrder = {
-                    tokenID: "123",
-                    price: 0.56,
-                    size: 21.04,
-                    side: Side.BUY,
-                };
-                const orderData: RfqRequestParams = await buildRfqRequestArgs(
-                    order,
-                    SignatureType.POLY_PROXY,
-                    ROUNDING_CONFIG["0.01"],
-                );
-                expect(orderData).deep.equal({
-                    amountIn: "11782400",
-                    amountOut: "21040000",
-                    assetIn: "123",
-                    assetOut: "0",
-                    userType: 1,
-                });
-            });
-
-            it("0.001", async () => {
-                const order: RfqUserOrder = {
-                    tokenID: "123",
-                    price: 0.056,
-                    size: 21.04,
-                    side: Side.BUY,
-                };
-                const orderData: RfqRequestParams = await buildRfqRequestArgs(
-                    order,
-                    SignatureType.EOA,
-                    ROUNDING_CONFIG["0.001"],
-                );
-                expect(orderData).deep.equal({
-                    amountIn: "1178240",
-                    amountOut: "21040000",
-                    assetIn: "123",
-                    assetOut: "0",
-                    userType: 0,
-                });
-            });
-        });
-
-        describe("sell order", async () => {
-            it("0.1", async () => {
-                const order: RfqUserOrder = {
-                    tokenID: "5",
-                    price: 0.5,
-                    size: 21.04,
-                    side: Side.SELL,
-                };
-                const orderData: RfqRequestParams = await buildRfqRequestArgs(
-                    order,
-                    SignatureType.POLY_PROXY,
-                    ROUNDING_CONFIG["0.1"],
-                );
-                expect(orderData).deep.equal({
-                    amountIn: "10520000",
-                    amountOut: "21040000",
-                    assetIn: "0",
-                    assetOut: "5",
-                    userType: 1,
-                });
-            });
-
-            it("0.01", async () => {
-                const order: RfqUserOrder = {
-                    tokenID: "5",
-                    price: 0.56,
-                    size: 21.04,
-                    side: Side.SELL,
-                };
-                const orderData: RfqRequestParams = await buildRfqRequestArgs(
-                    order,
-                    SignatureType.POLY_PROXY,
-                    ROUNDING_CONFIG["0.01"],
-                );
-                expect(orderData).deep.equal({
-                    amountIn: "11782400",
-                    amountOut: "21040000",
-                    assetIn: "0",
-                    assetOut: "5",
-                    userType: 1,
-                });
-            });
-
-            it("0.001", async () => {
-                const order: RfqUserOrder = {
-                    tokenID: "5",
-                    price: 0.056,
-                    size: 21.04,
-                    side: Side.SELL,
-                };
-                const orderData: RfqRequestParams = await buildRfqRequestArgs(
-                    order,
-                    SignatureType.POLY_PROXY,
-                    ROUNDING_CONFIG["0.001"],
-                );
-                expect(orderData).deep.equal({
-                    amountIn: "1178240",
-                    amountOut: "21040000",
-                    assetIn: "0",
-                    assetOut: "5",
-                    userType: 1,
-                });
-            });
         });
     });
 });
