@@ -17,11 +17,9 @@ import {
     RoundConfig,
     CreateOrderOptions,
     OrderSummary,
-    RfqRequestParams,
 } from "../types";
 import { decimalPlaces, roundDown, roundNormal, roundUp } from "../utilities";
 import { COLLATERAL_TOKEN_DECIMALS, getContractConfig } from "../config";
-import { RfqUserOrder } from '../types';
 
 export const ROUNDING_CONFIG: Record<TickSize, RoundConfig> = {
     "0.1": {
@@ -107,39 +105,6 @@ export const getOrderRawAmounts = (
             rawTakerAmt,
         };
     }
-};
-
-export const buildRfqRequestArgs = (
-    userOrder: RfqUserOrder,
-    signatureType: SignatureType,
-    roundConfig: RoundConfig,
-): RfqRequestParams => {
-    const { side, rawMakerAmt, rawTakerAmt } = getOrderRawAmounts(
-        userOrder.side,
-        userOrder.size,
-        userOrder.price,
-        roundConfig,
-    );
-
-    const makerAmount = parseUnits(rawMakerAmt.toString(), COLLATERAL_TOKEN_DECIMALS).toString();
-    const takerAmount = parseUnits(rawTakerAmt.toString(), COLLATERAL_TOKEN_DECIMALS).toString();
-
-    if (side === UtilsSide.BUY) {
-        return {
-            amountIn: makerAmount,
-            assetIn: userOrder.tokenID,
-            amountOut: takerAmount,
-            assetOut: "0",
-            userType: signatureType,
-        };
-    }
-    return {
-        amountIn: takerAmount,
-        assetIn: "0",
-        amountOut: makerAmount,
-        assetOut: userOrder.tokenID,
-        userType: signatureType,
-    };
 };
 
 /**
