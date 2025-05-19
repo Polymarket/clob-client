@@ -63,6 +63,21 @@ export const post = async (endpoint: string, options?: RequestOptions): Promise<
     }
 };
 
+export const put = async (endpoint: string, options?: RequestOptions): Promise<any> => {
+    try {
+        const resp = await request(
+            endpoint,
+            PUT,
+            options?.headers,
+            options?.data,
+            options?.params,
+        );
+        return resp.data;
+    } catch (err: unknown) {
+        return errorHandling(err);
+    }
+};
+
 export const get = async (endpoint: string, options?: RequestOptions): Promise<any> => {
     try {
         const resp = await request(endpoint, GET, options?.headers, options?.data, options?.params);
