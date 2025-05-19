@@ -45,6 +45,7 @@ export enum OrderType {
     GTC = "GTC",
     FOK = "FOK",
     GTD = "GTD",
+    FAK = "FAK",
 }
 
 export interface NewOrder<T extends OrderType> {

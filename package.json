@@ -22,6 +22,10 @@
         {
             "name": "Mike Shrieve",
             "url": "https://github.com/mshrieve"
+        },
+        {
+            "name": "Danny Dresner",
+            "url": "https://github.com/ddresner-pm"
         }
     ],
     "main": "dist/index.js",
