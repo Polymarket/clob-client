@@ -1,7 +1,7 @@
 import { ethers } from "ethers";
 import { config as dotenvConfig } from "dotenv";
 import { resolve } from "path";
-import { ApiKeyCreds, Chain, ClobClient, Side } from "../src";
+import { ApiKeyCreds, Chain, ClobClient, OrderType, Side } from "../src";
 
 dotenvConfig({ path: resolve(__dirname, "../.env") });
 
@@ -33,8 +33,24 @@ async function main() {
     console.log("Created Order", order);
 
     // Send it to the server
-    const resp = await clobClient.postOrder(order);
+    const resp = await clobClient.postOrder(order, OrderType.GTC);
     console.log(resp);
+
+    // -----------------
+
+    // Create the order and send it to the server in a single step
+    const resp2 = await clobClient.createAndPostOrder(
+        {
+            tokenID: YES,
+            price: 0.5,
+            side: Side.BUY,
+            size: 100,
+            feeRateBps: 0,
+        },
+        { tickSize: "0.01" },
+        OrderType.GTC,
+    );
+    console.log(resp2);
 }
 
 main();

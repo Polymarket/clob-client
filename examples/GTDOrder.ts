@@ -35,6 +35,20 @@ async function main() {
     // Send it to the server
     const resp = await clobClient.postOrder(order, OrderType.GTD);
     console.log(resp);
+
+    // Create the order and send it to the server in a single step
+    const resp2 = await clobClient.createAndPostOrder(
+        {
+            tokenID: YES,
+            price: 0.5,
+            side: Side.BUY,
+            size: 100,
+            expiration: oneMinute,
+        },
+        { tickSize: "0.01" },
+        OrderType.GTD,
+    );
+    console.log(resp2);
 }
 
 main();

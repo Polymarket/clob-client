@@ -28,7 +28,21 @@ async function main() {
     console.log("Created Market BUY Order", marketBuyOrder);
 
     // Send it to the server
-    console.log(await clobClient.postOrder(marketBuyOrder, OrderType.FOK));
+    console.log(await clobClient.postOrder(marketBuyOrder, OrderType.FOK)); // FAK
+
+    // ------------------
+
+    // Create the order and send it to the server in a single step
+    const resp2 = await clobClient.createAndPostMarketOrder(
+        {
+            tokenID: YES,
+            amount: 100, // $$$
+            side: Side.BUY,
+        },
+        { tickSize: "0.01" },
+        OrderType.FOK, // FAK
+    );
+    console.log(resp2);
 }
 
 main();
