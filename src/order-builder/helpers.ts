@@ -324,7 +324,14 @@ export const createMarketOrder = async (
  * @param amountToMatch worth to buy
  * @returns
  */
-export const calculateBuyMarketPrice = (positions: OrderSummary[], amountToMatch: number) => {
+export const calculateBuyMarketPrice = (
+    positions: OrderSummary[], 
+    amountToMatch: number, 
+    allowPartialFill?: boolean
+) => {
+    if (!positions.length) {
+        throw new Error("no match");
+    }
     let sum = 0;
     for (let i = 0; i < positions.length; i++) {
         const p = positions[i];
@@ -332,6 +339,9 @@ export const calculateBuyMarketPrice = (positions: OrderSummary[], amountToMatch
         if (sum >= amountToMatch) {
             return parseFloat(p.price);
         }
+    }
+    if (allowPartialFill) {
+        return parseFloat(positions[positions.length - 1].price);
     }
     throw new Error("no match");
 };
@@ -342,7 +352,14 @@ export const calculateBuyMarketPrice = (positions: OrderSummary[], amountToMatch
  * @param amountToMatch sells to share
  * @returns
  */
-export const calculateSellMarketPrice = (positions: OrderSummary[], amountToMatch: number) => {
+export const calculateSellMarketPrice = (
+    positions: OrderSummary[], 
+    amountToMatch: number, 
+    allowPartialFill?: boolean
+) => {
+    if (!positions.length) {
+        throw new Error("no match");
+    }
     let sum = 0;
     for (let i = positions.length - 1; i >= 0; i--) {
         const p = positions[i];
@@ -350,6 +367,9 @@ export const calculateSellMarketPrice = (positions: OrderSummary[], amountToMatc
         if (sum >= amountToMatch) {
             return parseFloat(p.price);
         }
+    }
+    if (allowPartialFill) {
+        return parseFloat(positions[0].price);
     }
     throw new Error("no match");
 };

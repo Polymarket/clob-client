@@ -149,6 +149,11 @@ export interface UserMarketOrder {
      * Address of the order taker. The zero address is used to indicate a public order
      */
     taker?: string;
+
+    /**
+     * If true, the order will be partially filled if available
+     */
+    allowPartialFill?: boolean;
 }
 
 export interface OrderPayload {
