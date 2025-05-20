@@ -324,7 +324,11 @@ export const createMarketOrder = async (
  * @param amountToMatch worth to buy
  * @returns
  */
-export const calculateBuyMarketPrice = (positions: OrderSummary[], amountToMatch: number, allowPartialFill?: boolean) => {
+export const calculateBuyMarketPrice = (
+    positions: OrderSummary[], 
+    amountToMatch: number, 
+    allowPartialFill?: boolean
+) => {
     if (!positions.length) {
         throw new Error("no match");
     }
@@ -348,7 +352,11 @@ export const calculateBuyMarketPrice = (positions: OrderSummary[], amountToMatch
  * @param amountToMatch sells to share
  * @returns
  */
-export const calculateSellMarketPrice = (positions: OrderSummary[], amountToMatch: number, allowPartialFill?: boolean) => {
+export const calculateSellMarketPrice = (
+    positions: OrderSummary[], 
+    amountToMatch: number, 
+    allowPartialFill?: boolean
+) => {
     if (!positions.length) {
         throw new Error("no match");
     }
