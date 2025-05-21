@@ -17,6 +17,7 @@ import {
     RoundConfig,
     CreateOrderOptions,
     OrderSummary,
+    OrderType,
 } from "../types";
 import { decimalPlaces, roundDown, roundNormal, roundUp } from "../utilities";
 import { COLLATERAL_TOKEN_DECIMALS, getContractConfig } from "../config";
@@ -325,9 +326,9 @@ export const createMarketOrder = async (
  * @returns
  */
 export const calculateBuyMarketPrice = (
-    positions: OrderSummary[], 
-    amountToMatch: number, 
-    allowPartialFill?: boolean
+    positions: OrderSummary[],
+    amountToMatch: number,
+    orderType: OrderType,
 ) => {
     if (!positions.length) {
         throw new Error("no match");
@@ -340,10 +341,10 @@ export const calculateBuyMarketPrice = (
             return parseFloat(p.price);
         }
     }
-    if (allowPartialFill) {
-        return parseFloat(positions[positions.length - 1].price);
+    if (orderType === OrderType.FOK) {
+        throw new Error("no match");
     }
-    throw new Error("no match");
+    return parseFloat(positions[positions.length - 1].price);
 };
 
 /**
@@ -353,9 +354,9 @@ export const calculateBuyMarketPrice = (
  * @returns
  */
 export const calculateSellMarketPrice = (
-    positions: OrderSummary[], 
-    amountToMatch: number, 
-    allowPartialFill?: boolean
+    positions: OrderSummary[],
+    amountToMatch: number,
+    orderType: OrderType,
 ) => {
     if (!positions.length) {
         throw new Error("no match");
@@ -368,8 +369,8 @@ export const calculateSellMarketPrice = (
             return parseFloat(p.price);
         }
     }
-    if (allowPartialFill) {
-        return parseFloat(positions[0].price);
+    if (orderType === OrderType.FOK) {
+        throw new Error("no match");
     }
-    throw new Error("no match");
+    return parseFloat(positions[0].price);
 };
