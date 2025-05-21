@@ -126,18 +126,18 @@ export const buildRfqRequestArgs = (
 
     if (side === UtilsSide.BUY) {
         return {
-            amountIn: makerAmount,
-            assetIn: userOrder.tokenID,
-            amountOut: takerAmount,
-            assetOut: "0",
+            amountIn: takerAmount,
+			assetIn: userOrder.tokenID,
+			amountOut: makerAmount,
+			assetOut: "0",
             userType: signatureType,
         };
     }
     return {
-        amountIn: takerAmount,
-        assetIn: "0",
-        amountOut: makerAmount,
-        assetOut: userOrder.tokenID,
+		amountIn: takerAmount,
+		assetIn: "0",
+		amountOut: makerAmount,
+		assetOut: userOrder.tokenID,
         userType: signatureType,
     };
 };
