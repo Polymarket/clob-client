@@ -153,7 +153,7 @@ export interface UserMarketOrder {
     /**
      * If true, the order will be partially filled if available
      */
-    allowPartialFill?: boolean;
+    orderType?: OrderType.FOK | OrderType.FAK;
 }
 
 export interface OrderPayload {
