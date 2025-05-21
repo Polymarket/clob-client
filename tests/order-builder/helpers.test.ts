@@ -4310,9 +4310,9 @@ describe("helpers", () => {
                     ROUNDING_CONFIG["0.1"],
                 );
                 expect(orderData).deep.equal({
-                    amountIn: "10520000",
-                    amountOut: "21040000",
+                    amountIn: "21040000",
                     assetIn: "123",
+                    amountOut: "10520000",
                     assetOut: "0",
                     userType: 0,
                 });
@@ -4331,10 +4331,10 @@ describe("helpers", () => {
                     ROUNDING_CONFIG["0.01"],
                 );
                 expect(orderData).deep.equal({
-                    amountIn: "11782400",
-                    amountOut: "21040000",
-                    assetIn: "123",
-                    assetOut: "0",
+					amountIn: "21040000",
+					assetIn: "123",
+					amountOut: "11782400",
+					assetOut: "0",
                     userType: 1,
                 });
             });
@@ -4352,10 +4352,10 @@ describe("helpers", () => {
                     ROUNDING_CONFIG["0.001"],
                 );
                 expect(orderData).deep.equal({
-                    amountIn: "1178240",
-                    amountOut: "21040000",
-                    assetIn: "123",
-                    assetOut: "0",
+					amountIn: "21040000",
+					assetIn: "123",
+					amountOut: "1178240",
+					assetOut: "0",
                     userType: 0,
                 });
             });
@@ -4364,7 +4364,7 @@ describe("helpers", () => {
         describe("sell order", async () => {
             it("0.1", async () => {
                 const order: RfqUserOrder = {
-                    tokenID: "5",
+                    tokenID: "54321",
                     price: 0.5,
                     size: 21.04,
                     side: Side.SELL,
@@ -4375,17 +4375,17 @@ describe("helpers", () => {
                     ROUNDING_CONFIG["0.1"],
                 );
                 expect(orderData).deep.equal({
-                    amountIn: "10520000",
-                    amountOut: "21040000",
-                    assetIn: "0",
-                    assetOut: "5",
+					amountIn: "10520000",
+					assetIn: "0",
+					amountOut: "21040000",
+					assetOut: "54321",
                     userType: 1,
                 });
             });
 
             it("0.01", async () => {
                 const order: RfqUserOrder = {
-                    tokenID: "5",
+                    tokenID: "54321",
                     price: 0.56,
                     size: 21.04,
                     side: Side.SELL,
@@ -4397,16 +4397,16 @@ describe("helpers", () => {
                 );
                 expect(orderData).deep.equal({
                     amountIn: "11782400",
-                    amountOut: "21040000",
                     assetIn: "0",
-                    assetOut: "5",
+                    amountOut: "21040000",
+                    assetOut: "54321",
                     userType: 1,
                 });
             });
 
             it("0.001", async () => {
                 const order: RfqUserOrder = {
-                    tokenID: "5",
+                    tokenID: "54321",
                     price: 0.056,
                     size: 21.04,
                     side: Side.SELL,
@@ -4420,7 +4420,7 @@ describe("helpers", () => {
                     amountIn: "1178240",
                     amountOut: "21040000",
                     assetIn: "0",
-                    assetOut: "5",
+                    assetOut: "54321",
                     userType: 1,
                 });
             });
