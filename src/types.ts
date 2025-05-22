@@ -316,6 +316,7 @@ export interface BalanceAllowanceParams {
 export interface BalanceAllowanceResponse {
     balance: string;
     allowance: string;
+    allowances?: { [address: string]: string };
 }
 
 export interface OrderScoringParams {
