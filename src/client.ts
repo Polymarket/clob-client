@@ -654,7 +654,7 @@ export class ClobClient {
                 tokenID,
                 userMarketOrder.side,
                 userMarketOrder.amount,
-                userMarketOrder.allowPartialFill,
+                userMarketOrder.orderType,
             );
         }
 
@@ -1029,7 +1029,7 @@ export class ClobClient {
         tokenID: string,
         side: Side,
         amount: number,
-        allowPartialFill?: boolean,
+        orderType: OrderType = OrderType.FOK,
     ): Promise<number> {
         const book = await this.getOrderBook(tokenID);
         if (!book) {
@@ -1039,12 +1039,12 @@ export class ClobClient {
             if (!book.asks) {
                 throw new Error("no match");
             }
-            return calculateBuyMarketPrice(book.asks, amount, allowPartialFill);
+            return calculateBuyMarketPrice(book.asks, amount, orderType);
         } else {
             if (!book.bids) {
                 throw new Error("no match");
             }
-            return calculateSellMarketPrice(book.bids, amount, allowPartialFill);
+            return calculateSellMarketPrice(book.bids, amount, orderType);
         }
     }
 

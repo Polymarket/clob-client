@@ -24,11 +24,12 @@ async function main() {
         tokenID: YES,
         amount: 100, // $$$
         side: Side.BUY,
+        orderType: OrderType.FOK, // or FAK
     });
     console.log("Created Market BUY Order", marketBuyOrder);
 
     // Send it to the server
-    console.log(await clobClient.postOrder(marketBuyOrder, OrderType.FOK)); // FAK
+    console.log(await clobClient.postOrder(marketBuyOrder, OrderType.FOK)); // or FAK
 
     // ------------------
 
@@ -38,9 +39,10 @@ async function main() {
             tokenID: YES,
             amount: 100, // $$$
             side: Side.BUY,
+            orderType: OrderType.FOK, // or FAK
         },
         { tickSize: "0.01" },
-        OrderType.FOK, // FAK
+        OrderType.FOK, // or FAK
     );
     console.log(resp2);
 }
