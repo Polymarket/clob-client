@@ -70,9 +70,12 @@ export const decimalPlaces = (num: number): number => {
 };
 
 /**
- * Calculates the hash for the given orderbook
- * @param orderbook
- * @returns
+ * Calculates the SHA‑1 hash for the given orderbook.
+ *
+ * @param {OrderBookSummary} orderbook
+ *   **must** have its properties in _exactly_ this order:
+ *   `market`, `asset_id`, `timestamp`, `hash`, `bids`, `asks`
+ * @returns {string} the hex‑encoded SHA‑1
  */
 export const generateOrderBookSummaryHash = (orderbook: OrderBookSummary): string => {
     orderbook.hash = "";
