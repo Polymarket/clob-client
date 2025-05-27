@@ -43,6 +43,9 @@ import {
     BanStatus,
     RfqRequestParams,
 	RfqUserOrder,
+    CreateRfqQuoteParams,
+    ImproveRfqQuoteParams,
+    CancelRfqQuoteParams
 } from "./types";
 import { createL1Headers, createL2Headers } from "./headers";
 import {
@@ -52,7 +55,9 @@ import {
     get,
     parseDropNotificationParams,
     POST,
+    PUT,
     post,
+    put,
     RequestOptions,
 } from "./http-helpers";
 import { L1_AUTH_UNAVAILABLE_ERROR, L2_AUTH_NOT_AVAILABLE } from "./errors";
@@ -109,6 +114,9 @@ import {
     GET_SPREADS,
     UPDATE_BALANCE_ALLOWANCE,
     RFQ_ORDER,
+    CANCEL_RFQ_QUOTE,
+    CREATE_RFQ_QUOTE,
+    IMPROVE_RFQ_QUOTE
 } from "./endpoints";
 import { OrderBuilder } from "./order-builder/builder";
 import { END_CURSOR, INITIAL_CURSOR } from "./constants";
@@ -634,6 +642,75 @@ export class ClobClient {
         );
     }
 
+
+    public async createRfqQuote(
+        quote: CreateRfqQuoteParams
+    ): Promise<any> {
+        this.canL2Auth();
+        const endpoint = CREATE_RFQ_QUOTE;
+        const payload = JSON.stringify(quote);
+
+        const l2HeaderArgs = {
+            method: POST,
+            requestPath: endpoint,
+            body: payload,
+        };
+
+        const headers = await createL2Headers(
+            this.signer as Wallet | JsonRpcSigner,
+            this.creds as ApiKeyCreds,
+            l2HeaderArgs,
+            this.useServerTime ? await this.getServerTime() : undefined,
+        );
+
+        return this.post(`${this.host}${endpoint}`, { headers, data: payload });
+    }
+
+    public async improveRfqQuote(
+        quote: ImproveRfqQuoteParams
+    ): Promise<any> {
+        this.canL2Auth();
+        const endpoint = IMPROVE_RFQ_QUOTE;
+        const payload = JSON.stringify(quote);
+
+        const l2HeaderArgs = {
+            method: PUT,
+            requestPath: endpoint,
+            body: payload,
+        };
+
+        const headers = await createL2Headers(
+            this.signer as Wallet | JsonRpcSigner,
+            this.creds as ApiKeyCreds,
+            l2HeaderArgs,
+            this.useServerTime ? await this.getServerTime() : undefined,
+        );
+
+        return this.put(`${this.host}${endpoint}`, { headers, data: payload });
+    }
+    public async cancelRfqQuote(
+        quote: CancelRfqQuoteParams
+    ): Promise<any> {
+        this.canL2Auth();
+        const endpoint = CANCEL_RFQ_QUOTE;
+        const payload = JSON.stringify(quote);
+
+        const l2HeaderArgs = {
+            method: DELETE,
+            requestPath: endpoint,
+            body: payload,
+        };
+
+        const headers = await createL2Headers(
+            this.signer as Wallet | JsonRpcSigner,
+            this.creds as ApiKeyCreds,
+            l2HeaderArgs,
+            this.useServerTime ? await this.getServerTime() : undefined,
+        );
+
+        return this.del(`${this.host}${endpoint}`, { headers, data: payload });
+    }
+
     public async postRfqRequest(payload: RfqRequestParams): Promise<any> {
         this.canL2Auth();
         const endpoint = RFQ_ORDER;
@@ -1109,6 +1186,12 @@ export class ClobClient {
 
     private async post(endpoint: string, options?: RequestOptions) {
         return post(endpoint, {
+            ...options,
+            params: { ...options?.params, geo_block_token: this.geoBlockToken },
+        });
+    }
+    private async put(endpoint: string, options?: RequestOptions) {
+        return put(endpoint, {
             ...options,
             params: { ...options?.params, geo_block_token: this.geoBlockToken },
         });
