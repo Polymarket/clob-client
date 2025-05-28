@@ -4249,14 +4249,14 @@ describe("helpers", () => {
 
     describe("calculateSellMarketPrice FOK", () => {
         it("empty orderbook", () => {
-            expect(() => calculateBuyMarketPrice([], 100, OrderType.FOK)).to.throw("no match");
+            expect(() => calculateSellMarketPrice([], 100, OrderType.FOK)).to.throw("no match");
         });
         it("not enough", () => {
             const positions = [
-                { price: "0.4", size: "100" },
-                { price: "0.5", size: "100" },
+                { price: "0.4", size: "10" },
+                { price: "0.5", size: "10" },
             ] as OrderSummary[];
-            expect(() => calculateBuyMarketPrice(positions, 100, OrderType.FOK)).to.throw(
+            expect(() => calculateSellMarketPrice(positions, 100, OrderType.FOK)).to.throw(
                 "no match",
             );
         });
@@ -4341,14 +4341,14 @@ describe("helpers", () => {
 
     describe("calculateSellMarketPrice FAK", () => {
         it("empty orderbook", () => {
-            expect(() => calculateBuyMarketPrice([], 100, OrderType.FAK)).to.throw("no match");
+            expect(() => calculateSellMarketPrice([], 100, OrderType.FAK)).to.throw("no match");
         });
         it("not enough", () => {
             const positions = [
-                { price: "0.4", size: "100" },
-                { price: "0.5", size: "100" },
+                { price: "0.4", size: "10" },
+                { price: "0.5", size: "10" },
             ] as OrderSummary[];
-            expect(calculateBuyMarketPrice(positions, 100, OrderType.FAK)).equal(0.4);
+            expect(calculateSellMarketPrice(positions, 100, OrderType.FAK)).equal(0.4);
         });
         it("ok", () => {
             let positions = [

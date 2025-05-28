@@ -335,7 +335,7 @@ export const calculateBuyMarketPrice = (
     }
     let sum = 0;
     /*
-    Positions:
+    Asks:
     [
         { price: '0.6', size: '100' },
         { price: '0.55', size: '100' },
@@ -372,7 +372,7 @@ export const calculateSellMarketPrice = (
     }
     let sum = 0;
     /*
-    Positions:
+    Bids:
     [
         { price: '0.4', size: '100' },
         { price: '0.45', size: '100' },
