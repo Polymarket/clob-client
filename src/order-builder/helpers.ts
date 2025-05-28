@@ -334,7 +334,16 @@ export const calculateBuyMarketPrice = (
         throw new Error("no match");
     }
     let sum = 0;
-    for (let i = 0; i < positions.length; i++) {
+    /*
+    Positions:
+    [
+        { price: '0.6', size: '100' },
+        { price: '0.55', size: '100' },
+        { price: '0.5', size: '100' }
+    ]
+    So, if the amount to match is $150 that will be reched at first position so price will be 0.6
+    */
+    for (let i = positions.length - 1; i >= 0; i--) {
         const p = positions[i];
         sum += parseFloat(p.size) * parseFloat(p.price);
         if (sum >= amountToMatch) {
@@ -344,7 +353,7 @@ export const calculateBuyMarketPrice = (
     if (orderType === OrderType.FOK) {
         throw new Error("no match");
     }
-    return parseFloat(positions[positions.length - 1].price);
+    return parseFloat(positions[0].price);
 };
 
 /**
@@ -362,6 +371,15 @@ export const calculateSellMarketPrice = (
         throw new Error("no match");
     }
     let sum = 0;
+    /*
+    Positions:
+    [
+        { price: '0.4', size: '100' },
+        { price: '0.45', size: '100' },
+        { price: '0.5', size: '100' }
+    ]
+    So, if the amount to match is 300 that will be reched at the first position so price will be 0.4
+    */
     for (let i = positions.length - 1; i >= 0; i--) {
         const p = positions[i];
         sum += parseFloat(p.size);

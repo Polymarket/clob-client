@@ -4222,7 +4222,7 @@ describe("helpers", () => {
                 { price: "0.4", size: "100" },
                 { price: "0.3", size: "100" },
             ] as OrderSummary[];
-            expect(calculateBuyMarketPrice(positions, 100, OrderType.FOK)).equal(0.3);
+            expect(calculateBuyMarketPrice(positions, 100, OrderType.FOK)).equal(0.5);
 
             positions = [
                 { price: "0.5", size: "100" },
@@ -4236,7 +4236,7 @@ describe("helpers", () => {
                 { price: "0.4", size: "100" },
                 { price: "0.3", size: "100" },
             ] as OrderSummary[];
-            expect(calculateBuyMarketPrice(positions, 100, OrderType.FOK)).equal(0.4);
+            expect(calculateBuyMarketPrice(positions, 100, OrderType.FOK)).equal(0.5);
 
             positions = [
                 { price: "0.5", size: "200" },
@@ -4296,11 +4296,17 @@ describe("helpers", () => {
             expect(() => calculateBuyMarketPrice([], 100, OrderType.FAK)).to.throw("no match");
         });
         it("not enough", () => {
-            const positions = [
+            let positions = [
                 { price: "0.5", size: "100" },
                 { price: "0.4", size: "100" },
             ] as OrderSummary[];
-            expect(calculateBuyMarketPrice(positions, 100, OrderType.FAK)).equal(0.4);
+            expect(calculateBuyMarketPrice(positions, 100, OrderType.FAK)).equal(0.5);
+            positions = [
+                { price: "0.6", size: "100" },
+                { price: "0.55", size: "100" },
+                { price: "0.5", size: "100" },
+            ] as OrderSummary[];
+            expect(calculateBuyMarketPrice(positions, 200, OrderType.FAK)).equal(0.6);
         });
         it("ok", () => {
             let positions = [
@@ -4308,7 +4314,7 @@ describe("helpers", () => {
                 { price: "0.4", size: "100" },
                 { price: "0.3", size: "100" },
             ] as OrderSummary[];
-            expect(calculateBuyMarketPrice(positions, 100, OrderType.FAK)).equal(0.3);
+            expect(calculateBuyMarketPrice(positions, 100, OrderType.FAK)).equal(0.5);
 
             positions = [
                 { price: "0.5", size: "100" },
@@ -4322,7 +4328,7 @@ describe("helpers", () => {
                 { price: "0.4", size: "100" },
                 { price: "0.3", size: "100" },
             ] as OrderSummary[];
-            expect(calculateBuyMarketPrice(positions, 100, OrderType.FAK)).equal(0.4);
+            expect(calculateBuyMarketPrice(positions, 100, OrderType.FAK)).equal(0.5);
 
             positions = [
                 { price: "0.5", size: "200" },
@@ -4342,7 +4348,7 @@ describe("helpers", () => {
                 { price: "0.4", size: "100" },
                 { price: "0.5", size: "100" },
             ] as OrderSummary[];
-            expect(calculateBuyMarketPrice(positions, 100, OrderType.FAK)).equal(0.5);
+            expect(calculateBuyMarketPrice(positions, 100, OrderType.FAK)).equal(0.4);
         });
         it("ok", () => {
             let positions = [
