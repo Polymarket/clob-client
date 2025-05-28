@@ -378,7 +378,7 @@ export const calculateSellMarketPrice = (
         { price: '0.45', size: '100' },
         { price: '0.5', size: '100' }
     ]
-    So, if the amount to match is 300 that will be reched at the first position so price will be 0.4
+    So, if the amount to match is 300 that will be reached at the first position so price will be 0.4
     */
     for (let i = positions.length - 1; i >= 0; i--) {
         const p = positions[i];
