@@ -341,7 +341,7 @@ export const calculateBuyMarketPrice = (
         { price: '0.55', size: '100' },
         { price: '0.5', size: '100' }
     ]
-    So, if the amount to match is $150 that will be reched at first position so price will be 0.6
+    So, if the amount to match is $150 that will be reached at first position so price will be 0.6
     */
     for (let i = positions.length - 1; i >= 0; i--) {
         const p = positions[i];
