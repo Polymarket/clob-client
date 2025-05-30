@@ -116,7 +116,8 @@ import {
     RFQ_ORDER,
     CANCEL_RFQ_QUOTE,
     CREATE_RFQ_QUOTE,
-    IMPROVE_RFQ_QUOTE
+    IMPROVE_RFQ_QUOTE,
+    RFQ_CONFIG
 } from "./endpoints";
 import { OrderBuilder } from "./order-builder/builder";
 import { END_CURSOR, INITIAL_CURSOR } from "./constants";
@@ -731,6 +732,25 @@ export class ClobClient {
         return this.post(`${this.host}${endpoint}`, { headers, data: payload });
     }
 
+    public async rfqConfig(
+    ): Promise<any> {
+        this.canL2Auth();
+        const endpoint = RFQ_CONFIG;
+
+        const l2HeaderArgs = {
+            method: GET,
+            requestPath: endpoint,
+        };
+
+        const headers = await createL2Headers(
+            this.signer as Wallet | JsonRpcSigner,
+            this.creds as ApiKeyCreds,
+            l2HeaderArgs,
+            this.useServerTime ? await this.getServerTime() : undefined,
+        );
+
+        return this.get(`${this.host}${endpoint}`, { headers });
+    }
     public async createOrder(
         userOrder: UserOrder,
         options?: Partial<CreateOrderOptions>,
