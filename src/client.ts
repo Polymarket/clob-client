@@ -45,7 +45,8 @@ import {
 	RfqUserOrder,
     CreateRfqQuoteParams,
     ImproveRfqQuoteParams,
-    CancelRfqQuoteParams
+    CancelRfqQuoteParams,
+	CancelRfqRequestParams
 } from "./types";
 import { createL1Headers, createL2Headers } from "./headers";
 import {
@@ -113,11 +114,12 @@ import {
     GET_SPREAD,
     GET_SPREADS,
     UPDATE_BALANCE_ALLOWANCE,
-    RFQ_ORDER,
     CANCEL_RFQ_QUOTE,
     CREATE_RFQ_QUOTE,
     IMPROVE_RFQ_QUOTE,
-    RFQ_CONFIG
+    RFQ_CONFIG,
+	CREATE_RFQ_REQUEST,
+	CANCEL_RFQ_REQUEST
 } from "./endpoints";
 import { OrderBuilder } from "./order-builder/builder";
 import { END_CURSOR, INITIAL_CURSOR } from "./constants";
@@ -643,6 +645,27 @@ export class ClobClient {
         );
     }
 
+	public async cancelRfqRequest(request: CancelRfqRequestParams): Promise<void> {
+        this.canL2Auth();
+        const endpoint = CANCEL_RFQ_REQUEST;
+		const payload = JSON.stringify(request);
+
+		const l2HeaderArgs = {
+            method: DELETE,
+            requestPath: endpoint,
+            body: payload,
+        };
+
+        const headers = await createL2Headers(
+            this.signer as Wallet | JsonRpcSigner,
+            this.creds as ApiKeyCreds,
+            l2HeaderArgs,
+            this.useServerTime ? await this.getServerTime() : undefined,
+        );
+
+        return this.del(`${this.host}${endpoint}`, { headers, data: payload });
+	}
+
 
     public async createRfqQuote(
         quote: CreateRfqQuoteParams
@@ -689,6 +712,7 @@ export class ClobClient {
 
         return this.put(`${this.host}${endpoint}`, { headers, data: payload });
     }
+
     public async cancelRfqQuote(
         quote: CancelRfqQuoteParams
     ): Promise<any> {
@@ -714,7 +738,7 @@ export class ClobClient {
 
     public async postRfqRequest(payload: RfqRequestParams): Promise<any> {
         this.canL2Auth();
-        const endpoint = RFQ_ORDER;
+        const endpoint = CREATE_RFQ_REQUEST;
 
         const l2HeaderArgs = {
             method: POST,
