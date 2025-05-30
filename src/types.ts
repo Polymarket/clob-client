@@ -463,6 +463,10 @@ export interface RfqRequestParams {
     userType: number;
 }
 
+export interface CancelRfqRequestParams {
+	requestId: string;	
+}
+
 export interface RfqQuoteParams {
     requestId: string;
     assetIn: string;
