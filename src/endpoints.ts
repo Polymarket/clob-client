@@ -29,6 +29,7 @@ export const GET_NEG_RISK = "/neg-risk";
 
 // Order endpoints
 export const POST_ORDER = "/order";
+export const POST_ORDERS = "/orders";
 export const CANCEL_ORDER = "/order";
 export const CANCEL_ORDERS = "/orders";
 export const GET_ORDER = "/data/order/";

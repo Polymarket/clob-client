@@ -1,4 +1,4 @@
-import { SignatureType } from "@polymarket/order-utils";
+import { SignatureType, SignedOrder } from "@polymarket/order-utils";
 import { AxiosRequestHeaders } from "axios";
 
 export interface ApiKeyCreds {
@@ -46,6 +46,11 @@ export enum OrderType {
     FOK = "FOK",
     GTD = "GTD",
     FAK = "FAK",
+}
+
+export interface PostOrdersArgs {
+    order: SignedOrder;
+    orderType: OrderType;
 }
 
 export interface NewOrder<T extends OrderType> {
