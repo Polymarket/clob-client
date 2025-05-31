@@ -46,6 +46,9 @@
     },
     "dependencies": {
         "@polymarket/order-utils": "^2.1.0",
+        "@safe-global/api-kit": "^2.5.8",
+        "@safe-global/auth-kit": "^2.0.8",
+        "@safe-global/protocol-kit": "^5.2.1",
         "axios": "^0.27.2",
         "browser-or-node": "^2.1.1",
         "ethers": "^5.7.1"
