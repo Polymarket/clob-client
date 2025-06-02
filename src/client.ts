@@ -45,7 +45,8 @@ import {
 	RfqUserOrder,
     CreateRfqQuoteParams,
     ImproveRfqQuoteParams,
-    CancelRfqQuoteParams
+    CancelRfqQuoteParams,
+    GetRfqQuotesParams
 } from "./types";
 import { createL1Headers, createL2Headers } from "./headers";
 import {
@@ -116,7 +117,8 @@ import {
     RFQ_ORDER,
     CANCEL_RFQ_QUOTE,
     CREATE_RFQ_QUOTE,
-    IMPROVE_RFQ_QUOTE
+    IMPROVE_RFQ_QUOTE,
+    GET_RFQ_QUOTES
 } from "./endpoints";
 import { OrderBuilder } from "./order-builder/builder";
 import { END_CURSOR, INITIAL_CURSOR } from "./constants";
@@ -665,6 +667,27 @@ export class ClobClient {
 
         return this.post(`${this.host}${endpoint}`, { headers, data: payload });
     }
+    public async getRfqQuotes(
+        params?: GetRfqQuotesParams
+    ): Promise<any> {
+        this.canL2Auth();
+        const endpoint = GET_RFQ_QUOTES;
+
+        const l2HeaderArgs = {
+            method: GET,
+            requestPath: endpoint,
+        };
+
+        const headers = await createL2Headers(
+            this.signer as Wallet | JsonRpcSigner,
+            this.creds as ApiKeyCreds,
+            l2HeaderArgs,
+            this.useServerTime ? await this.getServerTime() : undefined,
+        );
+
+        return this.get(`${this.host}${endpoint}`, { headers, params });
+    }
+
 
     public async improveRfqQuote(
         quote: ImproveRfqQuoteParams
