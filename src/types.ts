@@ -224,7 +224,7 @@ export interface MakerOrder {
     fee_rate_bps: string;
     asset_id: string;
     outcome: string;
-    side: string;
+    side: Side;
 }
 
 export interface Trade {
@@ -234,7 +234,7 @@ export interface Trade {
 
     market: string;
     asset_id: string;
-    side: number | string;
+    side: Side;
     size: string;
     fee_rate_bps: string;
     price: string;
