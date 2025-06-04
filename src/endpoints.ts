@@ -67,3 +67,4 @@ export const GET_REWARDS_EARNINGS_PERCENTAGES = "/rewards/user/markets";
 export const CREATE_RFQ_QUOTE = "/rfq/quote";
 export const IMPROVE_RFQ_QUOTE = "/rfq/quote";
 export const CANCEL_RFQ_QUOTE = "/rfq/quote";
+export const RFQ_CONFIG = "/rfq/config";
