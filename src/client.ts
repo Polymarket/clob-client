@@ -41,6 +41,8 @@ import {
     TotalUserEarning,
     NegRisk,
     BanStatus,
+    NewOrder,
+    PostOrdersArgs,
 } from "./types";
 import { createL1Headers, createL2Headers } from "./headers";
 import {
@@ -106,6 +108,7 @@ import {
     GET_SPREAD,
     GET_SPREADS,
     UPDATE_BALANCE_ALLOWANCE,
+    POST_ORDERS,
 } from "./endpoints";
 import { OrderBuilder } from "./order-builder/builder";
 import { END_CURSOR, INITIAL_CURSOR } from "./constants";
@@ -750,6 +753,31 @@ export class ClobClient {
         );
 
         return this.post(`${this.host}${endpoint}`, { headers, data: orderPayload });
+    }
+
+    public async postOrders(args: PostOrdersArgs[]): Promise<any> {
+        this.canL2Auth();
+        const endpoint = POST_ORDERS;
+        const ordersPayload: NewOrder<any>[] = [];
+        for (const { order, orderType } of args) {
+            const orderPayload = orderToJson(order, this.creds?.key || "", orderType);
+            ordersPayload.push(orderPayload);
+        }
+
+        const l2HeaderArgs = {
+            method: POST,
+            requestPath: endpoint,
+            body: JSON.stringify(ordersPayload),
+        };
+
+        const headers = await createL2Headers(
+            this.signer as Wallet | JsonRpcSigner,
+            this.creds as ApiKeyCreds,
+            l2HeaderArgs,
+            this.useServerTime ? await this.getServerTime() : undefined,
+        );
+
+        return this.post(`${this.host}${endpoint}`, { headers, data: ordersPayload });
     }
 
     public async cancelOrder(payload: OrderPayload): Promise<any> {
