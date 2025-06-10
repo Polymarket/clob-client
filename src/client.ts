@@ -47,6 +47,8 @@ import {
     ImproveRfqQuoteParams,
     CancelRfqQuoteParams,
     CancelRfqRequestParams,
+    AcceptQuoteParams,
+    ApproveOrderParams,
 } from "./types";
 import { createL1Headers, createL2Headers } from "./headers";
 import {
@@ -120,6 +122,8 @@ import {
     RFQ_CONFIG,
     CREATE_RFQ_REQUEST,
     CANCEL_RFQ_REQUEST,
+    RFQ_REQUESTS_ACCEPT,
+    RFQ_QUOTE_APPROVE,
 } from "./endpoints";
 import { OrderBuilder } from "./order-builder/builder";
 import { END_CURSOR, INITIAL_CURSOR } from "./constants";
@@ -767,6 +771,47 @@ export class ClobClient {
 
         return this.get(`${this.host}${endpoint}`, { headers });
     }
+
+    public async acceptRfqQuote(payload: AcceptQuoteParams): Promise<any> {
+        this.canL2Auth();
+        const endpoint = RFQ_REQUESTS_ACCEPT;
+
+        const l2HeaderArgs = {
+            method: POST,
+            requestPath: endpoint,
+            body: JSON.stringify(payload),
+        };
+
+        const headers = await createL2Headers(
+            this.signer as Wallet | JsonRpcSigner,
+            this.creds as ApiKeyCreds,
+            l2HeaderArgs,
+            this.useServerTime ? await this.getServerTime() : undefined,
+        );
+        
+        return this.post(`${this.host}${endpoint}`, { headers, data: payload });
+    }
+
+    public async approveRfqOrder(payload: ApproveOrderParams): Promise<any> {
+        this.canL2Auth();
+        const endpoint = RFQ_QUOTE_APPROVE;
+
+        const l2HeaderArgs = {
+            method: POST,
+            requestPath: endpoint,
+            body: JSON.stringify(payload),
+        };
+
+        const headers = await createL2Headers(
+            this.signer as Wallet | JsonRpcSigner,
+            this.creds as ApiKeyCreds,
+            l2HeaderArgs,
+            this.useServerTime ? await this.getServerTime() : undefined,
+        );
+
+        return this.post(`${this.host}${endpoint}`, { headers, data: payload });
+    }
+
     public async createOrder(
         userOrder: UserOrder,
         options?: Partial<CreateOrderOptions>,

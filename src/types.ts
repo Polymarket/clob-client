@@ -475,6 +475,7 @@ export interface RfqQuoteParams {
     amountOut: string;
     userType: number;
 }
+
 export interface CreateRfqQuoteParams {
     requestId: string;
     assetIn: string;
@@ -483,11 +484,52 @@ export interface CreateRfqQuoteParams {
     amountOut: string;
     userType: number;
 }
+
 export interface ImproveRfqQuoteParams {
     quoteId: string;
     amountOut: string;
 }
+
 export interface CancelRfqQuoteParams {
     quoteId: string;
 }
+
+export interface AcceptQuoteParams {
+    requestId: string;
+    quoteId: string;
+    owner: string;
+    maker: string;
+    signer: string;
+    taker: string;
+    tokenId: string;
+    makerAmount: string;
+    takerAmount: string;
+    expiration: number;
+    nonce: string;
+    feeRateBps: string;
+    side: Side;
+    signatureType: SignatureType;
+    signature: string;
+    salt: number;
+}
+
+export interface ApproveOrderParams {
+    requestId: string;
+    quoteId: string;
+    owner: string;
+    maker: string;
+    signer: string;
+    taker: string;
+    tokenId: string;
+    makerAmount: string;
+    takerAmount: string;    
+    expiration: number;
+    nonce: string;
+    feeRateBps: string;
+    side: Side;
+    signatureType: SignatureType;
+    signature: string;
+    salt: number;
+}
+
 export type RfqUserOrder = Pick<UserOrder, "price" | "size" | "side" | "tokenID">
