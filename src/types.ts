@@ -463,6 +463,10 @@ export interface RfqRequestParams {
     userType: number;
 }
 
+export interface CancelRfqRequestParams {
+	requestId: string;	
+}
+
 export interface RfqQuoteParams {
     requestId: string;
     assetIn: string;
@@ -504,6 +508,9 @@ export interface GetRfqQuotesParams {
     sortDir?: string;
     limit?: number;
     offset?: number;
+}
+export interface GetRfqBestQuoteParams {
+    requestId?: string;
 }
 
 export type RfqUserOrder = Pick<UserOrder, "price" | "size" | "side" | "tokenID">

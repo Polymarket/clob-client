@@ -18,17 +18,8 @@ async function main() {
     };
     const clobClient = new ClobClient(host, chainId, wallet, creds);
     
-    const quote = await clobClient.createRfqQuote(
-        {
-            requestId: "0196b203-c3b4-7b4f-894e-b58a2c8c3111",
-            assetIn: "0",
-            assetOut: "34097058504275310827233323421517291090691602969494795225921954353603704046623",
-            amountIn: "50000000",
-            amountOut: "100000000",
-            userType: 0,
-        }
-    );
-    console.log("rfqQuote - Quote", quote);
+    const config = await clobClient.rfqConfig();
+    console.log("rfqConfig - Config", config);
 }
 
 main();
