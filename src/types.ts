@@ -475,13 +475,13 @@ export interface RfqQuoteParams {
     amountOut: string;
     userType: number;
 }
+
 export interface CreateRfqQuoteParams {
     requestId: string;
     assetIn: string;
     assetOut: string;
     amountIn: string;
     amountOut: string;
-    userType: number;
 }
 export interface ImproveRfqQuoteParams {
     quoteId: string;
