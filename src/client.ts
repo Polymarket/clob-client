@@ -47,6 +47,7 @@ import {
     ImproveRfqQuoteParams,
     CancelRfqQuoteParams,
     CancelRfqRequestParams,
+	RfqQuoteParams,
 } from "./types";
 import { createL1Headers, createL2Headers } from "./headers";
 import {
@@ -670,9 +671,9 @@ export class ClobClient {
         this.canL2Auth();
         const endpoint = CREATE_RFQ_QUOTE;
 
-		const quoteWithSignatureType = {
+		const quoteWithSignatureType: RfqQuoteParams = {
 			...quote,
-			signature_type: this.orderBuilder.signatureType,
+			userType: this.orderBuilder.signatureType,
 		}
 
         const payload = JSON.stringify(quoteWithSignatureType);
