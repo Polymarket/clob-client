@@ -51,7 +51,7 @@
         "ethers": "^5.7.1"
     },
     "devDependencies": {
-        "@babel/core": ">=7.23.2",
+        "@babel/core": "7.23.2",
         "@babel/traverse": ">=7.23.2",
         "@types/chai": "^4.3.3",
         "@types/mocha": "^9.1.1",
