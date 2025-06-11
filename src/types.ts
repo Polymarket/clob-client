@@ -486,4 +486,8 @@ export interface ImproveRfqQuoteParams {
 export interface CancelRfqQuoteParams {
     quoteId: string;
 }
-export type RfqUserOrder = Pick<UserOrder, "price" | "size" | "side" | "tokenID">
+
+export interface CancelRfqRequestParams {
+    requestId: string;
+}
+export type RfqUserOrder = Pick<UserOrder, "price" | "size" | "side" | "tokenID">;
