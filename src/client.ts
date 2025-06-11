@@ -734,10 +734,11 @@ export class ClobClient {
     public async postOrder<T extends OrderType = OrderType.GTC>(
         order: SignedOrder,
         orderType: T = OrderType.GTC as T,
+        deferExec = false,
     ): Promise<any> {
         this.canL2Auth();
         const endpoint = POST_ORDER;
-        const orderPayload = orderToJson(order, this.creds?.key || "", orderType);
+        const orderPayload = orderToJson(order, this.creds?.key || "", orderType, deferExec);
 
         const l2HeaderArgs = {
             method: POST,
@@ -755,12 +756,12 @@ export class ClobClient {
         return this.post(`${this.host}${endpoint}`, { headers, data: orderPayload });
     }
 
-    public async postOrders(args: PostOrdersArgs[]): Promise<any> {
+    public async postOrders(args: PostOrdersArgs[], deferExec = false): Promise<any> {
         this.canL2Auth();
         const endpoint = POST_ORDERS;
         const ordersPayload: NewOrder<any>[] = [];
         for (const { order, orderType } of args) {
-            const orderPayload = orderToJson(order, this.creds?.key || "", orderType);
+            const orderPayload = orderToJson(order, this.creds?.key || "", orderType, deferExec);
             ordersPayload.push(orderPayload);
         }
 
