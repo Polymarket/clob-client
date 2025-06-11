@@ -47,7 +47,7 @@ import {
     ImproveRfqQuoteParams,
     CancelRfqQuoteParams,
     CancelRfqRequestParams,
-	  RfqQuoteParams,
+    RfqQuoteParams,
 } from "./types";
 import { createL1Headers, createL2Headers } from "./headers";
 import {
@@ -671,10 +671,10 @@ export class ClobClient {
         this.canL2Auth();
         const endpoint = CREATE_RFQ_QUOTE;
 
-		const quoteWithSignatureType: RfqQuoteParams = {
-			...quote,
-			userType: this.orderBuilder.signatureType,
-		}
+        const quoteWithSignatureType: RfqQuoteParams = {
+            ...quote,
+            userType: this.orderBuilder.signatureType,
+        };
 
         const payload = JSON.stringify(quoteWithSignatureType);
 
@@ -719,27 +719,6 @@ export class ClobClient {
         this.canL2Auth();
         const endpoint = CANCEL_RFQ_QUOTE;
         const payload = JSON.stringify(quote);
-
-        const l2HeaderArgs = {
-            method: DELETE,
-            requestPath: endpoint,
-            body: payload,
-        };
-
-        const headers = await createL2Headers(
-            this.signer as Wallet | JsonRpcSigner,
-            this.creds as ApiKeyCreds,
-            l2HeaderArgs,
-            this.useServerTime ? await this.getServerTime() : undefined,
-        );
-
-        return this.del(`${this.host}${endpoint}`, { headers, data: payload });
-    }
-
-    public async cancelRfqRequest(request: CancelRfqRequestParams): Promise<any> {
-        this.canL2Auth();
-        const endpoint = CANCEL_RFQ_REQUEST;
-        const payload = JSON.stringify(request);
 
         const l2HeaderArgs = {
             method: DELETE,

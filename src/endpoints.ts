@@ -28,6 +28,7 @@ export const GET_TICK_SIZE = "/tick-size";
 export const GET_NEG_RISK = "/neg-risk";
 
 // Order endpoints
+export const POST_ORDER = "/order";
 export const CANCEL_ORDER = "/order";
 export const CANCEL_ORDERS = "/orders";
 export const GET_ORDER = "/data/order/";
@@ -61,7 +62,7 @@ export const GET_REWARDS_MARKETS = "/rewards/markets/";
 export const GET_REWARDS_EARNINGS_PERCENTAGES = "/rewards/user/markets";
 
 // RFQ
-export const CREATE_RFQ_REQUEST = "/rfq/request"
+export const CREATE_RFQ_REQUEST = "/rfq/request";
 export const CANCEL_RFQ_REQUEST = "/rfq/request";
 export const CREATE_RFQ_QUOTE = "/rfq/quote";
 export const IMPROVE_RFQ_QUOTE = "/rfq/quote";
