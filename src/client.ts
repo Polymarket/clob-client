@@ -681,18 +681,20 @@ export class ClobClient {
         userOrder: UserOrder,
         options?: Partial<CreateOrderOptions>,
         orderType: T = OrderType.GTC as T,
+        deferExec = false,
     ): Promise<any> {
         const order = await this.createOrder(userOrder, options);
-        return this.postOrder(order, orderType);
+        return this.postOrder(order, orderType, deferExec);
     }
 
     public async createAndPostMarketOrder<T extends OrderType.FOK | OrderType.FAK = OrderType.FOK>(
         userMarketOrder: UserMarketOrder,
         options?: Partial<CreateOrderOptions>,
         orderType: T = OrderType.FOK as T,
+        deferExec = false,
     ): Promise<any> {
         const order = await this.createMarketOrder(userMarketOrder, options);
-        return this.postOrder(order, orderType);
+        return this.postOrder(order, orderType, deferExec);
     }
 
     public async getOpenOrders(
