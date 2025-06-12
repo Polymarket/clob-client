@@ -530,5 +530,26 @@ export interface ApproveOrderParams {
     signature: string;
     salt: number;
 }
+export interface GetRfqQuotesParams {
+    quoteIds?: string[];
+    states?: string[];
+    userAddress?: string;
+    state?: string;
+    markets?: string[];
+    requestIds?: string[];
+    sizeMin?: number;
+    sizeMax?: number;
+    sizeUsdcMin?: number;
+    sizeUsdcMax?: number;
+    priceMin?: number;
+    priceMax?: number;
+    sortBy?: string;
+    sortDir?: string;
+    limit?: number;
+    offset?: number;
+}
+export interface GetRfqBestQuoteParams {
+    requestId?: string;
+}
 
 export type RfqUserOrder = Pick<UserOrder, "price" | "size" | "side" | "tokenID">
