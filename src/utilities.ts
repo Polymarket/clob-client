@@ -6,6 +6,7 @@ export function orderToJson<T extends OrderType>(
     order: SignedOrder,
     owner: string,
     orderType: T,
+    deferExec = false,
 ): NewOrder<T> {
     let side = Side.BUY;
     if (order.side == UtilsSide.BUY) {
@@ -15,6 +16,7 @@ export function orderToJson<T extends OrderType>(
     }
 
     return {
+        deferExec,
         order: {
             salt: parseInt(order.salt, 10),
             maker: order.maker,
