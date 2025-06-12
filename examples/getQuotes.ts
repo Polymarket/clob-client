@@ -16,18 +16,24 @@ async function main() {
         secret: `${process.env.CLOB_SECRET}`,
         passphrase: `${process.env.CLOB_PASS_PHRASE}`,
     };
+
     const clobClient = new ClobClient(host, chainId, wallet, creds);
     
-    const quote = await clobClient.createRfqQuote(
-        {
-            requestId: "0196b203-c3b4-7b4f-894e-b58a2c8c3111",
-            assetIn: "0",
-            assetOut: "34097058504275310827233323421517291090691602969494795225921954353603704046623",
-            amountIn: "50000000",
-            amountOut: "100000000",
-            userType: 0,
-        }
-    );
+    // Example: Get quotes with various filters
+    const quote = await clobClient.getRfqQuotes({
+        // quoteIds: [""],
+        // Optional filters
+        state: "active",           // Filter by quote state
+        // markets: [""],    // Filter by specific markets
+        // sizeMin: 5,               // Minimum size
+        // sizeMax: 100,             // Maximum size
+        // priceMin: 0.1,            // Minimum price
+        // priceMax: 0.9,            // Maximum price
+        // sortBy: "price",          // Sort by price
+        // sortDir: "asc",           // Sort ascending
+        limit: 10,                // Limit results
+        // offset: 0                 // Pagination offset
+    });
     console.log("rfqQuote - Quote", quote);
 }
 
