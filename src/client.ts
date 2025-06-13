@@ -867,7 +867,6 @@ export class ClobClient {
             price: rfqRequest.price,
             size: rfqRequest.sizeIn,
             side: rfqRequest.side,
-            feeRateBps: rfqRequest.feeRateBps,
             taker: rfqRequest.taker,
             expiration: payload.expiration,
         });
@@ -923,7 +922,6 @@ export class ClobClient {
             price: rfqQuote.price,
             size: rfqQuote.sizeIn,
             side: rfqQuote.side,
-            feeRateBps: rfqQuote.feeRateBps,
             taker: rfqQuote.taker,
             expiration: payload.expiration,
         });
