@@ -483,14 +483,27 @@ export interface CreateRfqQuoteParams {
     amountIn: string;
     amountOut: string;
 }
+
 export interface ImproveRfqQuoteParams {
     quoteId: string;
     amountOut: string;
 }
+
 export interface CancelRfqQuoteParams {
     quoteId: string;
 }
 
+export interface AcceptQuoteParams {
+    requestId: string;
+    quoteId: string;
+    expiration: number;
+}
+
+export interface ApproveOrderParams {
+    requestId: string;
+    quoteId: string;
+    expiration: number;
+}
 export interface GetRfqQuotesParams {
     quoteIds?: string[];
     states?: string[];
@@ -507,10 +520,28 @@ export interface GetRfqQuotesParams {
     sortBy?: string;
     sortDir?: string;
     limit?: number;
-    offset?: number;
+    offset?: string;
 }
 export interface GetRfqBestQuoteParams {
     requestId?: string;
 }
 
 export type RfqUserOrder = Pick<UserOrder, "price" | "size" | "side" | "tokenID">
+
+export interface GetRfqRequestsParams {
+    requestIds?: string[];
+    userAddress?: string;
+    states?: string[];
+    state?: string; // active/inactive query param
+    markets?: string[];
+    sizeMin?: number;
+    sizeMax?: number;
+    sizeUsdcMin?: number;
+    sizeUsdcMax?: number;
+    priceMin?: number;
+    priceMax?: number;
+    sortBy?: string;
+    sortDir?: string;
+    limit?: number;
+    offset?: string;
+}

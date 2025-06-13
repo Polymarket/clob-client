@@ -1,6 +1,6 @@
 import { Wallet } from "@ethersproject/wallet";
 import { JsonRpcSigner } from "@ethersproject/providers";
-import { SignatureType, SignedOrder } from "@polymarket/order-utils";
+import { SignatureType, SignedOrder, Side as UtilsSide } from "@polymarket/order-utils";
 import {
     ApiKeyCreds,
     ApiKeysResponse,
@@ -49,7 +49,10 @@ import {
     GetRfqQuotesParams,
     GetRfqBestQuoteParams,
     CancelRfqRequestParams,
+    AcceptQuoteParams,
+    ApproveOrderParams,
 	RfqQuoteParams,
+    GetRfqRequestsParams
 } from "./types";
 import { createL1Headers, createL2Headers } from "./headers";
 import {
@@ -125,6 +128,9 @@ import {
     RFQ_CONFIG,
     CREATE_RFQ_REQUEST,
     CANCEL_RFQ_REQUEST,
+    RFQ_REQUESTS_ACCEPT,
+    RFQ_QUOTE_APPROVE,
+    GET_RFQ_REQUESTS,
 } from "./endpoints";
 import { OrderBuilder } from "./order-builder/builder";
 import { END_CURSOR, INITIAL_CURSOR } from "./constants";
@@ -818,6 +824,129 @@ export class ClobClient {
 
         return this.get(`${this.host}${endpoint}`, { headers });
     }
+
+
+    public async getRfqRequests(params?: GetRfqRequestsParams): Promise<any> {
+        this.canL2Auth();
+        const endpoint = GET_RFQ_REQUESTS;
+
+        const l2HeaderArgs = {
+            method: GET,
+            requestPath: endpoint,
+        };
+
+        const headers = await createL2Headers(
+            this.signer as Wallet | JsonRpcSigner,
+            this.creds as ApiKeyCreds,
+            l2HeaderArgs,
+            this.useServerTime ? await this.getServerTime() : undefined,
+        );
+
+        return this.get(`${this.host}${endpoint}`, { headers, params });
+    }
+
+    public async acceptRfqQuote(payload: AcceptQuoteParams): Promise<any> {
+        this.canL2Auth();
+        let rfqRequests: any;
+        try {
+            rfqRequests = await this.getRfqRequests({
+                requestIds: [payload.requestId],
+                limit: 1,
+            });
+            if (!rfqRequests?.data || rfqRequests.data.length === 0) {
+                return { error: "RFQ request not found" };
+            }
+        } catch (error) {
+            return { error: error instanceof Error ? error.message : "Error fetching RFQ request" };
+        }
+        const rfqRequest = rfqRequests.data[0];
+
+        // create an order
+        const order = await this.createOrder({
+            tokenID: rfqRequest.token,
+            price: rfqRequest.price,
+            size: rfqRequest.sizeIn,
+            side: rfqRequest.side,
+            taker: rfqRequest.taker,
+            expiration: payload.expiration,
+        });
+        if (!order) {
+            throw new Error("Error creating order");
+        }
+
+        const acceptPayload = {
+            requestId: payload.requestId,
+            quoteId: payload.quoteId,
+            owner: this.creds?.key,
+            ...order,
+            expiration: parseInt(order.expiration),
+            side: order.side === UtilsSide.BUY ? Side.BUY : Side.SELL,
+            salt: parseInt(order.salt.toString())
+    
+        };
+        const endpoint = RFQ_REQUESTS_ACCEPT;
+
+        const l2HeaderArgs = {
+            method: POST,
+            requestPath: endpoint,
+            body: JSON.stringify(acceptPayload),
+        };
+
+        const headers = await createL2Headers(
+            this.signer as Wallet | JsonRpcSigner,
+            this.creds as ApiKeyCreds,
+            l2HeaderArgs,
+            this.useServerTime ? await this.getServerTime() : undefined,
+        );
+        return this.post(`${this.host}${endpoint}`, { headers, data: acceptPayload });
+    }
+
+    public async approveRfqOrder(payload: ApproveOrderParams): Promise<any> {
+        this.canL2Auth();
+        let rfqQuotes: any;
+        try {
+            rfqQuotes = await this.getRfqRequests({
+                requestIds: [payload.requestId],
+                limit: 1,
+            });
+            if (!rfqQuotes?.data || rfqQuotes.data.length === 0) {
+                return { error: "RFQ quote not found" };
+            }
+        } catch (error) {
+            return { error: error instanceof Error ? error.message : "Error fetching RFQ quote" };
+        }
+        const rfqQuote = rfqQuotes.data[0];
+        // create an order
+        const order = await this.createOrder({
+            tokenID: rfqQuote.token,
+            price: rfqQuote.price,
+            size: rfqQuote.sizeIn,
+            side: rfqQuote.side,
+            taker: rfqQuote.taker,
+            expiration: payload.expiration,
+        });
+        if (!order) {
+            throw new Error("Error creating order");
+        }
+        
+        const endpoint = RFQ_QUOTE_APPROVE;
+
+        const l2HeaderArgs = {
+            method: POST,
+            requestPath: endpoint,
+            body: JSON.stringify(payload),
+        };
+
+        const headers = await createL2Headers(
+            this.signer as Wallet | JsonRpcSigner,
+            this.creds as ApiKeyCreds,
+            l2HeaderArgs,
+            this.useServerTime ? await this.getServerTime() : undefined,
+        );
+
+        return this.post(`${this.host}${endpoint}`, { headers, data: payload });
+    }
+
     public async createOrder(
         userOrder: UserOrder,
         options?: Partial<CreateOrderOptions>,
