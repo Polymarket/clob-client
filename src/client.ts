@@ -899,8 +899,6 @@ export class ClobClient {
             l2HeaderArgs,
             this.useServerTime ? await this.getServerTime() : undefined,
         );
-        console.log("acceptPayload", acceptPayload);
-        console.log("headers", headers);
         return this.post(`${this.host}${endpoint}`, { headers, data: acceptPayload });
     }
 
