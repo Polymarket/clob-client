@@ -32,7 +32,7 @@ async function main() {
         // sortBy: "price",          // Sort by price
         // sortDir: "asc",           // Sort ascending
         limit: 10,                // Limit results
-        // offset: 0                 // Pagination offset
+        offset: "MA==",                 // Pagination offset
     });
     console.log("rfqQuote - Quote", quote);
 }

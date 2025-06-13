@@ -496,39 +496,13 @@ export interface CancelRfqQuoteParams {
 export interface AcceptQuoteParams {
     requestId: string;
     quoteId: string;
-    owner: string;
-    maker: string;
-    signer: string;
-    taker: string;
-    tokenId: string;
-    makerAmount: string;
-    takerAmount: string;
     expiration: number;
-    nonce: string;
-    feeRateBps: string;
-    side: Side;
-    signatureType: SignatureType;
-    signature: string;
-    salt: number;
 }
 
 export interface ApproveOrderParams {
     requestId: string;
     quoteId: string;
-    owner: string;
-    maker: string;
-    signer: string;
-    taker: string;
-    tokenId: string;
-    makerAmount: string;
-    takerAmount: string;    
     expiration: number;
-    nonce: string;
-    feeRateBps: string;
-    side: Side;
-    signatureType: SignatureType;
-    signature: string;
-    salt: number;
 }
 export interface GetRfqQuotesParams {
     quoteIds?: string[];
@@ -546,10 +520,28 @@ export interface GetRfqQuotesParams {
     sortBy?: string;
     sortDir?: string;
     limit?: number;
-    offset?: number;
+    offset?: string;
 }
 export interface GetRfqBestQuoteParams {
     requestId?: string;
 }
 
 export type RfqUserOrder = Pick<UserOrder, "price" | "size" | "side" | "tokenID">
+
+export interface GetRfqRequestsParams {
+    requestIds?: string[];
+    userAddress?: string;
+    states?: string[];
+    state?: string; // active/inactive query param
+    markets?: string[];
+    sizeMin?: number;
+    sizeMax?: number;
+    sizeUsdcMin?: number;
+    sizeUsdcMax?: number;
+    priceMin?: number;
+    priceMax?: number;
+    sortBy?: string;
+    sortDir?: string;
+    limit?: number;
+    offset?: string;
+}
