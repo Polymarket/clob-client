@@ -71,6 +71,7 @@ export interface NewOrder<T extends OrderType> {
     };
     readonly owner: string;
     readonly orderType: T;
+    readonly deferExec: boolean;
 }
 
 // Simplified order for users
