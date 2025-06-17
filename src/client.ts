@@ -723,7 +723,8 @@ export class ClobClient {
             this.useServerTime ? await this.getServerTime() : undefined,
         );
 
-        return this.get(`${this.host}${endpoint}`, { headers, params }) as Promise<RfqQuotesResponse>;
+        return this.get(`${this.host}${endpoint}`, 
+            { headers, params }) as Promise<RfqQuotesResponse>;
     }
 
     public async getRfqBestQuote(
@@ -844,7 +845,8 @@ export class ClobClient {
             this.useServerTime ? await this.getServerTime() : undefined,
         );
 
-        return this.get(`${this.host}${endpoint}`, { headers, params }) as Promise<RfqRequestsResponse>;
+        return this.get(`${this.host}${endpoint}`, 
+            { headers, params }) as Promise<RfqRequestsResponse>;
     }
 
     public async acceptRfqQuote(payload: AcceptQuoteParams): Promise<any> {
