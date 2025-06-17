@@ -64,9 +64,12 @@ export const GET_REWARDS_EARNINGS_PERCENTAGES = "/rewards/user/markets";
 // RFQ
 export const CREATE_RFQ_REQUEST = "/rfq/request"
 export const CANCEL_RFQ_REQUEST = "/rfq/request";
+export const GET_RFQ_REQUESTS = "/rfq/data/requests";
 export const CREATE_RFQ_QUOTE = "/rfq/quote";
 export const IMPROVE_RFQ_QUOTE = "/rfq/quote";
 export const CANCEL_RFQ_QUOTE = "/rfq/quote";
+export const RFQ_REQUESTS_ACCEPT = "/rfq/request/accept";
+export const RFQ_QUOTE_APPROVE = "/rfq/quote/approve";
 export const GET_RFQ_QUOTES = "/rfq/data/quotes";
 export const GET_RFQ_BEST_QUOTE = "/rfq/data/best-quote";
 export const RFQ_CONFIG = "/rfq/config";
