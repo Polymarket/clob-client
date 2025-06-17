@@ -52,7 +52,9 @@ import {
     AcceptQuoteParams,
     ApproveOrderParams,
 	RfqQuoteParams,
-    GetRfqRequestsParams
+    GetRfqRequestsParams,
+    RfqRequestsResponse,
+    RfqQuotesResponse,
 } from "./types";
 import { createL1Headers, createL2Headers } from "./headers";
 import {
@@ -705,7 +707,7 @@ export class ClobClient {
     }
     public async getRfqQuotes(
         params?: GetRfqQuotesParams
-    ): Promise<any> {
+    ): Promise<RfqQuotesResponse> {
         this.canL2Auth();
         const endpoint = GET_RFQ_QUOTES;
 
@@ -721,7 +723,7 @@ export class ClobClient {
             this.useServerTime ? await this.getServerTime() : undefined,
         );
 
-        return this.get(`${this.host}${endpoint}`, { headers, params });
+        return this.get(`${this.host}${endpoint}`, { headers, params }) as Promise<RfqQuotesResponse>;
     }
 
     public async getRfqBestQuote(
@@ -826,7 +828,7 @@ export class ClobClient {
     }
 
 
-    public async getRfqRequests(params?: GetRfqRequestsParams): Promise<any> {
+    public async getRfqRequests(params?: GetRfqRequestsParams): Promise<RfqRequestsResponse> {
         this.canL2Auth();
         const endpoint = GET_RFQ_REQUESTS;
 
@@ -842,12 +844,12 @@ export class ClobClient {
             this.useServerTime ? await this.getServerTime() : undefined,
         );
 
-        return this.get(`${this.host}${endpoint}`, { headers, params });
+        return this.get(`${this.host}${endpoint}`, { headers, params }) as Promise<RfqRequestsResponse>;
     }
 
     public async acceptRfqQuote(payload: AcceptQuoteParams): Promise<any> {
         this.canL2Auth();
-        let rfqRequests: any;
+        let rfqRequests: RfqRequestsResponse;
         try {
             rfqRequests = await this.getRfqRequests({
                 requestIds: [payload.requestId],
@@ -865,9 +867,8 @@ export class ClobClient {
         const order = await this.createOrder({
             tokenID: rfqRequest.token,
             price: rfqRequest.price,
-            size: rfqRequest.sizeIn,
-            side: rfqRequest.side,
-            taker: rfqRequest.taker,
+            size: parseInt(rfqRequest.size_in),
+            side: rfqRequest.side === UtilsSide.BUY.toString() ? Side.BUY : Side.SELL,
             expiration: payload.expiration,
         });
         if (!order) {
@@ -903,7 +904,7 @@ export class ClobClient {
 
     public async approveRfqOrder(payload: ApproveOrderParams): Promise<any> {
         this.canL2Auth();
-        let rfqQuotes: any;
+        let rfqQuotes: RfqRequestsResponse;
         try {
             rfqQuotes = await this.getRfqRequests({
                 requestIds: [payload.requestId],
@@ -920,9 +921,8 @@ export class ClobClient {
         const order = await this.createOrder({
             tokenID: rfqQuote.token,
             price: rfqQuote.price,
-            size: rfqQuote.sizeIn,
-            side: rfqQuote.side,
-            taker: rfqQuote.taker,
+            size: parseInt(rfqQuote.size_in),
+            side: rfqQuote.side === UtilsSide.BUY.toString() ? Side.BUY : Side.SELL,
             expiration: payload.expiration,
         });
         if (!order) {
