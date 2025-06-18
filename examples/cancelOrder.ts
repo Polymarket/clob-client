@@ -1,26 +1,23 @@
-import { ethers } from "ethers";
-import { config as dotenvConfig } from "dotenv";
-import { resolve } from "path";
-import { ApiKeyCreds, Chain, ClobClient } from "../src";
+import { ApiKeyCreds, ClobClient, OrderType, Side, } from "@polymarket/clob-client";
+import { Wallet } from "@ethersproject/wallet";
 
-dotenvConfig({ path: resolve(__dirname, "../.env") });
+const host = 'https://clob.polymarket.com';
+const funder = '';//This is your Polymarket Profile Address, where you send UDSC to.'
+const private_key = "" 
+//0: Browser Wallet(Metamask, Coinbase Wallet, etc)
+//1: Magic/Email Login
+const signatureType = 1; 
+const chainId = 137;
 
 async function main() {
-    const wallet = new ethers.Wallet(`${process.env.PK}`);
-    const chainId = parseInt(`${process.env.CHAIN_ID || Chain.AMOY}`) as Chain;
-    console.log(`Address: ${await wallet.getAddress()}, chainId: ${chainId}`);
-
-    const host = process.env.CLOB_API_URL || "http://localhost:8080";
-    const creds: ApiKeyCreds = {
-        key: `${process.env.CLOB_API_KEY}`,
-        secret: `${process.env.CLOB_SECRET}`,
-        passphrase: `${process.env.CLOB_PASS_PHRASE}`,
-    };
-    const clobClient = new ClobClient(host, chainId, wallet, creds);
+    
+    const wallet = new Wallet(private_key); //This is your Private Key. If using email login export from https://reveal.magic.link/polymarket otherwise export from your Web3 Application
+    const creds = new ClobClient(host, chainId, wallet).createOrDeriveApiKey();
+    const clobClient = new ClobClient(host, chainId, wallet, await creds, signatureType, funder);
 
     // Send it to the server
     const resp = await clobClient.cancelOrder({
-        orderID: "0x989af24e7bdf0f815e464d5560a0657735a9199fa3a6cd7fb968c85cc65d18b4", // Order ID
+        orderID: "0x989af24e7bdf0f815e464d5560a0657735a9199fa3a6cd7fb968c85cc65d18b4", // Example orderID
     });
     console.log(resp);
     console.log(`Done!`);
