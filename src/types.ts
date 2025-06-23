@@ -555,39 +555,39 @@ export interface RfqPaginatedResponse<T> {
 }
 
 export interface RfqRequest {
-    readonly request_id: string;
-    readonly user_address: string;
-    readonly proxy_address: string;
+    readonly requestId: string;
+    readonly userAddress: string;
+    readonly proxyAddress: string;
     readonly token: string;
     readonly complement: string;
     readonly condition: string;
     readonly side: string;
-    readonly size_in: string;
-    readonly size_out: string;
+    readonly sizeIn: string;
+    readonly sizeOut: string;
     readonly price: number;
-    readonly accepted_quote_id: string;
+    readonly acceptedQuoteId: string;
     readonly state: string;
     readonly expiry: Date;
-    readonly created_at: Date;
-    readonly updated_at: Date;
+    readonly createdAt: Date;
+    readonly updatedAt: Date;
 }
 
 export interface RfqQuote {
-    readonly quote_id: string;
-    readonly request_id: string;
-    readonly user_address: string;
-    readonly proxy_address: string;
+    readonly quoteId: string;
+    readonly requestId: string;
+    readonly userAddress: string;
+    readonly proxyAddress: string;
     readonly complement: string;
     readonly condition: string;
     readonly token: string;
     readonly side: string;
-    readonly size_in: string;
-    readonly size_out: string;
+    readonly sizeIn: string;
+    readonly sizeOut: string;
     readonly price: number;
     readonly state: string;
     readonly expiry: Date;
-    readonly created_at: Date;
-    readonly updated_at: Date;
+    readonly createdAt: Date;
+    readonly updatedAt: Date;
 }
 
 export type RfqRequestsResponse = RfqPaginatedResponse<RfqRequest>;
