@@ -864,7 +864,6 @@ export class ClobClient {
             return { error: error instanceof Error ? error.message : "Error fetching RFQ request" };
         }
         const rfqQuote = rfqQuotes.data[0];
-        console.log("quote", rfqQuote)
         // create an order
         const order = await this.createOrder({
             tokenID: rfqQuote.token,
@@ -876,7 +875,6 @@ export class ClobClient {
         if (!order) {
             throw new Error("Error creating order");
         }
-        console.log("order", order)
         const acceptPayload = {
             requestId: payload.requestId,
             quoteId: payload.quoteId,
