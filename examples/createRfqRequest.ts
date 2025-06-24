@@ -19,14 +19,14 @@ async function main() {
 	const clobClient = new ClobClient(host, chainId, wallet, creds);
 	
 	// Create a buy order for 12 YES at 0.50 for $6 (min amount is 5 shares and $5)
-	const YES = "104173557214744537570424345347209544585775842950109756851652855913015295701992"
+	const YES = "34097058504275310827233323421517291090691602969494795225921954353603704046623"
 
 	const request = await clobClient.createRfqRequest(
 		{
 			tokenID: YES,
 			price: 0.5,
-			side: Side.BUY,
-			size: 12,
+			side: Side.BUY, //20000000000
+			size: 40,
 		},
 		{ tickSize: "0.01" },
 	);
