@@ -866,7 +866,8 @@ export class ClobClient {
         const rfqQuote = rfqQuotes.data[0];
         // create an order
         const side = rfqQuote.side === UtilsSide.BUY.toString() ? Side.BUY : Side.SELL;
-        const size = rfqQuote.side === UtilsSide.BUY.toString() ? rfqQuote.sizeIn : rfqQuote.sizeOut;
+        const size = rfqQuote.side === UtilsSide.BUY.toString() ? 
+                rfqQuote.sizeIn : rfqQuote.sizeOut;
 
         const order = await this.createOrder({
             tokenID: rfqQuote.token,
@@ -921,7 +922,8 @@ export class ClobClient {
         const rfqQuote = rfqQuotes.data[0];
         // create an order
         const side = rfqQuote.side === UtilsSide.BUY.toString() ? Side.BUY : Side.SELL;
-        const size = rfqQuote.side === UtilsSide.BUY.toString() ? rfqQuote.sizeIn : rfqQuote.sizeOut;
+        const size = rfqQuote.side === UtilsSide.BUY.toString() ? 
+                rfqQuote.sizeIn : rfqQuote.sizeOut;
       
         const order = await this.createOrder({
             tokenID: rfqQuote.token,
