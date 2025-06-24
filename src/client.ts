@@ -851,27 +851,27 @@ export class ClobClient {
 
     public async acceptRfqQuote(payload: AcceptQuoteParams): Promise<any> {
         this.canL2Auth();
-        let rfqQuotes: RfqQuotesResponse;
+        let rfqRequests: RfqRequestsResponse;
         try {
-            rfqQuotes = await this.getRfqQuotes({
-                quoteIds: [payload.quoteId],
+            rfqRequests = await this.getRfqRequests({
+                requestIds: [payload.requestId],
                 limit: 1,
             });
-            if (!rfqQuotes?.data || rfqQuotes.data.length === 0) {
-                return { error: "RFQ quote not found" };
+            if (!rfqRequests?.data || rfqRequests.data.length === 0) {
+                return { error: "RFQ request not found" };
             }
         } catch (error) {
-            return { error: error instanceof Error ? error.message : "Error fetching RFQ quote" };
+            return { error: error instanceof Error ? error.message : "Error fetching RFQ request" };
         }
-        const rfqQuote = rfqQuotes.data[0];
+        const rfqRequest = rfqRequests.data[0];
         // create an order
-        const side = rfqQuote.side === UtilsSide.BUY.toString() ? Side.BUY : Side.SELL;
-        const size = rfqQuote.side === UtilsSide.BUY.toString() ? 
-                rfqQuote.sizeIn : rfqQuote.sizeOut;
+        const side = rfqRequest.side === UtilsSide.BUY.toString() ? Side.BUY : Side.SELL;
+        const size = rfqRequest.side === UtilsSide.BUY.toString() ? 
+            rfqRequest.sizeIn : rfqRequest.sizeOut;
 
         const order = await this.createOrder({
-            tokenID: rfqQuote.token,
-            price: rfqQuote.price,
+            tokenID: rfqRequest.token,
+            price: rfqRequest.price,
             size: parseInt(size),
             side: side,
             expiration: payload.expiration,
