@@ -903,25 +903,25 @@ export class ClobClient {
 
     public async approveRfqOrder(payload: ApproveOrderParams): Promise<any> {
         this.canL2Auth();
-        let rfqRequests: RfqRequestsResponse;
+        let rfqQuotes: RfqQuotesResponse;
         try {
-            rfqRequests = await this.getRfqRequests({
-                requestIds: [payload.requestId],
+            rfqQuotes = await this.getRfqQuotes({
+                quoteIds: [payload.quoteId],
                 limit: 1,
             });
-            if (!rfqRequests?.data || rfqRequests.data.length === 0) {
-                return { error: "RFQ request not found" };
+            if (!rfqQuotes?.data || rfqQuotes.data.length === 0) {
+                return { error: "RFQ quote not found" };
             }
         } catch (error) {
             return { error: error instanceof Error ? error.message : "Error fetching RFQ quote" };
         }
-        const rfqRequest = rfqRequests.data[0];
+        const rfqQuote = rfqQuotes.data[0];
         // create an order
         const order = await this.createOrder({
-            tokenID: rfqRequest.token,
-            price: rfqRequest.price,
-            size: parseInt(rfqRequest.sizeIn),
-            side: rfqRequest.side === UtilsSide.BUY.toString() ? Side.BUY : Side.SELL,
+            tokenID: rfqQuote.token,
+            price: rfqQuote.price,
+            size: parseInt(rfqQuote.sizeIn),
+            side: rfqQuote.side === UtilsSide.BUY.toString() ? Side.BUY : Side.SELL,
             expiration: payload.expiration,
         });
         if (!order) {
