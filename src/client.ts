@@ -872,7 +872,7 @@ export class ClobClient {
         const order = await this.createOrder({
             tokenID: rfqRequest.token,
             price: rfqRequest.price,
-            size: parseInt(size),
+            size: parseFloat(size),
             side: side,
             expiration: payload.expiration,
         });
@@ -928,7 +928,7 @@ export class ClobClient {
         const order = await this.createOrder({
             tokenID: rfqQuote.token,
             price: rfqQuote.price,
-            size: parseInt(size),
+            size: parseFloat(size),
             side: side,
             expiration: payload.expiration,
         });
