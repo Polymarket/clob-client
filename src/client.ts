@@ -861,15 +861,18 @@ export class ClobClient {
                 return { error: "RFQ quote not found" };
             }
         } catch (error) {
-            return { error: error instanceof Error ? error.message : "Error fetching RFQ request" };
+            return { error: error instanceof Error ? error.message : "Error fetching RFQ quote" };
         }
         const rfqQuote = rfqQuotes.data[0];
         // create an order
+        const side = rfqQuote.side === UtilsSide.BUY.toString() ? Side.BUY : Side.SELL;
+        const size = rfqQuote.side === UtilsSide.BUY.toString() ? rfqQuote.sizeIn : rfqQuote.sizeOut;
+
         const order = await this.createOrder({
             tokenID: rfqQuote.token,
             price: rfqQuote.price,
-            size: parseInt(rfqQuote.sizeIn),
-            side: rfqQuote.side === UtilsSide.BUY.toString() ? Side.BUY : Side.SELL,
+            size: parseInt(size),
+            side: side,
             expiration: payload.expiration,
         });
         if (!order) {
@@ -917,11 +920,14 @@ export class ClobClient {
         }
         const rfqQuote = rfqQuotes.data[0];
         // create an order
+        const side = rfqQuote.side === UtilsSide.BUY.toString() ? Side.BUY : Side.SELL;
+        const size = rfqQuote.side === UtilsSide.BUY.toString() ? rfqQuote.sizeIn : rfqQuote.sizeOut;
+      
         const order = await this.createOrder({
             tokenID: rfqQuote.token,
             price: rfqQuote.price,
-            size: parseInt(rfqQuote.sizeIn),
-            side: rfqQuote.side === UtilsSide.BUY.toString() ? Side.BUY : Side.SELL,
+            size: parseInt(size),
+            side: side,
             expiration: payload.expiration,
         });
         if (!order) {
