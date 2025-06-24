@@ -864,19 +864,21 @@ export class ClobClient {
             return { error: error instanceof Error ? error.message : "Error fetching RFQ request" };
         }
         const rfqRequest = rfqRequests.data[0];
-
         // create an order
+        const side = rfqRequest.side === UtilsSide.BUY.toString() ? Side.BUY : Side.SELL;
+        const size = rfqRequest.side === UtilsSide.BUY.toString() ? 
+            rfqRequest.sizeIn : rfqRequest.sizeOut;
+
         const order = await this.createOrder({
             tokenID: rfqRequest.token,
             price: rfqRequest.price,
-            size: parseInt(rfqRequest.size_in),
-            side: rfqRequest.side === UtilsSide.BUY.toString() ? Side.BUY : Side.SELL,
+            size: parseFloat(size),
+            side: side,
             expiration: payload.expiration,
         });
         if (!order) {
             throw new Error("Error creating order");
         }
-
         const acceptPayload = {
             requestId: payload.requestId,
             quoteId: payload.quoteId,
@@ -885,7 +887,6 @@ export class ClobClient {
             expiration: parseInt(order.expiration),
             side: order.side === UtilsSide.BUY ? Side.BUY : Side.SELL,
             salt: parseInt(order.salt.toString())
-    
         };
         const endpoint = RFQ_REQUESTS_ACCEPT;
 
@@ -906,10 +907,10 @@ export class ClobClient {
 
     public async approveRfqOrder(payload: ApproveOrderParams): Promise<any> {
         this.canL2Auth();
-        let rfqQuotes: RfqRequestsResponse;
+        let rfqQuotes: RfqQuotesResponse;
         try {
-            rfqQuotes = await this.getRfqRequests({
-                requestIds: [payload.requestId],
+            rfqQuotes = await this.getRfqQuotes({
+                quoteIds: [payload.quoteId],
                 limit: 1,
             });
             if (!rfqQuotes?.data || rfqQuotes.data.length === 0) {
@@ -920,23 +921,35 @@ export class ClobClient {
         }
         const rfqQuote = rfqQuotes.data[0];
         // create an order
+        const side = rfqQuote.side === UtilsSide.BUY.toString() ? Side.BUY : Side.SELL;
+        const size = rfqQuote.side === UtilsSide.BUY.toString() ? 
+                rfqQuote.sizeIn : rfqQuote.sizeOut;
+      
         const order = await this.createOrder({
             tokenID: rfqQuote.token,
             price: rfqQuote.price,
-            size: parseInt(rfqQuote.size_in),
-            side: rfqQuote.side === UtilsSide.BUY.toString() ? Side.BUY : Side.SELL,
+            size: parseFloat(size),
+            side: side,
             expiration: payload.expiration,
         });
         if (!order) {
             throw new Error("Error creating order");
         }
-        
+        const approvePayload = {
+            requestId: payload.requestId,
+            quoteId: payload.quoteId,
+            owner: this.creds?.key,
+            ...order,
+            expiration: parseInt(order.expiration),
+            side: order.side === UtilsSide.BUY ? Side.BUY : Side.SELL,
+            salt: parseInt(order.salt.toString())
+        };
         const endpoint = RFQ_QUOTE_APPROVE;
 
         const l2HeaderArgs = {
             method: POST,
             requestPath: endpoint,
-            body: JSON.stringify(payload),
+            body: JSON.stringify(approvePayload),
         };
 
         const headers = await createL2Headers(
@@ -946,7 +959,7 @@ export class ClobClient {
             this.useServerTime ? await this.getServerTime() : undefined,
         );
 
-        return this.post(`${this.host}${endpoint}`, { headers, data: payload });
+        return this.post(`${this.host}${endpoint}`, { headers, data: approvePayload });
     }
 
     public async createOrder(
