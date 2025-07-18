@@ -304,6 +304,9 @@ export interface OrderBookSummary {
     timestamp: string;
     bids: OrderSummary[];
     asks: OrderSummary[];
+    min_order_size: string;
+    tick_size: string;
+    neg_risk: boolean;
     hash: string;
 }
 

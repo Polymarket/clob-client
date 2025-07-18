@@ -6801,13 +6801,16 @@ describe("utilities", () => {
                 { price: "0.6", size: "100" },
                 { price: "0.7", size: "100" },
             ],
+            min_order_size: "15",
+            tick_size: "0.001",
+            neg_risk: false,
             hash: "",
         } as OrderBookSummary;
 
         expect(generateOrderBookSummaryHash(orderbook)).to.equal(
-            "5489da29343426f88622d61044975dc5fd828a27",
+            "36f56998e26d9a7c553446f35b240481efb271a3",
         );
-        expect(orderbook.hash).to.equal("5489da29343426f88622d61044975dc5fd828a27");
+        expect(orderbook.hash).to.equal("36f56998e26d9a7c553446f35b240481efb271a3");
 
         // -
         orderbook = {
@@ -6822,7 +6825,7 @@ describe("utilities", () => {
                 { price: "0.6", size: "100" },
                 { price: "0.7", size: "100" },
             ],
-            hash: "5489da29343426f88622d61044975dc5fd828a27",
+            hash: "36f56998e26d9a7c553446f35b240481efb271a3",
         } as OrderBookSummary;
 
         expect(generateOrderBookSummaryHash(orderbook)).to.equal(
@@ -6837,13 +6840,16 @@ describe("utilities", () => {
             timestamp: "",
             bids: [],
             asks: [],
+            min_order_size: "15",
+            tick_size: "0.001",
+            neg_risk: false,
             hash: "",
         } as OrderBookSummary;
 
         expect(generateOrderBookSummaryHash(orderbook)).to.equal(
-            "6d754a2f0304a83544f91a076fa3faa9cbfb9f63",
+            "d4d4e4ea0f1d86ce02d22704bd33414f45573e84",
         );
-        expect(orderbook.hash).to.equal("6d754a2f0304a83544f91a076fa3faa9cbfb9f63");
+        expect(orderbook.hash).to.equal("d4d4e4ea0f1d86ce02d22704bd33414f45573e84");
     });
 
     it("isTickSizeSmaller", () => {
