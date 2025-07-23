@@ -1,4 +1,4 @@
-import { SignatureType } from "@polymarket/order-utils";
+import { SignatureType, SignedOrder } from "@polymarket/order-utils";
 import { AxiosRequestHeaders } from "axios";
 
 export interface ApiKeyCreds {
@@ -48,6 +48,11 @@ export enum OrderType {
     FAK = "FAK",
 }
 
+export interface PostOrdersArgs {
+    order: SignedOrder;
+    orderType: OrderType;
+}
+
 export interface NewOrder<T extends OrderType> {
     readonly order: {
         readonly salt: number;
@@ -66,6 +71,7 @@ export interface NewOrder<T extends OrderType> {
     };
     readonly owner: string;
     readonly orderType: T;
+    readonly deferExec: boolean;
 }
 
 // Simplified order for users
@@ -224,6 +230,7 @@ export interface MakerOrder {
     fee_rate_bps: string;
     asset_id: string;
     outcome: string;
+    side: Side;
 }
 
 export interface Trade {
@@ -233,7 +240,7 @@ export interface Trade {
 
     market: string;
     asset_id: string;
-    side: number | string;
+    side: Side;
     size: string;
     fee_rate_bps: string;
     price: string;
@@ -297,6 +304,9 @@ export interface OrderBookSummary {
     timestamp: string;
     bids: OrderSummary[];
     asks: OrderSummary[];
+    min_order_size: string;
+    tick_size: string;
+    neg_risk: boolean;
     hash: string;
 }
 
