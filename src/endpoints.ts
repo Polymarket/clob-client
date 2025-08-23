@@ -26,6 +26,7 @@ export const GET_LAST_TRADE_PRICE = "/last-trade-price";
 export const GET_LAST_TRADES_PRICES = "/last-trades-prices";
 export const GET_TICK_SIZE = "/tick-size";
 export const GET_NEG_RISK = "/neg-risk";
+export const GET_FEE_RATE = "/fee-rate";
 
 // Order endpoints
 export const POST_ORDER = "/order";
