@@ -24,7 +24,6 @@ async function main() {
         price: 0.5,
         side: Side.BUY,
         size: 100,
-        feeRateBps: 0,
         nonce: 0,
     });
     console.log("creating order", yes_bid);
@@ -35,7 +34,6 @@ async function main() {
         price: 0.5,
         side: Side.SELL,
         size: 100,
-        feeRateBps: 0,
         nonce: 0,
     });
     console.log("creating order", yes_ask);
