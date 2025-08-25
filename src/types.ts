@@ -365,10 +365,6 @@ export interface NegRisk {
     [tokenId: string]: boolean;
 }
 
-export interface FeeRate {
-    base_fee: number;
-}
-
 export interface FeeRates {
     [tokenId: string]: number;
 }
