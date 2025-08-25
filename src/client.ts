@@ -673,6 +673,9 @@ export class ClobClient {
 
         const tickSize = await this._resolveTickSize(tokenID, options?.tickSize);
 
+        const feeRateBps = await this._resolveFeeRateBps(tokenID, userMarketOrder.feeRateBps);
+        userMarketOrder.feeRateBps = feeRateBps;
+
         if (!userMarketOrder.price) {
             userMarketOrder.price = await this.calculateMarketPrice(
                 tokenID,
