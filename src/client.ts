@@ -644,9 +644,9 @@ export class ClobClient {
 
         const tickSize = await this._resolveTickSize(tokenID, options?.tickSize);
 
-        const feeRateBps = await this._resolveFeeRateBps(tokenID, userOrder.feeRateBps)
+        const feeRateBps = await this._resolveFeeRateBps(tokenID, userOrder.feeRateBps);
         userOrder.feeRateBps = feeRateBps;
-        
+
         if (!priceValid(userOrder.price, tickSize)) {
             throw new Error(
                 `invalid price (${userOrder.price}), min: ${parseFloat(tickSize)} - max: ${
@@ -1132,11 +1132,12 @@ export class ClobClient {
 
     private async _resolveFeeRateBps(tokenID: string, userFeeRateBps?: number): Promise<number> {
         const marketFeeRateBps = await this.getFeeRateBps(tokenID);
-        if (userFeeRateBps != undefined && userFeeRateBps != marketFeeRateBps){
+        if (marketFeeRateBps > 0 && userFeeRateBps != undefined && userFeeRateBps != marketFeeRateBps){
             throw new Error(
                 `invalid user provided fee rate: ${userFeeRateBps}, fee rate for the market must be ${marketFeeRateBps}`,
             );
         }
+        console.log(`Fee Rate for ${tokenID}: ${marketFeeRateBps}`);
         return marketFeeRateBps;
     }
 
