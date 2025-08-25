@@ -1137,7 +1137,6 @@ export class ClobClient {
                 `invalid user provided fee rate: ${userFeeRateBps}, fee rate for the market must be ${marketFeeRateBps}`,
             );
         }
-        console.log(`Fee Rate for ${tokenID}: ${marketFeeRateBps}`);
         return marketFeeRateBps;
     }
 
