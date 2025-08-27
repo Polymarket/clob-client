@@ -365,6 +365,10 @@ export interface NegRisk {
     [tokenId: string]: boolean;
 }
 
+export interface FeeRates {
+    [tokenId: string]: number;
+}
+
 export interface PaginationPayload {
     readonly limit: number;
     readonly count: number;
@@ -471,3 +475,5 @@ export interface UserRewardsEarning {
     earning_percentage: number;
     earnings: Earning[];
 }
+
+

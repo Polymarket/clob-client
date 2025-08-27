@@ -43,6 +43,7 @@ import {
     BanStatus,
     NewOrder,
     PostOrdersArgs,
+    FeeRates,
 } from "./types";
 import { createL1Headers, createL2Headers } from "./headers";
 import {
@@ -109,6 +110,7 @@ import {
     GET_SPREADS,
     UPDATE_BALANCE_ALLOWANCE,
     POST_ORDERS,
+    GET_FEE_RATE,
 } from "./endpoints";
 import { OrderBuilder } from "./order-builder/builder";
 import { END_CURSOR, INITIAL_CURSOR } from "./constants";
@@ -130,6 +132,8 @@ export class ClobClient {
     readonly tickSizes: TickSizes;
 
     readonly negRisk: NegRisk;
+
+    readonly feeRates: FeeRates;
 
     readonly geoBlockToken?: string;
 
@@ -163,6 +167,7 @@ export class ClobClient {
         );
         this.tickSizes = {};
         this.negRisk = {};
+        this.feeRates = {};
         this.geoBlockToken = geoBlockToken;
         this.useServerTime = useServerTime;
     }
@@ -242,6 +247,19 @@ export class ClobClient {
         this.negRisk[tokenID] = result.neg_risk as boolean;
 
         return this.negRisk[tokenID];
+    }
+
+    public async getFeeRateBps(tokenID: string): Promise<number> {
+        if (tokenID in this.feeRates) {
+            return this.feeRates[tokenID];
+        }
+
+        const result = await this.get(`${this.host}${GET_FEE_RATE}`, {
+            params: { token_id: tokenID },
+        });
+        this.feeRates[tokenID] = result.base_fee as number;
+
+        return this.feeRates[tokenID];
     }
 
     /**
@@ -626,6 +644,9 @@ export class ClobClient {
 
         const tickSize = await this._resolveTickSize(tokenID, options?.tickSize);
 
+        const feeRateBps = await this._resolveFeeRateBps(tokenID, userOrder.feeRateBps);
+        userOrder.feeRateBps = feeRateBps;
+
         if (!priceValid(userOrder.price, tickSize)) {
             throw new Error(
                 `invalid price (${userOrder.price}), min: ${parseFloat(tickSize)} - max: ${
@@ -651,6 +672,9 @@ export class ClobClient {
         const { tokenID } = userMarketOrder;
 
         const tickSize = await this._resolveTickSize(tokenID, options?.tickSize);
+
+        const feeRateBps = await this._resolveFeeRateBps(tokenID, userMarketOrder.feeRateBps);
+        userMarketOrder.feeRateBps = feeRateBps;
 
         if (!userMarketOrder.price) {
             userMarketOrder.price = await this.calculateMarketPrice(
@@ -1107,6 +1131,16 @@ export class ClobClient {
             tickSize = minTickSize;
         }
         return tickSize;
+    }
+
+    private async _resolveFeeRateBps(tokenID: string, userFeeRateBps?: number): Promise<number> {
+        const marketFeeRateBps = await this.getFeeRateBps(tokenID);
+        if (marketFeeRateBps > 0 && userFeeRateBps != undefined && userFeeRateBps != marketFeeRateBps){
+            throw new Error(
+                `invalid user provided fee rate: ${userFeeRateBps}, fee rate for the market must be ${marketFeeRateBps}`,
+            );
+        }
+        return marketFeeRateBps;
     }
 
     // http methods

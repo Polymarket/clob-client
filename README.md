@@ -35,7 +35,6 @@ const signatureType = 1;
             price: 0.01,
             side: Side.BUY,
             size: 5,
-            feeRateBps: 0,
         },
         { tickSize: "0.001",negRisk: false }, //You'll need to adjust these based on the market. Get the tickSize and negRisk T/F from the get-markets above
         //{ tickSize: "0.001",negRisk: true },
