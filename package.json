@@ -42,7 +42,8 @@
         "build": "make build",
         "lint": "make lint",
         "deploy": "yarn build && npm publish",
-        "test": "make test"
+        "test": "make test",
+        "merge-positions": "ts-node examples/mergePositions.ts"
     },
     "dependencies": {
         "@polymarket/order-utils": "^2.1.0",
