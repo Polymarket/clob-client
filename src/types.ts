@@ -191,7 +191,7 @@ export interface OpenOrder {
     status: string;
     owner: string;
     maker_address: string;
-    market: string;
+    condition_id: string;
     asset_id: string;
     side: string;
     original_size: string;
@@ -238,7 +238,7 @@ export interface Trade {
 
     taker_order_id: string;
 
-    market: string;
+    condition_id: string;
     asset_id: string;
     side: Side;
     size: string;
@@ -267,7 +267,7 @@ export interface MarketPrice {
 }
 
 export interface PriceHistoryFilterParams {
-    market?: string;
+    condition_id?: string;
     startTs?: number;
     endTs?: number;
     fidelity?: number;
@@ -294,12 +294,12 @@ export interface Notification {
 }
 
 export interface OrderMarketCancelParams {
-    market?: string;
+    condition_id?: string;
     asset_id?: string;
 }
 
 export interface OrderBookSummary {
-    market: string;
+    condition_id: string;
     asset_id: string;
     timestamp: string;
     bids: OrderSummary[];
@@ -378,7 +378,7 @@ export interface PaginationPayload {
 
 export interface MarketTradeEvent {
     event_type: string;
-    market: {
+    condition_id: {
         condition_id: string;
         asset_id: string;
         question: string;
@@ -425,7 +425,7 @@ export interface TotalUserEarning {
 }
 
 export interface RewardsPercentages {
-    [market: string]: number;
+    [condition_id: string]: number;
 }
 
 export interface Token {
