@@ -104,13 +104,13 @@ const errorHandling = (err: unknown) => {
                     typeof err.response?.data === "string" ||
                     err.response?.data instanceof String
                 ) {
-                    return { error: err.response?.data };
+                    return { error: err.response?.data, status: err.response?.status };
                 }
                 if (!Object.prototype.hasOwnProperty.call(err.response?.data, "error")) {
-                    return { error: err.response?.data };
+                    return { error: err.response?.data, status: err.response?.status };
                 }
                 // in this case the field 'error' is included
-                return err.response?.data;
+                return { ...err.response?.data, status: err.response?.status };
             }
         }
 
