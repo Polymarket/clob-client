@@ -121,7 +121,7 @@ const errorHandling = (err: unknown) => {
                     error: err.message,
                 }),
             );
-            return { error: err.message, status: err.response?.status };
+            return { error: err.message };
         }
     }
 
