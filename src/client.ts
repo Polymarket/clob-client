@@ -143,7 +143,7 @@ export class ClobClient {
     constructor(
         host: string,
         chainId: Chain,
-        signer?: Wallet | JsonRpcSigner,
+        signer?: Wallet | JsonRpcSigner, // TODO Recreate
         creds?: ApiKeyCreds,
         signatureType?: SignatureType,
         funderAddress?: string,
@@ -638,6 +638,7 @@ export class ClobClient {
         userOrder: UserOrder,
         options?: Partial<CreateOrderOptions>,
     ): Promise<SignedOrder> {
+        // So at some point we have to auth for the balance to send?
         this.canL1Auth();
 
         const { tokenID } = userOrder;
@@ -666,6 +667,7 @@ export class ClobClient {
     public async createMarketOrder(
         userMarketOrder: UserMarketOrder,
         options?: Partial<CreateOrderOptions>,
+        signer?: Wallet | JsonRpcSigner
     ): Promise<SignedOrder> {
         this.canL1Auth();
 
@@ -698,7 +700,7 @@ export class ClobClient {
         return this.orderBuilder.buildMarketOrder(userMarketOrder, {
             tickSize,
             negRisk,
-        });
+        }, signer);
     }
 
     public async createAndPostOrder<T extends OrderType.GTC | OrderType.GTD = OrderType.GTC>(
@@ -716,9 +718,10 @@ export class ClobClient {
         options?: Partial<CreateOrderOptions>,
         orderType: T = OrderType.FOK as T,
         deferExec = false,
+        signer?: Wallet | JsonRpcSigner
     ): Promise<any> {
-        const order = await this.createMarketOrder(userMarketOrder, options);
-        return this.postOrder(order, orderType, deferExec);
+        const order = await this.createMarketOrder(userMarketOrder, options, signer); // TODO Confirm your new signer is all thats use
+        return this.postOrder(order, orderType, deferExec); // TODO Confirm that postOrder doesn't use the old signer
     }
 
     public async getOpenOrders(

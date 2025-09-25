@@ -11,6 +11,7 @@ dist/
 node_modules/
 typechain/
 scripts/
+.idea/
 .nyc_output/
 
 # files

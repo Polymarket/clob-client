@@ -52,9 +52,10 @@ export class OrderBuilder {
     public async buildMarketOrder(
         userMarketOrder: UserMarketOrder,
         options: CreateOrderOptions,
+        signer?: Wallet | JsonRpcSigner,
     ): Promise<SignedOrder> {
         return createMarketOrder(
-            this.signer,
+            signer ?? this.signer,   // <-- prefer provided signer, else fallback
             this.chainId,
             this.signatureType,
             this.funderAddress,
@@ -62,4 +63,5 @@ export class OrderBuilder {
             options,
         );
     }
+
 }
