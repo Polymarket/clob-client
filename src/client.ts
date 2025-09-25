@@ -719,8 +719,8 @@ export class ClobClient {
         deferExec = false,
         signer?: Wallet | JsonRpcSigner
     ): Promise<any> {
-        const order = await this.createMarketOrder(userMarketOrder, options, signer); // TODO Confirm your new signer is all thats use
-        return this.postOrder(order, orderType, deferExec); // TODO Confirm that postOrder doesn't use the old signer
+        const order = await this.createMarketOrder(userMarketOrder, options, signer);
+        return this.postOrder(order, orderType, deferExec, signer);
     }
 
     public async getOpenOrders(
@@ -763,6 +763,7 @@ export class ClobClient {
         order: SignedOrder,
         orderType: T = OrderType.GTC as T,
         deferExec = false,
+        signer?: Wallet | JsonRpcSigner
     ): Promise<any> {
         this.canL2Auth();
         const endpoint = POST_ORDER;
@@ -775,7 +776,7 @@ export class ClobClient {
         };
 
         const headers = await createL2Headers(
-            this.signer as Wallet | JsonRpcSigner,
+            (signer ?? this.signer) as Wallet | JsonRpcSigner,
             this.creds as ApiKeyCreds,
             l2HeaderArgs,
             this.useServerTime ? await this.getServerTime() : undefined,
