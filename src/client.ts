@@ -143,7 +143,7 @@ export class ClobClient {
     constructor(
         host: string,
         chainId: Chain,
-        signer?: Wallet | JsonRpcSigner, // TODO Recreate
+        signer?: Wallet | JsonRpcSigner,
         creds?: ApiKeyCreds,
         signatureType?: SignatureType,
         funderAddress?: string,
@@ -638,7 +638,6 @@ export class ClobClient {
         userOrder: UserOrder,
         options?: Partial<CreateOrderOptions>,
     ): Promise<SignedOrder> {
-        // So at some point we have to auth for the balance to send?
         this.canL1Auth();
 
         const { tokenID } = userOrder;
