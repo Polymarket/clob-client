@@ -666,9 +666,9 @@ export class ClobClient {
     public async createMarketOrder(
         userMarketOrder: UserMarketOrder,
         options?: Partial<CreateOrderOptions>,
-        signer?: Wallet | JsonRpcSigner
+        signer?: Wallet | JsonRpcSigner,
     ): Promise<SignedOrder> {
-        this.canL1Auth();
+        this.canL1Auth(signer);
 
         const { tokenID } = userMarketOrder;
 
@@ -717,7 +717,7 @@ export class ClobClient {
         options?: Partial<CreateOrderOptions>,
         orderType: T = OrderType.FOK as T,
         deferExec = false,
-        signer?: Wallet | JsonRpcSigner
+        signer?: Wallet | JsonRpcSigner,
     ): Promise<any> {
         const order = await this.createMarketOrder(userMarketOrder, options, signer);
         return this.postOrder(order, orderType, deferExec, signer);
@@ -763,9 +763,9 @@ export class ClobClient {
         order: SignedOrder,
         orderType: T = OrderType.GTC as T,
         deferExec = false,
-        signer?: Wallet | JsonRpcSigner
+        signer?: Wallet | JsonRpcSigner,
     ): Promise<any> {
-        this.canL2Auth();
+        this.canL2Auth(signer);
         const endpoint = POST_ORDER;
         const orderPayload = orderToJson(order, this.creds?.key || "", orderType, deferExec);
 
@@ -1106,14 +1106,14 @@ export class ClobClient {
         }
     }
 
-    private canL1Auth(): void {
-        if (this.signer === undefined) {
+    private canL1Auth(signer?: Wallet | JsonRpcSigner): void {
+        if (this.signer === undefined && signer === undefined) {
             throw L1_AUTH_UNAVAILABLE_ERROR;
         }
     }
 
-    private canL2Auth(): void {
-        if (this.signer === undefined) {
+    private canL2Auth(signer?: Wallet | JsonRpcSigner): void {
+        if (this.signer === undefined && signer === undefined) {
             throw L1_AUTH_UNAVAILABLE_ERROR;
         }
 
