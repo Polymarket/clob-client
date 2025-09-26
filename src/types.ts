@@ -36,6 +36,20 @@ export interface L2PolyHeader extends AxiosRequestHeaders {
     POLY_PASSPHRASE: string;
 }
 
+
+// Builder API key verification
+export interface L2WithBuilderHeader extends AxiosRequestHeaders {
+    POLY_ADDRESS: string;
+    POLY_SIGNATURE: string;
+    POLY_TIMESTAMP: string;
+    POLY_API_KEY: string;
+    POLY_PASSPHRASE: string;
+    POLY_BUILDER_API_KEY: string;
+    POLY_BUILDER_TIMESTAMP: string;
+    POLY_BUILDER_PASSPHRASE: string;
+    POLY_BUILDER_SIGNATURE: string;
+}
+
 export enum Side {
     BUY = "BUY",
     SELL = "SELL",

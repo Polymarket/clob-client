@@ -680,6 +680,13 @@
     "@nodelib/fs.scandir" "2.1.5"
     fastq "^1.6.0"
 
+"@polymarket/builder-signing-sdk@^0.0.3":
+  version "0.0.3"
+  resolved "https://registry.yarnpkg.com/@polymarket/builder-signing-sdk/-/builder-signing-sdk-0.0.3.tgz#ac0578dad1a5c149390abeccf5147189e16b41e0"
+  integrity sha512-yRO/tV2+33dC44nq+TCkgp+LFF2KmVzg+wN+S6zAGIJ2BFvlBXfgnzeu2LZi4aoORBJENAvv/x2kj4kXVaH8sg==
+  dependencies:
+    "@types/node" "^18.7.18"
+
 "@polymarket/order-utils@^2.1.0":
   version "2.1.0"
   resolved "https://registry.yarnpkg.com/@polymarket/order-utils/-/order-utils-2.1.0.tgz#eacf573c139e9e6c59d0244b6e4e52835b687b42"
