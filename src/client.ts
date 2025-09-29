@@ -1192,9 +1192,9 @@ export class ClobClient {
             const builderHeaders: BuilderHeaderPayload = await this.post(
                 this.builderConfig.remoteBuilderSignerUrl, 
                 { data: {
-                method: headers.method,
-                path: headers.requestPath,
-                body: headers.body,
+                method: headerArgs.method,
+                path: headerArgs.requestPath,
+                body: headerArgs.body,
             }});
             return injectBuilderHeaders(headers, builderHeaders);
         }
