@@ -66,13 +66,7 @@ export const createBuilderHeaders = async (
     builderCreds: BuilderApiKeyCreds,
     l2Header: L2PolyHeader,
     l2HeaderArgs: L2HeaderArgs,
-    timestamp?: number,
 ): Promise<L2WithBuilderHeader> => {
-    let ts = Math.floor(Date.now() / 1000);
-    if (timestamp !== undefined) {
-        ts = timestamp;
-    }
-
     const signer = new BuilderSigner(builderCreds);
     const builderHeaders = signer.createBuilderHeaderPayload(
         l2HeaderArgs.method,
