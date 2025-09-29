@@ -792,7 +792,7 @@ export class ClobClient {
         // builders flow
         if (this.canBuilderAuth()) {
             const builderHeaders = await this._generateBuilderHeaders(headers, l2HeaderArgs);
-            if(builderHeaders !== undefined) {
+            if (builderHeaders !== undefined) {
                 return this.post(`${this.host}${endpoint}`, { headers: builderHeaders, data: orderPayload });    
             }
         }
@@ -825,7 +825,7 @@ export class ClobClient {
         // builders flow
         if (this.canBuilderAuth()) {
             const builderHeaders = await this._generateBuilderHeaders(headers, l2HeaderArgs);
-            if(builderHeaders !== undefined) {
+            if (builderHeaders !== undefined) {
                 return this.post(`${this.host}${endpoint}`, { headers: builderHeaders, data: ordersPayload });    
             }
         }
@@ -1183,7 +1183,7 @@ export class ClobClient {
     ): Promise<L2WithBuilderHeader | undefined> {
 
         // Local builder creds
-        if(this.builderConfig !== undefined && this.builderConfig.localBuilderCreds !== undefined) {
+        if (this.builderConfig !== undefined && this.builderConfig.localBuilderCreds !== undefined) {
             return createBuilderHeaders(this.builderConfig.localBuilderCreds, headers, headerArgs);
         }
 
