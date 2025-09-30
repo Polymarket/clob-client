@@ -1182,20 +1182,25 @@ export class ClobClient {
         headerArgs: L2HeaderArgs,
     ): Promise<L2WithBuilderHeader | undefined> {
 
-        // Local builder creds
+        // If local builder creds are available, use these
         if (this.builderConfig !== undefined && this.builderConfig.localBuilderCreds !== undefined) {
             return createBuilderHeaders(this.builderConfig.localBuilderCreds, headers, headerArgs);
         }
 
-        // Remote builder signer
+        // If the remote builder signer is available, use it
         if (this.builderConfig !== undefined && this.builderConfig.remoteBuilderSignerUrl !== undefined) {
-            const builderHeaders: BuilderHeaderPayload = await this.post(
-                this.builderConfig.remoteBuilderSignerUrl, 
-                { data: {
-                method: headerArgs.method,
-                path: headerArgs.requestPath,
-                body: headerArgs.body,
-            }});
+            const remoteSignerUrl = this.builderConfig.remoteBuilderSignerUrl
+            // Execute a POST to the remote signer url with the header arguments
+            const builderHeaders: BuilderHeaderPayload = await post(
+                remoteSignerUrl,
+                { 
+                    data: {
+                        method: headerArgs.method,
+                        path: headerArgs.requestPath,
+                        body: headerArgs.body,
+                    }
+                }
+            );
             return injectBuilderHeaders(headers, builderHeaders);
         }
 
