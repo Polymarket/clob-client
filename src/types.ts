@@ -38,12 +38,7 @@ export interface L2PolyHeader extends AxiosRequestHeaders {
 
 
 // Builder API key verification
-export interface L2WithBuilderHeader extends AxiosRequestHeaders {
-    POLY_ADDRESS: string;
-    POLY_SIGNATURE: string;
-    POLY_TIMESTAMP: string;
-    POLY_API_KEY: string;
-    POLY_PASSPHRASE: string;
+export interface L2WithBuilderHeader extends L2PolyHeader {
     POLY_BUILDER_API_KEY: string;
     POLY_BUILDER_TIMESTAMP: string;
     POLY_BUILDER_PASSPHRASE: string;
