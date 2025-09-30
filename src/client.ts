@@ -1148,9 +1148,14 @@ export class ClobClient {
     private canBuilderAuth(): boolean {
         // Can builder auth if builder config is set up with local builder credentials or a remote builder signer
         return this.builderConfig !== undefined && 
-        (this.builderConfig.localBuilderCreds !== undefined 
-            || 
-            this.builderConfig.remoteBuilderSignerUrl !== undefined && this.builderConfig.remoteBuilderSignerUrl.length > 0)
+        (
+            (this.builderConfig.localBuilderCreds !== undefined)
+            ||
+            (
+                this.builderConfig.remoteBuilderSignerUrl !== undefined &&
+                this.builderConfig.remoteBuilderSignerUrl.length > 0
+            )
+        )
     }
 
     private async _resolveTickSize(tokenID: string, tickSize?: TickSize): Promise<TickSize> {
@@ -1189,7 +1194,7 @@ export class ClobClient {
 
         // If the remote builder signer is available, use it
         if (this.builderConfig !== undefined && this.builderConfig.remoteBuilderSignerUrl !== undefined) {
-            const remoteSignerUrl = this.builderConfig.remoteBuilderSignerUrl
+            const remoteSignerUrl = this.builderConfig.remoteBuilderSignerUrl;
             // Execute a POST to the remote signer url with the header arguments
             const builderHeaders: BuilderHeaderPayload = await post(
                 remoteSignerUrl,
