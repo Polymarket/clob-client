@@ -1,6 +1,7 @@
 import { Wallet } from "@ethersproject/wallet";
 import { JsonRpcSigner } from "@ethersproject/providers";
 import { SignatureType, SignedOrder } from "@polymarket/order-utils";
+import { BuilderConfig, BuilderHeaderPayload } from "@polymarket/builder-signing-sdk";
 import {
     ApiKeyCreds,
     ApiKeysResponse,
@@ -44,8 +45,11 @@ import {
     NewOrder,
     PostOrdersArgs,
     FeeRates,
+    L2WithBuilderHeader,
+    L2PolyHeader,
+    L2HeaderArgs,
 } from "./types";
-import { createL1Headers, createL2Headers } from "./headers";
+import { createBuilderHeaders, createL1Headers, createL2Headers, injectBuilderHeaders } from "./headers";
 import {
     del,
     DELETE,
@@ -139,6 +143,8 @@ export class ClobClient {
 
     readonly useServerTime?: boolean;
 
+    readonly builderConfig?: BuilderConfig;
+
     // eslint-disable-next-line max-params
     constructor(
         host: string,
@@ -149,6 +155,7 @@ export class ClobClient {
         funderAddress?: string,
         geoBlockToken?: string,
         useServerTime?: boolean,
+        builderConfig?: BuilderConfig,
     ) {
         this.host = host.endsWith("/") ? host.slice(0, -1) : host;
         this.chainId = chainId;
@@ -170,6 +177,9 @@ export class ClobClient {
         this.feeRates = {};
         this.geoBlockToken = geoBlockToken;
         this.useServerTime = useServerTime;
+        if (builderConfig !== undefined) {
+            this.builderConfig = builderConfig;
+        }
     }
 
     // Public endpoints
@@ -779,6 +789,14 @@ export class ClobClient {
             this.useServerTime ? await this.getServerTime() : undefined,
         );
 
+        // builders flow
+        if (this.canBuilderAuth()) {
+            const builderHeaders = await this._generateBuilderHeaders(headers, l2HeaderArgs);
+            if (builderHeaders !== undefined) {
+                return this.post(`${this.host}${endpoint}`, { headers: builderHeaders, data: orderPayload });    
+            }
+        }
+
         return this.post(`${this.host}${endpoint}`, { headers, data: orderPayload });
     }
 
@@ -803,6 +821,14 @@ export class ClobClient {
             l2HeaderArgs,
             this.useServerTime ? await this.getServerTime() : undefined,
         );
+
+        // builders flow
+        if (this.canBuilderAuth()) {
+            const builderHeaders = await this._generateBuilderHeaders(headers, l2HeaderArgs);
+            if (builderHeaders !== undefined) {
+                return this.post(`${this.host}${endpoint}`, { headers: builderHeaders, data: ordersPayload });    
+            }
+        }
 
         return this.post(`${this.host}${endpoint}`, { headers, data: ordersPayload });
     }
@@ -1119,6 +1145,19 @@ export class ClobClient {
         }
     }
 
+    private canBuilderAuth(): boolean {
+        // Can builder auth if builder config is set up with local builder credentials or a remote builder signer
+        return this.builderConfig !== undefined && 
+        (
+            (this.builderConfig.localBuilderCreds !== undefined)
+            ||
+            (
+                this.builderConfig.remoteBuilderSignerUrl !== undefined &&
+                this.builderConfig.remoteBuilderSignerUrl.length > 0
+            )
+        )
+    }
+
     private async _resolveTickSize(tokenID: string, tickSize?: TickSize): Promise<TickSize> {
         const minTickSize = await this.getTickSize(tokenID);
         if (tickSize) {
@@ -1141,6 +1180,36 @@ export class ClobClient {
             );
         }
         return marketFeeRateBps;
+    }
+
+    private async _generateBuilderHeaders(
+        headers: L2PolyHeader,
+        headerArgs: L2HeaderArgs,
+    ): Promise<L2WithBuilderHeader | undefined> {
+
+        // If local builder creds are available, use these
+        if (this.builderConfig !== undefined && this.builderConfig.localBuilderCreds !== undefined) {
+            return createBuilderHeaders(this.builderConfig.localBuilderCreds, headers, headerArgs);
+        }
+
+        // If the remote builder signer is available, use it
+        if (this.builderConfig !== undefined && this.builderConfig.remoteBuilderSignerUrl !== undefined) {
+            const remoteSignerUrl = this.builderConfig.remoteBuilderSignerUrl;
+            // Execute a POST to the remote signer url with the header arguments
+            const builderHeaders: BuilderHeaderPayload = await post(
+                remoteSignerUrl,
+                { 
+                    data: {
+                        method: headerArgs.method,
+                        path: headerArgs.requestPath,
+                        body: headerArgs.body,
+                    }
+                }
+            );
+            return injectBuilderHeaders(headers, builderHeaders);
+        }
+
+        return undefined;
     }
 
     // http methods
