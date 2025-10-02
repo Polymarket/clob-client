@@ -1,7 +1,7 @@
 import { Wallet } from "@ethersproject/wallet";
 import { JsonRpcSigner } from "@ethersproject/providers";
 import { SignatureType, SignedOrder } from "@polymarket/order-utils";
-import { BuilderConfig, BuilderType } from "@polymarket/builder-signing-sdk";
+import { BuilderConfig } from "@polymarket/builder-signing-sdk";
 import {
     ApiKeyCreds,
     ApiKeysResponse,
@@ -1178,22 +1178,7 @@ export class ClobClient {
         headerArgs: L2HeaderArgs,
     ): Promise<L2WithBuilderHeader | undefined> {
 
-        // If local builder creds are available, use these
-        if (this.builderConfig !== undefined && this.builderConfig.getBuilderType() == BuilderType.LOCAL) {
-            const builderHeaders = await this.builderConfig.generateBuilderHeaders(
-                headerArgs.method,
-                headerArgs.requestPath,
-                headerArgs.body,
-            )
-            if (builderHeaders == undefined) {
-                return undefined;
-            }
-            return injectBuilderHeaders(headers, builderHeaders);
-            
-        }
-
-        // If the remote builder signer is available, use it
-        if (this.builderConfig !== undefined && this.builderConfig.getBuilderType() == BuilderType.REMOTE) {
+        if (this.builderConfig !== undefined) {
             const builderHeaders = await this.builderConfig.generateBuilderHeaders(
                 headerArgs.method,
                 headerArgs.requestPath,
