@@ -1,7 +1,7 @@
 import { Wallet } from "@ethersproject/wallet";
 import { JsonRpcSigner } from "@ethersproject/providers";
 import { SignatureType, SignedOrder } from "@polymarket/order-utils";
-import { BuilderConfig, BuilderHeaderPayload } from "@polymarket/builder-signing-sdk";
+import { BuilderConfig } from "@polymarket/builder-signing-sdk";
 import {
     ApiKeyCreds,
     ApiKeysResponse,
@@ -49,7 +49,7 @@ import {
     L2PolyHeader,
     L2HeaderArgs,
 } from "./types";
-import { createBuilderHeaders, createL1Headers, createL2Headers, injectBuilderHeaders } from "./headers";
+import { createL1Headers, createL2Headers, injectBuilderHeaders } from "./headers";
 import {
     del,
     DELETE,
@@ -1146,16 +1146,7 @@ export class ClobClient {
     }
 
     private canBuilderAuth(): boolean {
-        // Can builder auth if builder config is set up with local builder credentials or a remote builder signer
-        return this.builderConfig !== undefined && 
-        (
-            (this.builderConfig.localBuilderCreds !== undefined)
-            ||
-            (
-                this.builderConfig.remoteBuilderSignerUrl !== undefined &&
-                this.builderConfig.remoteBuilderSignerUrl.length > 0
-            )
-        )
+        return (this.builderConfig != undefined && this.builderConfig.isValid())
     }
 
     private async _resolveTickSize(tokenID: string, tickSize?: TickSize): Promise<TickSize> {
@@ -1187,25 +1178,15 @@ export class ClobClient {
         headerArgs: L2HeaderArgs,
     ): Promise<L2WithBuilderHeader | undefined> {
 
-        // If local builder creds are available, use these
-        if (this.builderConfig !== undefined && this.builderConfig.localBuilderCreds !== undefined) {
-            return createBuilderHeaders(this.builderConfig.localBuilderCreds, headers, headerArgs);
-        }
-
-        // If the remote builder signer is available, use it
-        if (this.builderConfig !== undefined && this.builderConfig.remoteBuilderSignerUrl !== undefined) {
-            const remoteSignerUrl = this.builderConfig.remoteBuilderSignerUrl;
-            // Execute a POST to the remote signer url with the header arguments
-            const builderHeaders: BuilderHeaderPayload = await post(
-                remoteSignerUrl,
-                { 
-                    data: {
-                        method: headerArgs.method,
-                        path: headerArgs.requestPath,
-                        body: headerArgs.body,
-                    }
-                }
+        if (this.builderConfig !== undefined) {
+            const builderHeaders = await this.builderConfig.generateBuilderHeaders(
+                headerArgs.method,
+                headerArgs.requestPath,
+                headerArgs.body,
             );
+            if (builderHeaders == undefined) {
+                return undefined;
+            }
             return injectBuilderHeaders(headers, builderHeaders);
         }
 
