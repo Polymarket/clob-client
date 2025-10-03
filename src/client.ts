@@ -61,7 +61,7 @@ import {
     post,
     RequestOptions,
 } from "./http-helpers";
-import { BUILDER_AUTH_NOT_AVAILABLE, L1_AUTH_UNAVAILABLE_ERROR, L2_AUTH_NOT_AVAILABLE } from "./errors";
+import { BUILDER_AUTH_FAILED, BUILDER_AUTH_NOT_AVAILABLE, L1_AUTH_UNAVAILABLE_ERROR, L2_AUTH_NOT_AVAILABLE } from "./errors";
 import {
     generateOrderBookSummaryHash,
     isTickSizeSmaller,
@@ -552,7 +552,6 @@ export class ClobClient {
         return { trades: Array.isArray(data) ? [...data] : [], ...rest };
     }
 
-
     public async getBuilderTrades(
         params?: TradeParams,
         next_cursor?: string,
@@ -571,6 +570,9 @@ export class ClobClient {
             headerArgs.method,
             headerArgs.requestPath,
         );
+        if (headers == undefined) {
+            throw BUILDER_AUTH_FAILED; 
+        }
 
         next_cursor = next_cursor || INITIAL_CURSOR;
 
@@ -1239,7 +1241,7 @@ export class ClobClient {
         method: string,
         path: string,
         body?: string
-    ): Promise<BuilderHeaderPayload| undefined> {
+    ): Promise<BuilderHeaderPayload | undefined> {
         return (this.builderConfig as BuilderConfig).generateBuilderHeaders(
             method,
             path,
