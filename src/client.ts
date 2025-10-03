@@ -1,7 +1,7 @@
 import { Wallet } from "@ethersproject/wallet";
 import { JsonRpcSigner } from "@ethersproject/providers";
 import { SignatureType, SignedOrder } from "@polymarket/order-utils";
-import { BuilderConfig } from "@polymarket/builder-signing-sdk";
+import { BuilderConfig, BuilderHeaderPayload } from "@polymarket/builder-signing-sdk";
 import {
     ApiKeyCreds,
     ApiKeysResponse,
@@ -48,6 +48,7 @@ import {
     L2WithBuilderHeader,
     L2PolyHeader,
     L2HeaderArgs,
+    BuilderTrade,
 } from "./types";
 import { createL1Headers, createL2Headers, injectBuilderHeaders } from "./headers";
 import {
@@ -60,7 +61,7 @@ import {
     post,
     RequestOptions,
 } from "./http-helpers";
-import { L1_AUTH_UNAVAILABLE_ERROR, L2_AUTH_NOT_AVAILABLE } from "./errors";
+import { BUILDER_AUTH_NOT_AVAILABLE, L1_AUTH_UNAVAILABLE_ERROR, L2_AUTH_NOT_AVAILABLE } from "./errors";
 import {
     generateOrderBookSummaryHash,
     isTickSizeSmaller,
@@ -115,6 +116,7 @@ import {
     UPDATE_BALANCE_ALLOWANCE,
     POST_ORDERS,
     GET_FEE_RATE,
+    GET_BUILDER_TRADES,
 } from "./endpoints";
 import { OrderBuilder } from "./order-builder/builder";
 import { END_CURSOR, INITIAL_CURSOR } from "./constants";
@@ -539,6 +541,46 @@ export class ClobClient {
             ...rest
         }: {
             data: Trade[];
+            next_cursor: string;
+            limit: number;
+            count: number;
+        } = await this.get(`${this.host}${endpoint}`, {
+            headers,
+            params: _params,
+        });
+
+        return { trades: Array.isArray(data) ? [...data] : [], ...rest };
+    }
+
+
+    public async getBuilderTrades(
+        params?: TradeParams,
+        next_cursor?: string,
+    ): Promise<{ trades: BuilderTrade[]; next_cursor: string; limit: number; count: number }> {
+        if (!this.canBuilderAuth()) {
+            throw BUILDER_AUTH_NOT_AVAILABLE;
+        }
+
+        const endpoint = GET_BUILDER_TRADES;
+        const headerArgs = {
+            method: GET,
+            requestPath: endpoint,
+        };
+
+        const headers = await this._getBuilderHeaders(
+            headerArgs.method,
+            headerArgs.requestPath,
+        );
+
+        next_cursor = next_cursor || INITIAL_CURSOR;
+
+        const _params: any = { ...params, next_cursor };
+
+        const {
+            data,
+            ...rest
+        }: {
+            data: BuilderTrade[];
             next_cursor: string;
             limit: number;
             count: number;
@@ -1179,7 +1221,7 @@ export class ClobClient {
     ): Promise<L2WithBuilderHeader | undefined> {
 
         if (this.builderConfig !== undefined) {
-            const builderHeaders = await this.builderConfig.generateBuilderHeaders(
+            const builderHeaders = await this._getBuilderHeaders(
                 headerArgs.method,
                 headerArgs.requestPath,
                 headerArgs.body,
@@ -1191,6 +1233,18 @@ export class ClobClient {
         }
 
         return undefined;
+    }
+
+    private async _getBuilderHeaders(
+        method: string,
+        path: string,
+        body?: string
+    ): Promise<BuilderHeaderPayload| undefined> {
+        return (this.builderConfig as BuilderConfig).generateBuilderHeaders(
+            method,
+            path,
+            body,
+        );
     }
 
     // http methods
