@@ -485,4 +485,28 @@ export interface UserRewardsEarning {
     earnings: Earning[];
 }
 
-
+export interface BuilderTrade {
+    id: string;
+    tradeType: string;
+    takerOrderHash: string;
+    builder: string;
+    market: string;
+    assetId: string;
+    side: string;
+    size: string;
+    sizeUsdc: string;
+    price: string;
+    status: string;
+    outcome: string;
+    outcomeIndex: number;
+    owner: string;
+    maker: string;
+    transactionHash: string;
+    matchTime: string;
+    bucketIndex: number;
+    fee: string;
+    feeUsdc: string;
+    err_msg?: string | null;
+    createdAt: string | null;
+    updatedAt: string | null;
+}
