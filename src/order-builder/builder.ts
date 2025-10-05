@@ -34,16 +34,6 @@ export class OrderBuilder {
         this.getSigner = getSigner === undefined ? null : getSigner;
     }
 
-    /** Unified getter: use fresh signer if available */
-    private async resolveSigner(): Promise<Wallet | JsonRpcSigner> {
-        if (this.getSigner) {
-            const s = await this.getSigner();
-            if (!s) throw new Error("getSigner() returned undefined");
-            return s;
-        }
-        if (!this.signer) throw new Error("No signer provided to client");
-        return this.signer;
-    }
     /**
      * Generate and sign a order
      */
@@ -80,4 +70,14 @@ export class OrderBuilder {
         );
     }
 
+    /** Unified getter: use fresh signer if available */
+    private async resolveSigner(): Promise<Wallet | JsonRpcSigner> {
+        if (this.getSigner) {
+            const s = await this.getSigner();
+            if (!s) throw new Error("getSigner() returned undefined");
+            return s;
+        }
+        if (!this.signer) throw new Error("No signer provided to client");
+        return this.signer;
+    }
 }
