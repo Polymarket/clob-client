@@ -17,6 +17,13 @@ export class OrderBuilder {
     // If not provided, funderAddress is the signer address
     readonly funderAddress?: string;
 
+    /**
+     * Optional function to dynamically resolve the signer.
+     * If provided, this function will be called to obtain a fresh signer instance
+     * (e.g., for smart contract wallets or when the signer may change).
+     * Should return a Wallet or JsonRpcSigner, or a Promise resolving to one.
+     * If not provided, the static `signer` property is used.
+     */
     private getSigner?: () => Promise<Wallet | JsonRpcSigner> | (Wallet | JsonRpcSigner);
 
     constructor(
