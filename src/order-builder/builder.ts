@@ -73,7 +73,7 @@ export class OrderBuilder {
     private async resolveSigner(): Promise<Wallet | JsonRpcSigner> {
         if (this.getSigner) {
             const s = await this.getSigner();
-            if (!s) throw new Error("getSigner() returned undefined");
+            if (!s) throw new Error("getSigner() function returned undefined or null");
             return s;
         }
         return this.signer;
