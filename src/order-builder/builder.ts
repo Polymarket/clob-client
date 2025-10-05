@@ -76,7 +76,6 @@ export class OrderBuilder {
             if (!s) throw new Error("getSigner() returned undefined");
             return s;
         }
-        if (!this.signer) throw new Error("No signer provided to client");
         return this.signer;
     }
 }
