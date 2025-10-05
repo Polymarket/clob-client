@@ -160,12 +160,8 @@ export class ClobClient {
         if (creds !== undefined) {
             this.creds = creds;
         }
-
-        if (getSigner !== undefined) {
-            this.getSigner = getSigner
-        }
         this.orderBuilder = new OrderBuilder(
-            signer as Wallet | JsonRpcSigner, // TODO So this is what I need to change
+            signer as Wallet | JsonRpcSigner,
             chainId,
             signatureType,
             funderAddress,
@@ -672,9 +668,8 @@ export class ClobClient {
     public async createMarketOrder(
         userMarketOrder: UserMarketOrder,
         options?: Partial<CreateOrderOptions>,
-        signer?: Wallet | JsonRpcSigner,
     ): Promise<SignedOrder> {
-        this.canL1Auth(signer);
+        this.canL1Auth();
 
         const { tokenID } = userMarketOrder;
 
@@ -705,7 +700,7 @@ export class ClobClient {
         return this.orderBuilder.buildMarketOrder(userMarketOrder, {
             tickSize,
             negRisk,
-        }, signer);
+        });
     }
 
     public async createAndPostOrder<T extends OrderType.GTC | OrderType.GTD = OrderType.GTC>(
@@ -723,10 +718,9 @@ export class ClobClient {
         options?: Partial<CreateOrderOptions>,
         orderType: T = OrderType.FOK as T,
         deferExec = false,
-        signer?: Wallet | JsonRpcSigner,
     ): Promise<any> {
-        const order = await this.createMarketOrder(userMarketOrder, options, signer);
-        return this.postOrder(order, orderType, deferExec, signer);
+        const order = await this.createMarketOrder(userMarketOrder, options);
+        return this.postOrder(order, orderType, deferExec);
     }
 
     public async getOpenOrders(
@@ -769,9 +763,8 @@ export class ClobClient {
         order: SignedOrder,
         orderType: T = OrderType.GTC as T,
         deferExec = false,
-        signer?: Wallet | JsonRpcSigner,
     ): Promise<any> {
-        this.canL2Auth(signer);
+        this.canL2Auth();
         const endpoint = POST_ORDER;
         const orderPayload = orderToJson(order, this.creds?.key || "", orderType, deferExec);
 
@@ -782,7 +775,7 @@ export class ClobClient {
         };
 
         const headers = await createL2Headers(
-            (signer ?? this.signer) as Wallet | JsonRpcSigner,
+            this.signer as Wallet | JsonRpcSigner,
             this.creds as ApiKeyCreds,
             l2HeaderArgs,
             this.useServerTime ? await this.getServerTime() : undefined,
@@ -1112,14 +1105,14 @@ export class ClobClient {
         }
     }
 
-    private canL1Auth(signer?: Wallet | JsonRpcSigner): void {
-        if (this.signer === undefined && signer === undefined) {
+    private canL1Auth(): void {
+        if (this.signer === undefined) {
             throw L1_AUTH_UNAVAILABLE_ERROR;
         }
     }
 
-    private canL2Auth(signer?: Wallet | JsonRpcSigner): void {
-        if (this.signer === undefined && signer === undefined) {
+    private canL2Auth(): void {
+        if (this.signer === undefined) {
             throw L1_AUTH_UNAVAILABLE_ERROR;
         }
 
