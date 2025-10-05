@@ -36,6 +36,15 @@ export interface L2PolyHeader extends AxiosRequestHeaders {
     POLY_PASSPHRASE: string;
 }
 
+
+// Builder API key verification
+export interface L2WithBuilderHeader extends L2PolyHeader {
+    POLY_BUILDER_API_KEY: string;
+    POLY_BUILDER_TIMESTAMP: string;
+    POLY_BUILDER_PASSPHRASE: string;
+    POLY_BUILDER_SIGNATURE: string;
+}
+
 export enum Side {
     BUY = "BUY",
     SELL = "SELL",
@@ -476,4 +485,28 @@ export interface UserRewardsEarning {
     earnings: Earning[];
 }
 
-
+export interface BuilderTrade {
+    id: string;
+    tradeType: string;
+    takerOrderHash: string;
+    builder: string;
+    market: string;
+    assetId: string;
+    side: string;
+    size: string;
+    sizeUsdc: string;
+    price: string;
+    status: string;
+    outcome: string;
+    outcomeIndex: number;
+    owner: string;
+    maker: string;
+    transactionHash: string;
+    matchTime: string;
+    bucketIndex: number;
+    fee: string;
+    feeUsdc: string;
+    err_msg?: string | null;
+    createdAt: string | null;
+    updatedAt: string | null;
+}
