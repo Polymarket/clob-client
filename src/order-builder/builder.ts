@@ -51,7 +51,7 @@ export class OrderBuilder {
         userOrder: UserOrder,
         options: CreateOrderOptions,
     ): Promise<SignedOrder> {
-        const signer = await this.resolveSigner(); // always up-to-date
+        const signer = await this.resolveSigner();
         return createOrder(
             signer,
             this.chainId,
@@ -69,7 +69,7 @@ export class OrderBuilder {
         userMarketOrder: UserMarketOrder,
         options: CreateOrderOptions,
     ): Promise<SignedOrder> {
-        const signer = await this.resolveSigner(); // always up-to-date
+        const signer = await this.resolveSigner();
         return createMarketOrder(
             signer,
             this.chainId,
