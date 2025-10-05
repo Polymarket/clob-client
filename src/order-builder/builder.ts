@@ -69,7 +69,11 @@ export class OrderBuilder {
         return createMarketOrder(
             signer,
             this.chainId,
-            this.signatureType,
+    /**
+     * Resolves the signer to use for order creation.
+     * Returns a fresh signer from the getSigner callback if available,
+     * otherwise falls back to the default signer.
+     */
             this.funderAddress,
             userMarketOrder,
             options,
