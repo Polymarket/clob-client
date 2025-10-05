@@ -149,6 +149,7 @@ export class ClobClient {
         funderAddress?: string,
         geoBlockToken?: string,
         useServerTime?: boolean,
+        getSigner?: () => Promise<Wallet | JsonRpcSigner> | (Wallet | JsonRpcSigner)
     ) {
         this.host = host.endsWith("/") ? host.slice(0, -1) : host;
         this.chainId = chainId;
@@ -159,11 +160,16 @@ export class ClobClient {
         if (creds !== undefined) {
             this.creds = creds;
         }
+
+        if (getSigner !== undefined) {
+            this.getSigner = getSigner
+        }
         this.orderBuilder = new OrderBuilder(
-            signer as Wallet | JsonRpcSigner,
+            signer as Wallet | JsonRpcSigner, // TODO So this is what I need to change
             chainId,
             signatureType,
             funderAddress,
+            getSigner,
         );
         this.tickSizes = {};
         this.negRisk = {};

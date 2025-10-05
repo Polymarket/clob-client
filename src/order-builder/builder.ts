@@ -17,18 +17,33 @@ export class OrderBuilder {
     // If not provided, funderAddress is the signer address
     readonly funderAddress?: string;
 
+    getSigner :() => Promise<Wallet | JsonRpcSigner> | (Wallet | JsonRpcSigner);
+
+
     constructor(
         signer: Wallet | JsonRpcSigner,
         chainId: Chain,
         signatureType?: SignatureType,
         funderAddress?: string,
+        getSigner?: () => Promise<Wallet | JsonRpcSigner> | (Wallet | JsonRpcSigner)
     ) {
         this.signer = signer;
         this.chainId = chainId;
         this.signatureType = signatureType === undefined ? SignatureType.EOA : signatureType;
         this.funderAddress = funderAddress;
+        this.getSigner = getSigner === undefined ? null : getSigner;
     }
 
+    /** Unified getter: use fresh signer if available */
+    private async resolveSigner(): Promise<Wallet | JsonRpcSigner> {
+        if (this.getSigner) {
+            const s = await this.getSigner();
+            if (!s) throw new Error("getSigner() returned undefined");
+            return s;
+        }
+        if (!this.signer) throw new Error("No signer provided to client");
+        return this.signer;
+    }
     /**
      * Generate and sign a order
      */
@@ -36,8 +51,9 @@ export class OrderBuilder {
         userOrder: UserOrder,
         options: CreateOrderOptions,
     ): Promise<SignedOrder> {
+        const signer = await this.resolveSigner(); // always up-to-date
         return createOrder(
-            this.signer,
+            signer,
             this.chainId,
             this.signatureType,
             this.funderAddress,
@@ -52,10 +68,10 @@ export class OrderBuilder {
     public async buildMarketOrder(
         userMarketOrder: UserMarketOrder,
         options: CreateOrderOptions,
-        signer?: Wallet | JsonRpcSigner,
     ): Promise<SignedOrder> {
+        const signer = await this.resolveSigner(); // always up-to-date
         return createMarketOrder(
-            signer ?? this.signer,   // <-- prefer provided signer, else fallback
+            signer,
             this.chainId,
             this.signatureType,
             this.funderAddress,
