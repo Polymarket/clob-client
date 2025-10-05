@@ -19,7 +19,6 @@ export class OrderBuilder {
 
     private getSigner? :() => Promise<Wallet | JsonRpcSigner> | (Wallet | JsonRpcSigner);
 
-
     constructor(
         signer: Wallet | JsonRpcSigner,
         chainId: Chain,
