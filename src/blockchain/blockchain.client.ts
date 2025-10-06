@@ -1,5 +1,9 @@
 import { ethers } from "ethers";
-import { getContractConfig } from "../config";
+import {
+    getContractConfig,
+    REDEEM_POSITIONS_GAS_LIMIT,
+    REDEEM_POSITIONS_MINIMUM_MAX_FEE,
+} from "../config";
 import {
     ApproveHashOnSafeParams,
     Chain,
@@ -196,7 +200,7 @@ export class BlockchainClient {
             gasToken,
             refundReceiver,
             signature,
-            { ...(await this.getCurrentFeeParams()), gasLimit: 500000 },
+            { ...(await this.getCurrentFeeParams()), gasLimit: REDEEM_POSITIONS_GAS_LIMIT },
         );
 
         // Step 8: Wait for confirmation
@@ -211,8 +215,8 @@ export class BlockchainClient {
         const feeData = await this.wallet.provider.getFeeData();
 
         // Polygon network minimum requirements
-        const minPriorityFee = ethers.utils.parseUnits("80", "gwei");
-        const minMaxFee = ethers.utils.parseUnits("80", "gwei");
+        const minPriorityFee = ethers.utils.parseUnits(REDEEM_POSITIONS_MINIMUM_MAX_FEE, "gwei");
+        const minMaxFee = ethers.utils.parseUnits(REDEEM_POSITIONS_MINIMUM_MAX_FEE, "gwei");
 
         if (!feeData.maxPriorityFeePerGas || !feeData.maxFeePerGas) {
             // Fallback to minimum values if fee data not available

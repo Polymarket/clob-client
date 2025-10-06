@@ -4464,7 +4464,7 @@ describe("helpers", () => {
             });
 
             expect(promise).to.be.instanceOf(Promise);
-            // The function internally calls blockchainClient.redeemMarketOutcomeTokenForEOA
+            // The function internally calls blockchainClient.redeemMarketPositionsForEOA
             // with correct params (ConditionID)
         });
 
@@ -4479,7 +4479,7 @@ describe("helpers", () => {
             });
 
             expect(promise).to.be.instanceOf(Promise);
-            // The function internally calls blockchainClient.redeemMarketOutcomeTokenForSafeWallet
+            // The function internally calls blockchainClient.redeemMarketPositionsForSafeWallet
             // with correct params (ConditionID, safeWalletAddress)
         });
     });

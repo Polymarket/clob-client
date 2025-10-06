@@ -36,5 +36,15 @@ const getContractConfig = (chainID: number): ContractConfig => {
     }
 };
 
+const REDEEM_POSITIONS_GAS_LIMIT = 500000;
+
+const REDEEM_POSITIONS_MINIMUM_MAX_FEE = "80";
+
 export type { ContractConfig };
-export { getContractConfig, COLLATERAL_TOKEN_DECIMALS, CONDITIONAL_TOKEN_DECIMALS };
+export {
+    getContractConfig,
+    COLLATERAL_TOKEN_DECIMALS,
+    CONDITIONAL_TOKEN_DECIMALS,
+    REDEEM_POSITIONS_GAS_LIMIT,
+    REDEEM_POSITIONS_MINIMUM_MAX_FEE,
+};
