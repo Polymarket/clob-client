@@ -17,16 +17,27 @@ export class OrderBuilder {
     // If not provided, funderAddress is the signer address
     readonly funderAddress?: string;
 
+    /**
+     * Optional function to dynamically resolve the signer.
+     * If provided, this function will be called to obtain a fresh signer instance
+     * (e.g., for smart contract wallets or when the signer may change).
+     * Should return a Wallet or JsonRpcSigner, or a Promise resolving to one.
+     * If not provided, the static `signer` property is used.
+     */
+    private getSigner?: () => Promise<Wallet | JsonRpcSigner> | (Wallet | JsonRpcSigner);
+
     constructor(
         signer: Wallet | JsonRpcSigner,
         chainId: Chain,
         signatureType?: SignatureType,
         funderAddress?: string,
+        getSigner?: () => Promise<Wallet | JsonRpcSigner> | (Wallet | JsonRpcSigner)
     ) {
         this.signer = signer;
         this.chainId = chainId;
         this.signatureType = signatureType === undefined ? SignatureType.EOA : signatureType;
         this.funderAddress = funderAddress;
+        this.getSigner = getSigner;
     }
 
     /**
@@ -36,8 +47,9 @@ export class OrderBuilder {
         userOrder: UserOrder,
         options: CreateOrderOptions,
     ): Promise<SignedOrder> {
+        const signer = await this.resolveSigner();
         return createOrder(
-            this.signer,
+            signer,
             this.chainId,
             this.signatureType,
             this.funderAddress,
@@ -53,13 +65,24 @@ export class OrderBuilder {
         userMarketOrder: UserMarketOrder,
         options: CreateOrderOptions,
     ): Promise<SignedOrder> {
+        const signer = await this.resolveSigner();
         return createMarketOrder(
-            this.signer,
+            signer,
             this.chainId,
             this.signatureType,
             this.funderAddress,
             userMarketOrder,
             options,
         );
+    }
+
+    /** Unified getter: use fresh signer if available */
+    private async resolveSigner(): Promise<Wallet | JsonRpcSigner> {
+        if (this.getSigner) {
+            const s = await this.getSigner();
+            if (!s) throw new Error("getSigner() function returned undefined or null");
+            return s;
+        }
+        return this.signer;
     }
 }
