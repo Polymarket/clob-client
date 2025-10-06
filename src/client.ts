@@ -168,7 +168,7 @@ export class ClobClient {
         geoBlockToken?: string,
         useServerTime?: boolean,
         builderConfig?: BuilderConfig,
-        getSigner?: () => Promise<Wallet | JsonRpcSigner> | (Wallet | JsonRpcSigner),
+        getSigner?: () => Promise<Wallet | JsonRpcSigner> | (Wallet | JsonRpcSigner)
     ) {
         this.host = host.endsWith("/") ? host.slice(0, -1) : host;
         this.chainId = chainId;
@@ -1224,7 +1224,7 @@ export class ClobClient {
     }
 
     private canBuilderAuth(): boolean {
-        return this.builderConfig != undefined && this.builderConfig.isValid();
+        return (this.builderConfig != undefined && this.builderConfig.isValid())
     }
 
     private async _resolveTickSize(tokenID: string, tickSize?: TickSize): Promise<TickSize> {
