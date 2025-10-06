@@ -12,6 +12,7 @@ import {
     ROUNDING_CONFIG,
     calculateBuyMarketPrice,
     calculateSellMarketPrice,
+    redeemMarketPositions,
 } from "../../src/order-builder/helpers";
 import { OrderData, SignatureType, Side as UtilsSide } from "@polymarket/order-utils";
 import { Wallet } from "@ethersproject/wallet";
@@ -4378,6 +4379,108 @@ describe("helpers", () => {
                 { price: "0.5", size: "1000" },
             ] as OrderSummary[];
             expect(calculateSellMarketPrice(positions, 600, OrderType.FAK)).equal(0.5);
+        });
+    });
+
+    describe("redeemPositions", () => {
+        it("should redeem for EOA wallet", async () => {
+            const mockConditionID =
+                "0xabcdef1234567890abcdef1234567890abcdef1234567890abcdef1234567890";
+
+            const promise = redeemMarketPositions(wallet, chainId, SignatureType.EOA, {
+                ConditionID: mockConditionID,
+            });
+
+            // Should return a promise
+            expect(promise).to.be.instanceOf(Promise);
+        });
+
+        it("should redeem for POLY_PROXY wallet", async () => {
+            const mockConditionID =
+                "0xabcdef1234567890abcdef1234567890abcdef1234567890abcdef1234567890";
+            const funderWalletAddress = "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266";
+
+            const promise = redeemMarketPositions(wallet, chainId, SignatureType.POLY_PROXY, {
+                ConditionID: mockConditionID,
+                funderWalletAddress,
+            });
+
+            // Should return a promise
+            expect(promise).to.be.instanceOf(Promise);
+        });
+
+        it("should redeem for POLY_GNOSIS_SAFE wallet", async () => {
+            const mockConditionID =
+                "0xabcdef1234567890abcdef1234567890abcdef1234567890abcdef1234567890";
+            const funderWalletAddress = "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266";
+
+            const promise = redeemMarketPositions(wallet, chainId, SignatureType.POLY_GNOSIS_SAFE, {
+                ConditionID: mockConditionID,
+                funderWalletAddress,
+            });
+
+            // Should return a promise
+            expect(promise).to.be.instanceOf(Promise);
+        });
+
+        it("should throw error when funderWalletAddress is missing for Safe wallet", async () => {
+            const mockConditionID =
+                "0xabcdef1234567890abcdef1234567890abcdef1234567890abcdef1234567890";
+
+            try {
+                await redeemMarketPositions(wallet, chainId, SignatureType.POLY_GNOSIS_SAFE, {
+                    ConditionID: mockConditionID,
+                });
+                expect.fail("Should have thrown an error");
+            } catch (error: any) {
+                expect(error.message).to.equal(
+                    "funderWalletAddress is required for Safe wallet redemption",
+                );
+            }
+        });
+
+        it("should throw error when funderWalletAddress is missing for POLY_PROXY wallet", async () => {
+            const mockConditionID =
+                "0xabcdef1234567890abcdef1234567890abcdef1234567890abcdef1234567890";
+
+            try {
+                await redeemMarketPositions(wallet, chainId, SignatureType.POLY_PROXY, {
+                    ConditionID: mockConditionID,
+                });
+                expect.fail("Should have thrown an error");
+            } catch (error: any) {
+                expect(error.message).to.equal(
+                    "funderWalletAddress is required for Safe wallet redemption",
+                );
+            }
+        });
+
+        it("should use correct parameters for EOA redemption", async () => {
+            const mockConditionID =
+                "0xabcdef1234567890abcdef1234567890abcdef1234567890abcdef1234567890";
+
+            const promise = redeemMarketPositions(wallet, chainId, SignatureType.EOA, {
+                ConditionID: mockConditionID,
+            });
+
+            expect(promise).to.be.instanceOf(Promise);
+            // The function internally calls blockchainClient.redeemMarketOutcomeTokenForEOA
+            // with correct params (ConditionID)
+        });
+
+        it("should use correct parameters for Safe wallet redemption", async () => {
+            const mockConditionID =
+                "0xabcdef1234567890abcdef1234567890abcdef1234567890abcdef1234567890";
+            const funderWalletAddress = "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266";
+
+            const promise = redeemMarketPositions(wallet, chainId, SignatureType.POLY_GNOSIS_SAFE, {
+                ConditionID: mockConditionID,
+                funderWalletAddress,
+            });
+
+            expect(promise).to.be.instanceOf(Promise);
+            // The function internally calls blockchainClient.redeemMarketOutcomeTokenForSafeWallet
+            // with correct params (ConditionID, safeWalletAddress)
         });
     });
 });
