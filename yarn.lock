@@ -687,10 +687,10 @@
     "@nodelib/fs.scandir" "2.1.5"
     fastq "^1.6.0"
 
-"@polymarket/builder-signing-sdk@^0.0.6":
-  version "0.0.6"
-  resolved "https://registry.yarnpkg.com/@polymarket/builder-signing-sdk/-/builder-signing-sdk-0.0.6.tgz#ecb674bdcc4f0b01924f861273ffceec675ec715"
-  integrity sha512-XztaELyoiYUQt0uBdhinn+VMJAGGmjxH6NGLGd5VPhgaE6fyDC0tqHWy6H9CraKEphxrkHe7wQR4BAz1xAXvBQ==
+"@polymarket/builder-signing-sdk@^0.0.7":
+  version "0.0.7"
+  resolved "https://registry.yarnpkg.com/@polymarket/builder-signing-sdk/-/builder-signing-sdk-0.0.7.tgz#0b3ab51eee0289448bdc24ccad0d7ef5fecebe55"
+  integrity sha512-EQ47V8QkZx7UKQriAA9YhlZoObjLG3lcmE1pk4NkT7WHrGw6UixHFjuAzCRg7o1EAE83K4D5rcrw1p3Izh9lCg==
   dependencies:
     "@types/node" "^18.7.18"
     axios "^1.12.2"
