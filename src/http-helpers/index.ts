@@ -90,15 +90,6 @@ export const del = async (endpoint: string, options?: RequestOptions): Promise<a
 const errorHandling = (err: unknown) => {
     if (axios.isAxiosError(err)) {
         if (err.response) {
-            console.error(
-                "[CLOB Client] request error",
-                JSON.stringify({
-                    status: err.response?.status,
-                    statusText: err.response?.statusText,
-                    data: err.response?.data,
-                    config: err.response?.config,
-                }),
-            );
             if (err.response?.data) {
                 if (
                     typeof err.response?.data === "string" ||
