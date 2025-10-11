@@ -106,12 +106,6 @@ const errorHandling = (err: unknown) => {
         }
 
         if (err.message) {
-            console.error(
-                "[CLOB Client] request error",
-                JSON.stringify({
-                    error: err.message,
-                }),
-            );
             return { error: err.message };
         }
     }
