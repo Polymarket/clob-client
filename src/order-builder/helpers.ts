@@ -4,23 +4,25 @@ import { parseUnits } from "@ethersproject/units";
 import {
     ExchangeOrderBuilder,
     OrderData,
+    Side as UtilsSide,
     SignatureType,
     SignedOrder,
-    Side as UtilsSide,
 } from "@polymarket/order-utils";
 import {
-    UserOrder,
-    Side,
     Chain,
-    UserMarketOrder,
-    TickSize,
-    RoundConfig,
     CreateOrderOptions,
     OrderSummary,
     OrderType,
+    RoundConfig,
+    Side,
+    TickSize,
+    UserMarketOrder,
+    UserOrder,
 } from "../types";
 import { decimalPlaces, roundDown, roundNormal, roundUp } from "../utilities";
 import { COLLATERAL_TOKEN_DECIMALS, getContractConfig } from "../config";
+import { TransactionReceipt } from "@ethersproject/abstract-provider";
+import { BlockchainClient } from "../blockchain/blockchain.client";
 
 export const ROUNDING_CONFIG: Record<TickSize, RoundConfig> = {
     "0.1": {
@@ -391,4 +393,29 @@ export const calculateSellMarketPrice = (
         throw new Error("no match");
     }
     return parseFloat(positions[0].price);
+};
+
+export const redeemMarketPositions = (
+    eoaSigner: Wallet | JsonRpcSigner,
+    chainId: Chain,
+    signatureType: SignatureType,
+    params: {
+        ConditionID: string;
+        funderWalletAddress?: string;
+    },
+): Promise<TransactionReceipt> => {
+    const blockchainClient = new BlockchainClient(eoaSigner, chainId);
+    if (signatureType === SignatureType.EOA) {
+        return blockchainClient.redeemMarketPositionsForEOA({
+            ConditionID: params.ConditionID,
+        });
+    }
+    if (!params.funderWalletAddress) {
+        throw new Error("funderWalletAddress is required for Safe wallet redemption");
+    }
+
+    return blockchainClient.redeemMarketPositionsForSafeWallet({
+        ConditionID: params.ConditionID,
+        safeWalletAddress: params.funderWalletAddress,
+    });
 };
