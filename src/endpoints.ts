@@ -8,6 +8,11 @@ export const DELETE_API_KEY = "/auth/api-key";
 export const DERIVE_API_KEY = "/auth/derive-api-key";
 export const CLOSED_ONLY = "/auth/ban-status/closed-only";
 
+// Builder API Key endpoints
+export const CREATE_BUILDER_API_KEY = "/auth/builder-api-key";
+export const GET_BUILDER_API_KEYS = "/auth/builder-api-key";
+export const REVOKE_BUILDER_API_KEY = "/auth/builder-api-key";
+
 // Markets
 export const GET_SAMPLING_SIMPLIFIED_MARKETS = "/sampling-simplified-markets";
 export const GET_SAMPLING_MARKETS = "/sampling-markets";

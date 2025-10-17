@@ -469,6 +469,12 @@ export interface Earning {
     asset_rate: number;
 }
 
+export interface BuilderApiKey {
+    key: string;
+    secret: string;
+    passphrase: string;
+}
+
 export interface UserRewardsEarning {
     condition_id: string;
     question: string;
