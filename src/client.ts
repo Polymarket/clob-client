@@ -61,7 +61,7 @@ import {
     post,
     RequestOptions,
 } from "./http-helpers";
-import { BUILDER_AUTH_FAILED, BUILDER_AUTH_NOT_AVAILABLE, L1_AUTH_UNAVAILABLE_ERROR, L2_AUTH_NOT_AVAILABLE } from "./errors";
+import { BUILDER_AUTH_NOT_AVAILABLE, L1_AUTH_UNAVAILABLE_ERROR, L2_AUTH_NOT_AVAILABLE } from "./errors";
 import {
     generateOrderBookSummaryHash,
     isTickSizeSmaller,
@@ -117,6 +117,9 @@ import {
     POST_ORDERS,
     GET_FEE_RATE,
     GET_BUILDER_TRADES,
+    CREATE_BUILDER_API_KEY,
+    GET_BUILDER_API_KEYS,
+    REVOKE_BUILDER_API_KEY,
 } from "./endpoints";
 import { OrderBuilder } from "./order-builder/builder";
 import { END_CURSOR, INITIAL_CURSOR } from "./constants";
@@ -558,9 +561,7 @@ export class ClobClient {
         params?: TradeParams,
         next_cursor?: string,
     ): Promise<{ trades: BuilderTrade[]; next_cursor: string; limit: number; count: number }> {
-        if (!this.canBuilderAuth()) {
-            throw BUILDER_AUTH_NOT_AVAILABLE;
-        }
+        this.mustBuilderAuth();
 
         const endpoint = GET_BUILDER_TRADES;
         const headerArgs = {
@@ -572,9 +573,6 @@ export class ClobClient {
             headerArgs.method,
             headerArgs.requestPath,
         );
-        if (headers == undefined) {
-            throw BUILDER_AUTH_FAILED; 
-        }
 
         next_cursor = next_cursor || INITIAL_CURSOR;
 
@@ -1175,6 +1173,61 @@ export class ClobClient {
         }
     }
 
+    public async createBuilderApiKey(): Promise<any> {
+        this.canL2Auth();
+        
+        const endpoint = CREATE_BUILDER_API_KEY;
+        const headerArgs = {
+            method: POST,
+            requestPath: endpoint,
+        };
+
+        const headers = await createL2Headers(
+            this.signer as Wallet | JsonRpcSigner,
+            this.creds as ApiKeyCreds,
+            headerArgs,
+            this.useServerTime ? await this.getServerTime() : undefined,
+        );
+
+        return this.post(`${this.host}${endpoint}`, { headers });
+    }
+
+    public async getBuilderApiKeys(): Promise<any> {
+        this.canL2Auth();
+        
+        const endpoint = GET_BUILDER_API_KEYS;
+        const headerArgs = {
+            method: GET,
+            requestPath: endpoint,
+        };
+
+        const headers = await createL2Headers(
+            this.signer as Wallet | JsonRpcSigner,
+            this.creds as ApiKeyCreds,
+            headerArgs,
+            this.useServerTime ? await this.getServerTime() : undefined,
+        );
+
+        return this.get(`${this.host}${endpoint}`, { headers });
+    }
+
+    public async revokeBuilderApiKey(): Promise<any> {
+        this.mustBuilderAuth();
+        
+        const endpoint = REVOKE_BUILDER_API_KEY;
+        const headerArgs = {
+            method: DELETE,
+            requestPath: endpoint,
+        };
+
+        const headers = await this._getBuilderHeaders(
+            headerArgs.method,
+            headerArgs.requestPath,
+        );
+
+        return this.del(`${this.host}${endpoint}`, { headers });
+    }
+
     private canL1Auth(): void {
         if (this.signer === undefined) {
             throw L1_AUTH_UNAVAILABLE_ERROR;
@@ -1188,6 +1241,12 @@ export class ClobClient {
 
         if (this.creds === undefined) {
             throw L2_AUTH_NOT_AVAILABLE;
+        }
+    }
+
+    private mustBuilderAuth(): void {
+        if (!this.canBuilderAuth()) {
+            throw BUILDER_AUTH_NOT_AVAILABLE;
         }
     }
 
