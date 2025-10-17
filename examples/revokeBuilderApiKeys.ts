@@ -21,9 +21,9 @@ async function main() {
     const builderConfig: BuilderConfig = new BuilderConfig(
         {
             localBuilderCreds: {
-                key: `${process.env.BK_REVOKE_KEY}`,
-                secret: `${process.env.BK_REVOKE_SECRET}`,
-                passphrase: `${process.env.BK_REVOKE_PASSPHRASE}`,        
+                key: `${process.env.BUILDER_API_KEY}`,
+                secret: `${process.env.BUILDER_SECRET}`,
+                passphrase: `${process.env.BUILDER_PASS_PHRASE}`,
             }
         }
     );
