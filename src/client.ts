@@ -50,6 +50,7 @@ import {
     L2HeaderArgs,
     BuilderTrade,
     BuilderApiKey,
+    BuilderApiKeyResponse,
 } from "./types";
 import { createL1Headers, createL2Headers, injectBuilderHeaders } from "./headers";
 import {
@@ -1193,7 +1194,7 @@ export class ClobClient {
         return this.post(`${this.host}${endpoint}`, { headers });
     }
 
-    public async getBuilderApiKeys(): Promise<string[]> {
+    public async getBuilderApiKeys(): Promise<BuilderApiKeyResponse[]> {
         this.canL2Auth();
         
         const endpoint = GET_BUILDER_API_KEYS;

@@ -475,6 +475,12 @@ export interface BuilderApiKey {
     passphrase: string;
 }
 
+export interface BuilderApiKeyResponse {
+    key: string;
+    createdAt?: string;
+    revokedAt?: string;
+}
+
 export interface UserRewardsEarning {
     condition_id: string;
     question: string;
