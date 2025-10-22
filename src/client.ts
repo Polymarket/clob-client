@@ -63,7 +63,7 @@ import {
     post,
     RequestOptions,
 } from "./http-helpers";
-import { BUILDER_AUTH_NOT_AVAILABLE, L1_AUTH_UNAVAILABLE_ERROR, L2_AUTH_NOT_AVAILABLE } from "./errors";
+import { BUILDER_AUTH_FAILED, BUILDER_AUTH_NOT_AVAILABLE, L1_AUTH_UNAVAILABLE_ERROR, L2_AUTH_NOT_AVAILABLE } from "./errors";
 import {
     generateOrderBookSummaryHash,
     isTickSizeSmaller,
@@ -575,6 +575,10 @@ export class ClobClient {
             headerArgs.method,
             headerArgs.requestPath,
         );
+
+        if (headers == undefined) {
+            throw BUILDER_AUTH_FAILED;
+        }
 
         next_cursor = next_cursor || INITIAL_CURSOR;
 
@@ -1226,6 +1230,9 @@ export class ClobClient {
             headerArgs.method,
             headerArgs.requestPath,
         );
+        if (headers == undefined) {
+            throw BUILDER_AUTH_FAILED;
+        }
 
         return this.del(`${this.host}${endpoint}`, { headers });
     }

@@ -11,5 +11,5 @@ export const BUILDER_AUTH_NOT_AVAILABLE = new Error(
 );
 
 export const BUILDER_AUTH_FAILED = new Error(
-    "Builder auth failed!",
+    "Builder key auth failed!",
 );
