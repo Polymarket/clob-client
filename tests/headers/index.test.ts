@@ -1,5 +1,4 @@
-import "mocha";
-import { expect } from "chai";
+import { describe, it, beforeEach, expect } from "bun:test";
 import { createL1Headers, createL2Headers } from "../../src/headers/index";
 import { Wallet } from "ethers";
 import { ApiKeyCreds, Chain } from "../../src/types";
@@ -23,26 +22,26 @@ describe("headers", () => {
     describe("createL1Headers", async () => {
         it("no nonce", async () => {
             const l1Headers = await createL1Headers(wallet, chainId);
-            expect(l1Headers).not.null;
-            expect(l1Headers).not.undefined;
+            expect(l1Headers).not.toBeNull();
+            expect(l1Headers).not.toBeUndefined();
 
-            expect(l1Headers.POLY_ADDRESS).equal(wallet.address);
-            expect(l1Headers.POLY_SIGNATURE).not.empty;
-            expect(l1Headers.POLY_TIMESTAMP).not.empty;
-            expect(parseInt(l1Headers.POLY_TIMESTAMP) <= Math.floor(Date.now() / 1000)).true;
-            expect(l1Headers.POLY_NONCE).equal("0");
+            expect(l1Headers.POLY_ADDRESS).toEqual(wallet.address);
+            expect(l1Headers.POLY_SIGNATURE).not.toBeEmpty();
+            expect(l1Headers.POLY_TIMESTAMP).not.toBeEmpty();
+            expect(parseInt(l1Headers.POLY_TIMESTAMP) <= Math.floor(Date.now() / 1000)).toBe(true);
+            expect(l1Headers.POLY_NONCE).toEqual("0");
         });
 
         it("nonce", async () => {
             const l1Headers = await createL1Headers(wallet, chainId, 1012);
-            expect(l1Headers).not.null;
-            expect(l1Headers).not.undefined;
+            expect(l1Headers).not.toBeNull();
+            expect(l1Headers).not.toBeUndefined();
 
-            expect(l1Headers.POLY_ADDRESS).equal(wallet.address);
-            expect(l1Headers.POLY_SIGNATURE).not.empty;
-            expect(l1Headers.POLY_TIMESTAMP).not.empty;
-            expect(parseInt(l1Headers.POLY_TIMESTAMP) <= Math.floor(Date.now() / 1000)).true;
-            expect(l1Headers.POLY_NONCE).equal("1012");
+            expect(l1Headers.POLY_ADDRESS).toEqual(wallet.address);
+            expect(l1Headers.POLY_SIGNATURE).not.toBeEmpty();
+            expect(l1Headers.POLY_TIMESTAMP).not.toBeEmpty();
+            expect(parseInt(l1Headers.POLY_TIMESTAMP) <= Math.floor(Date.now() / 1000)).toBe(true);
+            expect(l1Headers.POLY_NONCE).toEqual("1012");
         });
     });
 
@@ -52,15 +51,15 @@ describe("headers", () => {
                 method: "get",
                 requestPath: "/order",
             });
-            expect(l2Headers).not.null;
-            expect(l2Headers).not.undefined;
+            expect(l2Headers).not.toBeNull();
+            expect(l2Headers).not.toBeUndefined();
 
-            expect(l2Headers.POLY_ADDRESS).equal(wallet.address);
-            expect(l2Headers.POLY_SIGNATURE).not.empty;
-            expect(l2Headers.POLY_TIMESTAMP).not.empty;
-            expect(parseInt(l2Headers.POLY_TIMESTAMP) <= Math.floor(Date.now() / 1000)).true;
-            expect(l2Headers.POLY_API_KEY).equal(creds.key);
-            expect(l2Headers.POLY_PASSPHRASE).equal(creds.passphrase);
+            expect(l2Headers.POLY_ADDRESS).toEqual(wallet.address);
+            expect(l2Headers.POLY_SIGNATURE).not.toBeEmpty();
+            expect(l2Headers.POLY_TIMESTAMP).not.toBeEmpty();
+            expect(parseInt(l2Headers.POLY_TIMESTAMP) <= Math.floor(Date.now() / 1000)).toBe(true);
+            expect(l2Headers.POLY_API_KEY).toEqual(creds.key);
+            expect(l2Headers.POLY_PASSPHRASE).toEqual(creds.passphrase);
         });
 
         it("body", async () => {
@@ -69,15 +68,15 @@ describe("headers", () => {
                 requestPath: "/order",
                 body: '{"hash": "0x123"}',
             });
-            expect(l2Headers).not.null;
-            expect(l2Headers).not.undefined;
+            expect(l2Headers).not.toBeNull();
+            expect(l2Headers).not.toBeUndefined();
 
-            expect(l2Headers.POLY_ADDRESS).equal(wallet.address);
-            expect(l2Headers.POLY_SIGNATURE).not.empty;
-            expect(l2Headers.POLY_TIMESTAMP).not.empty;
-            expect(parseInt(l2Headers.POLY_TIMESTAMP) <= Math.floor(Date.now() / 1000)).true;
-            expect(l2Headers.POLY_API_KEY).equal(creds.key);
-            expect(l2Headers.POLY_PASSPHRASE).equal(creds.passphrase);
+            expect(l2Headers.POLY_ADDRESS).toEqual(wallet.address);
+            expect(l2Headers.POLY_SIGNATURE).not.toBeEmpty();
+            expect(l2Headers.POLY_TIMESTAMP).not.toBeEmpty();
+            expect(parseInt(l2Headers.POLY_TIMESTAMP) <= Math.floor(Date.now() / 1000)).toBe(true);
+            expect(l2Headers.POLY_API_KEY).toEqual(creds.key);
+            expect(l2Headers.POLY_PASSPHRASE).toEqual(creds.passphrase);
         });
     });
 });
