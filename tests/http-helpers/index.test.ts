@@ -1,5 +1,4 @@
-import "mocha";
-import { expect } from "chai";
+import { expect, describe, it } from "bun:test";
 import {
     parseDropNotificationParams,
     parseOrdersScoringParams,
@@ -12,10 +11,10 @@ describe("utilities", () => {
             const params = parseOrdersScoringParams({
                 orderIds: ["0x0", "0x1", "0x2"],
             } as OrdersScoringParams);
-            expect(params).not.null;
-            expect(params).not.undefined;
-            expect(params).not.empty;
-            expect(params).deep.equal({ order_ids: "0x0,0x1,0x2" });
+            expect(params).not.toBeNull();
+            expect(params).not.toBeUndefined();
+            expect(params).not.toBeEmpty();
+            expect(params).toEqual({ order_ids: "0x0,0x1,0x2" });
         });
     });
     describe("parseDropNotificationParams", () => {
@@ -23,10 +22,10 @@ describe("utilities", () => {
             const params = parseDropNotificationParams({
                 ids: ["0", "1", "2"],
             } as DropNotificationParams);
-            expect(params).not.null;
-            expect(params).not.undefined;
-            expect(params).not.empty;
-            expect(params).deep.equal({ ids: "0,1,2" });
+            expect(params).not.toBeNull();
+            expect(params).not.toBeUndefined();
+            expect(params).not.toBeEmpty();
+            expect(params).toEqual({ ids: "0,1,2" });
         });
     });
 });

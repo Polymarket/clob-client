@@ -1,6 +1,5 @@
 /* eslint-disable max-len */
-import "mocha";
-import { expect } from "chai";
+import { describe, it, expect } from "bun:test";
 import {
     decimalPlaces,
     generateOrderBookSummaryHash,
@@ -36,10 +35,11 @@ describe("utilities", () => {
                 "aaaa-bbbb-cccc-dddd",
                 OrderType.GTD,
             );
-            expect(jsonOrder).not.null;
-            expect(jsonOrder).not.undefined;
 
-            expect(jsonOrder).deep.equal({
+            expect(jsonOrder).not.toBeNull();
+            expect(jsonOrder).not.toBeUndefined();
+
+            expect(jsonOrder).toEqual({
                 order: {
                     salt: 1000,
                     maker: "0x0000000000000000000000000000000000000001",
@@ -48,7 +48,7 @@ describe("utilities", () => {
                     tokenId: "1",
                     makerAmount: "100000000",
                     takerAmount: "50000000",
-                    side: "BUY",
+                    side: Side.BUY,
                     expiration: "0",
                     nonce: "1",
                     feeRateBps: "100",
@@ -56,7 +56,7 @@ describe("utilities", () => {
                     signature: "0x",
                 },
                 owner: "aaaa-bbbb-cccc-dddd",
-                orderType: "GTD",
+                orderType: OrderType.GTD,
                 deferExec: false,
             });
         });
@@ -81,10 +81,10 @@ describe("utilities", () => {
                 "aaaa-bbbb-cccc-dddd",
                 OrderType.GTD,
             );
-            expect(jsonOrder).not.null;
-            expect(jsonOrder).not.undefined;
+            expect(jsonOrder).not.toBeNull();
+            expect(jsonOrder).not.toBeUndefined();
 
-            expect(jsonOrder).deep.equal({
+            expect(jsonOrder).toEqual({
                 order: {
                     salt: 1000,
                     maker: "0x0000000000000000000000000000000000000001",
@@ -93,7 +93,7 @@ describe("utilities", () => {
                     tokenId: "1",
                     makerAmount: "100000000",
                     takerAmount: "50000000",
-                    side: "SELL",
+                    side: Side.SELL,
                     expiration: "0",
                     nonce: "1",
                     feeRateBps: "100",
@@ -101,7 +101,7 @@ describe("utilities", () => {
                     signature: "0x",
                 },
                 owner: "aaaa-bbbb-cccc-dddd",
-                orderType: "GTD",
+                orderType: OrderType.GTD,
                 deferExec: false,
             });
         });
@@ -126,10 +126,10 @@ describe("utilities", () => {
                 "aaaa-bbbb-cccc-dddd",
                 OrderType.GTC,
             );
-            expect(jsonOrder).not.null;
-            expect(jsonOrder).not.undefined;
+            expect(jsonOrder).not.toBeNull();
+            expect(jsonOrder).not.toBeUndefined();
 
-            expect(jsonOrder).deep.equal({
+            expect(jsonOrder).toEqual({
                 order: {
                     salt: 1000,
                     maker: "0x0000000000000000000000000000000000000001",
@@ -138,7 +138,7 @@ describe("utilities", () => {
                     tokenId: "1",
                     makerAmount: "100000000",
                     takerAmount: "50000000",
-                    side: "BUY",
+                    side: Side.BUY,
                     expiration: "0",
                     nonce: "1",
                     feeRateBps: "100",
@@ -146,7 +146,7 @@ describe("utilities", () => {
                     signature: "0x",
                 },
                 owner: "aaaa-bbbb-cccc-dddd",
-                orderType: "GTC",
+                orderType: OrderType.GTC,
                 deferExec: false,
             });
         });
@@ -171,10 +171,10 @@ describe("utilities", () => {
                 "aaaa-bbbb-cccc-dddd",
                 OrderType.GTC,
             );
-            expect(jsonOrder).not.null;
-            expect(jsonOrder).not.undefined;
+            expect(jsonOrder).not.toBeNull();
+            expect(jsonOrder).not.toBeUndefined();
 
-            expect(jsonOrder).deep.equal({
+            expect(jsonOrder).toEqual({
                 order: {
                     salt: 1000,
                     maker: "0x0000000000000000000000000000000000000001",
@@ -183,7 +183,7 @@ describe("utilities", () => {
                     tokenId: "1",
                     makerAmount: "50000000",
                     takerAmount: "100000000",
-                    side: "SELL",
+                    side: Side.SELL,
                     expiration: "0",
                     nonce: "1",
                     feeRateBps: "100",
@@ -191,7 +191,7 @@ describe("utilities", () => {
                     signature: "0x",
                 },
                 owner: "aaaa-bbbb-cccc-dddd",
-                orderType: "GTC",
+                orderType: OrderType.GTC,
                 deferExec: false,
             });
         });
@@ -216,10 +216,10 @@ describe("utilities", () => {
                 "aaaa-bbbb-cccc-dddd",
                 OrderType.FOK,
             );
-            expect(jsonOrder).not.null;
-            expect(jsonOrder).not.undefined;
+            expect(jsonOrder).not.toBeNull();
+            expect(jsonOrder).not.toBeUndefined();
 
-            expect(jsonOrder).deep.equal({
+            expect(jsonOrder).toEqual({
                 order: {
                     salt: 1000,
                     maker: "0x0000000000000000000000000000000000000001",
@@ -228,7 +228,7 @@ describe("utilities", () => {
                     tokenId: "1",
                     makerAmount: "100000000",
                     takerAmount: "200000000",
-                    side: "BUY",
+                    side: Side.BUY,
                     expiration: "0",
                     nonce: "1",
                     feeRateBps: "100",
@@ -236,7 +236,7 @@ describe("utilities", () => {
                     signature: "0x",
                 },
                 owner: "aaaa-bbbb-cccc-dddd",
-                orderType: "FOK",
+                orderType: OrderType.FOK,
                 deferExec: false,
             });
         });
@@ -261,10 +261,10 @@ describe("utilities", () => {
                 "aaaa-bbbb-cccc-dddd",
                 OrderType.FOK,
             );
-            expect(jsonOrder).not.null;
-            expect(jsonOrder).not.undefined;
+            expect(jsonOrder).not.toBeNull();
+            expect(jsonOrder).not.toBeUndefined();
 
-            expect(jsonOrder).deep.equal({
+            expect(jsonOrder).toEqual({
                 order: {
                     salt: 1000,
                     maker: "0x0000000000000000000000000000000000000001",
@@ -273,7 +273,7 @@ describe("utilities", () => {
                     tokenId: "1",
                     makerAmount: "200000000",
                     takerAmount: "100000000",
-                    side: "SELL",
+                    side: Side.SELL,
                     expiration: "0",
                     nonce: "1",
                     feeRateBps: "100",
@@ -281,7 +281,7 @@ describe("utilities", () => {
                     signature: "0x",
                 },
                 owner: "aaaa-bbbb-cccc-dddd",
-                orderType: "FOK",
+                orderType: OrderType.FOK,
                 deferExec: false,
             });
         });
@@ -315,14 +315,14 @@ describe("utilities", () => {
                             userOrder,
                             { tickSize: "0.1", negRisk: false },
                         );
-                        expect(signedOrder).not.null;
-                        expect(signedOrder).not.undefined;
+                        expect(signedOrder).not.toBeNull();
+                        expect(signedOrder).not.toBeUndefined();
 
                         const jsonGTDOrder = orderToJson(signedOrder, owner, OrderType.GTD);
-                        expect(jsonGTDOrder).not.null;
-                        expect(jsonGTDOrder).not.undefined;
+                        expect(jsonGTDOrder).not.toBeNull();
+                        expect(jsonGTDOrder).not.toBeUndefined();
 
-                        expect(jsonGTDOrder).deep.equal({
+                        expect(jsonGTDOrder).toEqual({
                             order: {
                                 salt: parseInt(signedOrder.salt),
                                 maker: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
@@ -331,7 +331,7 @@ describe("utilities", () => {
                                 tokenId: token,
                                 makerAmount: "50000000",
                                 takerAmount: "100000000",
-                                side: "BUY",
+                                side: Side.BUY,
                                 expiration: "1709948026",
                                 nonce: "0",
                                 feeRateBps: "0",
@@ -360,14 +360,14 @@ describe("utilities", () => {
                             userOrder,
                             { tickSize: "0.1", negRisk: false },
                         );
-                        expect(signedOrder).not.null;
-                        expect(signedOrder).not.undefined;
+                        expect(signedOrder).not.toBeNull();
+                        expect(signedOrder).not.toBeUndefined();
 
                         const jsonGTDOrder = orderToJson(signedOrder, owner, OrderType.GTD);
-                        expect(jsonGTDOrder).not.null;
-                        expect(jsonGTDOrder).not.undefined;
+                        expect(jsonGTDOrder).not.toBeNull();
+                        expect(jsonGTDOrder).not.toBeUndefined();
 
-                        expect(jsonGTDOrder).deep.equal({
+                        expect(jsonGTDOrder).toEqual({
                             order: {
                                 salt: parseInt(signedOrder.salt),
                                 maker: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
@@ -376,7 +376,7 @@ describe("utilities", () => {
                                 tokenId: token,
                                 makerAmount: "50000000",
                                 takerAmount: "100000000",
-                                side: "BUY",
+                                side: Side.BUY,
                                 expiration: "1709948026",
                                 nonce: "0",
                                 feeRateBps: "0",
@@ -405,14 +405,14 @@ describe("utilities", () => {
                             userOrder,
                             { tickSize: "0.1", negRisk: false },
                         );
-                        expect(signedOrder).not.null;
-                        expect(signedOrder).not.undefined;
+                        expect(signedOrder).not.toBeNull();
+                        expect(signedOrder).not.toBeUndefined();
 
                         const jsonGTDOrder = orderToJson(signedOrder, owner, OrderType.GTD);
-                        expect(jsonGTDOrder).not.null;
-                        expect(jsonGTDOrder).not.undefined;
+                        expect(jsonGTDOrder).not.toBeNull();
+                        expect(jsonGTDOrder).not.toBeUndefined();
 
-                        expect(jsonGTDOrder).deep.equal({
+                        expect(jsonGTDOrder).toEqual({
                             order: {
                                 salt: parseInt(signedOrder.salt),
                                 maker: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
@@ -421,7 +421,7 @@ describe("utilities", () => {
                                 tokenId: token,
                                 makerAmount: "50000000",
                                 takerAmount: "100000000",
-                                side: "BUY",
+                                side: Side.BUY,
                                 expiration: "1709948026",
                                 nonce: "0",
                                 feeRateBps: "0",
@@ -450,14 +450,14 @@ describe("utilities", () => {
                             userOrder,
                             { tickSize: "0.1", negRisk: false },
                         );
-                        expect(signedOrder).not.null;
-                        expect(signedOrder).not.undefined;
+                        expect(signedOrder).not.toBeNull();
+                        expect(signedOrder).not.toBeUndefined();
 
                         const jsonGTDOrder = orderToJson(signedOrder, owner, OrderType.GTD);
-                        expect(jsonGTDOrder).not.null;
-                        expect(jsonGTDOrder).not.undefined;
+                        expect(jsonGTDOrder).not.toBeNull();
+                        expect(jsonGTDOrder).not.toBeUndefined();
 
-                        expect(jsonGTDOrder).deep.equal({
+                        expect(jsonGTDOrder).toEqual({
                             order: {
                                 salt: parseInt(signedOrder.salt),
                                 maker: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
@@ -466,7 +466,7 @@ describe("utilities", () => {
                                 tokenId: token,
                                 makerAmount: "100000000",
                                 takerAmount: "50000000",
-                                side: "SELL",
+                                side: Side.SELL,
                                 expiration: "1709948026",
                                 nonce: "0",
                                 feeRateBps: "0",
@@ -495,14 +495,14 @@ describe("utilities", () => {
                             userOrder,
                             { tickSize: "0.1", negRisk: false },
                         );
-                        expect(signedOrder).not.null;
-                        expect(signedOrder).not.undefined;
+                        expect(signedOrder).not.toBeNull();
+                        expect(signedOrder).not.toBeUndefined();
 
                         const jsonGTDOrder = orderToJson(signedOrder, owner, OrderType.GTD);
-                        expect(jsonGTDOrder).not.null;
-                        expect(jsonGTDOrder).not.undefined;
+                        expect(jsonGTDOrder).not.toBeNull();
+                        expect(jsonGTDOrder).not.toBeUndefined();
 
-                        expect(jsonGTDOrder).deep.equal({
+                        expect(jsonGTDOrder).toEqual({
                             order: {
                                 salt: parseInt(signedOrder.salt),
                                 maker: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
@@ -511,7 +511,7 @@ describe("utilities", () => {
                                 tokenId: token,
                                 makerAmount: "100000000",
                                 takerAmount: "50000000",
-                                side: "SELL",
+                                side: Side.SELL,
                                 expiration: "1709948026",
                                 nonce: "0",
                                 feeRateBps: "0",
@@ -540,14 +540,14 @@ describe("utilities", () => {
                             userOrder,
                             { tickSize: "0.1", negRisk: false },
                         );
-                        expect(signedOrder).not.null;
-                        expect(signedOrder).not.undefined;
+                        expect(signedOrder).not.toBeNull();
+                        expect(signedOrder).not.toBeUndefined();
 
                         const jsonGTDOrder = orderToJson(signedOrder, owner, OrderType.GTD);
-                        expect(jsonGTDOrder).not.null;
-                        expect(jsonGTDOrder).not.undefined;
+                        expect(jsonGTDOrder).not.toBeNull();
+                        expect(jsonGTDOrder).not.toBeUndefined();
 
-                        expect(jsonGTDOrder).deep.equal({
+                        expect(jsonGTDOrder).toEqual({
                             order: {
                                 salt: parseInt(signedOrder.salt),
                                 maker: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
@@ -556,7 +556,7 @@ describe("utilities", () => {
                                 tokenId: token,
                                 makerAmount: "100000000",
                                 takerAmount: "50000000",
-                                side: "SELL",
+                                side: Side.SELL,
                                 expiration: "1709948026",
                                 nonce: "0",
                                 feeRateBps: "0",
@@ -584,14 +584,14 @@ describe("utilities", () => {
                             userOrder,
                             { tickSize: "0.1", negRisk: false },
                         );
-                        expect(signedOrder).not.null;
-                        expect(signedOrder).not.undefined;
+                        expect(signedOrder).not.toBeNull();
+                        expect(signedOrder).not.toBeUndefined();
 
                         const jsonGTCOrder = orderToJson(signedOrder, owner, OrderType.GTC);
-                        expect(jsonGTCOrder).not.null;
-                        expect(jsonGTCOrder).not.undefined;
+                        expect(jsonGTCOrder).not.toBeNull();
+                        expect(jsonGTCOrder).not.toBeUndefined();
 
-                        expect(jsonGTCOrder).deep.equal({
+                        expect(jsonGTCOrder).toEqual({
                             order: {
                                 salt: parseInt(signedOrder.salt),
                                 maker: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
@@ -600,7 +600,7 @@ describe("utilities", () => {
                                 tokenId: token,
                                 makerAmount: "50000000",
                                 takerAmount: "100000000",
-                                side: "BUY",
+                                side: Side.BUY,
                                 expiration: "0",
                                 nonce: "0",
                                 feeRateBps: "0",
@@ -628,14 +628,14 @@ describe("utilities", () => {
                             userOrder,
                             { tickSize: "0.1", negRisk: false },
                         );
-                        expect(signedOrder).not.null;
-                        expect(signedOrder).not.undefined;
+                        expect(signedOrder).not.toBeNull();
+                        expect(signedOrder).not.toBeUndefined();
 
                         const jsonGTCOrder = orderToJson(signedOrder, owner, OrderType.GTC);
-                        expect(jsonGTCOrder).not.null;
-                        expect(jsonGTCOrder).not.undefined;
+                        expect(jsonGTCOrder).not.toBeNull();
+                        expect(jsonGTCOrder).not.toBeUndefined();
 
-                        expect(jsonGTCOrder).deep.equal({
+                        expect(jsonGTCOrder).toEqual({
                             order: {
                                 salt: parseInt(signedOrder.salt),
                                 maker: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
@@ -644,7 +644,7 @@ describe("utilities", () => {
                                 tokenId: token,
                                 makerAmount: "50000000",
                                 takerAmount: "100000000",
-                                side: "BUY",
+                                side: Side.BUY,
                                 expiration: "0",
                                 nonce: "0",
                                 feeRateBps: "0",
@@ -672,14 +672,14 @@ describe("utilities", () => {
                             userOrder,
                             { tickSize: "0.1", negRisk: false },
                         );
-                        expect(signedOrder).not.null;
-                        expect(signedOrder).not.undefined;
+                        expect(signedOrder).not.toBeNull();
+                        expect(signedOrder).not.toBeUndefined();
 
                         const jsonGTCOrder = orderToJson(signedOrder, owner, OrderType.GTC);
-                        expect(jsonGTCOrder).not.null;
-                        expect(jsonGTCOrder).not.undefined;
+                        expect(jsonGTCOrder).not.toBeNull();
+                        expect(jsonGTCOrder).not.toBeUndefined();
 
-                        expect(jsonGTCOrder).deep.equal({
+                        expect(jsonGTCOrder).toEqual({
                             order: {
                                 salt: parseInt(signedOrder.salt),
                                 maker: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
@@ -688,7 +688,7 @@ describe("utilities", () => {
                                 tokenId: token,
                                 makerAmount: "50000000",
                                 takerAmount: "100000000",
-                                side: "BUY",
+                                side: Side.BUY,
                                 expiration: "0",
                                 nonce: "0",
                                 feeRateBps: "0",
@@ -716,14 +716,14 @@ describe("utilities", () => {
                             userOrder,
                             { tickSize: "0.1", negRisk: false },
                         );
-                        expect(signedOrder).not.null;
-                        expect(signedOrder).not.undefined;
+                        expect(signedOrder).not.toBeNull();
+                        expect(signedOrder).not.toBeUndefined();
 
                         const jsonGTCOrder = orderToJson(signedOrder, owner, OrderType.GTC);
-                        expect(jsonGTCOrder).not.null;
-                        expect(jsonGTCOrder).not.undefined;
+                        expect(jsonGTCOrder).not.toBeNull();
+                        expect(jsonGTCOrder).not.toBeUndefined();
 
-                        expect(jsonGTCOrder).deep.equal({
+                        expect(jsonGTCOrder).toEqual({
                             order: {
                                 salt: parseInt(signedOrder.salt),
                                 maker: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
@@ -732,7 +732,7 @@ describe("utilities", () => {
                                 tokenId: token,
                                 makerAmount: "100000000",
                                 takerAmount: "50000000",
-                                side: "SELL",
+                                side: Side.SELL,
                                 expiration: "0",
                                 nonce: "0",
                                 feeRateBps: "0",
@@ -760,14 +760,14 @@ describe("utilities", () => {
                             userOrder,
                             { tickSize: "0.1", negRisk: false },
                         );
-                        expect(signedOrder).not.null;
-                        expect(signedOrder).not.undefined;
+                        expect(signedOrder).not.toBeNull();
+                        expect(signedOrder).not.toBeUndefined();
 
                         const jsonGTCOrder = orderToJson(signedOrder, owner, OrderType.GTC);
-                        expect(jsonGTCOrder).not.null;
-                        expect(jsonGTCOrder).not.undefined;
+                        expect(jsonGTCOrder).not.toBeNull();
+                        expect(jsonGTCOrder).not.toBeUndefined();
 
-                        expect(jsonGTCOrder).deep.equal({
+                        expect(jsonGTCOrder).toEqual({
                             order: {
                                 salt: parseInt(signedOrder.salt),
                                 maker: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
@@ -776,7 +776,7 @@ describe("utilities", () => {
                                 tokenId: token,
                                 makerAmount: "100000000",
                                 takerAmount: "50000000",
-                                side: "SELL",
+                                side: Side.SELL,
                                 expiration: "0",
                                 nonce: "0",
                                 feeRateBps: "0",
@@ -804,14 +804,14 @@ describe("utilities", () => {
                             userOrder,
                             { tickSize: "0.1", negRisk: false },
                         );
-                        expect(signedOrder).not.null;
-                        expect(signedOrder).not.undefined;
+                        expect(signedOrder).not.toBeNull();
+                        expect(signedOrder).not.toBeUndefined();
 
                         const jsonGTCOrder = orderToJson(signedOrder, owner, OrderType.GTC);
-                        expect(jsonGTCOrder).not.null;
-                        expect(jsonGTCOrder).not.undefined;
+                        expect(jsonGTCOrder).not.toBeNull();
+                        expect(jsonGTCOrder).not.toBeUndefined();
 
-                        expect(jsonGTCOrder).deep.equal({
+                        expect(jsonGTCOrder).toEqual({
                             order: {
                                 salt: parseInt(signedOrder.salt),
                                 maker: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
@@ -820,7 +820,7 @@ describe("utilities", () => {
                                 tokenId: token,
                                 makerAmount: "100000000",
                                 takerAmount: "50000000",
-                                side: "SELL",
+                                side: Side.SELL,
                                 expiration: "0",
                                 nonce: "0",
                                 feeRateBps: "0",
@@ -848,14 +848,14 @@ describe("utilities", () => {
                             userMarketOrder,
                             { tickSize: "0.1", negRisk: false },
                         );
-                        expect(signedOrder).not.null;
-                        expect(signedOrder).not.undefined;
+                        expect(signedOrder).not.toBeNull();
+                        expect(signedOrder).not.toBeUndefined();
 
                         const jsonFOKOrder = orderToJson(signedOrder, owner, OrderType.FOK);
-                        expect(jsonFOKOrder).not.null;
-                        expect(jsonFOKOrder).not.undefined;
+                        expect(jsonFOKOrder).not.toBeNull();
+                        expect(jsonFOKOrder).not.toBeUndefined();
 
-                        expect(jsonFOKOrder).deep.equal({
+                        expect(jsonFOKOrder).toEqual({
                             order: {
                                 salt: parseInt(signedOrder.salt),
                                 maker: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
@@ -864,7 +864,7 @@ describe("utilities", () => {
                                 tokenId: token,
                                 makerAmount: "100000000",
                                 takerAmount: "200000000",
-                                side: "BUY",
+                                side: Side.BUY,
                                 expiration: "0",
                                 nonce: "0",
                                 feeRateBps: "0",
@@ -892,14 +892,14 @@ describe("utilities", () => {
                             userMarketOrder,
                             { tickSize: "0.1", negRisk: false },
                         );
-                        expect(signedOrder).not.null;
-                        expect(signedOrder).not.undefined;
+                        expect(signedOrder).not.toBeNull();
+                        expect(signedOrder).not.toBeUndefined();
 
                         const jsonFOKOrder = orderToJson(signedOrder, owner, OrderType.FOK);
-                        expect(jsonFOKOrder).not.null;
-                        expect(jsonFOKOrder).not.undefined;
+                        expect(jsonFOKOrder).not.toBeNull();
+                        expect(jsonFOKOrder).not.toBeUndefined();
 
-                        expect(jsonFOKOrder).deep.equal({
+                        expect(jsonFOKOrder).toEqual({
                             order: {
                                 salt: parseInt(signedOrder.salt),
                                 maker: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
@@ -908,7 +908,7 @@ describe("utilities", () => {
                                 tokenId: token,
                                 makerAmount: "100000000",
                                 takerAmount: "200000000",
-                                side: "BUY",
+                                side: Side.BUY,
                                 expiration: "0",
                                 nonce: "0",
                                 feeRateBps: "0",
@@ -936,14 +936,14 @@ describe("utilities", () => {
                             userMarketOrder,
                             { tickSize: "0.1", negRisk: false },
                         );
-                        expect(signedOrder).not.null;
-                        expect(signedOrder).not.undefined;
+                        expect(signedOrder).not.toBeNull();
+                        expect(signedOrder).not.toBeUndefined();
 
                         const jsonFOKOrder = orderToJson(signedOrder, owner, OrderType.FOK);
-                        expect(jsonFOKOrder).not.null;
-                        expect(jsonFOKOrder).not.undefined;
+                        expect(jsonFOKOrder).not.toBeNull();
+                        expect(jsonFOKOrder).not.toBeUndefined();
 
-                        expect(jsonFOKOrder).deep.equal({
+                        expect(jsonFOKOrder).toEqual({
                             order: {
                                 salt: parseInt(signedOrder.salt),
                                 maker: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
@@ -952,7 +952,7 @@ describe("utilities", () => {
                                 tokenId: token,
                                 makerAmount: "100000000",
                                 takerAmount: "200000000",
-                                side: "BUY",
+                                side: Side.BUY,
                                 expiration: "0",
                                 nonce: "0",
                                 feeRateBps: "0",
@@ -980,14 +980,14 @@ describe("utilities", () => {
                             userMarketOrder,
                             { tickSize: "0.1", negRisk: false },
                         );
-                        expect(signedOrder).not.null;
-                        expect(signedOrder).not.undefined;
+                        expect(signedOrder).not.toBeNull();
+                        expect(signedOrder).not.toBeUndefined();
 
                         const jsonFOKOrder = orderToJson(signedOrder, owner, OrderType.FOK);
-                        expect(jsonFOKOrder).not.null;
-                        expect(jsonFOKOrder).not.undefined;
+                        expect(jsonFOKOrder).not.toBeNull();
+                        expect(jsonFOKOrder).not.toBeUndefined();
 
-                        expect(jsonFOKOrder).deep.equal({
+                        expect(jsonFOKOrder).toEqual({
                             order: {
                                 salt: parseInt(signedOrder.salt),
                                 maker: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
@@ -996,7 +996,7 @@ describe("utilities", () => {
                                 tokenId: token,
                                 makerAmount: "100000000",
                                 takerAmount: "50000000",
-                                side: "SELL",
+                                side: Side.SELL,
                                 expiration: "0",
                                 nonce: "0",
                                 feeRateBps: "0",
@@ -1024,14 +1024,14 @@ describe("utilities", () => {
                             userMarketOrder,
                             { tickSize: "0.1", negRisk: false },
                         );
-                        expect(signedOrder).not.null;
-                        expect(signedOrder).not.undefined;
+                        expect(signedOrder).not.toBeNull();
+                        expect(signedOrder).not.toBeUndefined();
 
                         const jsonFOKOrder = orderToJson(signedOrder, owner, OrderType.FOK);
-                        expect(jsonFOKOrder).not.null;
-                        expect(jsonFOKOrder).not.undefined;
+                        expect(jsonFOKOrder).not.toBeNull();
+                        expect(jsonFOKOrder).not.toBeUndefined();
 
-                        expect(jsonFOKOrder).deep.equal({
+                        expect(jsonFOKOrder).toEqual({
                             order: {
                                 salt: parseInt(signedOrder.salt),
                                 maker: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
@@ -1040,7 +1040,7 @@ describe("utilities", () => {
                                 tokenId: token,
                                 makerAmount: "100000000",
                                 takerAmount: "50000000",
-                                side: "SELL",
+                                side: Side.SELL,
                                 expiration: "0",
                                 nonce: "0",
                                 feeRateBps: "0",
@@ -1068,14 +1068,14 @@ describe("utilities", () => {
                             userMarketOrder,
                             { tickSize: "0.1", negRisk: false },
                         );
-                        expect(signedOrder).not.null;
-                        expect(signedOrder).not.undefined;
+                        expect(signedOrder).not.toBeNull();
+                        expect(signedOrder).not.toBeUndefined();
 
                         const jsonFOKOrder = orderToJson(signedOrder, owner, OrderType.FOK);
-                        expect(jsonFOKOrder).not.null;
-                        expect(jsonFOKOrder).not.undefined;
+                        expect(jsonFOKOrder).not.toBeNull();
+                        expect(jsonFOKOrder).not.toBeUndefined();
 
-                        expect(jsonFOKOrder).deep.equal({
+                        expect(jsonFOKOrder).toEqual({
                             order: {
                                 salt: parseInt(signedOrder.salt),
                                 maker: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
@@ -1084,7 +1084,7 @@ describe("utilities", () => {
                                 tokenId: token,
                                 makerAmount: "100000000",
                                 takerAmount: "50000000",
-                                side: "SELL",
+                                side: Side.SELL,
                                 expiration: "0",
                                 nonce: "0",
                                 feeRateBps: "0",
@@ -1125,14 +1125,14 @@ describe("utilities", () => {
                             userOrder,
                             { tickSize: "0.01", negRisk: false },
                         );
-                        expect(signedOrder).not.null;
-                        expect(signedOrder).not.undefined;
+                        expect(signedOrder).not.toBeNull();
+                        expect(signedOrder).not.toBeUndefined();
 
                         const jsonGTDOrder = orderToJson(signedOrder, owner, OrderType.GTD);
-                        expect(jsonGTDOrder).not.null;
-                        expect(jsonGTDOrder).not.undefined;
+                        expect(jsonGTDOrder).not.toBeNull();
+                        expect(jsonGTDOrder).not.toBeUndefined();
 
-                        expect(jsonGTDOrder).deep.equal({
+                        expect(jsonGTDOrder).toEqual({
                             order: {
                                 salt: parseInt(signedOrder.salt),
                                 maker: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
@@ -1141,7 +1141,7 @@ describe("utilities", () => {
                                 tokenId: token,
                                 makerAmount: "5000000",
                                 takerAmount: "100000000",
-                                side: "BUY",
+                                side: Side.BUY,
                                 expiration: "1709948026",
                                 nonce: "0",
                                 feeRateBps: "0",
@@ -1170,14 +1170,14 @@ describe("utilities", () => {
                             userOrder,
                             { tickSize: "0.01", negRisk: false },
                         );
-                        expect(signedOrder).not.null;
-                        expect(signedOrder).not.undefined;
+                        expect(signedOrder).not.toBeNull();
+                        expect(signedOrder).not.toBeUndefined();
 
                         const jsonGTDOrder = orderToJson(signedOrder, owner, OrderType.GTD);
-                        expect(jsonGTDOrder).not.null;
-                        expect(jsonGTDOrder).not.undefined;
+                        expect(jsonGTDOrder).not.toBeNull();
+                        expect(jsonGTDOrder).not.toBeUndefined();
 
-                        expect(jsonGTDOrder).deep.equal({
+                        expect(jsonGTDOrder).toEqual({
                             order: {
                                 salt: parseInt(signedOrder.salt),
                                 maker: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
@@ -1186,7 +1186,7 @@ describe("utilities", () => {
                                 tokenId: token,
                                 makerAmount: "5000000",
                                 takerAmount: "100000000",
-                                side: "BUY",
+                                side: Side.BUY,
                                 expiration: "1709948026",
                                 nonce: "0",
                                 feeRateBps: "0",
@@ -1215,14 +1215,14 @@ describe("utilities", () => {
                             userOrder,
                             { tickSize: "0.01", negRisk: false },
                         );
-                        expect(signedOrder).not.null;
-                        expect(signedOrder).not.undefined;
+                        expect(signedOrder).not.toBeNull();
+                        expect(signedOrder).not.toBeUndefined();
 
                         const jsonGTDOrder = orderToJson(signedOrder, owner, OrderType.GTD);
-                        expect(jsonGTDOrder).not.null;
-                        expect(jsonGTDOrder).not.undefined;
+                        expect(jsonGTDOrder).not.toBeNull();
+                        expect(jsonGTDOrder).not.toBeUndefined();
 
-                        expect(jsonGTDOrder).deep.equal({
+                        expect(jsonGTDOrder).toEqual({
                             order: {
                                 salt: parseInt(signedOrder.salt),
                                 maker: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
@@ -1231,7 +1231,7 @@ describe("utilities", () => {
                                 tokenId: token,
                                 makerAmount: "5000000",
                                 takerAmount: "100000000",
-                                side: "BUY",
+                                side: Side.BUY,
                                 expiration: "1709948026",
                                 nonce: "0",
                                 feeRateBps: "0",
@@ -1260,14 +1260,14 @@ describe("utilities", () => {
                             userOrder,
                             { tickSize: "0.01", negRisk: false },
                         );
-                        expect(signedOrder).not.null;
-                        expect(signedOrder).not.undefined;
+                        expect(signedOrder).not.toBeNull();
+                        expect(signedOrder).not.toBeUndefined();
 
                         const jsonGTDOrder = orderToJson(signedOrder, owner, OrderType.GTD);
-                        expect(jsonGTDOrder).not.null;
-                        expect(jsonGTDOrder).not.undefined;
+                        expect(jsonGTDOrder).not.toBeNull();
+                        expect(jsonGTDOrder).not.toBeUndefined();
 
-                        expect(jsonGTDOrder).deep.equal({
+                        expect(jsonGTDOrder).toEqual({
                             order: {
                                 salt: parseInt(signedOrder.salt),
                                 maker: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
@@ -1276,7 +1276,7 @@ describe("utilities", () => {
                                 tokenId: token,
                                 makerAmount: "100000000",
                                 takerAmount: "5000000",
-                                side: "SELL",
+                                side: Side.SELL,
                                 expiration: "1709948026",
                                 nonce: "0",
                                 feeRateBps: "0",
@@ -1305,14 +1305,14 @@ describe("utilities", () => {
                             userOrder,
                             { tickSize: "0.01", negRisk: false },
                         );
-                        expect(signedOrder).not.null;
-                        expect(signedOrder).not.undefined;
+                        expect(signedOrder).not.toBeNull();
+                        expect(signedOrder).not.toBeUndefined();
 
                         const jsonGTDOrder = orderToJson(signedOrder, owner, OrderType.GTD);
-                        expect(jsonGTDOrder).not.null;
-                        expect(jsonGTDOrder).not.undefined;
+                        expect(jsonGTDOrder).not.toBeNull();
+                        expect(jsonGTDOrder).not.toBeUndefined();
 
-                        expect(jsonGTDOrder).deep.equal({
+                        expect(jsonGTDOrder).toEqual({
                             order: {
                                 salt: parseInt(signedOrder.salt),
                                 maker: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
@@ -1321,7 +1321,7 @@ describe("utilities", () => {
                                 tokenId: token,
                                 makerAmount: "100000000",
                                 takerAmount: "5000000",
-                                side: "SELL",
+                                side: Side.SELL,
                                 expiration: "1709948026",
                                 nonce: "0",
                                 feeRateBps: "0",
@@ -1350,14 +1350,14 @@ describe("utilities", () => {
                             userOrder,
                             { tickSize: "0.01", negRisk: false },
                         );
-                        expect(signedOrder).not.null;
-                        expect(signedOrder).not.undefined;
+                        expect(signedOrder).not.toBeNull();
+                        expect(signedOrder).not.toBeUndefined();
 
                         const jsonGTDOrder = orderToJson(signedOrder, owner, OrderType.GTD);
-                        expect(jsonGTDOrder).not.null;
-                        expect(jsonGTDOrder).not.undefined;
+                        expect(jsonGTDOrder).not.toBeNull();
+                        expect(jsonGTDOrder).not.toBeUndefined();
 
-                        expect(jsonGTDOrder).deep.equal({
+                        expect(jsonGTDOrder).toEqual({
                             order: {
                                 salt: parseInt(signedOrder.salt),
                                 maker: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
@@ -1366,7 +1366,7 @@ describe("utilities", () => {
                                 tokenId: token,
                                 makerAmount: "100000000",
                                 takerAmount: "5000000",
-                                side: "SELL",
+                                side: Side.SELL,
                                 expiration: "1709948026",
                                 nonce: "0",
                                 feeRateBps: "0",
@@ -1394,14 +1394,14 @@ describe("utilities", () => {
                             userOrder,
                             { tickSize: "0.01", negRisk: false },
                         );
-                        expect(signedOrder).not.null;
-                        expect(signedOrder).not.undefined;
+                        expect(signedOrder).not.toBeNull();
+                        expect(signedOrder).not.toBeUndefined();
 
                         const jsonGTCOrder = orderToJson(signedOrder, owner, OrderType.GTC);
-                        expect(jsonGTCOrder).not.null;
-                        expect(jsonGTCOrder).not.undefined;
+                        expect(jsonGTCOrder).not.toBeNull();
+                        expect(jsonGTCOrder).not.toBeUndefined();
 
-                        expect(jsonGTCOrder).deep.equal({
+                        expect(jsonGTCOrder).toEqual({
                             order: {
                                 salt: parseInt(signedOrder.salt),
                                 maker: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
@@ -1410,7 +1410,7 @@ describe("utilities", () => {
                                 tokenId: token,
                                 makerAmount: "5000000",
                                 takerAmount: "100000000",
-                                side: "BUY",
+                                side: Side.BUY,
                                 expiration: "0",
                                 nonce: "0",
                                 feeRateBps: "0",
@@ -1438,14 +1438,14 @@ describe("utilities", () => {
                             userOrder,
                             { tickSize: "0.01", negRisk: false },
                         );
-                        expect(signedOrder).not.null;
-                        expect(signedOrder).not.undefined;
+                        expect(signedOrder).not.toBeNull();
+                        expect(signedOrder).not.toBeUndefined();
 
                         const jsonGTCOrder = orderToJson(signedOrder, owner, OrderType.GTC);
-                        expect(jsonGTCOrder).not.null;
-                        expect(jsonGTCOrder).not.undefined;
+                        expect(jsonGTCOrder).not.toBeNull();
+                        expect(jsonGTCOrder).not.toBeUndefined();
 
-                        expect(jsonGTCOrder).deep.equal({
+                        expect(jsonGTCOrder).toEqual({
                             order: {
                                 salt: parseInt(signedOrder.salt),
                                 maker: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
@@ -1454,7 +1454,7 @@ describe("utilities", () => {
                                 tokenId: token,
                                 makerAmount: "5000000",
                                 takerAmount: "100000000",
-                                side: "BUY",
+                                side: Side.BUY,
                                 expiration: "0",
                                 nonce: "0",
                                 feeRateBps: "0",
@@ -1482,14 +1482,14 @@ describe("utilities", () => {
                             userOrder,
                             { tickSize: "0.01", negRisk: false },
                         );
-                        expect(signedOrder).not.null;
-                        expect(signedOrder).not.undefined;
+                        expect(signedOrder).not.toBeNull();
+                        expect(signedOrder).not.toBeUndefined();
 
                         const jsonGTCOrder = orderToJson(signedOrder, owner, OrderType.GTC);
-                        expect(jsonGTCOrder).not.null;
-                        expect(jsonGTCOrder).not.undefined;
+                        expect(jsonGTCOrder).not.toBeNull();
+                        expect(jsonGTCOrder).not.toBeUndefined();
 
-                        expect(jsonGTCOrder).deep.equal({
+                        expect(jsonGTCOrder).toEqual({
                             order: {
                                 salt: parseInt(signedOrder.salt),
                                 maker: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
@@ -1498,7 +1498,7 @@ describe("utilities", () => {
                                 tokenId: token,
                                 makerAmount: "5000000",
                                 takerAmount: "100000000",
-                                side: "BUY",
+                                side: Side.BUY,
                                 expiration: "0",
                                 nonce: "0",
                                 feeRateBps: "0",
@@ -1526,14 +1526,14 @@ describe("utilities", () => {
                             userOrder,
                             { tickSize: "0.01", negRisk: false },
                         );
-                        expect(signedOrder).not.null;
-                        expect(signedOrder).not.undefined;
+                        expect(signedOrder).not.toBeNull();
+                        expect(signedOrder).not.toBeUndefined();
 
                         const jsonGTCOrder = orderToJson(signedOrder, owner, OrderType.GTC);
-                        expect(jsonGTCOrder).not.null;
-                        expect(jsonGTCOrder).not.undefined;
+                        expect(jsonGTCOrder).not.toBeNull();
+                        expect(jsonGTCOrder).not.toBeUndefined();
 
-                        expect(jsonGTCOrder).deep.equal({
+                        expect(jsonGTCOrder).toEqual({
                             order: {
                                 salt: parseInt(signedOrder.salt),
                                 maker: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
@@ -1542,7 +1542,7 @@ describe("utilities", () => {
                                 tokenId: token,
                                 makerAmount: "100000000",
                                 takerAmount: "5000000",
-                                side: "SELL",
+                                side: Side.SELL,
                                 expiration: "0",
                                 nonce: "0",
                                 feeRateBps: "0",
@@ -1570,14 +1570,14 @@ describe("utilities", () => {
                             userOrder,
                             { tickSize: "0.01", negRisk: false },
                         );
-                        expect(signedOrder).not.null;
-                        expect(signedOrder).not.undefined;
+                        expect(signedOrder).not.toBeNull();
+                        expect(signedOrder).not.toBeUndefined();
 
                         const jsonGTCOrder = orderToJson(signedOrder, owner, OrderType.GTC);
-                        expect(jsonGTCOrder).not.null;
-                        expect(jsonGTCOrder).not.undefined;
+                        expect(jsonGTCOrder).not.toBeNull();
+                        expect(jsonGTCOrder).not.toBeUndefined();
 
-                        expect(jsonGTCOrder).deep.equal({
+                        expect(jsonGTCOrder).toEqual({
                             order: {
                                 salt: parseInt(signedOrder.salt),
                                 maker: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
@@ -1586,7 +1586,7 @@ describe("utilities", () => {
                                 tokenId: token,
                                 makerAmount: "100000000",
                                 takerAmount: "5000000",
-                                side: "SELL",
+                                side: Side.SELL,
                                 expiration: "0",
                                 nonce: "0",
                                 feeRateBps: "0",
@@ -1614,14 +1614,14 @@ describe("utilities", () => {
                             userOrder,
                             { tickSize: "0.01", negRisk: false },
                         );
-                        expect(signedOrder).not.null;
-                        expect(signedOrder).not.undefined;
+                        expect(signedOrder).not.toBeNull();
+                        expect(signedOrder).not.toBeUndefined();
 
                         const jsonGTCOrder = orderToJson(signedOrder, owner, OrderType.GTC);
-                        expect(jsonGTCOrder).not.null;
-                        expect(jsonGTCOrder).not.undefined;
+                        expect(jsonGTCOrder).not.toBeNull();
+                        expect(jsonGTCOrder).not.toBeUndefined();
 
-                        expect(jsonGTCOrder).deep.equal({
+                        expect(jsonGTCOrder).toEqual({
                             order: {
                                 salt: parseInt(signedOrder.salt),
                                 maker: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
@@ -1630,7 +1630,7 @@ describe("utilities", () => {
                                 tokenId: token,
                                 makerAmount: "100000000",
                                 takerAmount: "5000000",
-                                side: "SELL",
+                                side: Side.SELL,
                                 expiration: "0",
                                 nonce: "0",
                                 feeRateBps: "0",
@@ -1658,14 +1658,14 @@ describe("utilities", () => {
                             userMarketOrder,
                             { tickSize: "0.01", negRisk: false },
                         );
-                        expect(signedOrder).not.null;
-                        expect(signedOrder).not.undefined;
+                        expect(signedOrder).not.toBeNull();
+                        expect(signedOrder).not.toBeUndefined();
 
                         const jsonFOKOrder = orderToJson(signedOrder, owner, OrderType.FOK);
-                        expect(jsonFOKOrder).not.null;
-                        expect(jsonFOKOrder).not.undefined;
+                        expect(jsonFOKOrder).not.toBeNull();
+                        expect(jsonFOKOrder).not.toBeUndefined();
 
-                        expect(jsonFOKOrder).deep.equal({
+                        expect(jsonFOKOrder).toEqual({
                             order: {
                                 salt: parseInt(signedOrder.salt),
                                 maker: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
@@ -1674,7 +1674,7 @@ describe("utilities", () => {
                                 tokenId: token,
                                 makerAmount: "100000000",
                                 takerAmount: "2000000000",
-                                side: "BUY",
+                                side: Side.BUY,
                                 expiration: "0",
                                 nonce: "0",
                                 feeRateBps: "0",
@@ -1702,14 +1702,14 @@ describe("utilities", () => {
                             userMarketOrder,
                             { tickSize: "0.01", negRisk: false },
                         );
-                        expect(signedOrder).not.null;
-                        expect(signedOrder).not.undefined;
+                        expect(signedOrder).not.toBeNull();
+                        expect(signedOrder).not.toBeUndefined();
 
                         const jsonFOKOrder = orderToJson(signedOrder, owner, OrderType.FOK);
-                        expect(jsonFOKOrder).not.null;
-                        expect(jsonFOKOrder).not.undefined;
+                        expect(jsonFOKOrder).not.toBeNull();
+                        expect(jsonFOKOrder).not.toBeUndefined();
 
-                        expect(jsonFOKOrder).deep.equal({
+                        expect(jsonFOKOrder).toEqual({
                             order: {
                                 salt: parseInt(signedOrder.salt),
                                 maker: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
@@ -1718,7 +1718,7 @@ describe("utilities", () => {
                                 tokenId: token,
                                 makerAmount: "100000000",
                                 takerAmount: "2000000000",
-                                side: "BUY",
+                                side: Side.BUY,
                                 expiration: "0",
                                 nonce: "0",
                                 feeRateBps: "0",
@@ -1746,14 +1746,14 @@ describe("utilities", () => {
                             userMarketOrder,
                             { tickSize: "0.01", negRisk: false },
                         );
-                        expect(signedOrder).not.null;
-                        expect(signedOrder).not.undefined;
+                        expect(signedOrder).not.toBeNull();
+                        expect(signedOrder).not.toBeUndefined();
 
                         const jsonFOKOrder = orderToJson(signedOrder, owner, OrderType.FOK);
-                        expect(jsonFOKOrder).not.null;
-                        expect(jsonFOKOrder).not.undefined;
+                        expect(jsonFOKOrder).not.toBeNull();
+                        expect(jsonFOKOrder).not.toBeUndefined();
 
-                        expect(jsonFOKOrder).deep.equal({
+                        expect(jsonFOKOrder).toEqual({
                             order: {
                                 salt: parseInt(signedOrder.salt),
                                 maker: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
@@ -1762,7 +1762,7 @@ describe("utilities", () => {
                                 tokenId: token,
                                 makerAmount: "100000000",
                                 takerAmount: "2000000000",
-                                side: "BUY",
+                                side: Side.BUY,
                                 expiration: "0",
                                 nonce: "0",
                                 feeRateBps: "0",
@@ -1790,14 +1790,14 @@ describe("utilities", () => {
                             userMarketOrder,
                             { tickSize: "0.01", negRisk: false },
                         );
-                        expect(signedOrder).not.null;
-                        expect(signedOrder).not.undefined;
+                        expect(signedOrder).not.toBeNull();
+                        expect(signedOrder).not.toBeUndefined();
 
                         const jsonFOKOrder = orderToJson(signedOrder, owner, OrderType.FOK);
-                        expect(jsonFOKOrder).not.null;
-                        expect(jsonFOKOrder).not.undefined;
+                        expect(jsonFOKOrder).not.toBeNull();
+                        expect(jsonFOKOrder).not.toBeUndefined();
 
-                        expect(jsonFOKOrder).deep.equal({
+                        expect(jsonFOKOrder).toEqual({
                             order: {
                                 salt: parseInt(signedOrder.salt),
                                 maker: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
@@ -1806,7 +1806,7 @@ describe("utilities", () => {
                                 tokenId: token,
                                 makerAmount: "100000000",
                                 takerAmount: "5000000",
-                                side: "SELL",
+                                side: Side.SELL,
                                 expiration: "0",
                                 nonce: "0",
                                 feeRateBps: "0",
@@ -1834,14 +1834,14 @@ describe("utilities", () => {
                             userMarketOrder,
                             { tickSize: "0.01", negRisk: false },
                         );
-                        expect(signedOrder).not.null;
-                        expect(signedOrder).not.undefined;
+                        expect(signedOrder).not.toBeNull();
+                        expect(signedOrder).not.toBeUndefined();
 
                         const jsonFOKOrder = orderToJson(signedOrder, owner, OrderType.FOK);
-                        expect(jsonFOKOrder).not.null;
-                        expect(jsonFOKOrder).not.undefined;
+                        expect(jsonFOKOrder).not.toBeNull();
+                        expect(jsonFOKOrder).not.toBeUndefined();
 
-                        expect(jsonFOKOrder).deep.equal({
+                        expect(jsonFOKOrder).toEqual({
                             order: {
                                 salt: parseInt(signedOrder.salt),
                                 maker: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
@@ -1850,7 +1850,7 @@ describe("utilities", () => {
                                 tokenId: token,
                                 makerAmount: "100000000",
                                 takerAmount: "5000000",
-                                side: "SELL",
+                                side: Side.SELL,
                                 expiration: "0",
                                 nonce: "0",
                                 feeRateBps: "0",
@@ -1878,14 +1878,14 @@ describe("utilities", () => {
                             userMarketOrder,
                             { tickSize: "0.01", negRisk: false },
                         );
-                        expect(signedOrder).not.null;
-                        expect(signedOrder).not.undefined;
+                        expect(signedOrder).not.toBeNull();
+                        expect(signedOrder).not.toBeUndefined();
 
                         const jsonFOKOrder = orderToJson(signedOrder, owner, OrderType.FOK);
-                        expect(jsonFOKOrder).not.null;
-                        expect(jsonFOKOrder).not.undefined;
+                        expect(jsonFOKOrder).not.toBeNull();
+                        expect(jsonFOKOrder).not.toBeUndefined();
 
-                        expect(jsonFOKOrder).deep.equal({
+                        expect(jsonFOKOrder).toEqual({
                             order: {
                                 salt: parseInt(signedOrder.salt),
                                 maker: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
@@ -1894,7 +1894,7 @@ describe("utilities", () => {
                                 tokenId: token,
                                 makerAmount: "100000000",
                                 takerAmount: "5000000",
-                                side: "SELL",
+                                side: Side.SELL,
                                 expiration: "0",
                                 nonce: "0",
                                 feeRateBps: "0",
@@ -1935,14 +1935,14 @@ describe("utilities", () => {
                             userOrder,
                             { tickSize: "0.001", negRisk: false },
                         );
-                        expect(signedOrder).not.null;
-                        expect(signedOrder).not.undefined;
+                        expect(signedOrder).not.toBeNull();
+                        expect(signedOrder).not.toBeUndefined();
 
                         const jsonGTDOrder = orderToJson(signedOrder, owner, OrderType.GTD);
-                        expect(jsonGTDOrder).not.null;
-                        expect(jsonGTDOrder).not.undefined;
+                        expect(jsonGTDOrder).not.toBeNull();
+                        expect(jsonGTDOrder).not.toBeUndefined();
 
-                        expect(jsonGTDOrder).deep.equal({
+                        expect(jsonGTDOrder).toEqual({
                             order: {
                                 salt: parseInt(signedOrder.salt),
                                 maker: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
@@ -1951,7 +1951,7 @@ describe("utilities", () => {
                                 tokenId: token,
                                 makerAmount: "500000",
                                 takerAmount: "100000000",
-                                side: "BUY",
+                                side: Side.BUY,
                                 expiration: "1709948026",
                                 nonce: "0",
                                 feeRateBps: "0",
@@ -1980,14 +1980,14 @@ describe("utilities", () => {
                             userOrder,
                             { tickSize: "0.001", negRisk: false },
                         );
-                        expect(signedOrder).not.null;
-                        expect(signedOrder).not.undefined;
+                        expect(signedOrder).not.toBeNull();
+                        expect(signedOrder).not.toBeUndefined();
 
                         const jsonGTDOrder = orderToJson(signedOrder, owner, OrderType.GTD);
-                        expect(jsonGTDOrder).not.null;
-                        expect(jsonGTDOrder).not.undefined;
+                        expect(jsonGTDOrder).not.toBeNull();
+                        expect(jsonGTDOrder).not.toBeUndefined();
 
-                        expect(jsonGTDOrder).deep.equal({
+                        expect(jsonGTDOrder).toEqual({
                             order: {
                                 salt: parseInt(signedOrder.salt),
                                 maker: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
@@ -1996,7 +1996,7 @@ describe("utilities", () => {
                                 tokenId: token,
                                 makerAmount: "500000",
                                 takerAmount: "100000000",
-                                side: "BUY",
+                                side: Side.BUY,
                                 expiration: "1709948026",
                                 nonce: "0",
                                 feeRateBps: "0",
@@ -2025,14 +2025,14 @@ describe("utilities", () => {
                             userOrder,
                             { tickSize: "0.001", negRisk: false },
                         );
-                        expect(signedOrder).not.null;
-                        expect(signedOrder).not.undefined;
+                        expect(signedOrder).not.toBeNull();
+                        expect(signedOrder).not.toBeUndefined();
 
                         const jsonGTDOrder = orderToJson(signedOrder, owner, OrderType.GTD);
-                        expect(jsonGTDOrder).not.null;
-                        expect(jsonGTDOrder).not.undefined;
+                        expect(jsonGTDOrder).not.toBeNull();
+                        expect(jsonGTDOrder).not.toBeUndefined();
 
-                        expect(jsonGTDOrder).deep.equal({
+                        expect(jsonGTDOrder).toEqual({
                             order: {
                                 salt: parseInt(signedOrder.salt),
                                 maker: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
@@ -2041,7 +2041,7 @@ describe("utilities", () => {
                                 tokenId: token,
                                 makerAmount: "500000",
                                 takerAmount: "100000000",
-                                side: "BUY",
+                                side: Side.BUY,
                                 expiration: "1709948026",
                                 nonce: "0",
                                 feeRateBps: "0",
@@ -2070,14 +2070,14 @@ describe("utilities", () => {
                             userOrder,
                             { tickSize: "0.001", negRisk: false },
                         );
-                        expect(signedOrder).not.null;
-                        expect(signedOrder).not.undefined;
+                        expect(signedOrder).not.toBeNull();
+                        expect(signedOrder).not.toBeUndefined();
 
                         const jsonGTDOrder = orderToJson(signedOrder, owner, OrderType.GTD);
-                        expect(jsonGTDOrder).not.null;
-                        expect(jsonGTDOrder).not.undefined;
+                        expect(jsonGTDOrder).not.toBeNull();
+                        expect(jsonGTDOrder).not.toBeUndefined();
 
-                        expect(jsonGTDOrder).deep.equal({
+                        expect(jsonGTDOrder).toEqual({
                             order: {
                                 salt: parseInt(signedOrder.salt),
                                 maker: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
@@ -2086,7 +2086,7 @@ describe("utilities", () => {
                                 tokenId: token,
                                 makerAmount: "100000000",
                                 takerAmount: "500000",
-                                side: "SELL",
+                                side: Side.SELL,
                                 expiration: "1709948026",
                                 nonce: "0",
                                 feeRateBps: "0",
@@ -2115,14 +2115,14 @@ describe("utilities", () => {
                             userOrder,
                             { tickSize: "0.001", negRisk: false },
                         );
-                        expect(signedOrder).not.null;
-                        expect(signedOrder).not.undefined;
+                        expect(signedOrder).not.toBeNull();
+                        expect(signedOrder).not.toBeUndefined();
 
                         const jsonGTDOrder = orderToJson(signedOrder, owner, OrderType.GTD);
-                        expect(jsonGTDOrder).not.null;
-                        expect(jsonGTDOrder).not.undefined;
+                        expect(jsonGTDOrder).not.toBeNull();
+                        expect(jsonGTDOrder).not.toBeUndefined();
 
-                        expect(jsonGTDOrder).deep.equal({
+                        expect(jsonGTDOrder).toEqual({
                             order: {
                                 salt: parseInt(signedOrder.salt),
                                 maker: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
@@ -2131,7 +2131,7 @@ describe("utilities", () => {
                                 tokenId: token,
                                 makerAmount: "100000000",
                                 takerAmount: "500000",
-                                side: "SELL",
+                                side: Side.SELL,
                                 expiration: "1709948026",
                                 nonce: "0",
                                 feeRateBps: "0",
@@ -2160,14 +2160,14 @@ describe("utilities", () => {
                             userOrder,
                             { tickSize: "0.001", negRisk: false },
                         );
-                        expect(signedOrder).not.null;
-                        expect(signedOrder).not.undefined;
+                        expect(signedOrder).not.toBeNull();
+                        expect(signedOrder).not.toBeUndefined();
 
                         const jsonGTDOrder = orderToJson(signedOrder, owner, OrderType.GTD);
-                        expect(jsonGTDOrder).not.null;
-                        expect(jsonGTDOrder).not.undefined;
+                        expect(jsonGTDOrder).not.toBeNull();
+                        expect(jsonGTDOrder).not.toBeUndefined();
 
-                        expect(jsonGTDOrder).deep.equal({
+                        expect(jsonGTDOrder).toEqual({
                             order: {
                                 salt: parseInt(signedOrder.salt),
                                 maker: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
@@ -2176,7 +2176,7 @@ describe("utilities", () => {
                                 tokenId: token,
                                 makerAmount: "100000000",
                                 takerAmount: "500000",
-                                side: "SELL",
+                                side: Side.SELL,
                                 expiration: "1709948026",
                                 nonce: "0",
                                 feeRateBps: "0",
@@ -2204,14 +2204,14 @@ describe("utilities", () => {
                             userOrder,
                             { tickSize: "0.001", negRisk: false },
                         );
-                        expect(signedOrder).not.null;
-                        expect(signedOrder).not.undefined;
+                        expect(signedOrder).not.toBeNull();
+                        expect(signedOrder).not.toBeUndefined();
 
                         const jsonGTCOrder = orderToJson(signedOrder, owner, OrderType.GTC);
-                        expect(jsonGTCOrder).not.null;
-                        expect(jsonGTCOrder).not.undefined;
+                        expect(jsonGTCOrder).not.toBeNull();
+                        expect(jsonGTCOrder).not.toBeUndefined();
 
-                        expect(jsonGTCOrder).deep.equal({
+                        expect(jsonGTCOrder).toEqual({
                             order: {
                                 salt: parseInt(signedOrder.salt),
                                 maker: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
@@ -2220,7 +2220,7 @@ describe("utilities", () => {
                                 tokenId: token,
                                 makerAmount: "500000",
                                 takerAmount: "100000000",
-                                side: "BUY",
+                                side: Side.BUY,
                                 expiration: "0",
                                 nonce: "0",
                                 feeRateBps: "0",
@@ -2248,14 +2248,14 @@ describe("utilities", () => {
                             userOrder,
                             { tickSize: "0.001", negRisk: false },
                         );
-                        expect(signedOrder).not.null;
-                        expect(signedOrder).not.undefined;
+                        expect(signedOrder).not.toBeNull();
+                        expect(signedOrder).not.toBeUndefined();
 
                         const jsonGTCOrder = orderToJson(signedOrder, owner, OrderType.GTC);
-                        expect(jsonGTCOrder).not.null;
-                        expect(jsonGTCOrder).not.undefined;
+                        expect(jsonGTCOrder).not.toBeNull();
+                        expect(jsonGTCOrder).not.toBeUndefined();
 
-                        expect(jsonGTCOrder).deep.equal({
+                        expect(jsonGTCOrder).toEqual({
                             order: {
                                 salt: parseInt(signedOrder.salt),
                                 maker: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
@@ -2264,7 +2264,7 @@ describe("utilities", () => {
                                 tokenId: token,
                                 makerAmount: "500000",
                                 takerAmount: "100000000",
-                                side: "BUY",
+                                side: Side.BUY,
                                 expiration: "0",
                                 nonce: "0",
                                 feeRateBps: "0",
@@ -2292,14 +2292,14 @@ describe("utilities", () => {
                             userOrder,
                             { tickSize: "0.001", negRisk: false },
                         );
-                        expect(signedOrder).not.null;
-                        expect(signedOrder).not.undefined;
+                        expect(signedOrder).not.toBeNull();
+                        expect(signedOrder).not.toBeUndefined();
 
                         const jsonGTCOrder = orderToJson(signedOrder, owner, OrderType.GTC);
-                        expect(jsonGTCOrder).not.null;
-                        expect(jsonGTCOrder).not.undefined;
+                        expect(jsonGTCOrder).not.toBeNull();
+                        expect(jsonGTCOrder).not.toBeUndefined();
 
-                        expect(jsonGTCOrder).deep.equal({
+                        expect(jsonGTCOrder).toEqual({
                             order: {
                                 salt: parseInt(signedOrder.salt),
                                 maker: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
@@ -2308,7 +2308,7 @@ describe("utilities", () => {
                                 tokenId: token,
                                 makerAmount: "500000",
                                 takerAmount: "100000000",
-                                side: "BUY",
+                                side: Side.BUY,
                                 expiration: "0",
                                 nonce: "0",
                                 feeRateBps: "0",
@@ -2336,14 +2336,14 @@ describe("utilities", () => {
                             userOrder,
                             { tickSize: "0.001", negRisk: false },
                         );
-                        expect(signedOrder).not.null;
-                        expect(signedOrder).not.undefined;
+                        expect(signedOrder).not.toBeNull();
+                        expect(signedOrder).not.toBeUndefined();
 
                         const jsonGTCOrder = orderToJson(signedOrder, owner, OrderType.GTC);
-                        expect(jsonGTCOrder).not.null;
-                        expect(jsonGTCOrder).not.undefined;
+                        expect(jsonGTCOrder).not.toBeNull();
+                        expect(jsonGTCOrder).not.toBeUndefined();
 
-                        expect(jsonGTCOrder).deep.equal({
+                        expect(jsonGTCOrder).toEqual({
                             order: {
                                 salt: parseInt(signedOrder.salt),
                                 maker: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
@@ -2352,7 +2352,7 @@ describe("utilities", () => {
                                 tokenId: token,
                                 makerAmount: "100000000",
                                 takerAmount: "500000",
-                                side: "SELL",
+                                side: Side.SELL,
                                 expiration: "0",
                                 nonce: "0",
                                 feeRateBps: "0",
@@ -2380,14 +2380,14 @@ describe("utilities", () => {
                             userOrder,
                             { tickSize: "0.001", negRisk: false },
                         );
-                        expect(signedOrder).not.null;
-                        expect(signedOrder).not.undefined;
+                        expect(signedOrder).not.toBeNull();
+                        expect(signedOrder).not.toBeUndefined();
 
                         const jsonGTCOrder = orderToJson(signedOrder, owner, OrderType.GTC);
-                        expect(jsonGTCOrder).not.null;
-                        expect(jsonGTCOrder).not.undefined;
+                        expect(jsonGTCOrder).not.toBeNull();
+                        expect(jsonGTCOrder).not.toBeUndefined();
 
-                        expect(jsonGTCOrder).deep.equal({
+                        expect(jsonGTCOrder).toEqual({
                             order: {
                                 salt: parseInt(signedOrder.salt),
                                 maker: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
@@ -2396,7 +2396,7 @@ describe("utilities", () => {
                                 tokenId: token,
                                 makerAmount: "100000000",
                                 takerAmount: "500000",
-                                side: "SELL",
+                                side: Side.SELL,
                                 expiration: "0",
                                 nonce: "0",
                                 feeRateBps: "0",
@@ -2424,14 +2424,14 @@ describe("utilities", () => {
                             userOrder,
                             { tickSize: "0.001", negRisk: false },
                         );
-                        expect(signedOrder).not.null;
-                        expect(signedOrder).not.undefined;
+                        expect(signedOrder).not.toBeNull();
+                        expect(signedOrder).not.toBeUndefined();
 
                         const jsonGTCOrder = orderToJson(signedOrder, owner, OrderType.GTC);
-                        expect(jsonGTCOrder).not.null;
-                        expect(jsonGTCOrder).not.undefined;
+                        expect(jsonGTCOrder).not.toBeNull();
+                        expect(jsonGTCOrder).not.toBeUndefined();
 
-                        expect(jsonGTCOrder).deep.equal({
+                        expect(jsonGTCOrder).toEqual({
                             order: {
                                 salt: parseInt(signedOrder.salt),
                                 maker: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
@@ -2440,7 +2440,7 @@ describe("utilities", () => {
                                 tokenId: token,
                                 makerAmount: "100000000",
                                 takerAmount: "500000",
-                                side: "SELL",
+                                side: Side.SELL,
                                 expiration: "0",
                                 nonce: "0",
                                 feeRateBps: "0",
@@ -2468,14 +2468,14 @@ describe("utilities", () => {
                             userMarketOrder,
                             { tickSize: "0.001", negRisk: false },
                         );
-                        expect(signedOrder).not.null;
-                        expect(signedOrder).not.undefined;
+                        expect(signedOrder).not.toBeNull();
+                        expect(signedOrder).not.toBeUndefined();
 
                         const jsonFOKOrder = orderToJson(signedOrder, owner, OrderType.FOK);
-                        expect(jsonFOKOrder).not.null;
-                        expect(jsonFOKOrder).not.undefined;
+                        expect(jsonFOKOrder).not.toBeNull();
+                        expect(jsonFOKOrder).not.toBeUndefined();
 
-                        expect(jsonFOKOrder).deep.equal({
+                        expect(jsonFOKOrder).toEqual({
                             order: {
                                 salt: parseInt(signedOrder.salt),
                                 maker: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
@@ -2484,7 +2484,7 @@ describe("utilities", () => {
                                 tokenId: token,
                                 makerAmount: "100000000",
                                 takerAmount: "20000000000",
-                                side: "BUY",
+                                side: Side.BUY,
                                 expiration: "0",
                                 nonce: "0",
                                 feeRateBps: "0",
@@ -2512,14 +2512,14 @@ describe("utilities", () => {
                             userMarketOrder,
                             { tickSize: "0.001", negRisk: false },
                         );
-                        expect(signedOrder).not.null;
-                        expect(signedOrder).not.undefined;
+                        expect(signedOrder).not.toBeNull();
+                        expect(signedOrder).not.toBeUndefined();
 
                         const jsonFOKOrder = orderToJson(signedOrder, owner, OrderType.FOK);
-                        expect(jsonFOKOrder).not.null;
-                        expect(jsonFOKOrder).not.undefined;
+                        expect(jsonFOKOrder).not.toBeNull();
+                        expect(jsonFOKOrder).not.toBeUndefined();
 
-                        expect(jsonFOKOrder).deep.equal({
+                        expect(jsonFOKOrder).toEqual({
                             order: {
                                 salt: parseInt(signedOrder.salt),
                                 maker: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
@@ -2528,7 +2528,7 @@ describe("utilities", () => {
                                 tokenId: token,
                                 makerAmount: "100000000",
                                 takerAmount: "20000000000",
-                                side: "BUY",
+                                side: Side.BUY,
                                 expiration: "0",
                                 nonce: "0",
                                 feeRateBps: "0",
@@ -2556,14 +2556,14 @@ describe("utilities", () => {
                             userMarketOrder,
                             { tickSize: "0.001", negRisk: false },
                         );
-                        expect(signedOrder).not.null;
-                        expect(signedOrder).not.undefined;
+                        expect(signedOrder).not.toBeNull();
+                        expect(signedOrder).not.toBeUndefined();
 
                         const jsonFOKOrder = orderToJson(signedOrder, owner, OrderType.FOK);
-                        expect(jsonFOKOrder).not.null;
-                        expect(jsonFOKOrder).not.undefined;
+                        expect(jsonFOKOrder).not.toBeNull();
+                        expect(jsonFOKOrder).not.toBeUndefined();
 
-                        expect(jsonFOKOrder).deep.equal({
+                        expect(jsonFOKOrder).toEqual({
                             order: {
                                 salt: parseInt(signedOrder.salt),
                                 maker: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
@@ -2572,7 +2572,7 @@ describe("utilities", () => {
                                 tokenId: token,
                                 makerAmount: "100000000",
                                 takerAmount: "20000000000",
-                                side: "BUY",
+                                side: Side.BUY,
                                 expiration: "0",
                                 nonce: "0",
                                 feeRateBps: "0",
@@ -2600,14 +2600,14 @@ describe("utilities", () => {
                             userMarketOrder,
                             { tickSize: "0.001", negRisk: false },
                         );
-                        expect(signedOrder).not.null;
-                        expect(signedOrder).not.undefined;
+                        expect(signedOrder).not.toBeNull();
+                        expect(signedOrder).not.toBeUndefined();
 
                         const jsonFOKOrder = orderToJson(signedOrder, owner, OrderType.FOK);
-                        expect(jsonFOKOrder).not.null;
-                        expect(jsonFOKOrder).not.undefined;
+                        expect(jsonFOKOrder).not.toBeNull();
+                        expect(jsonFOKOrder).not.toBeUndefined();
 
-                        expect(jsonFOKOrder).deep.equal({
+                        expect(jsonFOKOrder).toEqual({
                             order: {
                                 salt: parseInt(signedOrder.salt),
                                 maker: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
@@ -2616,7 +2616,7 @@ describe("utilities", () => {
                                 tokenId: token,
                                 makerAmount: "100000000",
                                 takerAmount: "500000",
-                                side: "SELL",
+                                side: Side.SELL,
                                 expiration: "0",
                                 nonce: "0",
                                 feeRateBps: "0",
@@ -2644,14 +2644,14 @@ describe("utilities", () => {
                             userMarketOrder,
                             { tickSize: "0.001", negRisk: false },
                         );
-                        expect(signedOrder).not.null;
-                        expect(signedOrder).not.undefined;
+                        expect(signedOrder).not.toBeNull();
+                        expect(signedOrder).not.toBeUndefined();
 
                         const jsonFOKOrder = orderToJson(signedOrder, owner, OrderType.FOK);
-                        expect(jsonFOKOrder).not.null;
-                        expect(jsonFOKOrder).not.undefined;
+                        expect(jsonFOKOrder).not.toBeNull();
+                        expect(jsonFOKOrder).not.toBeUndefined();
 
-                        expect(jsonFOKOrder).deep.equal({
+                        expect(jsonFOKOrder).toEqual({
                             order: {
                                 salt: parseInt(signedOrder.salt),
                                 maker: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
@@ -2660,7 +2660,7 @@ describe("utilities", () => {
                                 tokenId: token,
                                 makerAmount: "100000000",
                                 takerAmount: "500000",
-                                side: "SELL",
+                                side: Side.SELL,
                                 expiration: "0",
                                 nonce: "0",
                                 feeRateBps: "0",
@@ -2688,14 +2688,14 @@ describe("utilities", () => {
                             userMarketOrder,
                             { tickSize: "0.001", negRisk: false },
                         );
-                        expect(signedOrder).not.null;
-                        expect(signedOrder).not.undefined;
+                        expect(signedOrder).not.toBeNull();
+                        expect(signedOrder).not.toBeUndefined();
 
                         const jsonFOKOrder = orderToJson(signedOrder, owner, OrderType.FOK);
-                        expect(jsonFOKOrder).not.null;
-                        expect(jsonFOKOrder).not.undefined;
+                        expect(jsonFOKOrder).not.toBeNull();
+                        expect(jsonFOKOrder).not.toBeUndefined();
 
-                        expect(jsonFOKOrder).deep.equal({
+                        expect(jsonFOKOrder).toEqual({
                             order: {
                                 salt: parseInt(signedOrder.salt),
                                 maker: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
@@ -2704,7 +2704,7 @@ describe("utilities", () => {
                                 tokenId: token,
                                 makerAmount: "100000000",
                                 takerAmount: "500000",
-                                side: "SELL",
+                                side: Side.SELL,
                                 expiration: "0",
                                 nonce: "0",
                                 feeRateBps: "0",
@@ -2745,14 +2745,14 @@ describe("utilities", () => {
                             userOrder,
                             { tickSize: "0.0001", negRisk: false },
                         );
-                        expect(signedOrder).not.null;
-                        expect(signedOrder).not.undefined;
+                        expect(signedOrder).not.toBeNull();
+                        expect(signedOrder).not.toBeUndefined();
 
                         const jsonGTDOrder = orderToJson(signedOrder, owner, OrderType.GTD);
-                        expect(jsonGTDOrder).not.null;
-                        expect(jsonGTDOrder).not.undefined;
+                        expect(jsonGTDOrder).not.toBeNull();
+                        expect(jsonGTDOrder).not.toBeUndefined();
 
-                        expect(jsonGTDOrder).deep.equal({
+                        expect(jsonGTDOrder).toEqual({
                             order: {
                                 salt: parseInt(signedOrder.salt),
                                 maker: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
@@ -2761,7 +2761,7 @@ describe("utilities", () => {
                                 tokenId: token,
                                 makerAmount: "50000",
                                 takerAmount: "100000000",
-                                side: "BUY",
+                                side: Side.BUY,
                                 expiration: "1709948026",
                                 nonce: "0",
                                 feeRateBps: "0",
@@ -2790,14 +2790,14 @@ describe("utilities", () => {
                             userOrder,
                             { tickSize: "0.0001", negRisk: false },
                         );
-                        expect(signedOrder).not.null;
-                        expect(signedOrder).not.undefined;
+                        expect(signedOrder).not.toBeNull();
+                        expect(signedOrder).not.toBeUndefined();
 
                         const jsonGTDOrder = orderToJson(signedOrder, owner, OrderType.GTD);
-                        expect(jsonGTDOrder).not.null;
-                        expect(jsonGTDOrder).not.undefined;
+                        expect(jsonGTDOrder).not.toBeNull();
+                        expect(jsonGTDOrder).not.toBeUndefined();
 
-                        expect(jsonGTDOrder).deep.equal({
+                        expect(jsonGTDOrder).toEqual({
                             order: {
                                 salt: parseInt(signedOrder.salt),
                                 maker: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
@@ -2806,7 +2806,7 @@ describe("utilities", () => {
                                 tokenId: token,
                                 makerAmount: "50000",
                                 takerAmount: "100000000",
-                                side: "BUY",
+                                side: Side.BUY,
                                 expiration: "1709948026",
                                 nonce: "0",
                                 feeRateBps: "0",
@@ -2835,14 +2835,14 @@ describe("utilities", () => {
                             userOrder,
                             { tickSize: "0.0001", negRisk: false },
                         );
-                        expect(signedOrder).not.null;
-                        expect(signedOrder).not.undefined;
+                        expect(signedOrder).not.toBeNull();
+                        expect(signedOrder).not.toBeUndefined();
 
                         const jsonGTDOrder = orderToJson(signedOrder, owner, OrderType.GTD);
-                        expect(jsonGTDOrder).not.null;
-                        expect(jsonGTDOrder).not.undefined;
+                        expect(jsonGTDOrder).not.toBeNull();
+                        expect(jsonGTDOrder).not.toBeUndefined();
 
-                        expect(jsonGTDOrder).deep.equal({
+                        expect(jsonGTDOrder).toEqual({
                             order: {
                                 salt: parseInt(signedOrder.salt),
                                 maker: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
@@ -2851,7 +2851,7 @@ describe("utilities", () => {
                                 tokenId: token,
                                 makerAmount: "50000",
                                 takerAmount: "100000000",
-                                side: "BUY",
+                                side: Side.BUY,
                                 expiration: "1709948026",
                                 nonce: "0",
                                 feeRateBps: "0",
@@ -2880,14 +2880,14 @@ describe("utilities", () => {
                             userOrder,
                             { tickSize: "0.0001", negRisk: false },
                         );
-                        expect(signedOrder).not.null;
-                        expect(signedOrder).not.undefined;
+                        expect(signedOrder).not.toBeNull();
+                        expect(signedOrder).not.toBeUndefined();
 
                         const jsonGTDOrder = orderToJson(signedOrder, owner, OrderType.GTD);
-                        expect(jsonGTDOrder).not.null;
-                        expect(jsonGTDOrder).not.undefined;
+                        expect(jsonGTDOrder).not.toBeNull();
+                        expect(jsonGTDOrder).not.toBeUndefined();
 
-                        expect(jsonGTDOrder).deep.equal({
+                        expect(jsonGTDOrder).toEqual({
                             order: {
                                 salt: parseInt(signedOrder.salt),
                                 maker: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
@@ -2896,7 +2896,7 @@ describe("utilities", () => {
                                 tokenId: token,
                                 makerAmount: "100000000",
                                 takerAmount: "50000",
-                                side: "SELL",
+                                side: Side.SELL,
                                 expiration: "1709948026",
                                 nonce: "0",
                                 feeRateBps: "0",
@@ -2925,14 +2925,14 @@ describe("utilities", () => {
                             userOrder,
                             { tickSize: "0.0001", negRisk: false },
                         );
-                        expect(signedOrder).not.null;
-                        expect(signedOrder).not.undefined;
+                        expect(signedOrder).not.toBeNull();
+                        expect(signedOrder).not.toBeUndefined();
 
                         const jsonGTDOrder = orderToJson(signedOrder, owner, OrderType.GTD);
-                        expect(jsonGTDOrder).not.null;
-                        expect(jsonGTDOrder).not.undefined;
+                        expect(jsonGTDOrder).not.toBeNull();
+                        expect(jsonGTDOrder).not.toBeUndefined();
 
-                        expect(jsonGTDOrder).deep.equal({
+                        expect(jsonGTDOrder).toEqual({
                             order: {
                                 salt: parseInt(signedOrder.salt),
                                 maker: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
@@ -2941,7 +2941,7 @@ describe("utilities", () => {
                                 tokenId: token,
                                 makerAmount: "100000000",
                                 takerAmount: "50000",
-                                side: "SELL",
+                                side: Side.SELL,
                                 expiration: "1709948026",
                                 nonce: "0",
                                 feeRateBps: "0",
@@ -2970,14 +2970,14 @@ describe("utilities", () => {
                             userOrder,
                             { tickSize: "0.0001", negRisk: false },
                         );
-                        expect(signedOrder).not.null;
-                        expect(signedOrder).not.undefined;
+                        expect(signedOrder).not.toBeNull();
+                        expect(signedOrder).not.toBeUndefined();
 
                         const jsonGTDOrder = orderToJson(signedOrder, owner, OrderType.GTD);
-                        expect(jsonGTDOrder).not.null;
-                        expect(jsonGTDOrder).not.undefined;
+                        expect(jsonGTDOrder).not.toBeNull();
+                        expect(jsonGTDOrder).not.toBeUndefined();
 
-                        expect(jsonGTDOrder).deep.equal({
+                        expect(jsonGTDOrder).toEqual({
                             order: {
                                 salt: parseInt(signedOrder.salt),
                                 maker: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
@@ -2986,7 +2986,7 @@ describe("utilities", () => {
                                 tokenId: token,
                                 makerAmount: "100000000",
                                 takerAmount: "50000",
-                                side: "SELL",
+                                side: Side.SELL,
                                 expiration: "1709948026",
                                 nonce: "0",
                                 feeRateBps: "0",
@@ -3014,14 +3014,14 @@ describe("utilities", () => {
                             userOrder,
                             { tickSize: "0.0001", negRisk: false },
                         );
-                        expect(signedOrder).not.null;
-                        expect(signedOrder).not.undefined;
+                        expect(signedOrder).not.toBeNull();
+                        expect(signedOrder).not.toBeUndefined();
 
                         const jsonGTCOrder = orderToJson(signedOrder, owner, OrderType.GTC);
-                        expect(jsonGTCOrder).not.null;
-                        expect(jsonGTCOrder).not.undefined;
+                        expect(jsonGTCOrder).not.toBeNull();
+                        expect(jsonGTCOrder).not.toBeUndefined();
 
-                        expect(jsonGTCOrder).deep.equal({
+                        expect(jsonGTCOrder).toEqual({
                             order: {
                                 salt: parseInt(signedOrder.salt),
                                 maker: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
@@ -3030,7 +3030,7 @@ describe("utilities", () => {
                                 tokenId: token,
                                 makerAmount: "50000",
                                 takerAmount: "100000000",
-                                side: "BUY",
+                                side: Side.BUY,
                                 expiration: "0",
                                 nonce: "0",
                                 feeRateBps: "0",
@@ -3058,14 +3058,14 @@ describe("utilities", () => {
                             userOrder,
                             { tickSize: "0.0001", negRisk: false },
                         );
-                        expect(signedOrder).not.null;
-                        expect(signedOrder).not.undefined;
+                        expect(signedOrder).not.toBeNull();
+                        expect(signedOrder).not.toBeUndefined();
 
                         const jsonGTCOrder = orderToJson(signedOrder, owner, OrderType.GTC);
-                        expect(jsonGTCOrder).not.null;
-                        expect(jsonGTCOrder).not.undefined;
+                        expect(jsonGTCOrder).not.toBeNull();
+                        expect(jsonGTCOrder).not.toBeUndefined();
 
-                        expect(jsonGTCOrder).deep.equal({
+                        expect(jsonGTCOrder).toEqual({
                             order: {
                                 salt: parseInt(signedOrder.salt),
                                 maker: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
@@ -3074,7 +3074,7 @@ describe("utilities", () => {
                                 tokenId: token,
                                 makerAmount: "50000",
                                 takerAmount: "100000000",
-                                side: "BUY",
+                                side: Side.BUY,
                                 expiration: "0",
                                 nonce: "0",
                                 feeRateBps: "0",
@@ -3102,14 +3102,14 @@ describe("utilities", () => {
                             userOrder,
                             { tickSize: "0.0001", negRisk: false },
                         );
-                        expect(signedOrder).not.null;
-                        expect(signedOrder).not.undefined;
+                        expect(signedOrder).not.toBeNull();
+                        expect(signedOrder).not.toBeUndefined();
 
                         const jsonGTCOrder = orderToJson(signedOrder, owner, OrderType.GTC);
-                        expect(jsonGTCOrder).not.null;
-                        expect(jsonGTCOrder).not.undefined;
+                        expect(jsonGTCOrder).not.toBeNull();
+                        expect(jsonGTCOrder).not.toBeUndefined();
 
-                        expect(jsonGTCOrder).deep.equal({
+                        expect(jsonGTCOrder).toEqual({
                             order: {
                                 salt: parseInt(signedOrder.salt),
                                 maker: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
@@ -3118,7 +3118,7 @@ describe("utilities", () => {
                                 tokenId: token,
                                 makerAmount: "50000",
                                 takerAmount: "100000000",
-                                side: "BUY",
+                                side: Side.BUY,
                                 expiration: "0",
                                 nonce: "0",
                                 feeRateBps: "0",
@@ -3146,14 +3146,14 @@ describe("utilities", () => {
                             userOrder,
                             { tickSize: "0.0001", negRisk: false },
                         );
-                        expect(signedOrder).not.null;
-                        expect(signedOrder).not.undefined;
+                        expect(signedOrder).not.toBeNull();
+                        expect(signedOrder).not.toBeUndefined();
 
                         const jsonGTCOrder = orderToJson(signedOrder, owner, OrderType.GTC);
-                        expect(jsonGTCOrder).not.null;
-                        expect(jsonGTCOrder).not.undefined;
+                        expect(jsonGTCOrder).not.toBeNull();
+                        expect(jsonGTCOrder).not.toBeUndefined();
 
-                        expect(jsonGTCOrder).deep.equal({
+                        expect(jsonGTCOrder).toEqual({
                             order: {
                                 salt: parseInt(signedOrder.salt),
                                 maker: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
@@ -3162,7 +3162,7 @@ describe("utilities", () => {
                                 tokenId: token,
                                 makerAmount: "100000000",
                                 takerAmount: "50000",
-                                side: "SELL",
+                                side: Side.SELL,
                                 expiration: "0",
                                 nonce: "0",
                                 feeRateBps: "0",
@@ -3190,14 +3190,14 @@ describe("utilities", () => {
                             userOrder,
                             { tickSize: "0.0001", negRisk: false },
                         );
-                        expect(signedOrder).not.null;
-                        expect(signedOrder).not.undefined;
+                        expect(signedOrder).not.toBeNull();
+                        expect(signedOrder).not.toBeUndefined();
 
                         const jsonGTCOrder = orderToJson(signedOrder, owner, OrderType.GTC);
-                        expect(jsonGTCOrder).not.null;
-                        expect(jsonGTCOrder).not.undefined;
+                        expect(jsonGTCOrder).not.toBeNull();
+                        expect(jsonGTCOrder).not.toBeUndefined();
 
-                        expect(jsonGTCOrder).deep.equal({
+                        expect(jsonGTCOrder).toEqual({
                             order: {
                                 salt: parseInt(signedOrder.salt),
                                 maker: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
@@ -3206,7 +3206,7 @@ describe("utilities", () => {
                                 tokenId: token,
                                 makerAmount: "100000000",
                                 takerAmount: "50000",
-                                side: "SELL",
+                                side: Side.SELL,
                                 expiration: "0",
                                 nonce: "0",
                                 feeRateBps: "0",
@@ -3234,14 +3234,14 @@ describe("utilities", () => {
                             userOrder,
                             { tickSize: "0.0001", negRisk: false },
                         );
-                        expect(signedOrder).not.null;
-                        expect(signedOrder).not.undefined;
+                        expect(signedOrder).not.toBeNull();
+                        expect(signedOrder).not.toBeUndefined();
 
                         const jsonGTCOrder = orderToJson(signedOrder, owner, OrderType.GTC);
-                        expect(jsonGTCOrder).not.null;
-                        expect(jsonGTCOrder).not.undefined;
+                        expect(jsonGTCOrder).not.toBeNull();
+                        expect(jsonGTCOrder).not.toBeUndefined();
 
-                        expect(jsonGTCOrder).deep.equal({
+                        expect(jsonGTCOrder).toEqual({
                             order: {
                                 salt: parseInt(signedOrder.salt),
                                 maker: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
@@ -3250,7 +3250,7 @@ describe("utilities", () => {
                                 tokenId: token,
                                 makerAmount: "100000000",
                                 takerAmount: "50000",
-                                side: "SELL",
+                                side: Side.SELL,
                                 expiration: "0",
                                 nonce: "0",
                                 feeRateBps: "0",
@@ -3278,14 +3278,14 @@ describe("utilities", () => {
                             userMarketOrder,
                             { tickSize: "0.0001", negRisk: false },
                         );
-                        expect(signedOrder).not.null;
-                        expect(signedOrder).not.undefined;
+                        expect(signedOrder).not.toBeNull();
+                        expect(signedOrder).not.toBeUndefined();
 
                         const jsonFOKOrder = orderToJson(signedOrder, owner, OrderType.FOK);
-                        expect(jsonFOKOrder).not.null;
-                        expect(jsonFOKOrder).not.undefined;
+                        expect(jsonFOKOrder).not.toBeNull();
+                        expect(jsonFOKOrder).not.toBeUndefined();
 
-                        expect(jsonFOKOrder).deep.equal({
+                        expect(jsonFOKOrder).toEqual({
                             order: {
                                 salt: parseInt(signedOrder.salt),
                                 maker: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
@@ -3294,7 +3294,7 @@ describe("utilities", () => {
                                 tokenId: token,
                                 makerAmount: "100000000",
                                 takerAmount: "200000000000",
-                                side: "BUY",
+                                side: Side.BUY,
                                 expiration: "0",
                                 nonce: "0",
                                 feeRateBps: "0",
@@ -3322,14 +3322,14 @@ describe("utilities", () => {
                             userMarketOrder,
                             { tickSize: "0.0001", negRisk: false },
                         );
-                        expect(signedOrder).not.null;
-                        expect(signedOrder).not.undefined;
+                        expect(signedOrder).not.toBeNull();
+                        expect(signedOrder).not.toBeUndefined();
 
                         const jsonFOKOrder = orderToJson(signedOrder, owner, OrderType.FOK);
-                        expect(jsonFOKOrder).not.null;
-                        expect(jsonFOKOrder).not.undefined;
+                        expect(jsonFOKOrder).not.toBeNull();
+                        expect(jsonFOKOrder).not.toBeUndefined();
 
-                        expect(jsonFOKOrder).deep.equal({
+                        expect(jsonFOKOrder).toEqual({
                             order: {
                                 salt: parseInt(signedOrder.salt),
                                 maker: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
@@ -3338,7 +3338,7 @@ describe("utilities", () => {
                                 tokenId: token,
                                 makerAmount: "100000000",
                                 takerAmount: "200000000000",
-                                side: "BUY",
+                                side: Side.BUY,
                                 expiration: "0",
                                 nonce: "0",
                                 feeRateBps: "0",
@@ -3366,14 +3366,14 @@ describe("utilities", () => {
                             userMarketOrder,
                             { tickSize: "0.0001", negRisk: false },
                         );
-                        expect(signedOrder).not.null;
-                        expect(signedOrder).not.undefined;
+                        expect(signedOrder).not.toBeNull();
+                        expect(signedOrder).not.toBeUndefined();
 
                         const jsonFOKOrder = orderToJson(signedOrder, owner, OrderType.FOK);
-                        expect(jsonFOKOrder).not.null;
-                        expect(jsonFOKOrder).not.undefined;
+                        expect(jsonFOKOrder).not.toBeNull();
+                        expect(jsonFOKOrder).not.toBeUndefined();
 
-                        expect(jsonFOKOrder).deep.equal({
+                        expect(jsonFOKOrder).toEqual({
                             order: {
                                 salt: parseInt(signedOrder.salt),
                                 maker: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
@@ -3382,7 +3382,7 @@ describe("utilities", () => {
                                 tokenId: token,
                                 makerAmount: "100000000",
                                 takerAmount: "200000000000",
-                                side: "BUY",
+                                side: Side.BUY,
                                 expiration: "0",
                                 nonce: "0",
                                 feeRateBps: "0",
@@ -3410,14 +3410,14 @@ describe("utilities", () => {
                             userMarketOrder,
                             { tickSize: "0.0001", negRisk: false },
                         );
-                        expect(signedOrder).not.null;
-                        expect(signedOrder).not.undefined;
+                        expect(signedOrder).not.toBeNull();
+                        expect(signedOrder).not.toBeUndefined();
 
                         const jsonFOKOrder = orderToJson(signedOrder, owner, OrderType.FOK);
-                        expect(jsonFOKOrder).not.null;
-                        expect(jsonFOKOrder).not.undefined;
+                        expect(jsonFOKOrder).not.toBeNull();
+                        expect(jsonFOKOrder).not.toBeUndefined();
 
-                        expect(jsonFOKOrder).deep.equal({
+                        expect(jsonFOKOrder).toEqual({
                             order: {
                                 salt: parseInt(signedOrder.salt),
                                 maker: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
@@ -3426,7 +3426,7 @@ describe("utilities", () => {
                                 tokenId: token,
                                 makerAmount: "100000000",
                                 takerAmount: "50000",
-                                side: "SELL",
+                                side: Side.SELL,
                                 expiration: "0",
                                 nonce: "0",
                                 feeRateBps: "0",
@@ -3454,14 +3454,14 @@ describe("utilities", () => {
                             userMarketOrder,
                             { tickSize: "0.0001", negRisk: false },
                         );
-                        expect(signedOrder).not.null;
-                        expect(signedOrder).not.undefined;
+                        expect(signedOrder).not.toBeNull();
+                        expect(signedOrder).not.toBeUndefined();
 
                         const jsonFOKOrder = orderToJson(signedOrder, owner, OrderType.FOK);
-                        expect(jsonFOKOrder).not.null;
-                        expect(jsonFOKOrder).not.undefined;
+                        expect(jsonFOKOrder).not.toBeNull();
+                        expect(jsonFOKOrder).not.toBeUndefined();
 
-                        expect(jsonFOKOrder).deep.equal({
+                        expect(jsonFOKOrder).toEqual({
                             order: {
                                 salt: parseInt(signedOrder.salt),
                                 maker: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
@@ -3470,7 +3470,7 @@ describe("utilities", () => {
                                 tokenId: token,
                                 makerAmount: "100000000",
                                 takerAmount: "50000",
-                                side: "SELL",
+                                side: Side.SELL,
                                 expiration: "0",
                                 nonce: "0",
                                 feeRateBps: "0",
@@ -3498,14 +3498,14 @@ describe("utilities", () => {
                             userMarketOrder,
                             { tickSize: "0.0001", negRisk: false },
                         );
-                        expect(signedOrder).not.null;
-                        expect(signedOrder).not.undefined;
+                        expect(signedOrder).not.toBeNull();
+                        expect(signedOrder).not.toBeUndefined();
 
                         const jsonFOKOrder = orderToJson(signedOrder, owner, OrderType.FOK);
-                        expect(jsonFOKOrder).not.null;
-                        expect(jsonFOKOrder).not.undefined;
+                        expect(jsonFOKOrder).not.toBeNull();
+                        expect(jsonFOKOrder).not.toBeUndefined();
 
-                        expect(jsonFOKOrder).deep.equal({
+                        expect(jsonFOKOrder).toEqual({
                             order: {
                                 salt: parseInt(signedOrder.salt),
                                 maker: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
@@ -3514,7 +3514,7 @@ describe("utilities", () => {
                                 tokenId: token,
                                 makerAmount: "100000000",
                                 takerAmount: "50000",
-                                side: "SELL",
+                                side: Side.SELL,
                                 expiration: "0",
                                 nonce: "0",
                                 feeRateBps: "0",
@@ -3557,14 +3557,14 @@ describe("utilities", () => {
                             userOrder,
                             { tickSize: "0.1", negRisk: true },
                         );
-                        expect(signedOrder).not.null;
-                        expect(signedOrder).not.undefined;
+                        expect(signedOrder).not.toBeNull();
+                        expect(signedOrder).not.toBeUndefined();
 
                         const jsonGTDOrder = orderToJson(signedOrder, owner, OrderType.GTD);
-                        expect(jsonGTDOrder).not.null;
-                        expect(jsonGTDOrder).not.undefined;
+                        expect(jsonGTDOrder).not.toBeNull();
+                        expect(jsonGTDOrder).not.toBeUndefined();
 
-                        expect(jsonGTDOrder).deep.equal({
+                        expect(jsonGTDOrder).toEqual({
                             order: {
                                 salt: parseInt(signedOrder.salt),
                                 maker: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
@@ -3573,7 +3573,7 @@ describe("utilities", () => {
                                 tokenId: token,
                                 makerAmount: "50000000",
                                 takerAmount: "100000000",
-                                side: "BUY",
+                                side: Side.BUY,
                                 expiration: "1709948026",
                                 nonce: "0",
                                 feeRateBps: "0",
@@ -3602,14 +3602,14 @@ describe("utilities", () => {
                             userOrder,
                             { tickSize: "0.1", negRisk: true },
                         );
-                        expect(signedOrder).not.null;
-                        expect(signedOrder).not.undefined;
+                        expect(signedOrder).not.toBeNull();
+                        expect(signedOrder).not.toBeUndefined();
 
                         const jsonGTDOrder = orderToJson(signedOrder, owner, OrderType.GTD);
-                        expect(jsonGTDOrder).not.null;
-                        expect(jsonGTDOrder).not.undefined;
+                        expect(jsonGTDOrder).not.toBeNull();
+                        expect(jsonGTDOrder).not.toBeUndefined();
 
-                        expect(jsonGTDOrder).deep.equal({
+                        expect(jsonGTDOrder).toEqual({
                             order: {
                                 salt: parseInt(signedOrder.salt),
                                 maker: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
@@ -3618,7 +3618,7 @@ describe("utilities", () => {
                                 tokenId: token,
                                 makerAmount: "50000000",
                                 takerAmount: "100000000",
-                                side: "BUY",
+                                side: Side.BUY,
                                 expiration: "1709948026",
                                 nonce: "0",
                                 feeRateBps: "0",
@@ -3647,14 +3647,14 @@ describe("utilities", () => {
                             userOrder,
                             { tickSize: "0.1", negRisk: true },
                         );
-                        expect(signedOrder).not.null;
-                        expect(signedOrder).not.undefined;
+                        expect(signedOrder).not.toBeNull();
+                        expect(signedOrder).not.toBeUndefined();
 
                         const jsonGTDOrder = orderToJson(signedOrder, owner, OrderType.GTD);
-                        expect(jsonGTDOrder).not.null;
-                        expect(jsonGTDOrder).not.undefined;
+                        expect(jsonGTDOrder).not.toBeNull();
+                        expect(jsonGTDOrder).not.toBeUndefined();
 
-                        expect(jsonGTDOrder).deep.equal({
+                        expect(jsonGTDOrder).toEqual({
                             order: {
                                 salt: parseInt(signedOrder.salt),
                                 maker: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
@@ -3663,7 +3663,7 @@ describe("utilities", () => {
                                 tokenId: token,
                                 makerAmount: "50000000",
                                 takerAmount: "100000000",
-                                side: "BUY",
+                                side: Side.BUY,
                                 expiration: "1709948026",
                                 nonce: "0",
                                 feeRateBps: "0",
@@ -3692,14 +3692,14 @@ describe("utilities", () => {
                             userOrder,
                             { tickSize: "0.1", negRisk: true },
                         );
-                        expect(signedOrder).not.null;
-                        expect(signedOrder).not.undefined;
+                        expect(signedOrder).not.toBeNull();
+                        expect(signedOrder).not.toBeUndefined();
 
                         const jsonGTDOrder = orderToJson(signedOrder, owner, OrderType.GTD);
-                        expect(jsonGTDOrder).not.null;
-                        expect(jsonGTDOrder).not.undefined;
+                        expect(jsonGTDOrder).not.toBeNull();
+                        expect(jsonGTDOrder).not.toBeUndefined();
 
-                        expect(jsonGTDOrder).deep.equal({
+                        expect(jsonGTDOrder).toEqual({
                             order: {
                                 salt: parseInt(signedOrder.salt),
                                 maker: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
@@ -3708,7 +3708,7 @@ describe("utilities", () => {
                                 tokenId: token,
                                 makerAmount: "100000000",
                                 takerAmount: "50000000",
-                                side: "SELL",
+                                side: Side.SELL,
                                 expiration: "1709948026",
                                 nonce: "0",
                                 feeRateBps: "0",
@@ -3737,14 +3737,14 @@ describe("utilities", () => {
                             userOrder,
                             { tickSize: "0.1", negRisk: true },
                         );
-                        expect(signedOrder).not.null;
-                        expect(signedOrder).not.undefined;
+                        expect(signedOrder).not.toBeNull();
+                        expect(signedOrder).not.toBeUndefined();
 
                         const jsonGTDOrder = orderToJson(signedOrder, owner, OrderType.GTD);
-                        expect(jsonGTDOrder).not.null;
-                        expect(jsonGTDOrder).not.undefined;
+                        expect(jsonGTDOrder).not.toBeNull();
+                        expect(jsonGTDOrder).not.toBeUndefined();
 
-                        expect(jsonGTDOrder).deep.equal({
+                        expect(jsonGTDOrder).toEqual({
                             order: {
                                 salt: parseInt(signedOrder.salt),
                                 maker: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
@@ -3753,7 +3753,7 @@ describe("utilities", () => {
                                 tokenId: token,
                                 makerAmount: "100000000",
                                 takerAmount: "50000000",
-                                side: "SELL",
+                                side: Side.SELL,
                                 expiration: "1709948026",
                                 nonce: "0",
                                 feeRateBps: "0",
@@ -3782,14 +3782,14 @@ describe("utilities", () => {
                             userOrder,
                             { tickSize: "0.1", negRisk: true },
                         );
-                        expect(signedOrder).not.null;
-                        expect(signedOrder).not.undefined;
+                        expect(signedOrder).not.toBeNull();
+                        expect(signedOrder).not.toBeUndefined();
 
                         const jsonGTDOrder = orderToJson(signedOrder, owner, OrderType.GTD);
-                        expect(jsonGTDOrder).not.null;
-                        expect(jsonGTDOrder).not.undefined;
+                        expect(jsonGTDOrder).not.toBeNull();
+                        expect(jsonGTDOrder).not.toBeUndefined();
 
-                        expect(jsonGTDOrder).deep.equal({
+                        expect(jsonGTDOrder).toEqual({
                             order: {
                                 salt: parseInt(signedOrder.salt),
                                 maker: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
@@ -3798,7 +3798,7 @@ describe("utilities", () => {
                                 tokenId: token,
                                 makerAmount: "100000000",
                                 takerAmount: "50000000",
-                                side: "SELL",
+                                side: Side.SELL,
                                 expiration: "1709948026",
                                 nonce: "0",
                                 feeRateBps: "0",
@@ -3826,14 +3826,14 @@ describe("utilities", () => {
                             userOrder,
                             { tickSize: "0.1", negRisk: true },
                         );
-                        expect(signedOrder).not.null;
-                        expect(signedOrder).not.undefined;
+                        expect(signedOrder).not.toBeNull();
+                        expect(signedOrder).not.toBeUndefined();
 
                         const jsonGTCOrder = orderToJson(signedOrder, owner, OrderType.GTC);
-                        expect(jsonGTCOrder).not.null;
-                        expect(jsonGTCOrder).not.undefined;
+                        expect(jsonGTCOrder).not.toBeNull();
+                        expect(jsonGTCOrder).not.toBeUndefined();
 
-                        expect(jsonGTCOrder).deep.equal({
+                        expect(jsonGTCOrder).toEqual({
                             order: {
                                 salt: parseInt(signedOrder.salt),
                                 maker: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
@@ -3842,7 +3842,7 @@ describe("utilities", () => {
                                 tokenId: token,
                                 makerAmount: "50000000",
                                 takerAmount: "100000000",
-                                side: "BUY",
+                                side: Side.BUY,
                                 expiration: "0",
                                 nonce: "0",
                                 feeRateBps: "0",
@@ -3870,14 +3870,14 @@ describe("utilities", () => {
                             userOrder,
                             { tickSize: "0.1", negRisk: true },
                         );
-                        expect(signedOrder).not.null;
-                        expect(signedOrder).not.undefined;
+                        expect(signedOrder).not.toBeNull();
+                        expect(signedOrder).not.toBeUndefined();
 
                         const jsonGTCOrder = orderToJson(signedOrder, owner, OrderType.GTC);
-                        expect(jsonGTCOrder).not.null;
-                        expect(jsonGTCOrder).not.undefined;
+                        expect(jsonGTCOrder).not.toBeNull();
+                        expect(jsonGTCOrder).not.toBeUndefined();
 
-                        expect(jsonGTCOrder).deep.equal({
+                        expect(jsonGTCOrder).toEqual({
                             order: {
                                 salt: parseInt(signedOrder.salt),
                                 maker: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
@@ -3886,7 +3886,7 @@ describe("utilities", () => {
                                 tokenId: token,
                                 makerAmount: "50000000",
                                 takerAmount: "100000000",
-                                side: "BUY",
+                                side: Side.BUY,
                                 expiration: "0",
                                 nonce: "0",
                                 feeRateBps: "0",
@@ -3914,14 +3914,14 @@ describe("utilities", () => {
                             userOrder,
                             { tickSize: "0.1", negRisk: true },
                         );
-                        expect(signedOrder).not.null;
-                        expect(signedOrder).not.undefined;
+                        expect(signedOrder).not.toBeNull();
+                        expect(signedOrder).not.toBeUndefined();
 
                         const jsonGTCOrder = orderToJson(signedOrder, owner, OrderType.GTC);
-                        expect(jsonGTCOrder).not.null;
-                        expect(jsonGTCOrder).not.undefined;
+                        expect(jsonGTCOrder).not.toBeNull();
+                        expect(jsonGTCOrder).not.toBeUndefined();
 
-                        expect(jsonGTCOrder).deep.equal({
+                        expect(jsonGTCOrder).toEqual({
                             order: {
                                 salt: parseInt(signedOrder.salt),
                                 maker: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
@@ -3930,7 +3930,7 @@ describe("utilities", () => {
                                 tokenId: token,
                                 makerAmount: "50000000",
                                 takerAmount: "100000000",
-                                side: "BUY",
+                                side: Side.BUY,
                                 expiration: "0",
                                 nonce: "0",
                                 feeRateBps: "0",
@@ -3958,14 +3958,14 @@ describe("utilities", () => {
                             userOrder,
                             { tickSize: "0.1", negRisk: true },
                         );
-                        expect(signedOrder).not.null;
-                        expect(signedOrder).not.undefined;
+                        expect(signedOrder).not.toBeNull();
+                        expect(signedOrder).not.toBeUndefined();
 
                         const jsonGTCOrder = orderToJson(signedOrder, owner, OrderType.GTC);
-                        expect(jsonGTCOrder).not.null;
-                        expect(jsonGTCOrder).not.undefined;
+                        expect(jsonGTCOrder).not.toBeNull();
+                        expect(jsonGTCOrder).not.toBeUndefined();
 
-                        expect(jsonGTCOrder).deep.equal({
+                        expect(jsonGTCOrder).toEqual({
                             order: {
                                 salt: parseInt(signedOrder.salt),
                                 maker: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
@@ -3974,7 +3974,7 @@ describe("utilities", () => {
                                 tokenId: token,
                                 makerAmount: "100000000",
                                 takerAmount: "50000000",
-                                side: "SELL",
+                                side: Side.SELL,
                                 expiration: "0",
                                 nonce: "0",
                                 feeRateBps: "0",
@@ -4002,14 +4002,14 @@ describe("utilities", () => {
                             userOrder,
                             { tickSize: "0.1", negRisk: true },
                         );
-                        expect(signedOrder).not.null;
-                        expect(signedOrder).not.undefined;
+                        expect(signedOrder).not.toBeNull();
+                        expect(signedOrder).not.toBeUndefined();
 
                         const jsonGTCOrder = orderToJson(signedOrder, owner, OrderType.GTC);
-                        expect(jsonGTCOrder).not.null;
-                        expect(jsonGTCOrder).not.undefined;
+                        expect(jsonGTCOrder).not.toBeNull();
+                        expect(jsonGTCOrder).not.toBeUndefined();
 
-                        expect(jsonGTCOrder).deep.equal({
+                        expect(jsonGTCOrder).toEqual({
                             order: {
                                 salt: parseInt(signedOrder.salt),
                                 maker: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
@@ -4018,7 +4018,7 @@ describe("utilities", () => {
                                 tokenId: token,
                                 makerAmount: "100000000",
                                 takerAmount: "50000000",
-                                side: "SELL",
+                                side: Side.SELL,
                                 expiration: "0",
                                 nonce: "0",
                                 feeRateBps: "0",
@@ -4046,14 +4046,14 @@ describe("utilities", () => {
                             userOrder,
                             { tickSize: "0.1", negRisk: true },
                         );
-                        expect(signedOrder).not.null;
-                        expect(signedOrder).not.undefined;
+                        expect(signedOrder).not.toBeNull();
+                        expect(signedOrder).not.toBeUndefined();
 
                         const jsonGTCOrder = orderToJson(signedOrder, owner, OrderType.GTC);
-                        expect(jsonGTCOrder).not.null;
-                        expect(jsonGTCOrder).not.undefined;
+                        expect(jsonGTCOrder).not.toBeNull();
+                        expect(jsonGTCOrder).not.toBeUndefined();
 
-                        expect(jsonGTCOrder).deep.equal({
+                        expect(jsonGTCOrder).toEqual({
                             order: {
                                 salt: parseInt(signedOrder.salt),
                                 maker: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
@@ -4062,7 +4062,7 @@ describe("utilities", () => {
                                 tokenId: token,
                                 makerAmount: "100000000",
                                 takerAmount: "50000000",
-                                side: "SELL",
+                                side: Side.SELL,
                                 expiration: "0",
                                 nonce: "0",
                                 feeRateBps: "0",
@@ -4090,14 +4090,14 @@ describe("utilities", () => {
                             userMarketOrder,
                             { tickSize: "0.1", negRisk: true },
                         );
-                        expect(signedOrder).not.null;
-                        expect(signedOrder).not.undefined;
+                        expect(signedOrder).not.toBeNull();
+                        expect(signedOrder).not.toBeUndefined();
 
                         const jsonFOKOrder = orderToJson(signedOrder, owner, OrderType.FOK);
-                        expect(jsonFOKOrder).not.null;
-                        expect(jsonFOKOrder).not.undefined;
+                        expect(jsonFOKOrder).not.toBeNull();
+                        expect(jsonFOKOrder).not.toBeUndefined();
 
-                        expect(jsonFOKOrder).deep.equal({
+                        expect(jsonFOKOrder).toEqual({
                             order: {
                                 salt: parseInt(signedOrder.salt),
                                 maker: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
@@ -4106,7 +4106,7 @@ describe("utilities", () => {
                                 tokenId: token,
                                 makerAmount: "100000000",
                                 takerAmount: "200000000",
-                                side: "BUY",
+                                side: Side.BUY,
                                 expiration: "0",
                                 nonce: "0",
                                 feeRateBps: "0",
@@ -4134,14 +4134,14 @@ describe("utilities", () => {
                             userMarketOrder,
                             { tickSize: "0.1", negRisk: true },
                         );
-                        expect(signedOrder).not.null;
-                        expect(signedOrder).not.undefined;
+                        expect(signedOrder).not.toBeNull();
+                        expect(signedOrder).not.toBeUndefined();
 
                         const jsonFOKOrder = orderToJson(signedOrder, owner, OrderType.FOK);
-                        expect(jsonFOKOrder).not.null;
-                        expect(jsonFOKOrder).not.undefined;
+                        expect(jsonFOKOrder).not.toBeNull();
+                        expect(jsonFOKOrder).not.toBeUndefined();
 
-                        expect(jsonFOKOrder).deep.equal({
+                        expect(jsonFOKOrder).toEqual({
                             order: {
                                 salt: parseInt(signedOrder.salt),
                                 maker: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
@@ -4150,7 +4150,7 @@ describe("utilities", () => {
                                 tokenId: token,
                                 makerAmount: "100000000",
                                 takerAmount: "200000000",
-                                side: "BUY",
+                                side: Side.BUY,
                                 expiration: "0",
                                 nonce: "0",
                                 feeRateBps: "0",
@@ -4178,14 +4178,14 @@ describe("utilities", () => {
                             userMarketOrder,
                             { tickSize: "0.1", negRisk: true },
                         );
-                        expect(signedOrder).not.null;
-                        expect(signedOrder).not.undefined;
+                        expect(signedOrder).not.toBeNull();
+                        expect(signedOrder).not.toBeUndefined();
 
                         const jsonFOKOrder = orderToJson(signedOrder, owner, OrderType.FOK);
-                        expect(jsonFOKOrder).not.null;
-                        expect(jsonFOKOrder).not.undefined;
+                        expect(jsonFOKOrder).not.toBeNull();
+                        expect(jsonFOKOrder).not.toBeUndefined();
 
-                        expect(jsonFOKOrder).deep.equal({
+                        expect(jsonFOKOrder).toEqual({
                             order: {
                                 salt: parseInt(signedOrder.salt),
                                 maker: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
@@ -4194,7 +4194,7 @@ describe("utilities", () => {
                                 tokenId: token,
                                 makerAmount: "100000000",
                                 takerAmount: "200000000",
-                                side: "BUY",
+                                side: Side.BUY,
                                 expiration: "0",
                                 nonce: "0",
                                 feeRateBps: "0",
@@ -4222,14 +4222,14 @@ describe("utilities", () => {
                             userMarketOrder,
                             { tickSize: "0.1", negRisk: true },
                         );
-                        expect(signedOrder).not.null;
-                        expect(signedOrder).not.undefined;
+                        expect(signedOrder).not.toBeNull();
+                        expect(signedOrder).not.toBeUndefined();
 
                         const jsonFOKOrder = orderToJson(signedOrder, owner, OrderType.FOK);
-                        expect(jsonFOKOrder).not.null;
-                        expect(jsonFOKOrder).not.undefined;
+                        expect(jsonFOKOrder).not.toBeNull();
+                        expect(jsonFOKOrder).not.toBeUndefined();
 
-                        expect(jsonFOKOrder).deep.equal({
+                        expect(jsonFOKOrder).toEqual({
                             order: {
                                 salt: parseInt(signedOrder.salt),
                                 maker: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
@@ -4238,7 +4238,7 @@ describe("utilities", () => {
                                 tokenId: token,
                                 makerAmount: "100000000",
                                 takerAmount: "50000000",
-                                side: "SELL",
+                                side: Side.SELL,
                                 expiration: "0",
                                 nonce: "0",
                                 feeRateBps: "0",
@@ -4266,14 +4266,14 @@ describe("utilities", () => {
                             userMarketOrder,
                             { tickSize: "0.1", negRisk: true },
                         );
-                        expect(signedOrder).not.null;
-                        expect(signedOrder).not.undefined;
+                        expect(signedOrder).not.toBeNull();
+                        expect(signedOrder).not.toBeUndefined();
 
                         const jsonFOKOrder = orderToJson(signedOrder, owner, OrderType.FOK);
-                        expect(jsonFOKOrder).not.null;
-                        expect(jsonFOKOrder).not.undefined;
+                        expect(jsonFOKOrder).not.toBeNull();
+                        expect(jsonFOKOrder).not.toBeUndefined();
 
-                        expect(jsonFOKOrder).deep.equal({
+                        expect(jsonFOKOrder).toEqual({
                             order: {
                                 salt: parseInt(signedOrder.salt),
                                 maker: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
@@ -4282,7 +4282,7 @@ describe("utilities", () => {
                                 tokenId: token,
                                 makerAmount: "100000000",
                                 takerAmount: "50000000",
-                                side: "SELL",
+                                side: Side.SELL,
                                 expiration: "0",
                                 nonce: "0",
                                 feeRateBps: "0",
@@ -4310,14 +4310,14 @@ describe("utilities", () => {
                             userMarketOrder,
                             { tickSize: "0.1", negRisk: true },
                         );
-                        expect(signedOrder).not.null;
-                        expect(signedOrder).not.undefined;
+                        expect(signedOrder).not.toBeNull();
+                        expect(signedOrder).not.toBeUndefined();
 
                         const jsonFOKOrder = orderToJson(signedOrder, owner, OrderType.FOK);
-                        expect(jsonFOKOrder).not.null;
-                        expect(jsonFOKOrder).not.undefined;
+                        expect(jsonFOKOrder).not.toBeNull();
+                        expect(jsonFOKOrder).not.toBeUndefined();
 
-                        expect(jsonFOKOrder).deep.equal({
+                        expect(jsonFOKOrder).toEqual({
                             order: {
                                 salt: parseInt(signedOrder.salt),
                                 maker: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
@@ -4326,7 +4326,7 @@ describe("utilities", () => {
                                 tokenId: token,
                                 makerAmount: "100000000",
                                 takerAmount: "50000000",
-                                side: "SELL",
+                                side: Side.SELL,
                                 expiration: "0",
                                 nonce: "0",
                                 feeRateBps: "0",
@@ -4367,14 +4367,14 @@ describe("utilities", () => {
                             userOrder,
                             { tickSize: "0.01", negRisk: true },
                         );
-                        expect(signedOrder).not.null;
-                        expect(signedOrder).not.undefined;
+                        expect(signedOrder).not.toBeNull();
+                        expect(signedOrder).not.toBeUndefined();
 
                         const jsonGTDOrder = orderToJson(signedOrder, owner, OrderType.GTD);
-                        expect(jsonGTDOrder).not.null;
-                        expect(jsonGTDOrder).not.undefined;
+                        expect(jsonGTDOrder).not.toBeNull();
+                        expect(jsonGTDOrder).not.toBeUndefined();
 
-                        expect(jsonGTDOrder).deep.equal({
+                        expect(jsonGTDOrder).toEqual({
                             order: {
                                 salt: parseInt(signedOrder.salt),
                                 maker: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
@@ -4383,7 +4383,7 @@ describe("utilities", () => {
                                 tokenId: token,
                                 makerAmount: "5000000",
                                 takerAmount: "100000000",
-                                side: "BUY",
+                                side: Side.BUY,
                                 expiration: "1709948026",
                                 nonce: "0",
                                 feeRateBps: "0",
@@ -4412,14 +4412,14 @@ describe("utilities", () => {
                             userOrder,
                             { tickSize: "0.01", negRisk: true },
                         );
-                        expect(signedOrder).not.null;
-                        expect(signedOrder).not.undefined;
+                        expect(signedOrder).not.toBeNull();
+                        expect(signedOrder).not.toBeUndefined();
 
                         const jsonGTDOrder = orderToJson(signedOrder, owner, OrderType.GTD);
-                        expect(jsonGTDOrder).not.null;
-                        expect(jsonGTDOrder).not.undefined;
+                        expect(jsonGTDOrder).not.toBeNull();
+                        expect(jsonGTDOrder).not.toBeUndefined();
 
-                        expect(jsonGTDOrder).deep.equal({
+                        expect(jsonGTDOrder).toEqual({
                             order: {
                                 salt: parseInt(signedOrder.salt),
                                 maker: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
@@ -4428,7 +4428,7 @@ describe("utilities", () => {
                                 tokenId: token,
                                 makerAmount: "5000000",
                                 takerAmount: "100000000",
-                                side: "BUY",
+                                side: Side.BUY,
                                 expiration: "1709948026",
                                 nonce: "0",
                                 feeRateBps: "0",
@@ -4457,14 +4457,14 @@ describe("utilities", () => {
                             userOrder,
                             { tickSize: "0.01", negRisk: true },
                         );
-                        expect(signedOrder).not.null;
-                        expect(signedOrder).not.undefined;
+                        expect(signedOrder).not.toBeNull();
+                        expect(signedOrder).not.toBeUndefined();
 
                         const jsonGTDOrder = orderToJson(signedOrder, owner, OrderType.GTD);
-                        expect(jsonGTDOrder).not.null;
-                        expect(jsonGTDOrder).not.undefined;
+                        expect(jsonGTDOrder).not.toBeNull();
+                        expect(jsonGTDOrder).not.toBeUndefined();
 
-                        expect(jsonGTDOrder).deep.equal({
+                        expect(jsonGTDOrder).toEqual({
                             order: {
                                 salt: parseInt(signedOrder.salt),
                                 maker: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
@@ -4473,7 +4473,7 @@ describe("utilities", () => {
                                 tokenId: token,
                                 makerAmount: "5000000",
                                 takerAmount: "100000000",
-                                side: "BUY",
+                                side: Side.BUY,
                                 expiration: "1709948026",
                                 nonce: "0",
                                 feeRateBps: "0",
@@ -4502,14 +4502,14 @@ describe("utilities", () => {
                             userOrder,
                             { tickSize: "0.01", negRisk: true },
                         );
-                        expect(signedOrder).not.null;
-                        expect(signedOrder).not.undefined;
+                        expect(signedOrder).not.toBeNull();
+                        expect(signedOrder).not.toBeUndefined();
 
                         const jsonGTDOrder = orderToJson(signedOrder, owner, OrderType.GTD);
-                        expect(jsonGTDOrder).not.null;
-                        expect(jsonGTDOrder).not.undefined;
+                        expect(jsonGTDOrder).not.toBeNull();
+                        expect(jsonGTDOrder).not.toBeUndefined();
 
-                        expect(jsonGTDOrder).deep.equal({
+                        expect(jsonGTDOrder).toEqual({
                             order: {
                                 salt: parseInt(signedOrder.salt),
                                 maker: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
@@ -4518,7 +4518,7 @@ describe("utilities", () => {
                                 tokenId: token,
                                 makerAmount: "100000000",
                                 takerAmount: "5000000",
-                                side: "SELL",
+                                side: Side.SELL,
                                 expiration: "1709948026",
                                 nonce: "0",
                                 feeRateBps: "0",
@@ -4547,14 +4547,14 @@ describe("utilities", () => {
                             userOrder,
                             { tickSize: "0.01", negRisk: true },
                         );
-                        expect(signedOrder).not.null;
-                        expect(signedOrder).not.undefined;
+                        expect(signedOrder).not.toBeNull();
+                        expect(signedOrder).not.toBeUndefined();
 
                         const jsonGTDOrder = orderToJson(signedOrder, owner, OrderType.GTD);
-                        expect(jsonGTDOrder).not.null;
-                        expect(jsonGTDOrder).not.undefined;
+                        expect(jsonGTDOrder).not.toBeNull();
+                        expect(jsonGTDOrder).not.toBeUndefined();
 
-                        expect(jsonGTDOrder).deep.equal({
+                        expect(jsonGTDOrder).toEqual({
                             order: {
                                 salt: parseInt(signedOrder.salt),
                                 maker: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
@@ -4563,7 +4563,7 @@ describe("utilities", () => {
                                 tokenId: token,
                                 makerAmount: "100000000",
                                 takerAmount: "5000000",
-                                side: "SELL",
+                                side: Side.SELL,
                                 expiration: "1709948026",
                                 nonce: "0",
                                 feeRateBps: "0",
@@ -4592,14 +4592,14 @@ describe("utilities", () => {
                             userOrder,
                             { tickSize: "0.01", negRisk: true },
                         );
-                        expect(signedOrder).not.null;
-                        expect(signedOrder).not.undefined;
+                        expect(signedOrder).not.toBeNull();
+                        expect(signedOrder).not.toBeUndefined();
 
                         const jsonGTDOrder = orderToJson(signedOrder, owner, OrderType.GTD);
-                        expect(jsonGTDOrder).not.null;
-                        expect(jsonGTDOrder).not.undefined;
+                        expect(jsonGTDOrder).not.toBeNull();
+                        expect(jsonGTDOrder).not.toBeUndefined();
 
-                        expect(jsonGTDOrder).deep.equal({
+                        expect(jsonGTDOrder).toEqual({
                             order: {
                                 salt: parseInt(signedOrder.salt),
                                 maker: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
@@ -4608,7 +4608,7 @@ describe("utilities", () => {
                                 tokenId: token,
                                 makerAmount: "100000000",
                                 takerAmount: "5000000",
-                                side: "SELL",
+                                side: Side.SELL,
                                 expiration: "1709948026",
                                 nonce: "0",
                                 feeRateBps: "0",
@@ -4636,14 +4636,14 @@ describe("utilities", () => {
                             userOrder,
                             { tickSize: "0.01", negRisk: true },
                         );
-                        expect(signedOrder).not.null;
-                        expect(signedOrder).not.undefined;
+                        expect(signedOrder).not.toBeNull();
+                        expect(signedOrder).not.toBeUndefined();
 
                         const jsonGTCOrder = orderToJson(signedOrder, owner, OrderType.GTC);
-                        expect(jsonGTCOrder).not.null;
-                        expect(jsonGTCOrder).not.undefined;
+                        expect(jsonGTCOrder).not.toBeNull();
+                        expect(jsonGTCOrder).not.toBeUndefined();
 
-                        expect(jsonGTCOrder).deep.equal({
+                        expect(jsonGTCOrder).toEqual({
                             order: {
                                 salt: parseInt(signedOrder.salt),
                                 maker: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
@@ -4652,7 +4652,7 @@ describe("utilities", () => {
                                 tokenId: token,
                                 makerAmount: "5000000",
                                 takerAmount: "100000000",
-                                side: "BUY",
+                                side: Side.BUY,
                                 expiration: "0",
                                 nonce: "0",
                                 feeRateBps: "0",
@@ -4680,14 +4680,14 @@ describe("utilities", () => {
                             userOrder,
                             { tickSize: "0.01", negRisk: true },
                         );
-                        expect(signedOrder).not.null;
-                        expect(signedOrder).not.undefined;
+                        expect(signedOrder).not.toBeNull();
+                        expect(signedOrder).not.toBeUndefined();
 
                         const jsonGTCOrder = orderToJson(signedOrder, owner, OrderType.GTC);
-                        expect(jsonGTCOrder).not.null;
-                        expect(jsonGTCOrder).not.undefined;
+                        expect(jsonGTCOrder).not.toBeNull();
+                        expect(jsonGTCOrder).not.toBeUndefined();
 
-                        expect(jsonGTCOrder).deep.equal({
+                        expect(jsonGTCOrder).toEqual({
                             order: {
                                 salt: parseInt(signedOrder.salt),
                                 maker: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
@@ -4696,7 +4696,7 @@ describe("utilities", () => {
                                 tokenId: token,
                                 makerAmount: "5000000",
                                 takerAmount: "100000000",
-                                side: "BUY",
+                                side: Side.BUY,
                                 expiration: "0",
                                 nonce: "0",
                                 feeRateBps: "0",
@@ -4724,14 +4724,14 @@ describe("utilities", () => {
                             userOrder,
                             { tickSize: "0.01", negRisk: true },
                         );
-                        expect(signedOrder).not.null;
-                        expect(signedOrder).not.undefined;
+                        expect(signedOrder).not.toBeNull();
+                        expect(signedOrder).not.toBeUndefined();
 
                         const jsonGTCOrder = orderToJson(signedOrder, owner, OrderType.GTC);
-                        expect(jsonGTCOrder).not.null;
-                        expect(jsonGTCOrder).not.undefined;
+                        expect(jsonGTCOrder).not.toBeNull();
+                        expect(jsonGTCOrder).not.toBeUndefined();
 
-                        expect(jsonGTCOrder).deep.equal({
+                        expect(jsonGTCOrder).toEqual({
                             order: {
                                 salt: parseInt(signedOrder.salt),
                                 maker: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
@@ -4740,7 +4740,7 @@ describe("utilities", () => {
                                 tokenId: token,
                                 makerAmount: "5000000",
                                 takerAmount: "100000000",
-                                side: "BUY",
+                                side: Side.BUY,
                                 expiration: "0",
                                 nonce: "0",
                                 feeRateBps: "0",
@@ -4768,14 +4768,14 @@ describe("utilities", () => {
                             userOrder,
                             { tickSize: "0.01", negRisk: true },
                         );
-                        expect(signedOrder).not.null;
-                        expect(signedOrder).not.undefined;
+                        expect(signedOrder).not.toBeNull();
+                        expect(signedOrder).not.toBeUndefined();
 
                         const jsonGTCOrder = orderToJson(signedOrder, owner, OrderType.GTC);
-                        expect(jsonGTCOrder).not.null;
-                        expect(jsonGTCOrder).not.undefined;
+                        expect(jsonGTCOrder).not.toBeNull();
+                        expect(jsonGTCOrder).not.toBeUndefined();
 
-                        expect(jsonGTCOrder).deep.equal({
+                        expect(jsonGTCOrder).toEqual({
                             order: {
                                 salt: parseInt(signedOrder.salt),
                                 maker: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
@@ -4784,7 +4784,7 @@ describe("utilities", () => {
                                 tokenId: token,
                                 makerAmount: "100000000",
                                 takerAmount: "5000000",
-                                side: "SELL",
+                                side: Side.SELL,
                                 expiration: "0",
                                 nonce: "0",
                                 feeRateBps: "0",
@@ -4812,14 +4812,14 @@ describe("utilities", () => {
                             userOrder,
                             { tickSize: "0.01", negRisk: true },
                         );
-                        expect(signedOrder).not.null;
-                        expect(signedOrder).not.undefined;
+                        expect(signedOrder).not.toBeNull();
+                        expect(signedOrder).not.toBeUndefined();
 
                         const jsonGTCOrder = orderToJson(signedOrder, owner, OrderType.GTC);
-                        expect(jsonGTCOrder).not.null;
-                        expect(jsonGTCOrder).not.undefined;
+                        expect(jsonGTCOrder).not.toBeNull();
+                        expect(jsonGTCOrder).not.toBeUndefined();
 
-                        expect(jsonGTCOrder).deep.equal({
+                        expect(jsonGTCOrder).toEqual({
                             order: {
                                 salt: parseInt(signedOrder.salt),
                                 maker: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
@@ -4828,7 +4828,7 @@ describe("utilities", () => {
                                 tokenId: token,
                                 makerAmount: "100000000",
                                 takerAmount: "5000000",
-                                side: "SELL",
+                                side: Side.SELL,
                                 expiration: "0",
                                 nonce: "0",
                                 feeRateBps: "0",
@@ -4856,14 +4856,14 @@ describe("utilities", () => {
                             userOrder,
                             { tickSize: "0.01", negRisk: true },
                         );
-                        expect(signedOrder).not.null;
-                        expect(signedOrder).not.undefined;
+                        expect(signedOrder).not.toBeNull();
+                        expect(signedOrder).not.toBeUndefined();
 
                         const jsonGTCOrder = orderToJson(signedOrder, owner, OrderType.GTC);
-                        expect(jsonGTCOrder).not.null;
-                        expect(jsonGTCOrder).not.undefined;
+                        expect(jsonGTCOrder).not.toBeNull();
+                        expect(jsonGTCOrder).not.toBeUndefined();
 
-                        expect(jsonGTCOrder).deep.equal({
+                        expect(jsonGTCOrder).toEqual({
                             order: {
                                 salt: parseInt(signedOrder.salt),
                                 maker: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
@@ -4872,7 +4872,7 @@ describe("utilities", () => {
                                 tokenId: token,
                                 makerAmount: "100000000",
                                 takerAmount: "5000000",
-                                side: "SELL",
+                                side: Side.SELL,
                                 expiration: "0",
                                 nonce: "0",
                                 feeRateBps: "0",
@@ -4900,14 +4900,14 @@ describe("utilities", () => {
                             userMarketOrder,
                             { tickSize: "0.01", negRisk: true },
                         );
-                        expect(signedOrder).not.null;
-                        expect(signedOrder).not.undefined;
+                        expect(signedOrder).not.toBeNull();
+                        expect(signedOrder).not.toBeUndefined();
 
                         const jsonFOKOrder = orderToJson(signedOrder, owner, OrderType.FOK);
-                        expect(jsonFOKOrder).not.null;
-                        expect(jsonFOKOrder).not.undefined;
+                        expect(jsonFOKOrder).not.toBeNull();
+                        expect(jsonFOKOrder).not.toBeUndefined();
 
-                        expect(jsonFOKOrder).deep.equal({
+                        expect(jsonFOKOrder).toEqual({
                             order: {
                                 salt: parseInt(signedOrder.salt),
                                 maker: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
@@ -4916,7 +4916,7 @@ describe("utilities", () => {
                                 tokenId: token,
                                 makerAmount: "100000000",
                                 takerAmount: "2000000000",
-                                side: "BUY",
+                                side: Side.BUY,
                                 expiration: "0",
                                 nonce: "0",
                                 feeRateBps: "0",
@@ -4944,14 +4944,14 @@ describe("utilities", () => {
                             userMarketOrder,
                             { tickSize: "0.01", negRisk: true },
                         );
-                        expect(signedOrder).not.null;
-                        expect(signedOrder).not.undefined;
+                        expect(signedOrder).not.toBeNull();
+                        expect(signedOrder).not.toBeUndefined();
 
                         const jsonFOKOrder = orderToJson(signedOrder, owner, OrderType.FOK);
-                        expect(jsonFOKOrder).not.null;
-                        expect(jsonFOKOrder).not.undefined;
+                        expect(jsonFOKOrder).not.toBeNull();
+                        expect(jsonFOKOrder).not.toBeUndefined();
 
-                        expect(jsonFOKOrder).deep.equal({
+                        expect(jsonFOKOrder).toEqual({
                             order: {
                                 salt: parseInt(signedOrder.salt),
                                 maker: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
@@ -4960,7 +4960,7 @@ describe("utilities", () => {
                                 tokenId: token,
                                 makerAmount: "100000000",
                                 takerAmount: "2000000000",
-                                side: "BUY",
+                                side: Side.BUY,
                                 expiration: "0",
                                 nonce: "0",
                                 feeRateBps: "0",
@@ -4988,14 +4988,14 @@ describe("utilities", () => {
                             userMarketOrder,
                             { tickSize: "0.01", negRisk: true },
                         );
-                        expect(signedOrder).not.null;
-                        expect(signedOrder).not.undefined;
+                        expect(signedOrder).not.toBeNull();
+                        expect(signedOrder).not.toBeUndefined();
 
                         const jsonFOKOrder = orderToJson(signedOrder, owner, OrderType.FOK);
-                        expect(jsonFOKOrder).not.null;
-                        expect(jsonFOKOrder).not.undefined;
+                        expect(jsonFOKOrder).not.toBeNull();
+                        expect(jsonFOKOrder).not.toBeUndefined();
 
-                        expect(jsonFOKOrder).deep.equal({
+                        expect(jsonFOKOrder).toEqual({
                             order: {
                                 salt: parseInt(signedOrder.salt),
                                 maker: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
@@ -5004,7 +5004,7 @@ describe("utilities", () => {
                                 tokenId: token,
                                 makerAmount: "100000000",
                                 takerAmount: "2000000000",
-                                side: "BUY",
+                                side: Side.BUY,
                                 expiration: "0",
                                 nonce: "0",
                                 feeRateBps: "0",
@@ -5032,14 +5032,14 @@ describe("utilities", () => {
                             userMarketOrder,
                             { tickSize: "0.01", negRisk: true },
                         );
-                        expect(signedOrder).not.null;
-                        expect(signedOrder).not.undefined;
+                        expect(signedOrder).not.toBeNull();
+                        expect(signedOrder).not.toBeUndefined();
 
                         const jsonFOKOrder = orderToJson(signedOrder, owner, OrderType.FOK);
-                        expect(jsonFOKOrder).not.null;
-                        expect(jsonFOKOrder).not.undefined;
+                        expect(jsonFOKOrder).not.toBeNull();
+                        expect(jsonFOKOrder).not.toBeUndefined();
 
-                        expect(jsonFOKOrder).deep.equal({
+                        expect(jsonFOKOrder).toEqual({
                             order: {
                                 salt: parseInt(signedOrder.salt),
                                 maker: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
@@ -5048,7 +5048,7 @@ describe("utilities", () => {
                                 tokenId: token,
                                 makerAmount: "100000000",
                                 takerAmount: "5000000",
-                                side: "SELL",
+                                side: Side.SELL,
                                 expiration: "0",
                                 nonce: "0",
                                 feeRateBps: "0",
@@ -5076,14 +5076,14 @@ describe("utilities", () => {
                             userMarketOrder,
                             { tickSize: "0.01", negRisk: true },
                         );
-                        expect(signedOrder).not.null;
-                        expect(signedOrder).not.undefined;
+                        expect(signedOrder).not.toBeNull();
+                        expect(signedOrder).not.toBeUndefined();
 
                         const jsonFOKOrder = orderToJson(signedOrder, owner, OrderType.FOK);
-                        expect(jsonFOKOrder).not.null;
-                        expect(jsonFOKOrder).not.undefined;
+                        expect(jsonFOKOrder).not.toBeNull();
+                        expect(jsonFOKOrder).not.toBeUndefined();
 
-                        expect(jsonFOKOrder).deep.equal({
+                        expect(jsonFOKOrder).toEqual({
                             order: {
                                 salt: parseInt(signedOrder.salt),
                                 maker: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
@@ -5092,7 +5092,7 @@ describe("utilities", () => {
                                 tokenId: token,
                                 makerAmount: "100000000",
                                 takerAmount: "5000000",
-                                side: "SELL",
+                                side: Side.SELL,
                                 expiration: "0",
                                 nonce: "0",
                                 feeRateBps: "0",
@@ -5120,14 +5120,14 @@ describe("utilities", () => {
                             userMarketOrder,
                             { tickSize: "0.01", negRisk: true },
                         );
-                        expect(signedOrder).not.null;
-                        expect(signedOrder).not.undefined;
+                        expect(signedOrder).not.toBeNull();
+                        expect(signedOrder).not.toBeUndefined();
 
                         const jsonFOKOrder = orderToJson(signedOrder, owner, OrderType.FOK);
-                        expect(jsonFOKOrder).not.null;
-                        expect(jsonFOKOrder).not.undefined;
+                        expect(jsonFOKOrder).not.toBeNull();
+                        expect(jsonFOKOrder).not.toBeUndefined();
 
-                        expect(jsonFOKOrder).deep.equal({
+                        expect(jsonFOKOrder).toEqual({
                             order: {
                                 salt: parseInt(signedOrder.salt),
                                 maker: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
@@ -5136,7 +5136,7 @@ describe("utilities", () => {
                                 tokenId: token,
                                 makerAmount: "100000000",
                                 takerAmount: "5000000",
-                                side: "SELL",
+                                side: Side.SELL,
                                 expiration: "0",
                                 nonce: "0",
                                 feeRateBps: "0",
@@ -5177,14 +5177,14 @@ describe("utilities", () => {
                             userOrder,
                             { tickSize: "0.001", negRisk: true },
                         );
-                        expect(signedOrder).not.null;
-                        expect(signedOrder).not.undefined;
+                        expect(signedOrder).not.toBeNull();
+                        expect(signedOrder).not.toBeUndefined();
 
                         const jsonGTDOrder = orderToJson(signedOrder, owner, OrderType.GTD);
-                        expect(jsonGTDOrder).not.null;
-                        expect(jsonGTDOrder).not.undefined;
+                        expect(jsonGTDOrder).not.toBeNull();
+                        expect(jsonGTDOrder).not.toBeUndefined();
 
-                        expect(jsonGTDOrder).deep.equal({
+                        expect(jsonGTDOrder).toEqual({
                             order: {
                                 salt: parseInt(signedOrder.salt),
                                 maker: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
@@ -5193,7 +5193,7 @@ describe("utilities", () => {
                                 tokenId: token,
                                 makerAmount: "500000",
                                 takerAmount: "100000000",
-                                side: "BUY",
+                                side: Side.BUY,
                                 expiration: "1709948026",
                                 nonce: "0",
                                 feeRateBps: "0",
@@ -5222,14 +5222,14 @@ describe("utilities", () => {
                             userOrder,
                             { tickSize: "0.001", negRisk: true },
                         );
-                        expect(signedOrder).not.null;
-                        expect(signedOrder).not.undefined;
+                        expect(signedOrder).not.toBeNull();
+                        expect(signedOrder).not.toBeUndefined();
 
                         const jsonGTDOrder = orderToJson(signedOrder, owner, OrderType.GTD);
-                        expect(jsonGTDOrder).not.null;
-                        expect(jsonGTDOrder).not.undefined;
+                        expect(jsonGTDOrder).not.toBeNull();
+                        expect(jsonGTDOrder).not.toBeUndefined();
 
-                        expect(jsonGTDOrder).deep.equal({
+                        expect(jsonGTDOrder).toEqual({
                             order: {
                                 salt: parseInt(signedOrder.salt),
                                 maker: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
@@ -5238,7 +5238,7 @@ describe("utilities", () => {
                                 tokenId: token,
                                 makerAmount: "500000",
                                 takerAmount: "100000000",
-                                side: "BUY",
+                                side: Side.BUY,
                                 expiration: "1709948026",
                                 nonce: "0",
                                 feeRateBps: "0",
@@ -5267,14 +5267,14 @@ describe("utilities", () => {
                             userOrder,
                             { tickSize: "0.001", negRisk: true },
                         );
-                        expect(signedOrder).not.null;
-                        expect(signedOrder).not.undefined;
+                        expect(signedOrder).not.toBeNull();
+                        expect(signedOrder).not.toBeUndefined();
 
                         const jsonGTDOrder = orderToJson(signedOrder, owner, OrderType.GTD);
-                        expect(jsonGTDOrder).not.null;
-                        expect(jsonGTDOrder).not.undefined;
+                        expect(jsonGTDOrder).not.toBeNull();
+                        expect(jsonGTDOrder).not.toBeUndefined();
 
-                        expect(jsonGTDOrder).deep.equal({
+                        expect(jsonGTDOrder).toEqual({
                             order: {
                                 salt: parseInt(signedOrder.salt),
                                 maker: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
@@ -5283,7 +5283,7 @@ describe("utilities", () => {
                                 tokenId: token,
                                 makerAmount: "500000",
                                 takerAmount: "100000000",
-                                side: "BUY",
+                                side: Side.BUY,
                                 expiration: "1709948026",
                                 nonce: "0",
                                 feeRateBps: "0",
@@ -5312,14 +5312,14 @@ describe("utilities", () => {
                             userOrder,
                             { tickSize: "0.001", negRisk: true },
                         );
-                        expect(signedOrder).not.null;
-                        expect(signedOrder).not.undefined;
+                        expect(signedOrder).not.toBeNull();
+                        expect(signedOrder).not.toBeUndefined();
 
                         const jsonGTDOrder = orderToJson(signedOrder, owner, OrderType.GTD);
-                        expect(jsonGTDOrder).not.null;
-                        expect(jsonGTDOrder).not.undefined;
+                        expect(jsonGTDOrder).not.toBeNull();
+                        expect(jsonGTDOrder).not.toBeUndefined();
 
-                        expect(jsonGTDOrder).deep.equal({
+                        expect(jsonGTDOrder).toEqual({
                             order: {
                                 salt: parseInt(signedOrder.salt),
                                 maker: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
@@ -5328,7 +5328,7 @@ describe("utilities", () => {
                                 tokenId: token,
                                 makerAmount: "100000000",
                                 takerAmount: "500000",
-                                side: "SELL",
+                                side: Side.SELL,
                                 expiration: "1709948026",
                                 nonce: "0",
                                 feeRateBps: "0",
@@ -5357,14 +5357,14 @@ describe("utilities", () => {
                             userOrder,
                             { tickSize: "0.001", negRisk: true },
                         );
-                        expect(signedOrder).not.null;
-                        expect(signedOrder).not.undefined;
+                        expect(signedOrder).not.toBeNull();
+                        expect(signedOrder).not.toBeUndefined();
 
                         const jsonGTDOrder = orderToJson(signedOrder, owner, OrderType.GTD);
-                        expect(jsonGTDOrder).not.null;
-                        expect(jsonGTDOrder).not.undefined;
+                        expect(jsonGTDOrder).not.toBeNull();
+                        expect(jsonGTDOrder).not.toBeUndefined();
 
-                        expect(jsonGTDOrder).deep.equal({
+                        expect(jsonGTDOrder).toEqual({
                             order: {
                                 salt: parseInt(signedOrder.salt),
                                 maker: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
@@ -5373,7 +5373,7 @@ describe("utilities", () => {
                                 tokenId: token,
                                 makerAmount: "100000000",
                                 takerAmount: "500000",
-                                side: "SELL",
+                                side: Side.SELL,
                                 expiration: "1709948026",
                                 nonce: "0",
                                 feeRateBps: "0",
@@ -5402,14 +5402,14 @@ describe("utilities", () => {
                             userOrder,
                             { tickSize: "0.001", negRisk: true },
                         );
-                        expect(signedOrder).not.null;
-                        expect(signedOrder).not.undefined;
+                        expect(signedOrder).not.toBeNull();
+                        expect(signedOrder).not.toBeUndefined();
 
                         const jsonGTDOrder = orderToJson(signedOrder, owner, OrderType.GTD);
-                        expect(jsonGTDOrder).not.null;
-                        expect(jsonGTDOrder).not.undefined;
+                        expect(jsonGTDOrder).not.toBeNull();
+                        expect(jsonGTDOrder).not.toBeUndefined();
 
-                        expect(jsonGTDOrder).deep.equal({
+                        expect(jsonGTDOrder).toEqual({
                             order: {
                                 salt: parseInt(signedOrder.salt),
                                 maker: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
@@ -5418,7 +5418,7 @@ describe("utilities", () => {
                                 tokenId: token,
                                 makerAmount: "100000000",
                                 takerAmount: "500000",
-                                side: "SELL",
+                                side: Side.SELL,
                                 expiration: "1709948026",
                                 nonce: "0",
                                 feeRateBps: "0",
@@ -5446,14 +5446,14 @@ describe("utilities", () => {
                             userOrder,
                             { tickSize: "0.001", negRisk: true },
                         );
-                        expect(signedOrder).not.null;
-                        expect(signedOrder).not.undefined;
+                        expect(signedOrder).not.toBeNull();
+                        expect(signedOrder).not.toBeUndefined();
 
                         const jsonGTCOrder = orderToJson(signedOrder, owner, OrderType.GTC);
-                        expect(jsonGTCOrder).not.null;
-                        expect(jsonGTCOrder).not.undefined;
+                        expect(jsonGTCOrder).not.toBeNull();
+                        expect(jsonGTCOrder).not.toBeUndefined();
 
-                        expect(jsonGTCOrder).deep.equal({
+                        expect(jsonGTCOrder).toEqual({
                             order: {
                                 salt: parseInt(signedOrder.salt),
                                 maker: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
@@ -5462,7 +5462,7 @@ describe("utilities", () => {
                                 tokenId: token,
                                 makerAmount: "500000",
                                 takerAmount: "100000000",
-                                side: "BUY",
+                                side: Side.BUY,
                                 expiration: "0",
                                 nonce: "0",
                                 feeRateBps: "0",
@@ -5490,14 +5490,14 @@ describe("utilities", () => {
                             userOrder,
                             { tickSize: "0.001", negRisk: true },
                         );
-                        expect(signedOrder).not.null;
-                        expect(signedOrder).not.undefined;
+                        expect(signedOrder).not.toBeNull();
+                        expect(signedOrder).not.toBeUndefined();
 
                         const jsonGTCOrder = orderToJson(signedOrder, owner, OrderType.GTC);
-                        expect(jsonGTCOrder).not.null;
-                        expect(jsonGTCOrder).not.undefined;
+                        expect(jsonGTCOrder).not.toBeNull();
+                        expect(jsonGTCOrder).not.toBeUndefined();
 
-                        expect(jsonGTCOrder).deep.equal({
+                        expect(jsonGTCOrder).toEqual({
                             order: {
                                 salt: parseInt(signedOrder.salt),
                                 maker: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
@@ -5506,7 +5506,7 @@ describe("utilities", () => {
                                 tokenId: token,
                                 makerAmount: "500000",
                                 takerAmount: "100000000",
-                                side: "BUY",
+                                side: Side.BUY,
                                 expiration: "0",
                                 nonce: "0",
                                 feeRateBps: "0",
@@ -5534,14 +5534,14 @@ describe("utilities", () => {
                             userOrder,
                             { tickSize: "0.001", negRisk: true },
                         );
-                        expect(signedOrder).not.null;
-                        expect(signedOrder).not.undefined;
+                        expect(signedOrder).not.toBeNull();
+                        expect(signedOrder).not.toBeUndefined();
 
                         const jsonGTCOrder = orderToJson(signedOrder, owner, OrderType.GTC);
-                        expect(jsonGTCOrder).not.null;
-                        expect(jsonGTCOrder).not.undefined;
+                        expect(jsonGTCOrder).not.toBeNull();
+                        expect(jsonGTCOrder).not.toBeUndefined();
 
-                        expect(jsonGTCOrder).deep.equal({
+                        expect(jsonGTCOrder).toEqual({
                             order: {
                                 salt: parseInt(signedOrder.salt),
                                 maker: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
@@ -5550,7 +5550,7 @@ describe("utilities", () => {
                                 tokenId: token,
                                 makerAmount: "500000",
                                 takerAmount: "100000000",
-                                side: "BUY",
+                                side: Side.BUY,
                                 expiration: "0",
                                 nonce: "0",
                                 feeRateBps: "0",
@@ -5578,14 +5578,14 @@ describe("utilities", () => {
                             userOrder,
                             { tickSize: "0.001", negRisk: true },
                         );
-                        expect(signedOrder).not.null;
-                        expect(signedOrder).not.undefined;
+                        expect(signedOrder).not.toBeNull();
+                        expect(signedOrder).not.toBeUndefined();
 
                         const jsonGTCOrder = orderToJson(signedOrder, owner, OrderType.GTC);
-                        expect(jsonGTCOrder).not.null;
-                        expect(jsonGTCOrder).not.undefined;
+                        expect(jsonGTCOrder).not.toBeNull();
+                        expect(jsonGTCOrder).not.toBeUndefined();
 
-                        expect(jsonGTCOrder).deep.equal({
+                        expect(jsonGTCOrder).toEqual({
                             order: {
                                 salt: parseInt(signedOrder.salt),
                                 maker: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
@@ -5594,7 +5594,7 @@ describe("utilities", () => {
                                 tokenId: token,
                                 makerAmount: "100000000",
                                 takerAmount: "500000",
-                                side: "SELL",
+                                side: Side.SELL,
                                 expiration: "0",
                                 nonce: "0",
                                 feeRateBps: "0",
@@ -5622,14 +5622,14 @@ describe("utilities", () => {
                             userOrder,
                             { tickSize: "0.001", negRisk: true },
                         );
-                        expect(signedOrder).not.null;
-                        expect(signedOrder).not.undefined;
+                        expect(signedOrder).not.toBeNull();
+                        expect(signedOrder).not.toBeUndefined();
 
                         const jsonGTCOrder = orderToJson(signedOrder, owner, OrderType.GTC);
-                        expect(jsonGTCOrder).not.null;
-                        expect(jsonGTCOrder).not.undefined;
+                        expect(jsonGTCOrder).not.toBeNull();
+                        expect(jsonGTCOrder).not.toBeUndefined();
 
-                        expect(jsonGTCOrder).deep.equal({
+                        expect(jsonGTCOrder).toEqual({
                             order: {
                                 salt: parseInt(signedOrder.salt),
                                 maker: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
@@ -5638,7 +5638,7 @@ describe("utilities", () => {
                                 tokenId: token,
                                 makerAmount: "100000000",
                                 takerAmount: "500000",
-                                side: "SELL",
+                                side: Side.SELL,
                                 expiration: "0",
                                 nonce: "0",
                                 feeRateBps: "0",
@@ -5666,14 +5666,14 @@ describe("utilities", () => {
                             userOrder,
                             { tickSize: "0.001", negRisk: true },
                         );
-                        expect(signedOrder).not.null;
-                        expect(signedOrder).not.undefined;
+                        expect(signedOrder).not.toBeNull();
+                        expect(signedOrder).not.toBeUndefined();
 
                         const jsonGTCOrder = orderToJson(signedOrder, owner, OrderType.GTC);
-                        expect(jsonGTCOrder).not.null;
-                        expect(jsonGTCOrder).not.undefined;
+                        expect(jsonGTCOrder).not.toBeNull();
+                        expect(jsonGTCOrder).not.toBeUndefined();
 
-                        expect(jsonGTCOrder).deep.equal({
+                        expect(jsonGTCOrder).toEqual({
                             order: {
                                 salt: parseInt(signedOrder.salt),
                                 maker: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
@@ -5682,7 +5682,7 @@ describe("utilities", () => {
                                 tokenId: token,
                                 makerAmount: "100000000",
                                 takerAmount: "500000",
-                                side: "SELL",
+                                side: Side.SELL,
                                 expiration: "0",
                                 nonce: "0",
                                 feeRateBps: "0",
@@ -5710,14 +5710,14 @@ describe("utilities", () => {
                             userMarketOrder,
                             { tickSize: "0.001", negRisk: true },
                         );
-                        expect(signedOrder).not.null;
-                        expect(signedOrder).not.undefined;
+                        expect(signedOrder).not.toBeNull();
+                        expect(signedOrder).not.toBeUndefined();
 
                         const jsonFOKOrder = orderToJson(signedOrder, owner, OrderType.FOK);
-                        expect(jsonFOKOrder).not.null;
-                        expect(jsonFOKOrder).not.undefined;
+                        expect(jsonFOKOrder).not.toBeNull();
+                        expect(jsonFOKOrder).not.toBeUndefined();
 
-                        expect(jsonFOKOrder).deep.equal({
+                        expect(jsonFOKOrder).toEqual({
                             order: {
                                 salt: parseInt(signedOrder.salt),
                                 maker: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
@@ -5726,7 +5726,7 @@ describe("utilities", () => {
                                 tokenId: token,
                                 makerAmount: "100000000",
                                 takerAmount: "20000000000",
-                                side: "BUY",
+                                side: Side.BUY,
                                 expiration: "0",
                                 nonce: "0",
                                 feeRateBps: "0",
@@ -5754,14 +5754,14 @@ describe("utilities", () => {
                             userMarketOrder,
                             { tickSize: "0.001", negRisk: true },
                         );
-                        expect(signedOrder).not.null;
-                        expect(signedOrder).not.undefined;
+                        expect(signedOrder).not.toBeNull();
+                        expect(signedOrder).not.toBeUndefined();
 
                         const jsonFOKOrder = orderToJson(signedOrder, owner, OrderType.FOK);
-                        expect(jsonFOKOrder).not.null;
-                        expect(jsonFOKOrder).not.undefined;
+                        expect(jsonFOKOrder).not.toBeNull();
+                        expect(jsonFOKOrder).not.toBeUndefined();
 
-                        expect(jsonFOKOrder).deep.equal({
+                        expect(jsonFOKOrder).toEqual({
                             order: {
                                 salt: parseInt(signedOrder.salt),
                                 maker: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
@@ -5770,7 +5770,7 @@ describe("utilities", () => {
                                 tokenId: token,
                                 makerAmount: "100000000",
                                 takerAmount: "20000000000",
-                                side: "BUY",
+                                side: Side.BUY,
                                 expiration: "0",
                                 nonce: "0",
                                 feeRateBps: "0",
@@ -5798,14 +5798,14 @@ describe("utilities", () => {
                             userMarketOrder,
                             { tickSize: "0.001", negRisk: true },
                         );
-                        expect(signedOrder).not.null;
-                        expect(signedOrder).not.undefined;
+                        expect(signedOrder).not.toBeNull();
+                        expect(signedOrder).not.toBeUndefined();
 
                         const jsonFOKOrder = orderToJson(signedOrder, owner, OrderType.FOK);
-                        expect(jsonFOKOrder).not.null;
-                        expect(jsonFOKOrder).not.undefined;
+                        expect(jsonFOKOrder).not.toBeNull();
+                        expect(jsonFOKOrder).not.toBeUndefined();
 
-                        expect(jsonFOKOrder).deep.equal({
+                        expect(jsonFOKOrder).toEqual({
                             order: {
                                 salt: parseInt(signedOrder.salt),
                                 maker: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
@@ -5814,7 +5814,7 @@ describe("utilities", () => {
                                 tokenId: token,
                                 makerAmount: "100000000",
                                 takerAmount: "20000000000",
-                                side: "BUY",
+                                side: Side.BUY,
                                 expiration: "0",
                                 nonce: "0",
                                 feeRateBps: "0",
@@ -5842,14 +5842,14 @@ describe("utilities", () => {
                             userMarketOrder,
                             { tickSize: "0.001", negRisk: true },
                         );
-                        expect(signedOrder).not.null;
-                        expect(signedOrder).not.undefined;
+                        expect(signedOrder).not.toBeNull();
+                        expect(signedOrder).not.toBeUndefined();
 
                         const jsonFOKOrder = orderToJson(signedOrder, owner, OrderType.FOK);
-                        expect(jsonFOKOrder).not.null;
-                        expect(jsonFOKOrder).not.undefined;
+                        expect(jsonFOKOrder).not.toBeNull();
+                        expect(jsonFOKOrder).not.toBeUndefined();
 
-                        expect(jsonFOKOrder).deep.equal({
+                        expect(jsonFOKOrder).toEqual({
                             order: {
                                 salt: parseInt(signedOrder.salt),
                                 maker: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
@@ -5858,7 +5858,7 @@ describe("utilities", () => {
                                 tokenId: token,
                                 makerAmount: "100000000",
                                 takerAmount: "500000",
-                                side: "SELL",
+                                side: Side.SELL,
                                 expiration: "0",
                                 nonce: "0",
                                 feeRateBps: "0",
@@ -5886,14 +5886,14 @@ describe("utilities", () => {
                             userMarketOrder,
                             { tickSize: "0.001", negRisk: true },
                         );
-                        expect(signedOrder).not.null;
-                        expect(signedOrder).not.undefined;
+                        expect(signedOrder).not.toBeNull();
+                        expect(signedOrder).not.toBeUndefined();
 
                         const jsonFOKOrder = orderToJson(signedOrder, owner, OrderType.FOK);
-                        expect(jsonFOKOrder).not.null;
-                        expect(jsonFOKOrder).not.undefined;
+                        expect(jsonFOKOrder).not.toBeNull();
+                        expect(jsonFOKOrder).not.toBeUndefined();
 
-                        expect(jsonFOKOrder).deep.equal({
+                        expect(jsonFOKOrder).toEqual({
                             order: {
                                 salt: parseInt(signedOrder.salt),
                                 maker: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
@@ -5902,7 +5902,7 @@ describe("utilities", () => {
                                 tokenId: token,
                                 makerAmount: "100000000",
                                 takerAmount: "500000",
-                                side: "SELL",
+                                side: Side.SELL,
                                 expiration: "0",
                                 nonce: "0",
                                 feeRateBps: "0",
@@ -5930,14 +5930,14 @@ describe("utilities", () => {
                             userMarketOrder,
                             { tickSize: "0.001", negRisk: true },
                         );
-                        expect(signedOrder).not.null;
-                        expect(signedOrder).not.undefined;
+                        expect(signedOrder).not.toBeNull();
+                        expect(signedOrder).not.toBeUndefined();
 
                         const jsonFOKOrder = orderToJson(signedOrder, owner, OrderType.FOK);
-                        expect(jsonFOKOrder).not.null;
-                        expect(jsonFOKOrder).not.undefined;
+                        expect(jsonFOKOrder).not.toBeNull();
+                        expect(jsonFOKOrder).not.toBeUndefined();
 
-                        expect(jsonFOKOrder).deep.equal({
+                        expect(jsonFOKOrder).toEqual({
                             order: {
                                 salt: parseInt(signedOrder.salt),
                                 maker: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
@@ -5946,7 +5946,7 @@ describe("utilities", () => {
                                 tokenId: token,
                                 makerAmount: "100000000",
                                 takerAmount: "500000",
-                                side: "SELL",
+                                side: Side.SELL,
                                 expiration: "0",
                                 nonce: "0",
                                 feeRateBps: "0",
@@ -5987,14 +5987,14 @@ describe("utilities", () => {
                             userOrder,
                             { tickSize: "0.0001", negRisk: true },
                         );
-                        expect(signedOrder).not.null;
-                        expect(signedOrder).not.undefined;
+                        expect(signedOrder).not.toBeNull();
+                        expect(signedOrder).not.toBeUndefined();
 
                         const jsonGTDOrder = orderToJson(signedOrder, owner, OrderType.GTD);
-                        expect(jsonGTDOrder).not.null;
-                        expect(jsonGTDOrder).not.undefined;
+                        expect(jsonGTDOrder).not.toBeNull();
+                        expect(jsonGTDOrder).not.toBeUndefined();
 
-                        expect(jsonGTDOrder).deep.equal({
+                        expect(jsonGTDOrder).toEqual({
                             order: {
                                 salt: parseInt(signedOrder.salt),
                                 maker: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
@@ -6003,7 +6003,7 @@ describe("utilities", () => {
                                 tokenId: token,
                                 makerAmount: "50000",
                                 takerAmount: "100000000",
-                                side: "BUY",
+                                side: Side.BUY,
                                 expiration: "1709948026",
                                 nonce: "0",
                                 feeRateBps: "0",
@@ -6032,14 +6032,14 @@ describe("utilities", () => {
                             userOrder,
                             { tickSize: "0.0001", negRisk: true },
                         );
-                        expect(signedOrder).not.null;
-                        expect(signedOrder).not.undefined;
+                        expect(signedOrder).not.toBeNull();
+                        expect(signedOrder).not.toBeUndefined();
 
                         const jsonGTDOrder = orderToJson(signedOrder, owner, OrderType.GTD);
-                        expect(jsonGTDOrder).not.null;
-                        expect(jsonGTDOrder).not.undefined;
+                        expect(jsonGTDOrder).not.toBeNull();
+                        expect(jsonGTDOrder).not.toBeUndefined();
 
-                        expect(jsonGTDOrder).deep.equal({
+                        expect(jsonGTDOrder).toEqual({
                             order: {
                                 salt: parseInt(signedOrder.salt),
                                 maker: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
@@ -6048,7 +6048,7 @@ describe("utilities", () => {
                                 tokenId: token,
                                 makerAmount: "50000",
                                 takerAmount: "100000000",
-                                side: "BUY",
+                                side: Side.BUY,
                                 expiration: "1709948026",
                                 nonce: "0",
                                 feeRateBps: "0",
@@ -6077,14 +6077,14 @@ describe("utilities", () => {
                             userOrder,
                             { tickSize: "0.0001", negRisk: true },
                         );
-                        expect(signedOrder).not.null;
-                        expect(signedOrder).not.undefined;
+                        expect(signedOrder).not.toBeNull();
+                        expect(signedOrder).not.toBeUndefined();
 
                         const jsonGTDOrder = orderToJson(signedOrder, owner, OrderType.GTD);
-                        expect(jsonGTDOrder).not.null;
-                        expect(jsonGTDOrder).not.undefined;
+                        expect(jsonGTDOrder).not.toBeNull();
+                        expect(jsonGTDOrder).not.toBeUndefined();
 
-                        expect(jsonGTDOrder).deep.equal({
+                        expect(jsonGTDOrder).toEqual({
                             order: {
                                 salt: parseInt(signedOrder.salt),
                                 maker: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
@@ -6093,7 +6093,7 @@ describe("utilities", () => {
                                 tokenId: token,
                                 makerAmount: "50000",
                                 takerAmount: "100000000",
-                                side: "BUY",
+                                side: Side.BUY,
                                 expiration: "1709948026",
                                 nonce: "0",
                                 feeRateBps: "0",
@@ -6122,14 +6122,14 @@ describe("utilities", () => {
                             userOrder,
                             { tickSize: "0.0001", negRisk: true },
                         );
-                        expect(signedOrder).not.null;
-                        expect(signedOrder).not.undefined;
+                        expect(signedOrder).not.toBeNull();
+                        expect(signedOrder).not.toBeUndefined();
 
                         const jsonGTDOrder = orderToJson(signedOrder, owner, OrderType.GTD);
-                        expect(jsonGTDOrder).not.null;
-                        expect(jsonGTDOrder).not.undefined;
+                        expect(jsonGTDOrder).not.toBeNull();
+                        expect(jsonGTDOrder).not.toBeUndefined();
 
-                        expect(jsonGTDOrder).deep.equal({
+                        expect(jsonGTDOrder).toEqual({
                             order: {
                                 salt: parseInt(signedOrder.salt),
                                 maker: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
@@ -6138,7 +6138,7 @@ describe("utilities", () => {
                                 tokenId: token,
                                 makerAmount: "100000000",
                                 takerAmount: "50000",
-                                side: "SELL",
+                                side: Side.SELL,
                                 expiration: "1709948026",
                                 nonce: "0",
                                 feeRateBps: "0",
@@ -6167,14 +6167,14 @@ describe("utilities", () => {
                             userOrder,
                             { tickSize: "0.0001", negRisk: true },
                         );
-                        expect(signedOrder).not.null;
-                        expect(signedOrder).not.undefined;
+                        expect(signedOrder).not.toBeNull();
+                        expect(signedOrder).not.toBeUndefined();
 
                         const jsonGTDOrder = orderToJson(signedOrder, owner, OrderType.GTD);
-                        expect(jsonGTDOrder).not.null;
-                        expect(jsonGTDOrder).not.undefined;
+                        expect(jsonGTDOrder).not.toBeNull();
+                        expect(jsonGTDOrder).not.toBeUndefined();
 
-                        expect(jsonGTDOrder).deep.equal({
+                        expect(jsonGTDOrder).toEqual({
                             order: {
                                 salt: parseInt(signedOrder.salt),
                                 maker: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
@@ -6183,7 +6183,7 @@ describe("utilities", () => {
                                 tokenId: token,
                                 makerAmount: "100000000",
                                 takerAmount: "50000",
-                                side: "SELL",
+                                side: Side.SELL,
                                 expiration: "1709948026",
                                 nonce: "0",
                                 feeRateBps: "0",
@@ -6212,14 +6212,14 @@ describe("utilities", () => {
                             userOrder,
                             { tickSize: "0.0001", negRisk: true },
                         );
-                        expect(signedOrder).not.null;
-                        expect(signedOrder).not.undefined;
+                        expect(signedOrder).not.toBeNull();
+                        expect(signedOrder).not.toBeUndefined();
 
                         const jsonGTDOrder = orderToJson(signedOrder, owner, OrderType.GTD);
-                        expect(jsonGTDOrder).not.null;
-                        expect(jsonGTDOrder).not.undefined;
+                        expect(jsonGTDOrder).not.toBeNull();
+                        expect(jsonGTDOrder).not.toBeUndefined();
 
-                        expect(jsonGTDOrder).deep.equal({
+                        expect(jsonGTDOrder).toEqual({
                             order: {
                                 salt: parseInt(signedOrder.salt),
                                 maker: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
@@ -6228,7 +6228,7 @@ describe("utilities", () => {
                                 tokenId: token,
                                 makerAmount: "100000000",
                                 takerAmount: "50000",
-                                side: "SELL",
+                                side: Side.SELL,
                                 expiration: "1709948026",
                                 nonce: "0",
                                 feeRateBps: "0",
@@ -6256,14 +6256,14 @@ describe("utilities", () => {
                             userOrder,
                             { tickSize: "0.0001", negRisk: true },
                         );
-                        expect(signedOrder).not.null;
-                        expect(signedOrder).not.undefined;
+                        expect(signedOrder).not.toBeNull();
+                        expect(signedOrder).not.toBeUndefined();
 
                         const jsonGTCOrder = orderToJson(signedOrder, owner, OrderType.GTC);
-                        expect(jsonGTCOrder).not.null;
-                        expect(jsonGTCOrder).not.undefined;
+                        expect(jsonGTCOrder).not.toBeNull();
+                        expect(jsonGTCOrder).not.toBeUndefined();
 
-                        expect(jsonGTCOrder).deep.equal({
+                        expect(jsonGTCOrder).toEqual({
                             order: {
                                 salt: parseInt(signedOrder.salt),
                                 maker: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
@@ -6272,7 +6272,7 @@ describe("utilities", () => {
                                 tokenId: token,
                                 makerAmount: "50000",
                                 takerAmount: "100000000",
-                                side: "BUY",
+                                side: Side.BUY,
                                 expiration: "0",
                                 nonce: "0",
                                 feeRateBps: "0",
@@ -6300,14 +6300,14 @@ describe("utilities", () => {
                             userOrder,
                             { tickSize: "0.0001", negRisk: true },
                         );
-                        expect(signedOrder).not.null;
-                        expect(signedOrder).not.undefined;
+                        expect(signedOrder).not.toBeNull();
+                        expect(signedOrder).not.toBeUndefined();
 
                         const jsonGTCOrder = orderToJson(signedOrder, owner, OrderType.GTC);
-                        expect(jsonGTCOrder).not.null;
-                        expect(jsonGTCOrder).not.undefined;
+                        expect(jsonGTCOrder).not.toBeNull();
+                        expect(jsonGTCOrder).not.toBeUndefined();
 
-                        expect(jsonGTCOrder).deep.equal({
+                        expect(jsonGTCOrder).toEqual({
                             order: {
                                 salt: parseInt(signedOrder.salt),
                                 maker: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
@@ -6316,7 +6316,7 @@ describe("utilities", () => {
                                 tokenId: token,
                                 makerAmount: "50000",
                                 takerAmount: "100000000",
-                                side: "BUY",
+                                side: Side.BUY,
                                 expiration: "0",
                                 nonce: "0",
                                 feeRateBps: "0",
@@ -6344,14 +6344,14 @@ describe("utilities", () => {
                             userOrder,
                             { tickSize: "0.0001", negRisk: true },
                         );
-                        expect(signedOrder).not.null;
-                        expect(signedOrder).not.undefined;
+                        expect(signedOrder).not.toBeNull();
+                        expect(signedOrder).not.toBeUndefined();
 
                         const jsonGTCOrder = orderToJson(signedOrder, owner, OrderType.GTC);
-                        expect(jsonGTCOrder).not.null;
-                        expect(jsonGTCOrder).not.undefined;
+                        expect(jsonGTCOrder).not.toBeNull();
+                        expect(jsonGTCOrder).not.toBeUndefined();
 
-                        expect(jsonGTCOrder).deep.equal({
+                        expect(jsonGTCOrder).toEqual({
                             order: {
                                 salt: parseInt(signedOrder.salt),
                                 maker: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
@@ -6360,7 +6360,7 @@ describe("utilities", () => {
                                 tokenId: token,
                                 makerAmount: "50000",
                                 takerAmount: "100000000",
-                                side: "BUY",
+                                side: Side.BUY,
                                 expiration: "0",
                                 nonce: "0",
                                 feeRateBps: "0",
@@ -6388,14 +6388,14 @@ describe("utilities", () => {
                             userOrder,
                             { tickSize: "0.0001", negRisk: true },
                         );
-                        expect(signedOrder).not.null;
-                        expect(signedOrder).not.undefined;
+                        expect(signedOrder).not.toBeNull();
+                        expect(signedOrder).not.toBeUndefined();
 
                         const jsonGTCOrder = orderToJson(signedOrder, owner, OrderType.GTC);
-                        expect(jsonGTCOrder).not.null;
-                        expect(jsonGTCOrder).not.undefined;
+                        expect(jsonGTCOrder).not.toBeNull();
+                        expect(jsonGTCOrder).not.toBeUndefined();
 
-                        expect(jsonGTCOrder).deep.equal({
+                        expect(jsonGTCOrder).toEqual({
                             order: {
                                 salt: parseInt(signedOrder.salt),
                                 maker: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
@@ -6404,7 +6404,7 @@ describe("utilities", () => {
                                 tokenId: token,
                                 makerAmount: "100000000",
                                 takerAmount: "50000",
-                                side: "SELL",
+                                side: Side.SELL,
                                 expiration: "0",
                                 nonce: "0",
                                 feeRateBps: "0",
@@ -6432,14 +6432,14 @@ describe("utilities", () => {
                             userOrder,
                             { tickSize: "0.0001", negRisk: true },
                         );
-                        expect(signedOrder).not.null;
-                        expect(signedOrder).not.undefined;
+                        expect(signedOrder).not.toBeNull();
+                        expect(signedOrder).not.toBeUndefined();
 
                         const jsonGTCOrder = orderToJson(signedOrder, owner, OrderType.GTC);
-                        expect(jsonGTCOrder).not.null;
-                        expect(jsonGTCOrder).not.undefined;
+                        expect(jsonGTCOrder).not.toBeNull();
+                        expect(jsonGTCOrder).not.toBeUndefined();
 
-                        expect(jsonGTCOrder).deep.equal({
+                        expect(jsonGTCOrder).toEqual({
                             order: {
                                 salt: parseInt(signedOrder.salt),
                                 maker: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
@@ -6448,7 +6448,7 @@ describe("utilities", () => {
                                 tokenId: token,
                                 makerAmount: "100000000",
                                 takerAmount: "50000",
-                                side: "SELL",
+                                side: Side.SELL,
                                 expiration: "0",
                                 nonce: "0",
                                 feeRateBps: "0",
@@ -6476,14 +6476,14 @@ describe("utilities", () => {
                             userOrder,
                             { tickSize: "0.0001", negRisk: true },
                         );
-                        expect(signedOrder).not.null;
-                        expect(signedOrder).not.undefined;
+                        expect(signedOrder).not.toBeNull();
+                        expect(signedOrder).not.toBeUndefined();
 
                         const jsonGTCOrder = orderToJson(signedOrder, owner, OrderType.GTC);
-                        expect(jsonGTCOrder).not.null;
-                        expect(jsonGTCOrder).not.undefined;
+                        expect(jsonGTCOrder).not.toBeNull();
+                        expect(jsonGTCOrder).not.toBeUndefined();
 
-                        expect(jsonGTCOrder).deep.equal({
+                        expect(jsonGTCOrder).toEqual({
                             order: {
                                 salt: parseInt(signedOrder.salt),
                                 maker: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
@@ -6492,7 +6492,7 @@ describe("utilities", () => {
                                 tokenId: token,
                                 makerAmount: "100000000",
                                 takerAmount: "50000",
-                                side: "SELL",
+                                side: Side.SELL,
                                 expiration: "0",
                                 nonce: "0",
                                 feeRateBps: "0",
@@ -6520,14 +6520,14 @@ describe("utilities", () => {
                             userMarketOrder,
                             { tickSize: "0.0001", negRisk: true },
                         );
-                        expect(signedOrder).not.null;
-                        expect(signedOrder).not.undefined;
+                        expect(signedOrder).not.toBeNull();
+                        expect(signedOrder).not.toBeUndefined();
 
                         const jsonFOKOrder = orderToJson(signedOrder, owner, OrderType.FOK);
-                        expect(jsonFOKOrder).not.null;
-                        expect(jsonFOKOrder).not.undefined;
+                        expect(jsonFOKOrder).not.toBeNull();
+                        expect(jsonFOKOrder).not.toBeUndefined();
 
-                        expect(jsonFOKOrder).deep.equal({
+                        expect(jsonFOKOrder).toEqual({
                             order: {
                                 salt: parseInt(signedOrder.salt),
                                 maker: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
@@ -6536,7 +6536,7 @@ describe("utilities", () => {
                                 tokenId: token,
                                 makerAmount: "100000000",
                                 takerAmount: "200000000000",
-                                side: "BUY",
+                                side: Side.BUY,
                                 expiration: "0",
                                 nonce: "0",
                                 feeRateBps: "0",
@@ -6564,14 +6564,14 @@ describe("utilities", () => {
                             userMarketOrder,
                             { tickSize: "0.0001", negRisk: true },
                         );
-                        expect(signedOrder).not.null;
-                        expect(signedOrder).not.undefined;
+                        expect(signedOrder).not.toBeNull();
+                        expect(signedOrder).not.toBeUndefined();
 
                         const jsonFOKOrder = orderToJson(signedOrder, owner, OrderType.FOK);
-                        expect(jsonFOKOrder).not.null;
-                        expect(jsonFOKOrder).not.undefined;
+                        expect(jsonFOKOrder).not.toBeNull();
+                        expect(jsonFOKOrder).not.toBeUndefined();
 
-                        expect(jsonFOKOrder).deep.equal({
+                        expect(jsonFOKOrder).toEqual({
                             order: {
                                 salt: parseInt(signedOrder.salt),
                                 maker: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
@@ -6580,7 +6580,7 @@ describe("utilities", () => {
                                 tokenId: token,
                                 makerAmount: "100000000",
                                 takerAmount: "200000000000",
-                                side: "BUY",
+                                side: Side.BUY,
                                 expiration: "0",
                                 nonce: "0",
                                 feeRateBps: "0",
@@ -6608,14 +6608,14 @@ describe("utilities", () => {
                             userMarketOrder,
                             { tickSize: "0.0001", negRisk: true },
                         );
-                        expect(signedOrder).not.null;
-                        expect(signedOrder).not.undefined;
+                        expect(signedOrder).not.toBeNull();
+                        expect(signedOrder).not.toBeUndefined();
 
                         const jsonFOKOrder = orderToJson(signedOrder, owner, OrderType.FOK);
-                        expect(jsonFOKOrder).not.null;
-                        expect(jsonFOKOrder).not.undefined;
+                        expect(jsonFOKOrder).not.toBeNull();
+                        expect(jsonFOKOrder).not.toBeUndefined();
 
-                        expect(jsonFOKOrder).deep.equal({
+                        expect(jsonFOKOrder).toEqual({
                             order: {
                                 salt: parseInt(signedOrder.salt),
                                 maker: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
@@ -6624,7 +6624,7 @@ describe("utilities", () => {
                                 tokenId: token,
                                 makerAmount: "100000000",
                                 takerAmount: "200000000000",
-                                side: "BUY",
+                                side: Side.BUY,
                                 expiration: "0",
                                 nonce: "0",
                                 feeRateBps: "0",
@@ -6652,14 +6652,14 @@ describe("utilities", () => {
                             userMarketOrder,
                             { tickSize: "0.0001", negRisk: true },
                         );
-                        expect(signedOrder).not.null;
-                        expect(signedOrder).not.undefined;
+                        expect(signedOrder).not.toBeNull();
+                        expect(signedOrder).not.toBeUndefined();
 
                         const jsonFOKOrder = orderToJson(signedOrder, owner, OrderType.FOK);
-                        expect(jsonFOKOrder).not.null;
-                        expect(jsonFOKOrder).not.undefined;
+                        expect(jsonFOKOrder).not.toBeNull();
+                        expect(jsonFOKOrder).not.toBeUndefined();
 
-                        expect(jsonFOKOrder).deep.equal({
+                        expect(jsonFOKOrder).toEqual({
                             order: {
                                 salt: parseInt(signedOrder.salt),
                                 maker: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
@@ -6668,7 +6668,7 @@ describe("utilities", () => {
                                 tokenId: token,
                                 makerAmount: "100000000",
                                 takerAmount: "50000",
-                                side: "SELL",
+                                side: Side.SELL,
                                 expiration: "0",
                                 nonce: "0",
                                 feeRateBps: "0",
@@ -6696,14 +6696,14 @@ describe("utilities", () => {
                             userMarketOrder,
                             { tickSize: "0.0001", negRisk: true },
                         );
-                        expect(signedOrder).not.null;
-                        expect(signedOrder).not.undefined;
+                        expect(signedOrder).not.toBeNull();
+                        expect(signedOrder).not.toBeUndefined();
 
                         const jsonFOKOrder = orderToJson(signedOrder, owner, OrderType.FOK);
-                        expect(jsonFOKOrder).not.null;
-                        expect(jsonFOKOrder).not.undefined;
+                        expect(jsonFOKOrder).not.toBeNull();
+                        expect(jsonFOKOrder).not.toBeUndefined();
 
-                        expect(jsonFOKOrder).deep.equal({
+                        expect(jsonFOKOrder).toEqual({
                             order: {
                                 salt: parseInt(signedOrder.salt),
                                 maker: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
@@ -6712,7 +6712,7 @@ describe("utilities", () => {
                                 tokenId: token,
                                 makerAmount: "100000000",
                                 takerAmount: "50000",
-                                side: "SELL",
+                                side: Side.SELL,
                                 expiration: "0",
                                 nonce: "0",
                                 feeRateBps: "0",
@@ -6740,14 +6740,14 @@ describe("utilities", () => {
                             userMarketOrder,
                             { tickSize: "0.0001", negRisk: true },
                         );
-                        expect(signedOrder).not.null;
-                        expect(signedOrder).not.undefined;
+                        expect(signedOrder).not.toBeNull();
+                        expect(signedOrder).not.toBeUndefined();
 
                         const jsonFOKOrder = orderToJson(signedOrder, owner, OrderType.FOK);
-                        expect(jsonFOKOrder).not.null;
-                        expect(jsonFOKOrder).not.undefined;
+                        expect(jsonFOKOrder).not.toBeNull();
+                        expect(jsonFOKOrder).not.toBeUndefined();
 
-                        expect(jsonFOKOrder).deep.equal({
+                        expect(jsonFOKOrder).toEqual({
                             order: {
                                 salt: parseInt(signedOrder.salt),
                                 maker: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
@@ -6756,7 +6756,7 @@ describe("utilities", () => {
                                 tokenId: token,
                                 makerAmount: "100000000",
                                 takerAmount: "50000",
-                                side: "SELL",
+                                side: Side.SELL,
                                 expiration: "0",
                                 nonce: "0",
                                 feeRateBps: "0",
@@ -6774,18 +6774,18 @@ describe("utilities", () => {
     });
 
     it("decimalPlaces", () => {
-        expect(decimalPlaces(949.9970999999999)).to.equal(13);
-        expect(decimalPlaces(949)).to.equal(0);
+        expect(decimalPlaces(949.9970999999999)).toEqual(13);
+        expect(decimalPlaces(949)).toEqual(0);
     });
 
     it("roundDown", () => {
-        expect(roundDown(0.55, 2)).to.equal(0.55);
-        expect(roundDown(0.56, 2)).to.equal(0.56);
-        expect(roundDown(0.57, 2)).to.equal(0.57);
+        expect(roundDown(0.55, 2)).toEqual(0.55);
+        expect(roundDown(0.56, 2)).toEqual(0.56);
+        expect(roundDown(0.57, 2)).toEqual(0.57);
 
-        expect(roundDown(0.55, 4)).to.equal(0.55);
-        expect(roundDown(0.56, 4)).to.equal(0.56);
-        expect(roundDown(0.57, 4)).to.equal(0.57);
+        expect(roundDown(0.55, 4)).toEqual(0.55);
+        expect(roundDown(0.56, 4)).toEqual(0.56);
+        expect(roundDown(0.57, 4)).toEqual(0.57);
     });
 
     it("generateOrderBookSummaryHash", () => {
@@ -6807,10 +6807,10 @@ describe("utilities", () => {
             hash: "",
         } as OrderBookSummary;
 
-        expect(generateOrderBookSummaryHash(orderbook)).to.equal(
+        expect(generateOrderBookSummaryHash(orderbook)).toEqual(
             "36f56998e26d9a7c553446f35b240481efb271a3",
         );
-        expect(orderbook.hash).to.equal("36f56998e26d9a7c553446f35b240481efb271a3");
+        expect(orderbook.hash).toEqual("36f56998e26d9a7c553446f35b240481efb271a3");
 
         // -
         orderbook = {
@@ -6828,10 +6828,10 @@ describe("utilities", () => {
             hash: "36f56998e26d9a7c553446f35b240481efb271a3",
         } as OrderBookSummary;
 
-        expect(generateOrderBookSummaryHash(orderbook)).to.equal(
+        expect(generateOrderBookSummaryHash(orderbook)).toEqual(
             "5489da29343426f88622d61044975dc5fd828a27",
         );
-        expect(orderbook.hash).to.equal("5489da29343426f88622d61044975dc5fd828a27");
+        expect(orderbook.hash).toEqual("5489da29343426f88622d61044975dc5fd828a27");
 
         // -
         orderbook = {
@@ -6846,81 +6846,81 @@ describe("utilities", () => {
             hash: "",
         } as OrderBookSummary;
 
-        expect(generateOrderBookSummaryHash(orderbook)).to.equal(
+        expect(generateOrderBookSummaryHash(orderbook)).toEqual(
             "d4d4e4ea0f1d86ce02d22704bd33414f45573e84",
         );
-        expect(orderbook.hash).to.equal("d4d4e4ea0f1d86ce02d22704bd33414f45573e84");
+        expect(orderbook.hash).toEqual("d4d4e4ea0f1d86ce02d22704bd33414f45573e84");
     });
 
     it("isTickSizeSmaller", () => {
         // 0.1
-        expect(isTickSizeSmaller("0.1", "0.1")).to.be.false;
-        expect(isTickSizeSmaller("0.1", "0.01")).to.be.false;
-        expect(isTickSizeSmaller("0.1", "0.001")).to.be.false;
-        expect(isTickSizeSmaller("0.1", "0.0001")).to.be.false;
+        expect(isTickSizeSmaller("0.1", "0.1")).toBe(false);
+        expect(isTickSizeSmaller("0.1", "0.01")).toBe(false);
+        expect(isTickSizeSmaller("0.1", "0.001")).toBe(false);
+        expect(isTickSizeSmaller("0.1", "0.0001")).toBe(false);
 
         // 0.01
-        expect(isTickSizeSmaller("0.01", "0.1")).to.be.true;
-        expect(isTickSizeSmaller("0.01", "0.01")).to.be.false;
-        expect(isTickSizeSmaller("0.01", "0.001")).to.be.false;
-        expect(isTickSizeSmaller("0.01", "0.0001")).to.be.false;
+        expect(isTickSizeSmaller("0.01", "0.1")).toBe(true);
+        expect(isTickSizeSmaller("0.01", "0.01")).toBe(false);
+        expect(isTickSizeSmaller("0.01", "0.001")).toBe(false);
+        expect(isTickSizeSmaller("0.01", "0.0001")).toBe(false);
 
         // 0.001
-        expect(isTickSizeSmaller("0.001", "0.1")).to.be.true;
-        expect(isTickSizeSmaller("0.001", "0.01")).to.be.true;
-        expect(isTickSizeSmaller("0.001", "0.001")).to.be.false;
-        expect(isTickSizeSmaller("0.001", "0.0001")).to.be.false;
+        expect(isTickSizeSmaller("0.001", "0.1")).toBe(true);
+        expect(isTickSizeSmaller("0.001", "0.01")).toBe(true);
+        expect(isTickSizeSmaller("0.001", "0.001")).toBe(false);
+        expect(isTickSizeSmaller("0.001", "0.0001")).toBe(false);
 
         // 0.0001
-        expect(isTickSizeSmaller("0.0001", "0.1")).to.be.true;
-        expect(isTickSizeSmaller("0.0001", "0.01")).to.be.true;
-        expect(isTickSizeSmaller("0.0001", "0.001")).to.be.true;
-        expect(isTickSizeSmaller("0.0001", "0.0001")).to.be.false;
+        expect(isTickSizeSmaller("0.0001", "0.1")).toBe(true);
+        expect(isTickSizeSmaller("0.0001", "0.01")).toBe(true);
+        expect(isTickSizeSmaller("0.0001", "0.001")).toBe(true);
+        expect(isTickSizeSmaller("0.0001", "0.0001")).toBe(false);
     });
 
     it("priceValid", () => {
-        expect(priceValid(0.00001, "0.0001")).to.be.false;
-        expect(priceValid(0.0001, "0.0001")).to.be.true;
-        expect(priceValid(0.001, "0.0001")).to.be.true;
-        expect(priceValid(0.01, "0.0001")).to.be.true;
-        expect(priceValid(0.1, "0.0001")).to.be.true;
-        expect(priceValid(0.9, "0.0001")).to.be.true;
-        expect(priceValid(0.99, "0.0001")).to.be.true;
-        expect(priceValid(0.999, "0.0001")).to.be.true;
-        expect(priceValid(0.9999, "0.0001")).to.be.true;
-        expect(priceValid(0.99999, "0.0001")).to.be.false;
+        expect(priceValid(0.00001, "0.0001")).toBe(false);
+        expect(priceValid(0.0001, "0.0001")).toBe(true);
+        expect(priceValid(0.001, "0.0001")).toBe(true);
+        expect(priceValid(0.01, "0.0001")).toBe(true);
+        expect(priceValid(0.1, "0.0001")).toBe(true);
+        expect(priceValid(0.9, "0.0001")).toBe(true);
+        expect(priceValid(0.99, "0.0001")).toBe(true);
+        expect(priceValid(0.999, "0.0001")).toBe(true);
+        expect(priceValid(0.9999, "0.0001")).toBe(true);
+        expect(priceValid(0.99999, "0.0001")).toBe(false);
 
-        expect(priceValid(0.00001, "0.001")).to.be.false;
-        expect(priceValid(0.0001, "0.001")).to.be.false;
-        expect(priceValid(0.001, "0.001")).to.be.true;
-        expect(priceValid(0.01, "0.001")).to.be.true;
-        expect(priceValid(0.1, "0.001")).to.be.true;
-        expect(priceValid(0.9, "0.001")).to.be.true;
-        expect(priceValid(0.99, "0.001")).to.be.true;
-        expect(priceValid(0.999, "0.001")).to.be.true;
-        expect(priceValid(0.9999, "0.001")).to.be.false;
-        expect(priceValid(0.99999, "0.001")).to.be.false;
+        expect(priceValid(0.00001, "0.001")).toBe(false);
+        expect(priceValid(0.0001, "0.001")).toBe(false);
+        expect(priceValid(0.001, "0.001")).toBe(true);
+        expect(priceValid(0.01, "0.001")).toBe(true);
+        expect(priceValid(0.1, "0.001")).toBe(true);
+        expect(priceValid(0.9, "0.001")).toBe(true);
+        expect(priceValid(0.99, "0.001")).toBe(true);
+        expect(priceValid(0.999, "0.001")).toBe(true);
+        expect(priceValid(0.9999, "0.001")).toBe(false);
+        expect(priceValid(0.99999, "0.001")).toBe(false);
 
-        expect(priceValid(0.00001, "0.01")).to.be.false;
-        expect(priceValid(0.0001, "0.01")).to.be.false;
-        expect(priceValid(0.001, "0.01")).to.be.false;
-        expect(priceValid(0.01, "0.01")).to.be.true;
-        expect(priceValid(0.1, "0.01")).to.be.true;
-        expect(priceValid(0.9, "0.01")).to.be.true;
-        expect(priceValid(0.99, "0.01")).to.be.true;
-        expect(priceValid(0.999, "0.01")).to.be.false;
-        expect(priceValid(0.9999, "0.01")).to.be.false;
-        expect(priceValid(0.99999, "0.01")).to.be.false;
+        expect(priceValid(0.00001, "0.01")).toBe(false);
+        expect(priceValid(0.0001, "0.01")).toBe(false);
+        expect(priceValid(0.001, "0.01")).toBe(false);
+        expect(priceValid(0.01, "0.01")).toBe(true);
+        expect(priceValid(0.1, "0.01")).toBe(true);
+        expect(priceValid(0.9, "0.01")).toBe(true);
+        expect(priceValid(0.99, "0.01")).toBe(true);
+        expect(priceValid(0.999, "0.01")).toBe(false);
+        expect(priceValid(0.9999, "0.01")).toBe(false);
+        expect(priceValid(0.99999, "0.01")).toBe(false);
 
-        expect(priceValid(0.00001, "0.1")).to.be.false;
-        expect(priceValid(0.0001, "0.1")).to.be.false;
-        expect(priceValid(0.001, "0.1")).to.be.false;
-        expect(priceValid(0.01, "0.1")).to.be.false;
-        expect(priceValid(0.1, "0.1")).to.be.true;
-        expect(priceValid(0.9, "0.1")).to.be.true;
-        expect(priceValid(0.99, "0.1")).to.be.false;
-        expect(priceValid(0.999, "0.1")).to.be.false;
-        expect(priceValid(0.9999, "0.1")).to.be.false;
-        expect(priceValid(0.99999, "0.1")).to.be.false;
+        expect(priceValid(0.00001, "0.1")).toBe(false);
+        expect(priceValid(0.0001, "0.1")).toBe(false);
+        expect(priceValid(0.001, "0.1")).toBe(false);
+        expect(priceValid(0.01, "0.1")).toBe(false);
+        expect(priceValid(0.1, "0.1")).toBe(true);
+        expect(priceValid(0.9, "0.1")).toBe(true);
+        expect(priceValid(0.99, "0.1")).toBe(false);
+        expect(priceValid(0.999, "0.1")).toBe(false);
+        expect(priceValid(0.9999, "0.1")).toBe(false);
+        expect(priceValid(0.99999, "0.1")).toBe(false);
     });
 });
