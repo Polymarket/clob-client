@@ -1,6 +1,7 @@
 /* eslint-disable max-depth */
 import axios, { AxiosRequestHeaders, Method } from "axios";
-import { DropNotificationParams, OrdersScoringParams, GetRfqQuotesParams, GetRfqRequestsParams } from "src/types";
+import { DropNotificationParams, OrdersScoringParams, GetRfqQuotesParams, 
+    GetRfqRequestsParams } from "src/types";
 import { isBrowser } from "browser-or-node";
 
 export const GET = "GET";
