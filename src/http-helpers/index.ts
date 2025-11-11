@@ -1,6 +1,6 @@
 /* eslint-disable max-depth */
 import axios, { AxiosRequestHeaders, Method } from "axios";
-import { DropNotificationParams, OrdersScoringParams } from "src/types";
+import { DropNotificationParams, OrdersScoringParams, GetRfqQuotesParams, GetRfqRequestsParams } from "src/types";
 import { isBrowser } from "browser-or-node";
 
 export const GET = "GET";
@@ -163,5 +163,46 @@ export const parseDropNotificationParams = (
             params["ids"] = dropNotificationParams?.ids.join(",");
         }
     }
+    return params;
+};
+
+export const parseRfqQuotesParams = (rfqQuotesParams?: GetRfqQuotesParams): QueryParams => {
+    if (!rfqQuotesParams) return {};
+    
+    const params: QueryParams = { ...rfqQuotesParams };
+    
+    // Convert array fields to comma-separated strings
+    if (rfqQuotesParams.quoteIds) {
+        params.quoteIds = rfqQuotesParams.quoteIds.join(",");
+    }
+    if (rfqQuotesParams.states) {
+        params.states = rfqQuotesParams.states.join(",");
+    }
+    if (rfqQuotesParams.markets) {
+        params.markets = rfqQuotesParams.markets.join(",");
+    }
+    if (rfqQuotesParams.requestIds) {
+        params.requestIds = rfqQuotesParams.requestIds.join(",");
+    }
+    
+    return params;
+};
+
+export const parseRfqRequestsParams = (rfqRequestsParams?: GetRfqRequestsParams): QueryParams => {
+    if (!rfqRequestsParams) return {};
+    
+    const params: QueryParams = { ...rfqRequestsParams };
+    
+    // Convert array fields to comma-separated strings
+    if (rfqRequestsParams.requestIds) {
+        params.requestIds = rfqRequestsParams.requestIds.join(",");
+    }
+    if (rfqRequestsParams.states) {
+        params.states = rfqRequestsParams.states.join(",");
+    }
+    if (rfqRequestsParams.markets) {
+        params.markets = rfqRequestsParams.markets.join(",");
+    }
+    
     return params;
 };

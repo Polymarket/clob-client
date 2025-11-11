@@ -482,6 +482,7 @@ export interface CreateRfqQuoteParams {
     assetOut: string;
     amountIn: string;
     amountOut: string;
+    userType: number;
 }
 
 export interface ImproveRfqQuoteParams {

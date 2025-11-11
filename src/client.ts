@@ -1,6 +1,6 @@
 import { Wallet } from "@ethersproject/wallet";
 import { JsonRpcSigner } from "@ethersproject/providers";
-import { SignatureType, SignedOrder, Side as UtilsSide } from "@polymarket/order-utils";
+import { SignatureType, SignedOrder } from "@polymarket/order-utils";
 import {
     ApiKeyCreds,
     ApiKeysResponse,
@@ -63,6 +63,8 @@ import {
     GET,
     get,
     parseDropNotificationParams,
+    parseRfqQuotesParams,
+    parseRfqRequestsParams,
     POST,
     PUT,
     post,
@@ -724,7 +726,7 @@ export class ClobClient {
         );
 
         return this.get(`${this.host}${endpoint}`, 
-            { headers, params }) as Promise<RfqQuotesResponse>;
+            { headers, params: parseRfqQuotesParams(params) }) as Promise<RfqQuotesResponse>;
     }
 
     public async getRfqBestQuote(
@@ -846,7 +848,7 @@ export class ClobClient {
         );
 
         return this.get(`${this.host}${endpoint}`, 
-            { headers, params }) as Promise<RfqRequestsResponse>;
+            { headers, params: parseRfqRequestsParams(params) }) as Promise<RfqRequestsResponse>;
     }
 
     public async acceptRfqQuote(payload: AcceptQuoteParams): Promise<any> {
@@ -855,7 +857,6 @@ export class ClobClient {
         try {
             rfqRequests = await this.getRfqRequests({
                 requestIds: [payload.requestId],
-                limit: 1,
             });
             if (!rfqRequests?.data || rfqRequests.data.length === 0) {
                 return { error: "RFQ request not found" };
@@ -865,8 +866,8 @@ export class ClobClient {
         }
         const rfqRequest = rfqRequests.data[0];
         // create an order
-        const side = rfqRequest.side === UtilsSide.BUY.toString() ? Side.BUY : Side.SELL;
-        const size = rfqRequest.side === UtilsSide.BUY.toString() ? 
+        const side = rfqRequest.side === "BUY" ? Side.BUY : Side.SELL;
+        const size = rfqRequest.side === "BUY" ? 
             rfqRequest.sizeIn : rfqRequest.sizeOut;
 
         const order = await this.createOrder({
@@ -885,7 +886,7 @@ export class ClobClient {
             owner: this.creds?.key,
             ...order,
             expiration: parseInt(order.expiration),
-            side: order.side === UtilsSide.BUY ? Side.BUY : Side.SELL,
+            side: side,
             salt: parseInt(order.salt.toString())
         };
         const endpoint = RFQ_REQUESTS_ACCEPT;
@@ -911,7 +912,6 @@ export class ClobClient {
         try {
             rfqQuotes = await this.getRfqQuotes({
                 quoteIds: [payload.quoteId],
-                limit: 1,
             });
             if (!rfqQuotes?.data || rfqQuotes.data.length === 0) {
                 return { error: "RFQ quote not found" };
@@ -921,9 +921,9 @@ export class ClobClient {
         }
         const rfqQuote = rfqQuotes.data[0];
         // create an order
-        const side = rfqQuote.side === UtilsSide.BUY.toString() ? Side.BUY : Side.SELL;
-        const size = rfqQuote.side === UtilsSide.BUY.toString() ? 
-                rfqQuote.sizeIn : rfqQuote.sizeOut;
+        const side = rfqQuote.side === "BUY" ? Side.SELL : Side.BUY;
+        const size = rfqQuote.side === "BUY" ? 
+            rfqQuote.sizeIn : rfqQuote.sizeOut;
       
         const order = await this.createOrder({
             tokenID: rfqQuote.token,
@@ -941,7 +941,7 @@ export class ClobClient {
             owner: this.creds?.key,
             ...order,
             expiration: parseInt(order.expiration),
-            side: order.side === UtilsSide.BUY ? Side.BUY : Side.SELL,
+            side: side,
             salt: parseInt(order.salt.toString())
         };
         const endpoint = RFQ_QUOTE_APPROVE;
