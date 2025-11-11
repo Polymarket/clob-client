@@ -25,7 +25,6 @@ async function main() {
             assetOut: "34097058504275310827233323421517291090691602969494795225921954353603704046623",
             amountIn: "20000000",
             amountOut: "40000000",
-            userType: 0,
         }
     );
     console.log("rfqQuote - Quote", quote);
