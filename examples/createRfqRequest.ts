@@ -18,18 +18,25 @@ async function main() {
 	};
 	const clobClient = new ClobClient(host, chainId, wallet, creds);
 	
-	// Create a buy order for 12 YES at 0.50 for $6 (min amount is 5 shares and $5)
+	// Create a buy order for 40 YES at 0.50 for $20
 	const YES = "34097058504275310827233323421517291090691602969494795225921954353603704046623"
 
 	const request = await clobClient.createRfqRequest(
 		{
 			tokenID: YES,
 			price: 0.5,
-			side: Side.BUY, //20000000000
+			side: Side.BUY,
 			size: 40,
 		},
 		{ tickSize: "0.01" },
 	);
+	// Request {
+	// 	amountIn: '40000000',
+	// 	assetIn: '34097058504275310827233323421517291090691602969494795225921954353603704046623',
+	// 	amountOut: '20000000',
+	// 	assetOut: '0',
+	// 	userType: 0
+	// }
 	console.log("rfqRequest - Request", request);
 
 	// Send it to the server

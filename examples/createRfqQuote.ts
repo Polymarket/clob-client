@@ -23,9 +23,8 @@ async function main() {
             requestId: "0197656d-56ee-74a4-a06a-3b179121f3bf",
             assetIn: "0",
             assetOut: "34097058504275310827233323421517291090691602969494795225921954353603704046623",
-            amountIn: "5000000",
-            amountOut: "10000000",
-            // userType: 0,
+            amountIn: "20000000",
+            amountOut: "40000000",
         }
     );
     console.log("rfqQuote - Quote", quote);
