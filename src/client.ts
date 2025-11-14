@@ -1261,6 +1261,49 @@ export class ClobClient {
         return this.del(`${this.host}${endpoint}`, { headers });
     }
 
+    protected async _resolveTickSize(tokenID: string, tickSize?: TickSize): Promise<TickSize> {
+        const minTickSize = await this.getTickSize(tokenID);
+        if (tickSize) {
+            if (isTickSizeSmaller(tickSize, minTickSize)) {
+                throw new Error(
+                    `invalid tick size (${tickSize}), minimum for the market is ${minTickSize}`,
+                );
+            }
+        } else {
+            tickSize = minTickSize;
+        }
+        return tickSize;
+    }
+
+    // http methods
+    protected async get(endpoint: string, options?: RequestOptions) {
+        return get(endpoint, {
+            ...options,
+            params: { ...options?.params, geo_block_token: this.geoBlockToken },
+        });
+    }
+
+    protected async post(endpoint: string, options?: RequestOptions) {
+        return post(endpoint, {
+            ...options,
+            params: { ...options?.params, geo_block_token: this.geoBlockToken },
+        });
+    }
+
+    protected async put(endpoint: string, options?: RequestOptions) {
+        return put(endpoint, {
+            ...options,
+            params: { ...options?.params, geo_block_token: this.geoBlockToken },
+        });
+    }
+
+    protected async del(endpoint: string, options?: RequestOptions) {
+        return del(endpoint, {
+            ...options,
+            params: { ...options?.params, geo_block_token: this.geoBlockToken },
+        });
+    }
+
     private canL1Auth(): void {
         if (this.signer === undefined) {
             throw L1_AUTH_UNAVAILABLE_ERROR;
@@ -1285,20 +1328,6 @@ export class ClobClient {
 
     private canBuilderAuth(): boolean {
         return (this.builderConfig != undefined && this.builderConfig.isValid())
-    }
-
-    protected async _resolveTickSize(tokenID: string, tickSize?: TickSize): Promise<TickSize> {
-        const minTickSize = await this.getTickSize(tokenID);
-        if (tickSize) {
-            if (isTickSizeSmaller(tickSize, minTickSize)) {
-                throw new Error(
-                    `invalid tick size (${tickSize}), minimum for the market is ${minTickSize}`,
-                );
-            }
-        } else {
-            tickSize = minTickSize;
-        }
-        return tickSize;
     }
 
     private async _resolveFeeRateBps(tokenID: string, userFeeRateBps?: number): Promise<number> {
@@ -1341,34 +1370,5 @@ export class ClobClient {
             path,
             body,
         );
-    }
-
-    // http methods
-    protected async get(endpoint: string, options?: RequestOptions) {
-        return get(endpoint, {
-            ...options,
-            params: { ...options?.params, geo_block_token: this.geoBlockToken },
-        });
-    }
-
-    protected async post(endpoint: string, options?: RequestOptions) {
-        return post(endpoint, {
-            ...options,
-            params: { ...options?.params, geo_block_token: this.geoBlockToken },
-        });
-    }
-
-    protected async put(endpoint: string, options?: RequestOptions) {
-        return put(endpoint, {
-            ...options,
-            params: { ...options?.params, geo_block_token: this.geoBlockToken },
-        });
-    }
-
-    protected async del(endpoint: string, options?: RequestOptions) {
-        return del(endpoint, {
-            ...options,
-            params: { ...options?.params, geo_block_token: this.geoBlockToken },
-        });
     }
 }

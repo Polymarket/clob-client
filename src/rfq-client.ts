@@ -136,12 +136,11 @@ export class RfqClient implements IRfqClient {
     public async cancelRfqRequest(request: CancelRfqRequestParams): Promise<void> {
         this.ensureL2Auth();
         const endpoint = CANCEL_RFQ_REQUEST;
-        const payload = JSON.stringify(request);
 
         const l2HeaderArgs = {
             method: DELETE,
             requestPath: endpoint,
-            body: payload,
+            body: JSON.stringify(request),
         };
 
         const headers = await createL2Headers(
@@ -151,7 +150,7 @@ export class RfqClient implements IRfqClient {
             this.deps.useServerTime ? await this.deps.getServerTime() : undefined,
         );
 
-        return this.deps.del(`${this.deps.host}${endpoint}`, { headers, data: payload });
+        return this.deps.del(`${this.deps.host}${endpoint}`, { headers, data: request });
     }
 
     /**
@@ -190,12 +189,10 @@ export class RfqClient implements IRfqClient {
             userType: this.deps.userType,
         };
 
-        const payload = JSON.stringify(quoteWithUserType);
-
         const l2HeaderArgs = {
             method: POST,
             requestPath: endpoint,
-            body: payload,
+            body: JSON.stringify(quoteWithUserType),
         };
 
         const headers = await createL2Headers(
@@ -205,7 +202,7 @@ export class RfqClient implements IRfqClient {
             this.deps.useServerTime ? await this.deps.getServerTime() : undefined,
         );
 
-        return this.deps.post(`${this.deps.host}${endpoint}`, { headers, data: payload });
+        return this.deps.post(`${this.deps.host}${endpoint}`, { headers, data: quoteWithUserType });
     }
 
     /**
@@ -262,12 +259,11 @@ export class RfqClient implements IRfqClient {
     public async improveRfqQuote(quote: ImproveRfqQuoteParams): Promise<RfqQuoteResponse> {
         this.ensureL2Auth();
         const endpoint = IMPROVE_RFQ_QUOTE;
-        const payload = JSON.stringify(quote);
 
         const l2HeaderArgs = {
             method: PUT,
             requestPath: endpoint,
-            body: payload,
+            body: JSON.stringify(quote),
         };
 
         const headers = await createL2Headers(
@@ -277,7 +273,7 @@ export class RfqClient implements IRfqClient {
             this.deps.useServerTime ? await this.deps.getServerTime() : undefined,
         );
 
-        return this.deps.put(`${this.deps.host}${endpoint}`, { headers, data: payload });
+        return this.deps.put(`${this.deps.host}${endpoint}`, { headers, data: quote });
     }
 
     /**
@@ -286,12 +282,11 @@ export class RfqClient implements IRfqClient {
     public async cancelRfqQuote(quote: CancelRfqQuoteParams): Promise<void> {
         this.ensureL2Auth();
         const endpoint = CANCEL_RFQ_QUOTE;
-        const payload = JSON.stringify(quote);
 
         const l2HeaderArgs = {
             method: DELETE,
             requestPath: endpoint,
-            body: payload,
+            body: JSON.stringify(quote),
         };
 
         const headers = await createL2Headers(
@@ -301,7 +296,7 @@ export class RfqClient implements IRfqClient {
             this.deps.useServerTime ? await this.deps.getServerTime() : undefined,
         );
 
-        return this.deps.del(`${this.deps.host}${endpoint}`, { headers, data: payload });
+        return this.deps.del(`${this.deps.host}${endpoint}`, { headers, data: quote });
     }
 
     /**
