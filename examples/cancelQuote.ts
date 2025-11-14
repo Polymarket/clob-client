@@ -18,7 +18,7 @@ async function main() {
     };
     const clobClient = new ClobClient(host, chainId, wallet, creds);
 
-    const quote = await clobClient.cancelRfqQuote(
+    const quote = await clobClient.rfq.cancelRfqQuote(
         {
             quoteId: "0196b1e5-bd85-7496-9144-0684958212dd",
         }
