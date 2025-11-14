@@ -447,11 +447,4 @@ export class RfqClient extends ClobClient {
 
         return this.post(`${this.host}${endpoint}`, { headers, data: approvePayload });
     }
-
-    /**
-     * Protected method to support PUT requests
-     */
-    protected async put(endpoint: string, options?: any) {
-        return this.post(endpoint, options); // Reuse base post with PUT method
-    }
 }
