@@ -1,5 +1,3 @@
-import { Wallet } from "@ethersproject/wallet";
-import { JsonRpcSigner } from "@ethersproject/providers";
 import {
     ApiKeyCreds,
     CreateOrderOptions,
@@ -16,9 +14,12 @@ import {
     GetRfqRequestsParams,
     RfqRequestsResponse,
     RfqQuotesResponse,
+    RfqRequestResponse,
+    RfqQuoteResponse,
+    RfqOrderResponse,
+    RfqQuote,
     Side,
 } from "./types";
-import { ClobClient } from "./client";
 import { createL2Headers } from "./headers";
 import {
     DELETE,
@@ -45,14 +46,20 @@ import { ROUNDING_CONFIG } from "./order-builder/helpers";
 import { roundDown, roundNormal } from "./utilities";
 import { parseUnits } from "@ethersproject/units";
 import { COLLATERAL_TOKEN_DECIMALS } from "./config";
+import { IRfqClient, RfqDeps } from "./rfq-deps";
+import { JsonRpcSigner } from "@ethersproject/providers";
+import { Wallet } from "@ethersproject/wallet";
+import { L1_AUTH_UNAVAILABLE_ERROR, L2_AUTH_NOT_AVAILABLE } from "./errors";
 
 /**
- * RfqClient extends ClobClient with RFQ (Request for Quote) functionality
+ * RfqClient provides RFQ (Request for Quote) functionality on top of a CLOB client.
  * 
  * RFQ enables users to request quotes from market makers and accept/approve quotes
  * in a bilateral trading flow, separate from the standard order book.
  */
-export class RfqClient extends ClobClient {
+export class RfqClient implements IRfqClient {
+    constructor(private readonly deps: RfqDeps) {}
+
     /**
      * Creates an RFQ request from user order parameters
      * Converts the order into the proper RFQ request format with asset amounts
@@ -62,7 +69,9 @@ export class RfqClient extends ClobClient {
         options?: Partial<CreateOrderOptions>,
     ): Promise<RfqQuoteParams> {
         const { tokenID, price, side, size } = userOrder;
-        const tickSize = await this._resolveTickSize(tokenID, options?.tickSize);
+
+        const tickSize = await this.deps.resolveTickSize(tokenID, options?.tickSize);
+
         const roundConfig = ROUNDING_CONFIG[tickSize];
 
         const roundedPrice = roundNormal(price, roundConfig.price).toFixed(roundConfig.price);
@@ -97,15 +106,15 @@ export class RfqClient extends ClobClient {
             assetOut,
             amountIn,
             amountOut,
-            userType: this.orderBuilder.signatureType,
+            userType: this.deps.userType,
         };
     }
 
     /**
      * Posts an RFQ request to the server
      */
-    public async postRfqRequest(payload: RfqQuoteParams): Promise<any> {
-        this.canL2Auth();
+    public async postRfqRequest(payload: RfqQuoteParams): Promise<RfqRequestResponse> {
+        this.ensureL2Auth();
         const endpoint = CREATE_RFQ_REQUEST;
 
         const l2HeaderArgs = {
@@ -115,20 +124,20 @@ export class RfqClient extends ClobClient {
         };
 
         const headers = await createL2Headers(
-            this.signer as Wallet | JsonRpcSigner,
-            this.creds as ApiKeyCreds,
+            this.deps.signer as Wallet | JsonRpcSigner,
+            this.deps.creds as ApiKeyCreds,
             l2HeaderArgs,
-            this.useServerTime ? await this.getServerTime() : undefined,
+            this.deps.useServerTime ? await this.deps.getServerTime() : undefined,
         );
 
-        return this.post(`${this.host}${endpoint}`, { headers, data: payload });
+        return this.deps.post(`${this.deps.host}${endpoint}`, { headers, data: payload });
     }
 
     /**
      * Cancels an existing RFQ request
      */
     public async cancelRfqRequest(request: CancelRfqRequestParams): Promise<void> {
-        this.canL2Auth();
+        this.ensureL2Auth();
         const endpoint = CANCEL_RFQ_REQUEST;
         const payload = JSON.stringify(request);
 
@@ -139,20 +148,20 @@ export class RfqClient extends ClobClient {
         };
 
         const headers = await createL2Headers(
-            this.signer as Wallet | JsonRpcSigner,
-            this.creds as ApiKeyCreds,
+            this.deps.signer as Wallet | JsonRpcSigner,
+            this.deps.creds as ApiKeyCreds,
             l2HeaderArgs,
-            this.useServerTime ? await this.getServerTime() : undefined,
+            this.deps.useServerTime ? await this.deps.getServerTime() : undefined,
         );
 
-        return this.del(`${this.host}${endpoint}`, { headers, data: payload });
+        return this.deps.del(`${this.deps.host}${endpoint}`, { headers, data: payload });
     }
 
     /**
      * Gets RFQ requests with optional filtering parameters
      */
     public async getRfqRequests(params?: GetRfqRequestsParams): Promise<RfqRequestsResponse> {
-        this.canL2Auth();
+        this.ensureL2Auth();
         const endpoint = GET_RFQ_REQUESTS;
 
         const l2HeaderArgs = {
@@ -161,27 +170,27 @@ export class RfqClient extends ClobClient {
         };
 
         const headers = await createL2Headers(
-            this.signer as Wallet | JsonRpcSigner,
-            this.creds as ApiKeyCreds,
+            this.deps.signer as Wallet | JsonRpcSigner,
+            this.deps.creds as ApiKeyCreds,
             l2HeaderArgs,
-            this.useServerTime ? await this.getServerTime() : undefined,
+            this.deps.useServerTime ? await this.deps.getServerTime() : undefined,
         );
 
-        return this.get(`${this.host}${endpoint}`, 
+        return this.deps.get(`${this.deps.host}${endpoint}`, 
             { headers, params: parseRfqRequestsParams(params) }) as Promise<RfqRequestsResponse>;
     }
 
     /**
      * Creates a quote in response to an RFQ request
      */
-    public async createRfqQuote(quote: CreateRfqQuoteParams): Promise<any> {
-        this.canL2Auth();
+    public async createRfqQuote(quote: CreateRfqQuoteParams): Promise<RfqQuoteResponse> {
+        this.ensureL2Auth();
         const endpoint = CREATE_RFQ_QUOTE;
 
         // Auto-fill userType from client's signatureType
         const quoteWithUserType = {
             ...quote,
-            userType: this.orderBuilder.signatureType,
+            userType: this.deps.userType,
         };
 
         const payload = JSON.stringify(quoteWithUserType);
@@ -193,13 +202,13 @@ export class RfqClient extends ClobClient {
         };
 
         const headers = await createL2Headers(
-            this.signer as Wallet | JsonRpcSigner,
-            this.creds as ApiKeyCreds,
+            this.deps.signer as Wallet | JsonRpcSigner,
+            this.deps.creds as ApiKeyCreds,
             l2HeaderArgs,
-            this.useServerTime ? await this.getServerTime() : undefined,
+            this.deps.useServerTime ? await this.deps.getServerTime() : undefined,
         );
 
-        return this.post(`${this.host}${endpoint}`, { headers, data: payload });
+        return this.deps.post(`${this.deps.host}${endpoint}`, { headers, data: payload });
     }
 
     /**
@@ -208,7 +217,7 @@ export class RfqClient extends ClobClient {
     public async getRfqQuotes(
         params?: GetRfqQuotesParams
     ): Promise<RfqQuotesResponse> {
-        this.canL2Auth();
+        this.ensureL2Auth();
         const endpoint = GET_RFQ_QUOTES;
 
         const l2HeaderArgs = {
@@ -217,13 +226,13 @@ export class RfqClient extends ClobClient {
         };
 
         const headers = await createL2Headers(
-            this.signer as Wallet | JsonRpcSigner,
-            this.creds as ApiKeyCreds,
+            this.deps.signer as Wallet | JsonRpcSigner,
+            this.deps.creds as ApiKeyCreds,
             l2HeaderArgs,
-            this.useServerTime ? await this.getServerTime() : undefined,
+            this.deps.useServerTime ? await this.deps.getServerTime() : undefined,
         );
 
-        return this.get(`${this.host}${endpoint}`, 
+        return this.deps.get(`${this.deps.host}${endpoint}`, 
             { headers, params: parseRfqQuotesParams(params) }) as Promise<RfqQuotesResponse>;
     }
 
@@ -232,8 +241,8 @@ export class RfqClient extends ClobClient {
      */
     public async getRfqBestQuote(
         params?: GetRfqBestQuoteParams
-    ): Promise<any> {
-        this.canL2Auth();
+    ): Promise<RfqQuote> {
+        this.ensureL2Auth();
         const endpoint = GET_RFQ_BEST_QUOTE;
         const l2HeaderArgs = {
             method: GET,
@@ -241,20 +250,20 @@ export class RfqClient extends ClobClient {
         };
 
         const headers = await createL2Headers(
-            this.signer as Wallet | JsonRpcSigner,
-            this.creds as ApiKeyCreds,
+            this.deps.signer as Wallet | JsonRpcSigner,
+            this.deps.creds as ApiKeyCreds,
             l2HeaderArgs,
-            this.useServerTime ? await this.getServerTime() : undefined,
+            this.deps.useServerTime ? await this.deps.getServerTime() : undefined,
         );
 
-        return this.get(`${this.host}${endpoint}`, { headers, params });
+        return this.deps.get(`${this.deps.host}${endpoint}`, { headers, params });
     }
 
     /**
      * Improves an existing quote with a better amountOut
      */
-    public async improveRfqQuote(quote: ImproveRfqQuoteParams): Promise<any> {
-        this.canL2Auth();
+    public async improveRfqQuote(quote: ImproveRfqQuoteParams): Promise<RfqQuoteResponse> {
+        this.ensureL2Auth();
         const endpoint = IMPROVE_RFQ_QUOTE;
         const payload = JSON.stringify(quote);
 
@@ -265,20 +274,20 @@ export class RfqClient extends ClobClient {
         };
 
         const headers = await createL2Headers(
-            this.signer as Wallet | JsonRpcSigner,
-            this.creds as ApiKeyCreds,
+            this.deps.signer as Wallet | JsonRpcSigner,
+            this.deps.creds as ApiKeyCreds,
             l2HeaderArgs,
-            this.useServerTime ? await this.getServerTime() : undefined,
+            this.deps.useServerTime ? await this.deps.getServerTime() : undefined,
         );
 
-        return this.put(`${this.host}${endpoint}`, { headers, data: payload });
+        return this.deps.put(`${this.deps.host}${endpoint}`, { headers, data: payload });
     }
 
     /**
      * Cancels an existing quote
      */
-    public async cancelRfqQuote(quote: CancelRfqQuoteParams): Promise<any> {
-        this.canL2Auth();
+    public async cancelRfqQuote(quote: CancelRfqQuoteParams): Promise<void> {
+        this.ensureL2Auth();
         const endpoint = CANCEL_RFQ_QUOTE;
         const payload = JSON.stringify(quote);
 
@@ -289,20 +298,20 @@ export class RfqClient extends ClobClient {
         };
 
         const headers = await createL2Headers(
-            this.signer as Wallet | JsonRpcSigner,
-            this.creds as ApiKeyCreds,
+            this.deps.signer as Wallet | JsonRpcSigner,
+            this.deps.creds as ApiKeyCreds,
             l2HeaderArgs,
-            this.useServerTime ? await this.getServerTime() : undefined,
+            this.deps.useServerTime ? await this.deps.getServerTime() : undefined,
         );
 
-        return this.del(`${this.host}${endpoint}`, { headers, data: payload });
+        return this.deps.del(`${this.deps.host}${endpoint}`, { headers, data: payload });
     }
 
     /**
      * Gets the RFQ configuration from the server
      */
     public async rfqConfig(): Promise<any> {
-        this.canL2Auth();
+        this.ensureL2Auth();
         const endpoint = RFQ_CONFIG;
 
         const l2HeaderArgs = {
@@ -311,21 +320,21 @@ export class RfqClient extends ClobClient {
         };
 
         const headers = await createL2Headers(
-            this.signer as Wallet | JsonRpcSigner,
-            this.creds as ApiKeyCreds,
+            this.deps.signer as Wallet | JsonRpcSigner,
+            this.deps.creds as ApiKeyCreds,
             l2HeaderArgs,
-            this.useServerTime ? await this.getServerTime() : undefined,
+            this.deps.useServerTime ? await this.deps.getServerTime() : undefined,
         );
 
-        return this.get(`${this.host}${endpoint}`, { headers });
+        return this.deps.get(`${this.deps.host}${endpoint}`, { headers });
     }
 
     /**
      * Accepts a quote and creates an order (taker side)
      * This fetches the request details, creates an order, and submits the acceptance
      */
-    public async acceptRfqQuote(payload: AcceptQuoteParams): Promise<any> {
-        this.canL2Auth();
+    public async acceptRfqQuote(payload: AcceptQuoteParams): Promise<RfqOrderResponse> {
+        this.ensureL2Auth();
         let rfqRequests: RfqRequestsResponse;
         try {
             rfqRequests = await this.getRfqRequests({
@@ -344,7 +353,7 @@ export class RfqClient extends ClobClient {
         const size = rfqRequest.side === "BUY" ? 
             rfqRequest.sizeIn : rfqRequest.sizeOut;
 
-        const order = await this.createOrder({
+        const order = await this.deps.createOrder({
             tokenID: rfqRequest.token,
             price: rfqRequest.price,
             size: parseFloat(size),
@@ -359,7 +368,7 @@ export class RfqClient extends ClobClient {
         const acceptPayload = {
             requestId: payload.requestId,
             quoteId: payload.quoteId,
-            owner: this.creds?.key,
+            owner: (this.deps.creds as ApiKeyCreds).key,
             ...order,
             expiration: parseInt(order.expiration),
             side: side,
@@ -375,21 +384,21 @@ export class RfqClient extends ClobClient {
         };
 
         const headers = await createL2Headers(
-            this.signer as Wallet | JsonRpcSigner,
-            this.creds as ApiKeyCreds,
+            this.deps.signer as Wallet | JsonRpcSigner,
+            this.deps.creds as ApiKeyCreds,
             l2HeaderArgs,
-            this.useServerTime ? await this.getServerTime() : undefined,
+            this.deps.useServerTime ? await this.deps.getServerTime() : undefined,
         );
         
-        return this.post(`${this.host}${endpoint}`, { headers, data: acceptPayload });
+        return this.deps.post(`${this.deps.host}${endpoint}`, { headers, data: acceptPayload });
     }
 
     /**
      * Approves a quote and creates an order (maker side)
      * This fetches the quote details, creates an order, and submits the approval
      */
-    public async approveRfqOrder(payload: ApproveOrderParams): Promise<any> {
-        this.canL2Auth();
+    public async approveRfqOrder(payload: ApproveOrderParams): Promise<RfqOrderResponse> {
+        this.ensureL2Auth();
         let rfqQuotes: RfqQuotesResponse;
         try {
             rfqQuotes = await this.getRfqQuotes({
@@ -408,7 +417,7 @@ export class RfqClient extends ClobClient {
         const size = rfqQuote.side === "BUY" ? 
             rfqQuote.sizeIn : rfqQuote.sizeOut;
 
-        const order = await this.createOrder({
+        const order = await this.deps.createOrder({
             tokenID: rfqQuote.token,
             price: rfqQuote.price,
             size: parseFloat(size),
@@ -423,7 +432,7 @@ export class RfqClient extends ClobClient {
         const approvePayload = {
             requestId: payload.requestId,
             quoteId: payload.quoteId,
-            owner: this.creds?.key,
+            owner: (this.deps.creds as ApiKeyCreds).key,
             ...order,
             expiration: parseInt(order.expiration),
             side: side,
@@ -439,12 +448,25 @@ export class RfqClient extends ClobClient {
         };
 
         const headers = await createL2Headers(
-            this.signer as Wallet | JsonRpcSigner,
-            this.creds as ApiKeyCreds,
+            this.deps.signer as Wallet | JsonRpcSigner,
+            this.deps.creds as ApiKeyCreds,
             l2HeaderArgs,
-            this.useServerTime ? await this.getServerTime() : undefined,
+            this.deps.useServerTime ? await this.deps.getServerTime() : undefined,
         );
 
-        return this.post(`${this.host}${endpoint}`, { headers, data: approvePayload });
+        return this.deps.post(`${this.deps.host}${endpoint}`, { headers, data: approvePayload });
+    }
+
+    /**
+     * Ensures L2 authentication is available for RFQ endpoints.
+     */
+    protected ensureL2Auth(): void {
+        if (this.deps.signer === undefined) {
+            throw L1_AUTH_UNAVAILABLE_ERROR;
+        }
+
+        if (this.deps.creds === undefined) {
+            throw L2_AUTH_NOT_AVAILABLE;
+        }
     }
 }

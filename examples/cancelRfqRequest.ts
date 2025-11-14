@@ -1,7 +1,7 @@
 import { ethers } from "ethers";
 import { config as dotenvConfig } from "dotenv";
 import { resolve } from "path";
-import { ApiKeyCreds, Chain, RfqClient } from "../src";
+import { ApiKeyCreds, Chain, ClobClient } from "../src";
 
 dotenvConfig({ path: resolve(__dirname, "../.env") });
 
@@ -16,9 +16,9 @@ async function main() {
 		secret: `${process.env.CLOB_SECRET}`,
 		passphrase: `${process.env.CLOB_PASS_PHRASE}`,
 	};
-	const clobClient = new RfqClient(host, chainId, wallet, creds);
+	const clobClient = new ClobClient(host, chainId, wallet, creds);
 
-	const quote = await clobClient.cancelRfqRequest(
+	const quote = await clobClient.rfq.cancelRfqRequest(
 		{
 			requestId: "01972216-acff-7d19-8fad-1ef7095b10d6",
 		}

@@ -1,7 +1,7 @@
 import { ethers } from "ethers";
 import { config as dotenvConfig } from "dotenv";
 import { resolve } from "path";
-import { ApiKeyCreds, Chain, RfqClient } from "../src";
+import { ApiKeyCreds, Chain, ClobClient } from "../src";
 
 dotenvConfig({ path: resolve(__dirname, "../.env") });
 
@@ -17,10 +17,10 @@ async function main() {
         passphrase: `${process.env.CLOB_PASS_PHRASE}`,
     };
 
-    const clobClient = new RfqClient(host, chainId, wallet, creds);
+    const clobClient = new ClobClient(host, chainId, wallet, creds);
 
     // Example: Get quotes with various filters
-    const quote = await clobClient.getRfqBestQuote({
+    const quote = await clobClient.rfq.getRfqBestQuote({
         requestId: "0196ef6a-743a-72eb-bfb6-c32d831c4a4d"
     });
     console.log("rfqQuote - Best Quote", quote);

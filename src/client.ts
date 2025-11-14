@@ -127,6 +127,8 @@ import {
 import { OrderBuilder } from "./order-builder/builder";
 import { END_CURSOR, INITIAL_CURSOR } from "./constants";
 import { calculateBuyMarketPrice, calculateSellMarketPrice } from "./order-builder/helpers";
+import { RfqClient } from "./rfq-client";
+import { IRfqClient, RfqDeps } from "./rfq-deps";
 
 export class ClobClient {
     readonly host: string;
@@ -152,6 +154,8 @@ export class ClobClient {
     readonly useServerTime?: boolean;
 
     readonly builderConfig?: BuilderConfig;
+
+    readonly rfq: IRfqClient;
 
     // eslint-disable-next-line max-params
     constructor(
@@ -190,6 +194,25 @@ export class ClobClient {
         if (builderConfig !== undefined) {
             this.builderConfig = builderConfig;
         }
+
+        const rfqDeps: RfqDeps = {
+            host: this.host,
+            signer: this.signer,
+            creds: this.creds,
+            useServerTime: this.useServerTime,
+            geoBlockToken: this.geoBlockToken,
+            userType: this.orderBuilder.signatureType,
+            getServerTime: this.getServerTime.bind(this),
+            getTickSize: this.getTickSize.bind(this),
+            resolveTickSize: this._resolveTickSize.bind(this),
+            createOrder: this.createOrder.bind(this),
+            get: this.get.bind(this),
+            post: this.post.bind(this),
+            put: this.put.bind(this),
+            del: this.del.bind(this),
+        };
+
+        this.rfq = new RfqClient(rfqDeps);
     }
 
     // Public endpoints

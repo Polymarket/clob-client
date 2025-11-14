@@ -1,7 +1,7 @@
 import { ethers } from "ethers";
 import { config as dotenvConfig } from "dotenv";
 import { resolve } from "path";
-import { ApiKeyCreds, Chain, RfqClient, Side } from "../src";
+import { ApiKeyCreds, Chain, ClobClient, Side } from "../src";
 dotenvConfig({ path: resolve(__dirname, "../.env") });
 async function main() {
 	const wallet = new ethers.Wallet(`${process.env.PK}`);
@@ -13,12 +13,12 @@ async function main() {
 		secret: `${process.env.CLOB_SECRET}`,
 		passphrase: `${process.env.CLOB_PASS_PHRASE}`,
 	};
-	const clobClient = new RfqClient(host, chainId, wallet, creds);
+	const clobClient = new ClobClient(host, chainId, wallet, creds);
 
 	// Create a buy order for 40 YES at 0.50 for $20
 	const YES = "34097058504275310827233323421517291090691602969494795225921954353603704046623"
 
-	const request = await clobClient.createRfqRequest(
+	const request = await clobClient.rfq.createRfqRequest(
 		{
 			tokenID: YES,
 			price: 0.5,
@@ -37,7 +37,7 @@ async function main() {
 	console.log("rfqRequest - Request", request);
 
 	// Send it to the server
-	const resp = await clobClient.postRfqRequest(request)
+	const resp = await clobClient.rfq.postRfqRequest(request)
 	console.log("rfqRequest - Response", resp);
 }
 main();

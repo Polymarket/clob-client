@@ -667,3 +667,22 @@ export type RfqRequestsResponse = RfqPaginatedResponse<RfqRequest>;
 export type RfqQuotesResponse = RfqPaginatedResponse<RfqQuote>;
 
 
+export interface RfqRequestResponse {
+    readonly requestId: string;
+    readonly error?: string;
+}
+
+
+export interface RfqQuoteResponse {
+    readonly quoteId: string;
+    readonly error?: string;
+}
+
+
+export interface RfqOrderResponse {
+    readonly success?: boolean;
+    readonly error?: string;
+    readonly orderId?: string;
+}
+
+

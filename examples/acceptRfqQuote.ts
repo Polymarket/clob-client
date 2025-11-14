@@ -1,7 +1,7 @@
 import { ethers } from "ethers";
 import { config as dotenvConfig } from "dotenv";
 import { resolve } from "path";
-import { ApiKeyCreds, Chain, RfqClient } from "../src";
+import { ApiKeyCreds, Chain, ClobClient } from "../src";
 
 dotenvConfig({ path: resolve(__dirname, "../.env") });
 
@@ -18,13 +18,13 @@ async function main() {
         secret: `${process.env.CLOB_SECRET}`,
         passphrase: `${process.env.CLOB_PASS_PHRASE}`,
     };
-    const clobClient = new RfqClient(host, chainId, wallet, creds);
+    const clobClient = new ClobClient(host, chainId, wallet, creds);
 
     console.log("Accepting quote...");
     // accept the quote
-    const acceptedQuote = await clobClient.acceptRfqQuote({
-        requestId: "01975c17-4cd2-747e-823e-a27735bfa2d0",
-        quoteId: "01975c18-16d1-7b7d-8066-4f8c89358042",
+    const acceptedQuote = await clobClient.rfq.acceptRfqQuote({
+        requestId: "019a83a9-f4c7-7c96-9139-2da2b2d934ef",
+        quoteId: "019a83d7-0a92-730a-a686-f45acaad1c80",
         expiration: Math.floor(Date.now() / 1000) + 3600, // 1 hour from now
     });
     console.log("rfqQuote - Accepted Quote", acceptedQuote);
