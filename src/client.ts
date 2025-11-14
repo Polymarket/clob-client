@@ -61,6 +61,7 @@ import {
     parseDropNotificationParams,
     POST,
     post,
+    put,
     RequestOptions,
 } from "./http-helpers";
 import { BUILDER_AUTH_FAILED, BUILDER_AUTH_NOT_AVAILABLE, L1_AUTH_UNAVAILABLE_ERROR, L2_AUTH_NOT_AVAILABLE } from "./errors";
@@ -1237,13 +1238,13 @@ export class ClobClient {
         return this.del(`${this.host}${endpoint}`, { headers });
     }
 
-    private canL1Auth(): void {
+    protected canL1Auth(): void {
         if (this.signer === undefined) {
             throw L1_AUTH_UNAVAILABLE_ERROR;
         }
     }
 
-    private canL2Auth(): void {
+    protected canL2Auth(): void {
         if (this.signer === undefined) {
             throw L1_AUTH_UNAVAILABLE_ERROR;
         }
@@ -1253,17 +1254,17 @@ export class ClobClient {
         }
     }
 
-    private mustBuilderAuth(): void {
+    protected mustBuilderAuth(): void {
         if (!this.canBuilderAuth()) {
             throw BUILDER_AUTH_NOT_AVAILABLE;
         }
     }
 
-    private canBuilderAuth(): boolean {
+    protected canBuilderAuth(): boolean {
         return (this.builderConfig != undefined && this.builderConfig.isValid())
     }
 
-    private async _resolveTickSize(tokenID: string, tickSize?: TickSize): Promise<TickSize> {
+    protected async _resolveTickSize(tokenID: string, tickSize?: TickSize): Promise<TickSize> {
         const minTickSize = await this.getTickSize(tokenID);
         if (tickSize) {
             if (isTickSizeSmaller(tickSize, minTickSize)) {
@@ -1277,7 +1278,7 @@ export class ClobClient {
         return tickSize;
     }
 
-    private async _resolveFeeRateBps(tokenID: string, userFeeRateBps?: number): Promise<number> {
+    protected async _resolveFeeRateBps(tokenID: string, userFeeRateBps?: number): Promise<number> {
         const marketFeeRateBps = await this.getFeeRateBps(tokenID);
         if (marketFeeRateBps > 0 && userFeeRateBps != undefined && userFeeRateBps != marketFeeRateBps){
             throw new Error(
@@ -1287,7 +1288,7 @@ export class ClobClient {
         return marketFeeRateBps;
     }
 
-    private async _generateBuilderHeaders(
+    protected async _generateBuilderHeaders(
         headers: L2PolyHeader,
         headerArgs: L2HeaderArgs,
     ): Promise<L2WithBuilderHeader | undefined> {
@@ -1307,7 +1308,7 @@ export class ClobClient {
         return undefined;
     }
 
-    private async _getBuilderHeaders(
+    protected async _getBuilderHeaders(
         method: string,
         path: string,
         body?: string
@@ -1320,21 +1321,28 @@ export class ClobClient {
     }
 
     // http methods
-    private async get(endpoint: string, options?: RequestOptions) {
+    protected async get(endpoint: string, options?: RequestOptions) {
         return get(endpoint, {
             ...options,
             params: { ...options?.params, geo_block_token: this.geoBlockToken },
         });
     }
 
-    private async post(endpoint: string, options?: RequestOptions) {
+    protected async post(endpoint: string, options?: RequestOptions) {
         return post(endpoint, {
             ...options,
             params: { ...options?.params, geo_block_token: this.geoBlockToken },
         });
     }
 
-    private async del(endpoint: string, options?: RequestOptions) {
+    protected async put(endpoint: string, options?: RequestOptions) {
+        return put(endpoint, {
+            ...options,
+            params: { ...options?.params, geo_block_token: this.geoBlockToken },
+        });
+    }
+
+    protected async del(endpoint: string, options?: RequestOptions) {
         return del(endpoint, {
             ...options,
             params: { ...options?.params, geo_block_token: this.geoBlockToken },
