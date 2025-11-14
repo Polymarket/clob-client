@@ -1261,13 +1261,13 @@ export class ClobClient {
         return this.del(`${this.host}${endpoint}`, { headers });
     }
 
-    protected canL1Auth(): void {
+    private canL1Auth(): void {
         if (this.signer === undefined) {
             throw L1_AUTH_UNAVAILABLE_ERROR;
         }
     }
 
-    protected canL2Auth(): void {
+    private canL2Auth(): void {
         if (this.signer === undefined) {
             throw L1_AUTH_UNAVAILABLE_ERROR;
         }
@@ -1277,13 +1277,13 @@ export class ClobClient {
         }
     }
 
-    protected mustBuilderAuth(): void {
+    private mustBuilderAuth(): void {
         if (!this.canBuilderAuth()) {
             throw BUILDER_AUTH_NOT_AVAILABLE;
         }
     }
 
-    protected canBuilderAuth(): boolean {
+    private canBuilderAuth(): boolean {
         return (this.builderConfig != undefined && this.builderConfig.isValid())
     }
 
@@ -1301,7 +1301,7 @@ export class ClobClient {
         return tickSize;
     }
 
-    protected async _resolveFeeRateBps(tokenID: string, userFeeRateBps?: number): Promise<number> {
+    private async _resolveFeeRateBps(tokenID: string, userFeeRateBps?: number): Promise<number> {
         const marketFeeRateBps = await this.getFeeRateBps(tokenID);
         if (marketFeeRateBps > 0 && userFeeRateBps != undefined && userFeeRateBps != marketFeeRateBps){
             throw new Error(
@@ -1311,7 +1311,7 @@ export class ClobClient {
         return marketFeeRateBps;
     }
 
-    protected async _generateBuilderHeaders(
+    private async _generateBuilderHeaders(
         headers: L2PolyHeader,
         headerArgs: L2HeaderArgs,
     ): Promise<L2WithBuilderHeader | undefined> {
@@ -1331,7 +1331,7 @@ export class ClobClient {
         return undefined;
     }
 
-    protected async _getBuilderHeaders(
+    private async _getBuilderHeaders(
         method: string,
         path: string,
         body?: string

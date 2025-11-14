@@ -53,9 +53,6 @@ import { L1_AUTH_UNAVAILABLE_ERROR, L2_AUTH_NOT_AVAILABLE } from "./errors";
 
 /**
  * RfqClient provides RFQ (Request for Quote) functionality on top of a CLOB client.
- * 
- * RFQ enables users to request quotes from market makers and accept/approve quotes
- * in a bilateral trading flow, separate from the standard order book.
  */
 export class RfqClient implements IRfqClient {
     constructor(private readonly deps: RfqDeps) {}
