@@ -685,12 +685,3 @@ export interface RfqQuoteResponse {
     readonly quoteId: string;
     readonly error?: string;
 }
-
-
-export interface RfqOrderResponse {
-    readonly success?: boolean;
-    readonly error?: string;
-    readonly orderId?: string;
-}
-
-

@@ -20,7 +20,6 @@ import {
     RfqRequestsResponse,
     RfqRequestResponse,
     RfqQuoteResponse,
-    RfqOrderResponse,
     RfqUserOrder,
     TickSize,
     UserOrder,
@@ -93,7 +92,7 @@ export interface IRfqClient {
 
     rfqConfig(): Promise<any>;
 
-    acceptRfqQuote(payload: AcceptQuoteParams): Promise<RfqOrderResponse>;
+    acceptRfqQuote(payload: AcceptQuoteParams): Promise<"OK">;
 
-    approveRfqOrder(payload: ApproveOrderParams): Promise<RfqOrderResponse>;
+    approveRfqOrder(payload: ApproveOrderParams): Promise<"OK">;
 }

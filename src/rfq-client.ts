@@ -16,7 +16,6 @@ import {
     RfqQuotesResponse,
     RfqRequestResponse,
     RfqQuoteResponse,
-    RfqOrderResponse,
     RfqQuote,
     Side,
 } from "./types";
@@ -324,7 +323,7 @@ export class RfqClient implements IRfqClient {
      * Accepts a quote and creates an order (taker side)
      * This fetches the request details, creates an order, and submits the acceptance
      */
-    public async acceptRfqQuote(payload: AcceptQuoteParams): Promise<RfqOrderResponse> {
+    public async acceptRfqQuote(payload: AcceptQuoteParams): Promise<"OK"> {
         this.ensureL2Auth();
         let rfqRequests: RfqRequestsResponse;
         try {
@@ -332,10 +331,10 @@ export class RfqClient implements IRfqClient {
                 requestIds: [payload.requestId],
             });
             if (!rfqRequests?.data || rfqRequests.data.length === 0) {
-                return { error: "RFQ request not found" };
+                throw new Error("RFQ request not found");
             }
         } catch (error) {
-            return { error: error instanceof Error ? error.message : "Error fetching RFQ request" };
+            throw new Error(error instanceof Error ? error.message : "Error fetching RFQ request");
         }
         const rfqRequest = rfqRequests.data[0];
         
@@ -353,7 +352,7 @@ export class RfqClient implements IRfqClient {
         });
         
         if (!order) {
-            return { error: "Error creating order" };
+            throw new Error("Error creating order");
         }
         
         const acceptPayload = {
@@ -388,7 +387,7 @@ export class RfqClient implements IRfqClient {
      * Approves a quote and creates an order (maker side)
      * This fetches the quote details, creates an order, and submits the approval
      */
-    public async approveRfqOrder(payload: ApproveOrderParams): Promise<RfqOrderResponse> {
+    public async approveRfqOrder(payload: ApproveOrderParams): Promise<"OK"> {
         this.ensureL2Auth();
         let rfqQuotes: RfqQuotesResponse;
         try {
@@ -396,10 +395,10 @@ export class RfqClient implements IRfqClient {
                 quoteIds: [payload.quoteId],
             });
             if (!rfqQuotes?.data || rfqQuotes.data.length === 0) {
-                return { error: "RFQ quote not found" };
+                throw new Error("RFQ quote not found");
             }
         } catch (error) {
-            return { error: error instanceof Error ? error.message : "Error fetching RFQ quote" };
+            throw new Error(error instanceof Error ? error.message : "Error fetching RFQ quote");
         }
         const rfqQuote = rfqQuotes.data[0];
         
@@ -417,7 +416,7 @@ export class RfqClient implements IRfqClient {
         });
         
         if (!order) {
-            return { error: "Error creating order" };
+            throw new Error("Error creating order");
         }
         
         const approvePayload = {
