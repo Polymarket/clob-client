@@ -27,7 +27,16 @@ async function main() {
         quoteId: "019a83d7-0a92-730a-a686-f45acaad1c80",
         expiration: Math.floor(Date.now() / 1000) + 3600, // 1 hour from now
     });
-    console.log("rfqQuote - Accepted Quote", acceptedQuote);
+    
+    // Handle response with type-safe discriminated union
+    if (acceptedQuote.success) {
+        console.log("✅ Quote accepted!");
+        console.log("   Request ID:", acceptedQuote.data.requestId);
+        console.log("   Quote ID:", acceptedQuote.data.quoteId);
+        console.log("   Status:", acceptedQuote.data.status);
+    } else {
+        console.error("❌ Error:", acceptedQuote.error.code, "-", acceptedQuote.error.message);
+    }
 
 }
 

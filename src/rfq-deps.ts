@@ -19,7 +19,10 @@ import {
     RfqQuotesResponse,
     RfqRequestsResponse,
     RfqRequestResponse,
+    RfqCancelRequestResponse,
     RfqQuoteResponse,
+    RfqCancelQuoteResponse,
+    RfqImproveQuoteResponse,
     RfqOrderResponse,
     RfqUserOrder,
     TickSize,
@@ -77,7 +80,7 @@ export interface IRfqClient {
 
     postRfqRequest(payload: RfqRequestParams): Promise<RfqRequestResponse>;
 
-    cancelRfqRequest(request: CancelRfqRequestParams): Promise<any>;
+    cancelRfqRequest(request: CancelRfqRequestParams): Promise<RfqCancelRequestResponse>;
 
     getRfqRequests(params?: GetRfqRequestsParams): Promise<RfqRequestsResponse>;
 
@@ -87,9 +90,9 @@ export interface IRfqClient {
 
     getRfqBestQuote(params?: GetRfqBestQuoteParams): Promise<RfqQuote>;
 
-    improveRfqQuote(quote: ImproveRfqQuoteParams): Promise<any>;
+    improveRfqQuote(quote: ImproveRfqQuoteParams): Promise<RfqImproveQuoteResponse>;
 
-    cancelRfqQuote(quote: CancelRfqQuoteParams): Promise<void>;
+    cancelRfqQuote(quote: CancelRfqQuoteParams): Promise<RfqCancelQuoteResponse>;
 
     rfqConfig(): Promise<any>;
 

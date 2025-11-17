@@ -674,22 +674,40 @@ export type RfqRequestsResponse = RfqPaginatedResponse<RfqRequest>;
 export type RfqQuotesResponse = RfqPaginatedResponse<RfqQuote>;
 
 
-export interface RfqRequestResponse {
-    readonly requestId: string;
-    readonly error?: string;
+// RFQ API Error structure
+export interface RfqApiError {
+    readonly code: string;
+    readonly message: string;
 }
 
+// Create Request Response
+export type RfqRequestResponse = 
+    | { success: true; data: { requestId: string; expiry: number } }
+    | { success: false; error: RfqApiError };
 
-export interface RfqQuoteResponse {
-    readonly quoteId: string;
-    readonly error?: string;
-}
+// Cancel Request Response
+export type RfqCancelRequestResponse = 
+    | { success: true; data: { requestId: string; status: string } }
+    | { success: false; error: RfqApiError };
 
+// Create Quote Response
+export type RfqQuoteResponse = 
+    | { success: true; data: { quoteId: string } }
+    | { success: false; error: RfqApiError };
 
-export interface RfqOrderResponse {
-    readonly success?: boolean;
-    readonly error?: string;
-    readonly orderId?: string;
-}
+// Cancel Quote Response
+export type RfqCancelQuoteResponse = 
+    | { success: true; data: { quoteId: string; status: string } }
+    | { success: false; error: RfqApiError };
+
+// Improve Quote Response
+export type RfqImproveQuoteResponse = 
+    | { success: true; data: { quoteId: string; status: string } }
+    | { success: false; error: RfqApiError };
+
+// Accept/Approve Order Response
+export type RfqOrderResponse = 
+    | { success: true; data: { requestId: string; quoteId: string; status: string } }
+    | { success: false; error: RfqApiError };
 
 

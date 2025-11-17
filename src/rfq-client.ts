@@ -15,7 +15,10 @@ import {
     RfqRequestsResponse,
     RfqQuotesResponse,
     RfqRequestResponse,
+    RfqCancelRequestResponse,
     RfqQuoteResponse,
+    RfqCancelQuoteResponse,
+    RfqImproveQuoteResponse,
     RfqOrderResponse,
     RfqQuote,
     Side,
@@ -132,7 +135,7 @@ export class RfqClient implements IRfqClient {
     /**
      * Cancels an existing RFQ request
      */
-    public async cancelRfqRequest(request: CancelRfqRequestParams): Promise<any> {
+    public async cancelRfqRequest(request: CancelRfqRequestParams): Promise<RfqCancelRequestResponse> {
         this.ensureL2Auth();
         const endpoint = CANCEL_RFQ_REQUEST;
 
@@ -255,7 +258,7 @@ export class RfqClient implements IRfqClient {
     /**
      * Improves an existing quote with a better amountOut
      */
-    public async improveRfqQuote(quote: ImproveRfqQuoteParams): Promise<any> {
+    public async improveRfqQuote(quote: ImproveRfqQuoteParams): Promise<RfqImproveQuoteResponse> {
         this.ensureL2Auth();
         const endpoint = IMPROVE_RFQ_QUOTE;
 
@@ -278,7 +281,7 @@ export class RfqClient implements IRfqClient {
     /**
      * Cancels an existing quote
      */
-    public async cancelRfqQuote(quote: CancelRfqQuoteParams): Promise<void> {
+    public async cancelRfqQuote(quote: CancelRfqQuoteParams): Promise<RfqCancelQuoteResponse> {
         this.ensureL2Auth();
         const endpoint = CANCEL_RFQ_QUOTE;
 
@@ -332,10 +335,19 @@ export class RfqClient implements IRfqClient {
                 requestIds: [payload.requestId],
             });
             if (!rfqRequests?.data || rfqRequests.data.length === 0) {
-                return { error: "RFQ request not found" };
+                return { 
+                    success: false, 
+                    error: { code: "NOT_FOUND", message: "RFQ request not found" } 
+                };
             }
         } catch (error) {
-            return { error: error instanceof Error ? error.message : "Error fetching RFQ request" };
+            return { 
+                success: false, 
+                error: { 
+                    code: "FETCH_ERROR", 
+                    message: error instanceof Error ? error.message : "Error fetching RFQ request" 
+                } 
+            };
         }
         const rfqRequest = rfqRequests.data[0];
         
@@ -396,10 +408,19 @@ export class RfqClient implements IRfqClient {
                 quoteIds: [payload.quoteId],
             });
             if (!rfqQuotes?.data || rfqQuotes.data.length === 0) {
-                return { error: "RFQ quote not found" };
+                return { 
+                    success: false, 
+                    error: { code: "NOT_FOUND", message: "RFQ quote not found" } 
+                };
             }
         } catch (error) {
-            return { error: error instanceof Error ? error.message : "Error fetching RFQ quote" };
+            return { 
+                success: false, 
+                error: { 
+                    code: "FETCH_ERROR", 
+                    message: error instanceof Error ? error.message : "Error fetching RFQ quote" 
+                } 
+            };
         }
         const rfqQuote = rfqQuotes.data[0];
         

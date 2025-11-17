@@ -24,7 +24,14 @@ async function main() {
             amountOut: "100000003"
         }
     );
-    console.log("improveQuote - Response", response); // Should return "OK" on success
+    
+    // Handle response with type-safe discriminated union
+    if (response.success) {
+        console.log("✅ Quote improved:", response.data.quoteId);
+        console.log("   Status:", response.data.status);
+    } else {
+        console.error("❌ Error:", response.error.code, "-", response.error.message);
+    }
 }
 
 main();
