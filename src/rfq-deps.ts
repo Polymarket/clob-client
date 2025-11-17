@@ -89,7 +89,7 @@ export interface IRfqClient {
 
     improveRfqQuote(quote: ImproveRfqQuoteParams): Promise<"OK">;
 
-    cancelRfqQuote(quote: CancelRfqQuoteParams): Promise<void>;
+    cancelRfqQuote(quote: CancelRfqQuoteParams): Promise<"OK">;
 
     rfqConfig(): Promise<any>;
 

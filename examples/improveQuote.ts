@@ -24,7 +24,7 @@ async function main() {
             amountOut: "100000003"
         }
     );
-    console.log("improveQuote - Result", result); // Returns "OK" on success
+    console.log(result); // Returns "OK" on success
 }
 
 main();

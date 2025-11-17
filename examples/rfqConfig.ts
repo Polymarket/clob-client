@@ -19,7 +19,7 @@ async function main() {
     const clobClient = new ClobClient(host, chainId, wallet, creds);
 
     const config = await clobClient.rfq.rfqConfig();
-    console.log("rfqConfig - Config", config);
+    console.log(config);
 }
 
 main();

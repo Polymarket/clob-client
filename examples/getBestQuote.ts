@@ -19,11 +19,10 @@ async function main() {
 
     const clobClient = new ClobClient(host, chainId, wallet, creds);
 
-    // Example: Get quotes with various filters
     const quote = await clobClient.rfq.getRfqBestQuote({
         requestId: "0196ef6a-743a-72eb-bfb6-c32d831c4a4d"
     });
-    console.log("rfqQuote - Best Quote", quote);
+    console.log(quote);
 }
 
 main();

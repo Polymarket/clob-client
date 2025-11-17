@@ -27,7 +27,7 @@ async function main() {
             amountOut: "40000000",
         }
     );
-    console.log("rfqQuote - Quote", quote);
+    console.log(quote);
 }
 
 main();

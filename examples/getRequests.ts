@@ -34,7 +34,7 @@ async function main() {
         limit: 10,
         offset: "MA==",
     });
-    console.log("rfqRequests - Requests", requests);
+    console.log(requests);
 }
 
 main();

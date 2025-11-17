@@ -22,12 +22,12 @@ async function main() {
 
     console.log("Accepting quote...");
     // accept the quote
-    const acceptedQuote = await clobClient.rfq.acceptRfqQuote({
+    const result = await clobClient.rfq.acceptRfqQuote({
         requestId: "019a83a9-f4c7-7c96-9139-2da2b2d934ef",
         quoteId: "019a83d7-0a92-730a-a686-f45acaad1c80",
         expiration: Math.floor(Date.now() / 1000) + 3600, // 1 hour from now
     });
-    console.log("rfqQuote - Accepted Quote", acceptedQuote);
+    console.log(result);
 
 }
 

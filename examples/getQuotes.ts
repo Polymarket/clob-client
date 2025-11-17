@@ -20,7 +20,7 @@ async function main() {
     const clobClient = new ClobClient(host, chainId, wallet, creds);
 
     // Example: Get quotes with various filters
-    const quote = await clobClient.rfq.getRfqQuotes({
+    const quotes = await clobClient.rfq.getRfqQuotes({
         // quoteIds: [""],
         // Optional filters
         state: "active",           // Filter by quote state
@@ -34,7 +34,7 @@ async function main() {
         limit: 10,                // Limit results
         offset: "MA==",                 // Pagination offset
     });
-    console.log("rfqQuote - Quote", quote);
+    console.log(quotes);
 }
 
 main();

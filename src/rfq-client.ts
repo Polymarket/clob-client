@@ -278,7 +278,7 @@ export class RfqClient implements IRfqClient {
     /**
      * Cancels an existing quote
      */
-    public async cancelRfqQuote(quote: CancelRfqQuoteParams): Promise<void> {
+    public async cancelRfqQuote(quote: CancelRfqQuoteParams): Promise<"OK"> {
         this.ensureL2Auth();
         const endpoint = CANCEL_RFQ_QUOTE;
 
