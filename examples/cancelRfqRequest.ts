@@ -18,12 +18,12 @@ async function main() {
 	};
 	const clobClient = new ClobClient(host, chainId, wallet, creds);
 
-	const quote = await clobClient.rfq.cancelRfqRequest(
+	const response = await clobClient.rfq.cancelRfqRequest(
 		{
 			requestId: "01972216-acff-7d19-8fad-1ef7095b10d6",
 		}
 	);
-	console.log("rfqQuote - Quote", quote);
+	console.log("cancelRfqRequest - Response", response); // Should return "OK" on success
 }
 
 main();
