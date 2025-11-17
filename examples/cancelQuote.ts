@@ -23,7 +23,14 @@ async function main() {
             quoteId: "0196b1e5-bd85-7496-9144-0684958212dd",
         }
     );
-    console.log("Response:", response);
+    
+    // Handle response with type-safe discriminated union
+    if (response.success) {
+        console.log("✅ Quote canceled:", response.data.quoteId);
+        console.log("   Status:", response.data.status);
+    } else {
+        console.error("❌ Error:", response.error.code, "-", response.error.message);
+    }
 }
 
 main();

@@ -38,6 +38,13 @@ async function main() {
 
 	// Send it to the server
 	const resp = await clobClient.rfq.postRfqRequest(request)
-	console.log("Response:", resp);
+	
+	// Handle response with type-safe discriminated union
+	if (resp.success) {
+		console.log("✅ Request created:", resp.data.requestId);
+		console.log("   Expires at:", new Date(resp.data.expiry * 1000).toISOString());
+	} else {
+		console.error("❌ Error:", resp.error.code, "-", resp.error.message);
+	}
 }
 main();

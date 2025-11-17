@@ -21,12 +21,23 @@ async function main() {
     };
     const clobClient = new ClobClient(host, chainId, wallet, creds);
 
+    console.log("Approving order...");
+    // approve the order
     const approvedOrder = await clobClient.rfq.approveRfqOrder({
         requestId: "019a83a9-f4c7-7c96-9139-2da2b2d934ef",
         quoteId: "019a83d7-0a92-730a-a686-f45acaad1c80",
         expiration: Math.floor(Date.now() / 1000) + 3600, // 1 hour from now
     });
-    console.log("Response:", approvedOrder);
+    
+    // Handle response with type-safe discriminated union
+    if (approvedOrder.success) {
+        console.log("✅ Order approved!");
+        console.log("   Request ID:", approvedOrder.data.requestId);
+        console.log("   Quote ID:", approvedOrder.data.quoteId);
+        console.log("   Status:", approvedOrder.data.status);
+    } else {
+        console.error("❌ Error:", approvedOrder.error.code, "-", approvedOrder.error.message);
+    }
 }
 
 main(); 
