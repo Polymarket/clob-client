@@ -27,13 +27,7 @@ async function main() {
             amountOut: "40000000",
         }
     );
-    
-    // Handle response with type-safe discriminated union
-    if (quote.success) {
-        console.log("✅ Quote created:", quote.data.quoteId);
-    } else {
-        console.error("❌ Error:", quote.error.code, "-", quote.error.message);
-    }
+    console.log("Response:", quote);
 }
 
 main();
