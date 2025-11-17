@@ -18,13 +18,13 @@ async function main() {
     };
     const clobClient = new ClobClient(host, chainId, wallet, creds);
 
-    const response = await clobClient.rfq.improveRfqQuote(
+    const quote = await clobClient.rfq.improveRfqQuote(
         {
             quoteId: "0196b1e5-bd85-7496-9144-0684958212dd",
             amountOut: "100000003"
         }
     );
-    console.log("improveQuote - Response", response); // Should return "OK" on success
+    console.log("improveQuote - Quote", quote);
 }
 
 main();

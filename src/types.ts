@@ -528,13 +528,6 @@ export interface CancelRfqRequestParams {
 	requestId: string;	
 }
 
-export interface RfqRequestParams {
-    assetIn: string;
-    assetOut: string;
-    amountIn: string;
-    amountOut: string;
-    userType: number;
-}
 
 export interface RfqQuoteParams {
     requestId: string;
