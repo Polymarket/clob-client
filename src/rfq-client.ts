@@ -354,7 +354,7 @@ export class RfqClient implements IRfqClient {
         });
         
         if (!order) {
-            throw new Error("Error creating order");
+            return { error: "Error creating order" };
         }
         
         const acceptPayload = {
@@ -418,7 +418,7 @@ export class RfqClient implements IRfqClient {
         });
         
         if (!order) {
-            throw new Error("Error creating order");
+            return { error: "Error creating order" };
         }
         
         const approvePayload = {
