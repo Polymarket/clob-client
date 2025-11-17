@@ -2,7 +2,7 @@ import {
     ApiKeyCreds,
     CreateOrderOptions,
     RfqUserOrder,
-    RfqQuoteParams,
+    CreateRfqRequestParams,
     CreateRfqQuoteParams,
     ImproveRfqQuoteParams,
     CancelRfqQuoteParams,
@@ -64,7 +64,7 @@ export class RfqClient implements IRfqClient {
     public async createRfqRequest(
         userOrder: RfqUserOrder,
         options?: Partial<CreateOrderOptions>,
-    ): Promise<RfqQuoteParams> {
+    ): Promise<CreateRfqRequestParams> {
         const { tokenID, price, side, size } = userOrder;
 
         const tickSize = await this.deps.resolveTickSize(tokenID, options?.tickSize);
@@ -98,7 +98,6 @@ export class RfqClient implements IRfqClient {
         }
 
         return {
-            requestId: "", // Server will generate this
             assetIn,
             assetOut,
             amountIn,
@@ -110,7 +109,7 @@ export class RfqClient implements IRfqClient {
     /**
      * Posts an RFQ request to the server
      */
-    public async postRfqRequest(payload: RfqQuoteParams): Promise<RfqRequestResponse> {
+    public async postRfqRequest(payload: CreateRfqRequestParams): Promise<RfqRequestResponse> {
         this.ensureL2Auth();
         const endpoint = CREATE_RFQ_REQUEST;
 
@@ -133,7 +132,7 @@ export class RfqClient implements IRfqClient {
     /**
      * Cancels an existing RFQ request
      */
-    public async cancelRfqRequest(request: CancelRfqRequestParams): Promise<void> {
+    public async cancelRfqRequest(request: CancelRfqRequestParams): Promise<"OK"> {
         this.ensureL2Auth();
         const endpoint = CANCEL_RFQ_REQUEST;
 
@@ -256,7 +255,7 @@ export class RfqClient implements IRfqClient {
     /**
      * Improves an existing quote with a better amountOut
      */
-    public async improveRfqQuote(quote: ImproveRfqQuoteParams): Promise<RfqQuoteResponse> {
+    public async improveRfqQuote(quote: ImproveRfqQuoteParams): Promise<"OK"> {
         this.ensureL2Auth();
         const endpoint = IMPROVE_RFQ_QUOTE;
 

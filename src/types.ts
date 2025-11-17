@@ -529,6 +529,14 @@ export interface CancelRfqRequestParams {
 }
 
 
+export interface CreateRfqRequestParams {
+    assetIn: string;
+    assetOut: string;
+    amountIn: string;
+    amountOut: string;
+    userType: number;
+}
+
 export interface RfqQuoteParams {
     requestId: string;
     assetIn: string;

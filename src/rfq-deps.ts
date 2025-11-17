@@ -10,11 +10,11 @@ import {
     CancelRfqRequestParams,
     CreateOrderOptions,
     CreateRfqQuoteParams,
+    CreateRfqRequestParams,
     GetRfqBestQuoteParams,
     GetRfqQuotesParams,
     GetRfqRequestsParams,
     ImproveRfqQuoteParams,
-    RfqQuoteParams,
     RfqQuote,
     RfqQuotesResponse,
     RfqRequestsResponse,
@@ -73,11 +73,11 @@ export interface IRfqClient {
     createRfqRequest(
         userOrder: RfqUserOrder,
         options?: Partial<CreateOrderOptions>,
-    ): Promise<RfqQuoteParams>;
+    ): Promise<CreateRfqRequestParams>;
 
-    postRfqRequest(payload: RfqQuoteParams): Promise<RfqRequestResponse>;
+    postRfqRequest(payload: CreateRfqRequestParams): Promise<RfqRequestResponse>;
 
-    cancelRfqRequest(request: CancelRfqRequestParams): Promise<void>;
+    cancelRfqRequest(request: CancelRfqRequestParams): Promise<"OK">;
 
     getRfqRequests(params?: GetRfqRequestsParams): Promise<RfqRequestsResponse>;
 
@@ -87,7 +87,7 @@ export interface IRfqClient {
 
     getRfqBestQuote(params?: GetRfqBestQuoteParams): Promise<RfqQuote>;
 
-    improveRfqQuote(quote: ImproveRfqQuoteParams): Promise<RfqQuoteResponse>;
+    improveRfqQuote(quote: ImproveRfqQuoteParams): Promise<"OK">;
 
     cancelRfqQuote(quote: CancelRfqQuoteParams): Promise<void>;
 
