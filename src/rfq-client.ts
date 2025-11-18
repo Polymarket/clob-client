@@ -402,8 +402,8 @@ export class RfqClient implements IRfqClient {
         }
         const rfqQuote = rfqQuotes.data[0];
         
-        // Create an order on the opposite side of the quote
-        const side = rfqQuote.side === "BUY" ? Side.SELL : Side.BUY;
+        // Create an order based on the quote details
+        const side = rfqQuote.side === "BUY" ? Side.BUY : Side.SELL;
         const size = rfqQuote.side === "BUY" ? 
             rfqQuote.sizeIn : rfqQuote.sizeOut;
 
