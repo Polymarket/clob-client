@@ -20,10 +20,10 @@ async function main() {
 
 	const result = await clobClient.rfq.cancelRfqRequest(
 		{
-			requestId: "01972216-acff-7d19-8fad-1ef7095b10d6",
+			requestId: "019a9559-e1b2-741f-8162-420db811736c",
 		}
 	);
-	console.log("cancelRfqRequest - Result", result); // Returns "OK" on success
+	console.log(result);
 }
 
 main();
