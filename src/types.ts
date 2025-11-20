@@ -13,6 +13,10 @@ export interface ApiKeyRaw {
     passphrase: string;
 }
 
+export interface ReadonlyApiKeyResponse {
+    apiKey: string;
+}
+
 export interface L2HeaderArgs {
     method: string;
     requestPath: string;
