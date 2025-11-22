@@ -1,7 +1,7 @@
 {
     "name": "@polymarket/clob-client",
     "description": "Typescript client for Polymarket's CLOB",
-    "version": "4.22.8",
+    "version": "5.0.0",
     "contributors": [
         {
             "name": "Jonathan Amenechi",
@@ -33,6 +33,7 @@
     "files": [
         "/dist"
     ],
+    "sideEffects": false,
     "keywords": [
         "blockchain",
         "ethereum"
