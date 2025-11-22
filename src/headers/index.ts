@@ -43,7 +43,7 @@ export const createL2Headers = async (
     }
     const address = await signer.getAddress();
 
-    const sig = buildPolyHmacSignature(
+    const sig = await buildPolyHmacSignature(
         creds.secret,
         ts,
         l2HeaderArgs.method,

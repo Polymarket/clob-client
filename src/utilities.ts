@@ -1,5 +1,4 @@
 import { Side as UtilsSide, SignedOrder } from "@polymarket/order-utils";
-import { createHash } from "crypto";
 import { NewOrder, OrderBookSummary, OrderType, Side, TickSize } from "./types";
 
 export function orderToJson<T extends OrderType>(
@@ -72,13 +71,28 @@ export const decimalPlaces = (num: number): number => {
 };
 
 /**
+ * Converts ArrayBuffer to hex string
+ */
+function arrayBufferToHex(buffer: ArrayBuffer): string {
+    const bytes = new Uint8Array(buffer);
+    return Array.from(bytes)
+        .map(b => b.toString(16).padStart(2, "0"))
+        .join("");
+}
+
+/**
  * Calculates the hash for the given orderbook
  * @param orderbook
  * @returns
  */
-export const generateOrderBookSummaryHash = (orderbook: OrderBookSummary): string => {
+export const generateOrderBookSummaryHash = async (
+    orderbook: OrderBookSummary,
+): Promise<string> => {
     orderbook.hash = "";
-    const hash = createHash("sha1").update(JSON.stringify(orderbook)).digest("hex");
+    const message = JSON.stringify(orderbook);
+    const messageBuffer = new TextEncoder().encode(message);
+    const hashBuffer = await crypto.subtle.digest("SHA-1", messageBuffer);
+    const hash = arrayBufferToHex(hashBuffer);
     orderbook.hash = hash;
     return hash;
 };
