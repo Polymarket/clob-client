@@ -1,7 +1,7 @@
 import { Wallet } from "@ethersproject/wallet";
 import { JsonRpcSigner } from "@ethersproject/providers";
-import { MSG_TO_SIGN } from "./constants";
-import { Chain } from "src/types";
+import { MSG_TO_SIGN } from "./constants.js";
+import { Chain } from "../types.js";
 
 /**
  * Builds the canonical Polymarket CLOB EIP712 signature

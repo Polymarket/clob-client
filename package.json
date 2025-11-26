@@ -50,11 +50,14 @@
         "test": "make test"
     },
     "dependencies": {
+        "@ethersproject/providers": "^5.7.2",
+        "@ethersproject/wallet": "^5.7.0",
         "@polymarket/builder-signing-sdk": "^0.0.8",
         "@polymarket/order-utils": "^2.1.0",
         "axios": "^1.0.0",
         "browser-or-node": "^2.1.1",
-        "ethers": "^5.7.1"
+        "ethers": "^5.7.1",
+        "tslib": "^2.4.0"
     },
     "devDependencies": {
         "@babel/core": "7.23.2",

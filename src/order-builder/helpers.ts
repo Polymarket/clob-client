@@ -18,9 +18,9 @@ import {
     CreateOrderOptions,
     OrderSummary,
     OrderType,
-} from "../types";
-import { decimalPlaces, roundDown, roundNormal, roundUp } from "../utilities";
-import { COLLATERAL_TOKEN_DECIMALS, getContractConfig } from "../config";
+} from "../types.js";
+import { decimalPlaces, roundDown, roundNormal, roundUp } from "../utilities.js";
+import { COLLATERAL_TOKEN_DECIMALS, getContractConfig } from "../config.js";
 
 export const ROUNDING_CONFIG: Record<TickSize, RoundConfig> = {
     "0.1": {

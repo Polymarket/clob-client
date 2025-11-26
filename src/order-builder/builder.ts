@@ -1,8 +1,8 @@
 import { Wallet } from "@ethersproject/wallet";
 import { JsonRpcSigner } from "@ethersproject/providers";
 import { SignedOrder, SignatureType } from "@polymarket/order-utils";
-import { createMarketOrder, createOrder } from "./helpers";
-import { Chain, CreateOrderOptions, UserMarketOrder, UserOrder } from "../types";
+import { createMarketOrder, createOrder } from "./helpers.js";
+import { Chain, CreateOrderOptions, UserMarketOrder, UserOrder } from "../types.js";
 
 export class OrderBuilder {
     readonly signer: Wallet | JsonRpcSigner;

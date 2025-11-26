@@ -1,7 +1,7 @@
 import { JsonRpcSigner } from "@ethersproject/providers";
 import { Wallet } from "@ethersproject/wallet";
-import { buildClobEip712Signature, buildPolyHmacSignature } from "../signing";
-import { ApiKeyCreds, Chain, L1PolyHeader, L2HeaderArgs, L2PolyHeader, L2WithBuilderHeader } from "../types";
+import { buildClobEip712Signature, buildPolyHmacSignature } from "../signing/index.js";
+import { ApiKeyCreds, Chain, L1PolyHeader, L2HeaderArgs, L2PolyHeader, L2WithBuilderHeader } from "../types.js";
 import { BuilderHeaderPayload } from "@polymarket/builder-signing-sdk";
 
 export const createL1Headers = async (
@@ -69,5 +69,3 @@ export const injectBuilderHeaders = (
     ...l2Header,
     ...builderHeaders,
 }) as L2WithBuilderHeader;
-  
-

@@ -2,7 +2,7 @@
 build:
 	@echo "Building ts code..."
 	rm -rf dist
-	yarn tsc --module commonjs
+	yarn tsc
 
 .PHONY: test
 test:
