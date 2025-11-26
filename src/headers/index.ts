@@ -1,8 +1,8 @@
-import { JsonRpcSigner } from "@ethersproject/providers";
-import { Wallet } from "@ethersproject/wallet";
+import type { JsonRpcSigner } from "@ethersproject/providers";
+import type { Wallet } from "@ethersproject/wallet";
 import { buildClobEip712Signature, buildPolyHmacSignature } from "../signing/index.ts";
-import { ApiKeyCreds, Chain, L1PolyHeader, L2HeaderArgs, L2PolyHeader, L2WithBuilderHeader } from "../types.ts";
-import { BuilderHeaderPayload } from "@polymarket/builder-signing-sdk";
+import type { ApiKeyCreds, Chain, L1PolyHeader, L2HeaderArgs, L2PolyHeader, L2WithBuilderHeader } from "../types.ts";
+import type { BuilderHeaderPayload } from "@polymarket/builder-signing-sdk";
 
 export const createL1Headers = async (
     signer: Wallet | JsonRpcSigner,

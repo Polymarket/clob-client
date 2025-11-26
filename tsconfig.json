@@ -29,6 +29,8 @@
         "strictNullChecks": true,
         "typeRoots": ["node_modules/@types"],
         "lib": ["es2022", "dom"],
-        "skipLibCheck": true
+        "skipLibCheck": true,
+        // Enforce `import type` for compatibility with Node.js TS support
+        "verbatimModuleSyntax": true
     },
 }

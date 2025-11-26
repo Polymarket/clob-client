@@ -51,8 +51,8 @@
     },
     "dependencies": {
         "@ethersproject/providers": "^5.7.2",
-        "@ethersproject/wallet": "^5.7.0",
         "@ethersproject/units": "^5.7.0",
+        "@ethersproject/wallet": "^5.7.0",
         "@polymarket/builder-signing-sdk": "^0.0.8",
         "@polymarket/order-utils": "^2.1.0",
         "axios": "^1.0.0",
@@ -79,7 +79,6 @@
         "eslint-plugin-node": "^11.1.0",
         "eslint-plugin-promise": "^6.0.1",
         "eslint-plugin-unused-imports": "^2.0.0",
-        "esm": "^3.2.25",
         "jsdom": "^20.0.0",
         "jsdom-global": "^3.0.2",
         "mocha": "^10.0.0",
@@ -87,7 +86,6 @@
         "path": "^0.12.7",
         "prettier": "^2.7.1",
         "ts-mocha": "^10.0.0",
-        "ts-node": "^10.9.1",
         "typescript": "^5.9.3",
         "ws": "^8.11.0"
     },

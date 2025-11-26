@@ -1,23 +1,21 @@
-import { JsonRpcSigner } from "@ethersproject/providers";
-import { Wallet } from "@ethersproject/wallet";
+import type { JsonRpcSigner } from "@ethersproject/providers";
+import type { Wallet } from "@ethersproject/wallet";
 import { parseUnits } from "@ethersproject/units";
 import {
     ExchangeOrderBuilder,
-    OrderData,
     SignatureType,
-    SignedOrder,
     Side as UtilsSide,
 } from "@polymarket/order-utils";
-import {
+import type { OrderData, SignedOrder } from "@polymarket/order-utils";
+import { Side, OrderType } from "../types.ts";
+import type {
     UserOrder,
-    Side,
     Chain,
     UserMarketOrder,
     TickSize,
     RoundConfig,
     CreateOrderOptions,
     OrderSummary,
-    OrderType,
 } from "../types.ts";
 import { decimalPlaces, roundDown, roundNormal, roundUp } from "../utilities.ts";
 import { COLLATERAL_TOKEN_DECIMALS, getContractConfig } from "../config.ts";

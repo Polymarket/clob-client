@@ -1,8 +1,10 @@
-import { Wallet } from "@ethersproject/wallet";
-import { JsonRpcSigner } from "@ethersproject/providers";
-import { SignatureType, SignedOrder } from "@polymarket/order-utils";
-import { BuilderConfig, BuilderHeaderPayload } from "@polymarket/builder-signing-sdk";
-import {
+import type { Wallet } from "@ethersproject/wallet";
+import type { JsonRpcSigner } from "@ethersproject/providers";
+import { SignatureType } from "@polymarket/order-utils";
+import type { SignedOrder } from "@polymarket/order-utils";
+import type { BuilderConfig, BuilderHeaderPayload } from "@polymarket/builder-signing-sdk";
+import { OrderType, Side } from "./types.ts";
+import type {
     ApiKeyCreds,
     ApiKeysResponse,
     Chain,
@@ -13,8 +15,6 @@ import {
     OrderMarketCancelParams,
     OrderBookSummary,
     OrderPayload,
-    OrderType,
-    Side,
     Trade,
     Notification,
     TradeParams,
@@ -61,8 +61,8 @@ import {
     parseDropNotificationParams,
     POST,
     post,
-    RequestOptions,
 } from "./http-helpers/index.ts";
+import type { RequestOptions } from "./http-helpers/index.ts";
 import { BUILDER_AUTH_FAILED, BUILDER_AUTH_NOT_AVAILABLE, L1_AUTH_UNAVAILABLE_ERROR, L2_AUTH_NOT_AVAILABLE } from "./errors.ts";
 import {
     generateOrderBookSummaryHash,
