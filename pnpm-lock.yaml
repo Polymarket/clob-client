@@ -14,6 +14,9 @@ importers:
       '@ethersproject/providers':
         specifier: ^5.7.2
         version: 5.8.0
+      '@ethersproject/units':
+        specifier: ^5.7.0
+        version: 5.8.0
       '@ethersproject/wallet':
         specifier: ^5.7.0
         version: 5.8.0
