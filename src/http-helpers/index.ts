@@ -1,6 +1,6 @@
 /* eslint-disable max-depth */
 import axios, { Method } from "axios";
-import { DropNotificationParams, OrdersScoringParams, SimpleHeaders } from "../types.js";
+import { DropNotificationParams, OrdersScoringParams, SimpleHeaders } from "../types.ts";
 import { isBrowser } from "browser-or-node";
 
 export const GET = "GET";

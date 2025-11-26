@@ -51,8 +51,8 @@ import {
     BuilderTrade,
     BuilderApiKey,
     BuilderApiKeyResponse,
-} from "./types.js";
-import { createL1Headers, createL2Headers, injectBuilderHeaders } from "./headers/index.js";
+} from "./types.ts";
+import { createL1Headers, createL2Headers, injectBuilderHeaders } from "./headers/index.ts";
 import {
     del,
     DELETE,
@@ -62,14 +62,14 @@ import {
     POST,
     post,
     RequestOptions,
-} from "./http-helpers/index.js";
-import { BUILDER_AUTH_FAILED, BUILDER_AUTH_NOT_AVAILABLE, L1_AUTH_UNAVAILABLE_ERROR, L2_AUTH_NOT_AVAILABLE } from "./errors.js";
+} from "./http-helpers/index.ts";
+import { BUILDER_AUTH_FAILED, BUILDER_AUTH_NOT_AVAILABLE, L1_AUTH_UNAVAILABLE_ERROR, L2_AUTH_NOT_AVAILABLE } from "./errors.ts";
 import {
     generateOrderBookSummaryHash,
     isTickSizeSmaller,
     orderToJson,
     priceValid,
-} from "./utilities.js";
+} from "./utilities.ts";
 import {
     CANCEL_ALL,
     CANCEL_ORDER,
@@ -122,10 +122,10 @@ import {
     CREATE_BUILDER_API_KEY,
     GET_BUILDER_API_KEYS,
     REVOKE_BUILDER_API_KEY,
-} from "./endpoints.js";
-import { OrderBuilder } from "./order-builder/builder.js";
-import { END_CURSOR, INITIAL_CURSOR } from "./constants.js";
-import { calculateBuyMarketPrice, calculateSellMarketPrice } from "./order-builder/helpers.js";
+} from "./endpoints.ts";
+import { OrderBuilder } from "./order-builder/builder.ts";
+import { END_CURSOR, INITIAL_CURSOR } from "./constants.ts";
+import { calculateBuyMarketPrice, calculateSellMarketPrice } from "./order-builder/helpers.ts";
 
 export class ClobClient {
     readonly host: string;

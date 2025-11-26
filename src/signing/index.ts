@@ -1,2 +1,2 @@
-export * from "./eip712.js";
-export * from "./hmac.js";
+export * from "./eip712.ts";
+export * from "./hmac.ts";
