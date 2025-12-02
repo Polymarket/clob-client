@@ -6788,7 +6788,7 @@ describe("utilities", () => {
         expect(roundDown(0.57, 4)).to.equal(0.57);
     });
 
-    it("generateOrderBookSummaryHash", () => {
+    it("generateOrderBookSummaryHash", async () => {
         let orderbook = {
             market: "0xaabbcc",
             asset_id: "100",
@@ -6807,7 +6807,7 @@ describe("utilities", () => {
             hash: "",
         } as OrderBookSummary;
 
-        expect(generateOrderBookSummaryHash(orderbook)).to.equal(
+        expect(await generateOrderBookSummaryHash(orderbook)).to.equal(
             "36f56998e26d9a7c553446f35b240481efb271a3",
         );
         expect(orderbook.hash).to.equal("36f56998e26d9a7c553446f35b240481efb271a3");
@@ -6828,7 +6828,7 @@ describe("utilities", () => {
             hash: "36f56998e26d9a7c553446f35b240481efb271a3",
         } as OrderBookSummary;
 
-        expect(generateOrderBookSummaryHash(orderbook)).to.equal(
+        expect(await generateOrderBookSummaryHash(orderbook)).to.equal(
             "5489da29343426f88622d61044975dc5fd828a27",
         );
         expect(orderbook.hash).to.equal("5489da29343426f88622d61044975dc5fd828a27");
@@ -6846,7 +6846,7 @@ describe("utilities", () => {
             hash: "",
         } as OrderBookSummary;
 
-        expect(generateOrderBookSummaryHash(orderbook)).to.equal(
+        expect(await generateOrderBookSummaryHash(orderbook)).to.equal(
             "d4d4e4ea0f1d86ce02d22704bd33414f45573e84",
         );
         expect(orderbook.hash).to.equal("d4d4e4ea0f1d86ce02d22704bd33414f45573e84");

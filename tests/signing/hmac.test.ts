@@ -3,8 +3,8 @@ import { expect } from "chai";
 import { buildPolyHmacSignature } from "../../src/signing/hmac";
 
 describe("hmac", () => {
-    it("buildPolyHmacSignature", () => {
-        const signature = buildPolyHmacSignature(
+    it("buildPolyHmacSignature", async () => {
+        const signature = await buildPolyHmacSignature(
             "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=",
             1000000,
             "test-sign",

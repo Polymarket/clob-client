@@ -286,7 +286,7 @@ export class ClobClient {
      * @param orderbook
      * @returns
      */
-    public getOrderBookHash(orderbook: OrderBookSummary): string {
+    public getOrderBookHash(orderbook: OrderBookSummary): Promise<string> {
         return generateOrderBookSummaryHash(orderbook);
     }
 
