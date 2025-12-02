@@ -1,33 +1,59 @@
 {
-    "include": ["src/**/*"],
-    "exclude": [
-        "src/**/*.test.ts", 
-        "tests/*",
-        "node_modules",
-        "./node_modules",
-        "./node_modules/*",
-    ],
-    "compilerOptions": {
-        "baseUrl": "./",
-        "module": "commonjs",
-        "target": "es6",
-        "outDir": "./dist",
-        "sourceMap": true,
-        "declaration": true,
-        "moduleResolution": "node",
-        "esModuleInterop": true,
-        "experimentalDecorators": true,
-        "allowSyntheticDefaultImports": true,
-        "importHelpers": true,
-        "strict": true,
-        "noFallthroughCasesInSwitch": true,
-        "noUnusedLocals": true,
-        "noImplicitReturns": true,
-        "noUnusedParameters": true,
-        "resolveJsonModule": true,
-        "strictNullChecks": true,
-        "typeRoots": ["node_modules/@types"],
-        "lib": ["es2018", "dom"],
-        "skipLibCheck": true
-    },
+  // Files to include in the compilation process.
+  "include": ["src/**/*"],
+
+  // Files to explicitly exclude from compilation.
+  // Note: 'node_modules' is typically excluded by default, but kept here for clarity.
+  // We clean up redundant 'node_modules' entries.
+  "exclude": [
+    "src/**/*.test.ts", 
+    "tests/*",
+    "node_modules", // Only one entry needed if not excluded by default (which it usually is).
+    "dist" // Added: Exclude the output directory to prevent circular compilation.
+  ],
+
+  "compilerOptions": {
+    // === Project Setup & Output ===
+    "baseUrl": "./",
+    "outDir": "./dist",
+    "sourceMap": true,
+    "declaration": true,
+    
+    // === Modern Module & Interoperability ===
+    // Use 'NodeNext' for modern module resolution and output compatible with modern Node.js versions.
+    "module": "NodeNext", 
+    "moduleResolution": "NodeNext",
+    
+    // Target modern ES version for better performance on modern environments (Node >= 16).
+    "target": "es2020",
+    
+    // Enables compatibility with non-ES module formats (required for clean imports).
+    "esModuleInterop": true,
+    // 'allowSyntheticDefaultImports' is redundant when 'esModuleInterop' is true.
+
+    // === Strictness & Quality (The Core Optimization) ===
+    "strict": true, // Enables all fundamental strict checks (null, implicit any, etc.)
+    
+    // Kept explicitly as they are good quality-of-life checks, even if 'strict' enables some.
+    // 'noUnusedLocals' and 'noUnusedParameters' are kept for explicit code quality enforcement.
+    "noFallthroughCasesInSwitch": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    
+    // Removed redundant options already covered by "strict: true":
+    // - "noImplicitReturns"
+    // - "strictNullChecks"
+
+    // === Helpers & Types ===
+    "experimentalDecorators": true,
+    "importHelpers": true,
+    "resolveJsonModule": true,
+    "typeRoots": ["node_modules/@types"],
+
+    // Libraries available to the project. Target is higher than es2018 for consistency.
+    "lib": ["es2020", "dom"], 
+    
+    // Speeds up compilation by skipping type checking of declaration files in node_modules.
+    "skipLibCheck": true
+  }
 }
