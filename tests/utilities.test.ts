@@ -8,11 +8,12 @@ import {
     orderToJson,
     priceValid,
     roundDown,
-} from "../src/utilities";
+} from "../src/utilities.ts";
 import { Side as UtilsSide, SignatureType } from "@polymarket/order-utils";
-import { Chain, OrderBookSummary, OrderType, Side, UserMarketOrder, UserOrder } from "../src";
+import { Chain, OrderType, Side } from "../src/index.ts";
+import type { OrderBookSummary, UserMarketOrder, UserOrder } from "../src/index.ts";
 import { Wallet } from "@ethersproject/wallet";
-import { createMarketOrder, createOrder } from "../src/order-builder/helpers";
+import { createMarketOrder, createOrder } from "../src/order-builder/helpers.ts";
 
 describe("utilities", () => {
     describe("orderToJson", () => {

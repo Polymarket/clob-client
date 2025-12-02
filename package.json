@@ -30,6 +30,7 @@
     ],
     "main": "dist/index.js",
     "types": "dist/index.d.ts",
+    "type": "module",
     "files": [
         "/dist"
     ],
@@ -38,6 +39,10 @@
         "blockchain",
         "ethereum"
     ],
+    "engines": {
+        "node": ">=20.10",
+        "yarn": ">=1"
+    },
     "license": "MIT",
     "scripts": {
         "build": "make build",
@@ -46,11 +51,15 @@
         "test": "make test"
     },
     "dependencies": {
+        "@ethersproject/providers": "^5.7.2",
+        "@ethersproject/units": "^5.7.0",
+        "@ethersproject/wallet": "^5.7.0",
         "@polymarket/builder-signing-sdk": "^0.0.8",
-        "@polymarket/order-utils": "^2.1.0",
-        "axios": "^0.27.2",
+        "@polymarket/order-utils": "^3.0.1",
+        "axios": "^1.0.0",
         "browser-or-node": "^2.1.1",
-        "ethers": "^5.7.1"
+        "ethers": "^5.7.1",
+        "tslib": "^2.4.0"
     },
     "devDependencies": {
         "@babel/core": "7.23.2",
@@ -71,7 +80,6 @@
         "eslint-plugin-node": "^11.1.0",
         "eslint-plugin-promise": "^6.0.1",
         "eslint-plugin-unused-imports": "^2.0.0",
-        "esm": "^3.2.25",
         "jsdom": "^20.0.0",
         "jsdom-global": "^3.0.2",
         "mocha": "^10.0.0",
@@ -79,8 +87,7 @@
         "path": "^0.12.7",
         "prettier": "^2.7.1",
         "ts-mocha": "^10.0.0",
-        "ts-node": "^10.9.1",
-        "typescript": "^4.8.3",
+        "typescript": "^5.9.3",
         "ws": "^8.11.0"
     },
     "resolutions": {

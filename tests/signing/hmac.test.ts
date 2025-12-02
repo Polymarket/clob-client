@@ -1,6 +1,6 @@
 import "mocha";
 import { expect } from "chai";
-import { buildPolyHmacSignature } from "../../src/signing/hmac";
+import { buildPolyHmacSignature } from "../../src/signing/hmac.ts";
 
 describe("hmac", () => {
     it("buildPolyHmacSignature", async () => {

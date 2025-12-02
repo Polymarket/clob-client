@@ -1,8 +1,10 @@
-import { Wallet } from "@ethersproject/wallet";
-import { JsonRpcSigner } from "@ethersproject/providers";
-import { SignatureType, SignedOrder } from "@polymarket/order-utils";
-import { BuilderConfig, BuilderHeaderPayload } from "@polymarket/builder-signing-sdk";
-import {
+import type { Wallet } from "@ethersproject/wallet";
+import type { JsonRpcSigner } from "@ethersproject/providers";
+import { SignatureType } from "@polymarket/order-utils";
+import type { SignedOrder } from "@polymarket/order-utils";
+import type { BuilderConfig, BuilderHeaderPayload } from "@polymarket/builder-signing-sdk";
+import { OrderType, Side } from "./types.ts";
+import type {
     ApiKeyCreds,
     ApiKeysResponse,
     Chain,
@@ -13,8 +15,6 @@ import {
     OrderMarketCancelParams,
     OrderBookSummary,
     OrderPayload,
-    OrderType,
-    Side,
     Trade,
     Notification,
     TradeParams,
@@ -51,8 +51,8 @@ import {
     BuilderTrade,
     BuilderApiKey,
     BuilderApiKeyResponse,
-} from "./types";
-import { createL1Headers, createL2Headers, injectBuilderHeaders } from "./headers";
+} from "./types.ts";
+import { createL1Headers, createL2Headers, injectBuilderHeaders } from "./headers/index.ts";
 import {
     del,
     DELETE,
@@ -61,15 +61,15 @@ import {
     parseDropNotificationParams,
     POST,
     post,
-    RequestOptions,
-} from "./http-helpers";
-import { BUILDER_AUTH_FAILED, BUILDER_AUTH_NOT_AVAILABLE, L1_AUTH_UNAVAILABLE_ERROR, L2_AUTH_NOT_AVAILABLE } from "./errors";
+} from "./http-helpers/index.ts";
+import type { RequestOptions } from "./http-helpers/index.ts";
+import { BUILDER_AUTH_FAILED, BUILDER_AUTH_NOT_AVAILABLE, L1_AUTH_UNAVAILABLE_ERROR, L2_AUTH_NOT_AVAILABLE } from "./errors.ts";
 import {
     generateOrderBookSummaryHash,
     isTickSizeSmaller,
     orderToJson,
     priceValid,
-} from "./utilities";
+} from "./utilities.ts";
 import {
     CANCEL_ALL,
     CANCEL_ORDER,
@@ -122,10 +122,10 @@ import {
     CREATE_BUILDER_API_KEY,
     GET_BUILDER_API_KEYS,
     REVOKE_BUILDER_API_KEY,
-} from "./endpoints";
-import { OrderBuilder } from "./order-builder/builder";
-import { END_CURSOR, INITIAL_CURSOR } from "./constants";
-import { calculateBuyMarketPrice, calculateSellMarketPrice } from "./order-builder/helpers";
+} from "./endpoints.ts";
+import { OrderBuilder } from "./order-builder/builder.ts";
+import { END_CURSOR, INITIAL_CURSOR } from "./constants.ts";
+import { calculateBuyMarketPrice, calculateSellMarketPrice } from "./order-builder/helpers.ts";
 
 export class ClobClient {
     readonly host: string;
@@ -843,7 +843,7 @@ export class ClobClient {
         if (this.canBuilderAuth()) {
             const builderHeaders = await this._generateBuilderHeaders(headers, l2HeaderArgs);
             if (builderHeaders !== undefined) {
-                return this.post(`${this.host}${endpoint}`, { headers: builderHeaders, data: orderPayload });    
+                return this.post(`${this.host}${endpoint}`, { headers: builderHeaders, data: orderPayload });
             }
         }
 
@@ -876,7 +876,7 @@ export class ClobClient {
         if (this.canBuilderAuth()) {
             const builderHeaders = await this._generateBuilderHeaders(headers, l2HeaderArgs);
             if (builderHeaders !== undefined) {
-                return this.post(`${this.host}${endpoint}`, { headers: builderHeaders, data: ordersPayload });    
+                return this.post(`${this.host}${endpoint}`, { headers: builderHeaders, data: ordersPayload });
             }
         }
 
@@ -1181,7 +1181,7 @@ export class ClobClient {
 
     public async createBuilderApiKey(): Promise<BuilderApiKey> {
         this.canL2Auth();
-        
+
         const endpoint = CREATE_BUILDER_API_KEY;
         const headerArgs = {
             method: POST,
@@ -1200,7 +1200,7 @@ export class ClobClient {
 
     public async getBuilderApiKeys(): Promise<BuilderApiKeyResponse[]> {
         this.canL2Auth();
-        
+
         const endpoint = GET_BUILDER_API_KEYS;
         const headerArgs = {
             method: GET,
@@ -1219,7 +1219,7 @@ export class ClobClient {
 
     public async revokeBuilderApiKey(): Promise<any> {
         this.mustBuilderAuth();
-        
+
         const endpoint = REVOKE_BUILDER_API_KEY;
         const headerArgs = {
             method: DELETE,

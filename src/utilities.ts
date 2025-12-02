@@ -1,5 +1,7 @@
-import { Side as UtilsSide, SignedOrder } from "@polymarket/order-utils";
-import { NewOrder, OrderBookSummary, OrderType, Side, TickSize } from "./types";
+import { Side as UtilsSide } from "@polymarket/order-utils";
+import type { SignedOrder } from "@polymarket/order-utils";
+import { OrderType, Side } from "./types.ts";
+import type { NewOrder, OrderBookSummary, TickSize } from "./types.ts";
 
 export function orderToJson<T extends OrderType>(
     order: SignedOrder,
