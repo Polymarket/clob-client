@@ -6,7 +6,9 @@ function replaceAll(s: string, search: string, replace: string) {
  * Converts base64 string to ArrayBuffer
  */
 function base64ToArrayBuffer(base64: string): ArrayBuffer {
-    const binaryString = atob(base64);
+    const base64Std = base64.replace(/-/g, "+").replace(/_/g, "/");
+    const normalized = base64Std + "===".slice((base64Std.length + 3) % 4);
+    const binaryString = atob(normalized);
     const bytes = new Uint8Array(binaryString.length);
     for (let i = 0; i < binaryString.length; i++) {
         bytes[i] = binaryString.charCodeAt(i);
