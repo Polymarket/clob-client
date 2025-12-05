@@ -325,32 +325,32 @@ export class RfqClient implements IRfqClient {
      */
     public async acceptRfqQuote(payload: AcceptQuoteParams): Promise<"OK"> {
         this.ensureL2Auth();
-        let rfqRequests: RfqRequestsResponse;
+        let rfqQuotes: RfqQuotesResponse;
         try {
-            rfqRequests = await this.getRfqRequests({
-                requestIds: [payload.requestId],
+            rfqQuotes = await this.getRfqQuotes({
+                quoteIds: [payload.quoteId],
             });
-            if (!rfqRequests?.data || rfqRequests.data.length === 0) {
-                throw new Error("RFQ request not found");
+            if (!rfqQuotes?.data || rfqQuotes.data.length === 0) {
+                throw new Error("RFQ quote not found");
             }
         } catch (error) {
-            throw new Error(error instanceof Error ? error.message : "Error fetching RFQ request");
+            throw new Error(error instanceof Error ? error.message : "Error fetching RFQ quote");
         }
-        const rfqRequest = rfqRequests.data[0];
+        const rfqQuote = rfqQuotes.data[0];
         
-        // Create an order based on the request details
-        const side = rfqRequest.side === "BUY" ? Side.BUY : Side.SELL;
-        const size = rfqRequest.side === "BUY" ? 
-            rfqRequest.sizeIn : rfqRequest.sizeOut;
+        // Create an order, matching the quote
+        const side = rfqQuote.side === "BUY" ? Side.SELL : Side.BUY;
+        const size = rfqQuote.side === "BUY" ? 
+            rfqQuote.sizeIn : rfqQuote.sizeOut;
 
         const order = await this.deps.createOrder({
-            tokenID: rfqRequest.token,
-            price: rfqRequest.price,
+            tokenID: rfqQuote.token,
+            price: rfqQuote.price,
             size: parseFloat(size),
             side: side,
             expiration: payload.expiration,
         });
-        
+
         if (!order) {
             throw new Error("Error creating order");
         }
