@@ -1,7 +1,11 @@
 import { ethers } from "ethers";
 import { config as dotenvConfig } from "dotenv";
-import { resolve } from "path";
-import { ApiKeyCreds, Chain, ClobClient } from "../src";
+import { dirname, resolve } from "path";
+import { fileURLToPath } from "url";
+import { ApiKeyCreds, Chain, ClobClient } from "../src/index.ts";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 
 dotenvConfig({ path: resolve(__dirname, "../.env") });
 

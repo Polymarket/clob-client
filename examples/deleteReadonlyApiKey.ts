@@ -1,7 +1,11 @@
 import { ethers } from "ethers";
 import { config as dotenvConfig } from "dotenv";
-import { resolve } from "path";
-import { ApiKeyCreds, Chain, ClobClient } from "../src";
+import { dirname, resolve } from "path";
+import { fileURLToPath } from "url";
+import { ApiKeyCreds, Chain, ClobClient } from "../src/index.ts";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 
 dotenvConfig({ path: resolve(__dirname, "../.env") });
 
@@ -19,7 +23,7 @@ async function main() {
     const clobClient = new ClobClient(host, chainId, wallet, creds);
 
     // Replace with the readonly API key you want to delete
-    const readonlyApiKey = "019a9fdb-2fe8-7555-a050-91d20a72fc1a";
+    const readonlyApiKey = "019abfc0-e060-7b10-a4eb-653a0e9e0e42";
 
     console.log(`Deleting readonly API key: ${readonlyApiKey}...`);
     const resp = await clobClient.deleteReadonlyApiKey(readonlyApiKey);

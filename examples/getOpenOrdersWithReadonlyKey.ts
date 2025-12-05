@@ -1,9 +1,13 @@
 import { ethers } from "ethers";
 import { config as dotenvConfig } from "dotenv";
-import { resolve } from "path";
+import { dirname, resolve } from "path";
+import { fileURLToPath } from "url";
 import axios from "axios";
-import { Chain } from "../src";
-import { GET_OPEN_ORDERS } from "../src/endpoints";
+import { Chain } from "../src/index.ts";
+import { GET_OPEN_ORDERS } from "../src/endpoints.ts";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 
 dotenvConfig({ path: resolve(__dirname, "../.env") });
 
