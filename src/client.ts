@@ -1153,50 +1153,50 @@ export class ClobClient {
         return results;
     }
 
-public subscribeMarketTradesEvents(
-    conditionID: string,
-    onMessage: (event: MarketTradeEvent) => void,
-    onError?: (error: any) => void,
-): () => void {
-    const url = new URL(`${this.host}${GET_MARKET_TRADES_EVENTS}${conditionID}`);
-
-    // Добавляем geo_block_token, как это делают HTTP-методы
-    if (this.geoBlockToken) {
-        url.searchParams.set("geo_block_token", this.geoBlockToken);
+    public async getMarketTradesEvents(conditionID: string): Promise<MarketTradeEvent[]> {
+        return this.get(`${this.host}${GET_MARKET_TRADES_EVENTS}${conditionID}`);
     }
 
-    let eventSource: any;
+    public subscribeMarketTradesEvents(
+        conditionID: string,
+        onMessage: (event: MarketTradeEvent) => void,
+        onError?: (error: any) => void,
+    ): () => void {
+        const url = new URL(`${this.host}${GET_MARKET_TRADES_EVENTS}${conditionID}`);
 
-    if (isBrowser) {
-        // В браузере используем встроенный EventSource
-        // eslint-disable-next-line no-undef
-        eventSource = new EventSource(url.toString());
-    } else {
-        // В Node.js — полифилл
-        // eslint-disable-next-line @typescript-eslint/no-var-requires
-        const EventSourcePolyfill = require("eventsource");
-        eventSource = new EventSourcePolyfill(url.toString());
-    }
-
-    eventSource.onmessage = (evt: MessageEvent) => {
-        try {
-            const data: MarketTradeEvent = JSON.parse(evt.data);
-            onMessage(data);
-        } catch (err) {
-            onError?.(err);
+        if (this.geoBlockToken) {
+            url.searchParams.set("geo_block_token", this.geoBlockToken);
         }
-    };
 
-    // Ошибки не должны вызывать close() → иначе ломаем auto-reconnect
-    eventSource.onerror = (err: any) => {
-        onError?.(err);
-    };
+        let eventSource: any;
 
-    // Возвращаем функцию отписки
-    return () => {
-        eventSource.close();
-    };
-}
+        if (isBrowser) {
+            // eslint-disable-next-line no-undef
+            eventSource = new EventSource(url.toString());
+        } else {
+            // eslint-disable-next-line @typescript-eslint/no-var-requires
+            const EventSourcePolyfill = require("eventsource");
+            eventSource = new EventSourcePolyfill(url.toString());
+        }
+
+        eventSource.onmessage = (evt: MessageEvent) => {
+            try {
+                const data: MarketTradeEvent = JSON.parse(evt.data);
+                onMessage(data);
+            } catch (err) {
+                onError?.(err);
+            }
+        };
+
+        eventSource.onerror = (err: any) => {
+            onError?.(err);
+        };
+
+        return () => {
+            eventSource.close();
+        };
+    }
+
 
     public async calculateMarketPrice(
         tokenID: string,
