@@ -1157,6 +1157,49 @@ export class ClobClient {
         return this.get(`${this.host}${GET_MARKET_TRADES_EVENTS}${conditionID}`);
     }
 
+    public subscribeMarketTradesEvents(
+    conditionID: string,
+    onMessage: (event: MarketTradeEvent) => void,
+    onError?: (error: any) => void,
+): () => void {
+    const url = `${this.host}${GET_MARKET_TRADES_EVENTS}${conditionID}`;
+
+    let eventSource: any;
+
+    if (isBrowser) {
+        // В браузере используем встроенный EventSource
+        // eslint-disable-next-line no-undef
+        eventSource = new EventSource(url);
+    } else {
+        // В Node.js подгружаем полифилл eventsource
+        // eslint-disable-next-line @typescript-eslint/no-var-requires
+        const EventSourcePolyfill = require("eventsource");
+        eventSource = new EventSourcePolyfill(url);
+    }
+
+    eventSource.onmessage = (evt: MessageEvent) => {
+        try {
+            const data: MarketTradeEvent = JSON.parse(evt.data);
+            onMessage(data);
+        } catch (err) {
+            if (onError) {
+                onError(err);
+            }
+        }
+    };
+
+    eventSource.onerror = (err: any) => {
+        if (onError) {
+            onError(err);
+        }
+        eventSource.close();
+    };
+
+    return () => {
+        eventSource.close();
+    };
+}
+
     public async calculateMarketPrice(
         tokenID: string,
         side: Side,
