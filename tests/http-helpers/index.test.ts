@@ -3,8 +3,8 @@ import { expect } from "chai";
 import {
     parseDropNotificationParams,
     parseOrdersScoringParams,
-} from "../../src/http-helpers/index";
-import { DropNotificationParams, OrdersScoringParams } from "../../src";
+} from "../../src/http-helpers/index.ts";
+import type { DropNotificationParams, OrdersScoringParams } from "../../src/types.ts";
 
 describe("utilities", () => {
     describe("parseOrdersScoringParams", () => {

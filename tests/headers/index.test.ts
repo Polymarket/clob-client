@@ -1,8 +1,9 @@
 import "mocha";
 import { expect } from "chai";
-import { createL1Headers, createL2Headers } from "../../src/headers/index";
+import { createL1Headers, createL2Headers } from "../../src/headers/index.ts";
 import { Wallet } from "ethers";
-import { ApiKeyCreds, Chain } from "../../src/types";
+import { Chain } from "../../src/types.ts";
+import type { ApiKeyCreds } from "../../src/types.ts";
 
 describe("headers", () => {
     const chainId = Chain.AMOY;

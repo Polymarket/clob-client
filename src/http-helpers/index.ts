@@ -1,6 +1,7 @@
 /* eslint-disable max-depth */
-import axios, { AxiosRequestHeaders, Method } from "axios";
-import { DropNotificationParams, OrdersScoringParams } from "src/types";
+import axios from "axios";
+import type { Method } from "axios";
+import type { DropNotificationParams, OrdersScoringParams, SimpleHeaders } from "../types.ts";
 import { isBrowser } from "browser-or-node";
 
 export const GET = "GET";
@@ -8,7 +9,7 @@ export const POST = "POST";
 export const DELETE = "DELETE";
 export const PUT = "PUT";
 
-const overloadHeaders = (method: Method, headers?: Record<string, string | number | boolean>) => {
+const overloadHeaders = (method: Method, headers?: SimpleHeaders) => {
     if (isBrowser) {
         return;
     }
@@ -32,7 +33,7 @@ const overloadHeaders = (method: Method, headers?: Record<string, string | numbe
 export const request = async (
     endpoint: string,
     method: Method,
-    headers?: any,
+    headers?: SimpleHeaders,
     data?: any,
     params?: any,
 ): Promise<any> => {
@@ -43,7 +44,7 @@ export const request = async (
 export type QueryParams = Record<string, any>;
 
 export interface RequestOptions {
-    headers?: AxiosRequestHeaders;
+    headers?: SimpleHeaders;
     data?: any;
     params?: QueryParams;
 }
