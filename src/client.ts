@@ -1173,11 +1173,11 @@ export class ClobClient {
         if (isBrowser) {
             // eslint-disable-next-line no-undef
             eventSource = new EventSource(url.toString());
-        } else {
-            // eslint-disable-next-line @typescript-eslint/no-var-requires
-            const EventSourcePolyfill = require("eventsource");
-            eventSource = new EventSourcePolyfill(url.toString());
-        }
+} else {
+    // eslint-disable-next-line @typescript-eslint/no-var-requires
+    const { EventSource } = require("eventsource");
+    eventSource = new EventSource(url.toString());
+}
 
         eventSource.onmessage = (evt: MessageEvent) => {
             try {
