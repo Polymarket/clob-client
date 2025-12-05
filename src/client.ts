@@ -4,6 +4,7 @@ import { SignatureType } from "@polymarket/order-utils";
 import type { SignedOrder } from "@polymarket/order-utils";
 import type { BuilderConfig, BuilderHeaderPayload } from "@polymarket/builder-signing-sdk";
 import { OrderType, Side } from "./types.ts";
+import { isBrowser } from "browser-or-node";
 import type {
     ApiKeyCreds,
     ApiKeysResponse,
