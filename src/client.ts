@@ -1153,56 +1153,50 @@ export class ClobClient {
         return results;
     }
 
-    public subscribeMarketTradesEvents(
-        conditionID: string,
-        onMessage: (event: MarketTradeEvent) => void,
-        onError?: (error: any) => void,
-    ): () => void {
-        const url = new URL(`${this.host}${GET_MARKET_TRADES_EVENTS}${conditionID}`);
+public subscribeMarketTradesEvents(
+    conditionID: string,
+    onMessage: (event: MarketTradeEvent) => void,
+    onError?: (error: any) => void,
+): () => void {
+    const url = new URL(`${this.host}${GET_MARKET_TRADES_EVENTS}${conditionID}`);
 
-        // Если geoBlockToken настроен – добавляем его в query-параметры,
-        // как это делают обычные HTTP-методы
-        if (this.geoBlockToken) {
-            url.searchParams.set("geo_block_token", this.geoBlockToken);
-        }
-
-        let eventSource: any;
-
-        if (isBrowser) {
-            // В браузере используем встроенный EventSource
-            // eslint-disable-next-line no-undef
-            eventSource = new EventSource(url.toString());
-        } else {
-            // В Node.js подгружаем полифилл eventsource
-            // eslint-disable-next-line @typescript-eslint/no-var-requires
-            const EventSourcePolyfill = require("eventsource");
-            eventSource = new EventSourcePolyfill(url.toString());
-        }
-
-        eventSource.onmessage = (evt: MessageEvent) => {
-            try {
-                const data: MarketTradeEvent = JSON.parse(evt.data);
-                onMessage(data);
-            } catch (err) {
-                if (onError) {
-                    onError(err);
-                }
-            }
-        };
-
-        // Не закрываем соединение при любой ошибке – даём SSE шанс
-        // автоматически реконнектиться. Просто пробрасываем ошибку наружу.
-        eventSource.onerror = (err: any) => {
-            if (onError) {
-                onError(err);
-            }
-        };
-
-        // Отписка: явное закрытие стрима пользователем
-        return () => {
-            eventSource.close();
-        };
+    // Добавляем geo_block_token, как это делают HTTP-методы
+    if (this.geoBlockToken) {
+        url.searchParams.set("geo_block_token", this.geoBlockToken);
     }
+
+    let eventSource: any;
+
+    if (isBrowser) {
+        // В браузере используем встроенный EventSource
+        // eslint-disable-next-line no-undef
+        eventSource = new EventSource(url.toString());
+    } else {
+        // В Node.js — полифилл
+        // eslint-disable-next-line @typescript-eslint/no-var-requires
+        const EventSourcePolyfill = require("eventsource");
+        eventSource = new EventSourcePolyfill(url.toString());
+    }
+
+    eventSource.onmessage = (evt: MessageEvent) => {
+        try {
+            const data: MarketTradeEvent = JSON.parse(evt.data);
+            onMessage(data);
+        } catch (err) {
+            onError?.(err);
+        }
+    };
+
+    // Ошибки не должны вызывать close() → иначе ломаем auto-reconnect
+    eventSource.onerror = (err: any) => {
+        onError?.(err);
+    };
+
+    // Возвращаем функцию отписки
+    return () => {
+        eventSource.close();
+    };
+}
 
     public async calculateMarketPrice(
         tokenID: string,
