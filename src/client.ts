@@ -1157,7 +1157,7 @@ export class ClobClient {
         return this.get(`${this.host}${GET_MARKET_TRADES_EVENTS}${conditionID}`);
     }
 
-    public subscribeMarketTradesEvents(
+        public subscribeMarketTradesEvents(
         conditionID: string,
         onMessage: (event: MarketTradeEvent) => void,
         onError?: (error: any) => void,
