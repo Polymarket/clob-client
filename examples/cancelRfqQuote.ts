@@ -21,7 +21,7 @@ async function main() {
 
     const result = await clobClient.rfq.cancelRfqQuote(
         {
-            quoteId: "0196b1e5-bd85-7496-9144-0684958212dd",
+            quoteId: "019afa53-fcd3-76b5-9359-116b1fb56440",
         }
     );
     console.log(result);
