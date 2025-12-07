@@ -1,9 +1,10 @@
 import { ethers } from "ethers";
 import { config as dotenvConfig } from "dotenv";
 import { resolve } from "path";
-import { ApiKeyCreds, Chain, ClobClient } from "../src";
+import type { ApiKeyCreds } from "../src/index.ts";
+import { Chain, ClobClient } from "../src/index.ts";
 
-dotenvConfig({ path: resolve(__dirname, "../.env") });
+dotenvConfig({ path: resolve(import.meta.dirname, "../.env") });
 
 async function main() {
 	const wallet = new ethers.Wallet(`${process.env.PK}`);
@@ -20,7 +21,7 @@ async function main() {
 
 	const result = await clobClient.rfq.cancelRfqRequest(
 		{
-			requestId: "019a9559-e1b2-741f-8162-420db811736c",
+			requestId: "019afa26-7755-7a40-89de-a9d6bc9d9bf0",
 		}
 	);
 	console.log(result);

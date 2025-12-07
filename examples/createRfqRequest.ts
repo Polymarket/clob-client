@@ -1,8 +1,10 @@
 import { ethers } from "ethers";
 import { config as dotenvConfig } from "dotenv";
 import { resolve } from "path";
-import { ApiKeyCreds, Chain, ClobClient, Side } from "../src";
-dotenvConfig({ path: resolve(__dirname, "../.env") });
+import type { ApiKeyCreds } from "../src/index.ts";
+import { Chain, ClobClient, Side } from "../src/index.ts";
+
+dotenvConfig({ path: resolve(import.meta.dirname, "../.env") });
 async function main() {
 	const wallet = new ethers.Wallet(`${process.env.PK}`);
 	const chainId = parseInt(`${process.env.CHAIN_ID || Chain.AMOY}`) as Chain;
