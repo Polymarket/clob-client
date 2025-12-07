@@ -1,8 +1,8 @@
-import { Wallet } from "@ethersproject/wallet";
-import { JsonRpcSigner } from "@ethersproject/providers";
-import { SignedOrder } from "@polymarket/order-utils";
+import type { Wallet } from "@ethersproject/wallet";
+import type { JsonRpcSigner } from "@ethersproject/providers";
+import type { SignedOrder } from "@polymarket/order-utils";
 
-import {
+import type {
     AcceptQuoteParams,
     ApiKeyCreds,
     ApproveOrderParams,
@@ -23,8 +23,8 @@ import {
     RfqUserOrder,
     TickSize,
     UserOrder,
-} from "./types";
-import { RequestOptions } from "./http-helpers";
+} from "./types.ts";
+import type { RequestOptions } from "./http-helpers/index.ts";
 
 /**
  * Minimal surface from the core CLOB client that RFQ functionality depends on.

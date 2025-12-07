@@ -1,4 +1,5 @@
-import {
+import { Side } from "./types.ts";
+import type {
     ApiKeyCreds,
     CreateOrderOptions,
     RfqUserOrder,
@@ -17,9 +18,8 @@ import {
     RfqRequestResponse,
     RfqQuoteResponse,
     RfqQuote,
-    Side,
-} from "./types";
-import { createL2Headers } from "./headers";
+} from "./types.ts";
+import { createL2Headers } from "./headers/index.ts";
 import {
     DELETE,
     GET,
@@ -27,7 +27,7 @@ import {
     PUT,
     parseRfqQuotesParams,
     parseRfqRequestsParams,
-} from "./http-helpers";
+} from "./http-helpers/index.ts";
 import {
     CANCEL_RFQ_REQUEST,
     CREATE_RFQ_QUOTE,
@@ -40,15 +40,15 @@ import {
     GET_RFQ_REQUESTS,
     RFQ_REQUESTS_ACCEPT,
     RFQ_QUOTE_APPROVE,
-} from "./endpoints";
-import { ROUNDING_CONFIG } from "./order-builder/helpers";
-import { roundDown, roundNormal } from "./utilities";
+} from "./endpoints.ts";
+import { ROUNDING_CONFIG } from "./order-builder/helpers.ts";
+import { roundDown, roundNormal } from "./utilities.ts";
 import { parseUnits } from "@ethersproject/units";
-import { COLLATERAL_TOKEN_DECIMALS } from "./config";
-import { IRfqClient, RfqDeps } from "./rfq-deps";
-import { JsonRpcSigner } from "@ethersproject/providers";
-import { Wallet } from "@ethersproject/wallet";
-import { L1_AUTH_UNAVAILABLE_ERROR, L2_AUTH_NOT_AVAILABLE } from "./errors";
+import { COLLATERAL_TOKEN_DECIMALS } from "./config.ts";
+import type { IRfqClient, RfqDeps } from "./rfq-deps.ts";
+import type { JsonRpcSigner } from "@ethersproject/providers";
+import type { Wallet } from "@ethersproject/wallet";
+import { L1_AUTH_UNAVAILABLE_ERROR, L2_AUTH_NOT_AVAILABLE } from "./errors.ts";
 
 /**
  * RfqClient provides RFQ (Request for Quote) functionality on top of a CLOB client.
