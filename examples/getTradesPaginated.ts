@@ -1,10 +1,9 @@
-
 import { ethers } from "ethers";
 import { config as dotenvConfig } from "dotenv";
 import { resolve } from "path";
-import { ApiKeyCreds, Chain, ClobClient } from "../src";
+import { type ApiKeyCreds, Chain, ClobClient } from "../src/index.ts";
 
-dotenvConfig({ path: resolve(__dirname, "../.env") });
+dotenvConfig({ path: resolve(import.meta.dirname, "../.env") });
 
 async function main() {
     const wallet = new ethers.Wallet(`${process.env.PK}`);
@@ -19,20 +18,23 @@ async function main() {
     };
     const clobClient = new ClobClient(host, chainId, wallet, creds);
 
-    // only first page 
+    // only first page
     console.log(
         await clobClient.getTradesPaginated({
             market: "0x5f65177b394277fd294cd75650044e32ba009a95022d88a0c1d565897d72f8f1",
             maker_address: await wallet.getAddress(),
-        })
+        }),
     );
 
-    // fetch only second page 
+    // fetch only second page
     console.log(
-        await clobClient.getTradesPaginated({
-            market: "0x5f65177b394277fd294cd75650044e32ba009a95022d88a0c1d565897d72f8f1",
-            maker_address: await wallet.getAddress(),
-		}, "MzAw")
+        await clobClient.getTradesPaginated(
+            {
+                market: "0x5f65177b394277fd294cd75650044e32ba009a95022d88a0c1d565897d72f8f1",
+                maker_address: await wallet.getAddress(),
+            },
+            "MzAw",
+        ),
     );
 }
 
