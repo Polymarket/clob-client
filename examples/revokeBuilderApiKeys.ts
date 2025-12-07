@@ -1,11 +1,11 @@
 import { ethers } from "ethers";
 import { config as dotenvConfig } from "dotenv";
 import { resolve } from "path";
-import { ApiKeyCreds, Chain, ClobClient } from "../src";
+import { type ApiKeyCreds, Chain, ClobClient } from "../src/index.ts";
 import { BuilderConfig } from "@polymarket/builder-signing-sdk";
 import { SignatureType } from "@polymarket/order-utils";
 
-dotenvConfig({ path: resolve(__dirname, "../.env") });
+dotenvConfig({ path: resolve(import.meta.dirname, "../.env") });
 
 async function main() {
     const wallet = new ethers.Wallet(`${process.env.PK}`);
@@ -18,16 +18,24 @@ async function main() {
         secret: `${process.env.CLOB_SECRET}`,
         passphrase: `${process.env.CLOB_PASS_PHRASE}`,
     };
-    const builderConfig: BuilderConfig = new BuilderConfig(
-        {
-            localBuilderCreds: {
-                key: `${process.env.BUILDER_API_KEY}`,
-                secret: `${process.env.BUILDER_SECRET}`,
-                passphrase: `${process.env.BUILDER_PASS_PHRASE}`,
-            }
-        }
+    const builderConfig: BuilderConfig = new BuilderConfig({
+        localBuilderCreds: {
+            key: `${process.env.BUILDER_API_KEY}`,
+            secret: `${process.env.BUILDER_SECRET}`,
+            passphrase: `${process.env.BUILDER_PASS_PHRASE}`,
+        },
+    });
+    const clobClient = new ClobClient(
+        host,
+        chainId,
+        wallet,
+        creds,
+        SignatureType.EOA,
+        undefined,
+        undefined,
+        undefined,
+        builderConfig,
     );
-    const clobClient = new ClobClient(host, chainId, wallet, creds, SignatureType.EOA, undefined, undefined, undefined, builderConfig);
 
     console.log(`Response: `);
     const resp = await clobClient.revokeBuilderApiKey();
