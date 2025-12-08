@@ -6,7 +6,13 @@ function replaceAll(s: string, search: string, replace: string) {
  * Converts base64 string to ArrayBuffer
  */
 function base64ToArrayBuffer(base64: string): ArrayBuffer {
-    const binaryString = atob(base64);
+    const sanitizedBase64 = base64
+        // Convert base64url to base64 – some secrets routinely come in as base64url: https://stackoverflow.com/q/5234581
+        .replace(/-/g, "+")
+        .replace(/_/g, "/")
+        // Remove any non-base64 characters, for backwards compatibility with Node.js Buffer.from()
+        .replace(/[^A-Za-z0-9+/=]/g, "");
+    const binaryString = atob(sanitizedBase64);
     const bytes = new Uint8Array(binaryString.length);
     for (let i = 0; i < binaryString.length; i++) {
         bytes[i] = binaryString.charCodeAt(i);

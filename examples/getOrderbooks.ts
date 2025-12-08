@@ -1,8 +1,8 @@
 import { config as dotenvConfig } from "dotenv";
 import { resolve } from "path";
-import { BookParams, Chain, ClobClient } from "../src";
+import { type BookParams, Chain, ClobClient } from "../src/index.ts";
 
-dotenvConfig({ path: resolve(__dirname, "../.env") });
+dotenvConfig({ path: resolve(import.meta.dirname, "../.env") });
 
 async function main() {
     const host = process.env.CLOB_API_URL || "http://localhost:8080";

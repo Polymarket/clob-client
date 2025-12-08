@@ -1,11 +1,7 @@
 {
-    "include": ["src/**/*"],
+    "include": ["src/**/*", "examples/**/*", "tests/**/*"],
     "exclude": [
-        "src/**/*.test.ts",
-        "tests/*",
         "node_modules",
-        "./node_modules",
-        "./node_modules/*",
     ],
     "compilerOptions": {
         "baseUrl": "./",

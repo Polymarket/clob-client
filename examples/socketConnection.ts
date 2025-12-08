@@ -1,9 +1,9 @@
 /* eslint-disable max-len */
 import { config as dotenvConfig } from "dotenv";
 import { resolve } from "path";
-dotenvConfig({ path: resolve(__dirname, "../.env") });
+dotenvConfig({ path: resolve(import.meta.dirname, "../.env") });
 import { WebSocket } from "ws";
-import { ApiKeyCreds } from "../src";
+import { type ApiKeyCreds } from "../src/index.ts";
 
 // eslint-disable-next-line max-len
 const YES_TOKEN_ID =

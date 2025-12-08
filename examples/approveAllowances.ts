@@ -1,12 +1,12 @@
 import { BigNumber, constants, ethers } from "ethers";
 import { config as dotenvConfig } from "dotenv";
 import { resolve } from "path";
-import { Chain } from "../src";
-import { getContractConfig } from "../src/config";
-import { usdcAbi } from "./abi/usdcAbi";
-import { ctfAbi } from "./abi/ctfAbi";
+import { Chain } from "../src/index.ts";
+import { getContractConfig } from "../src/config.ts";
+import { usdcAbi } from "./abi/usdcAbi.ts";
+import { ctfAbi } from "./abi/ctfAbi.ts";
 
-dotenvConfig({ path: resolve(__dirname, "../.env") });
+dotenvConfig({ path: resolve(import.meta.dirname, "../.env") });
 
 export function getWallet(mainnetQ: boolean): ethers.Wallet {
     const pk = process.env.PK as string;
