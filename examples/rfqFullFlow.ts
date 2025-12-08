@@ -119,7 +119,7 @@ async function main() {
     console.log(`  Size: ${REQUEST_PARAMS.size}`);
     console.log(`  Price: ${REQUEST_PARAMS.price}`);
     
-    const rfqRequestParams = await takerClient.createRfqRequest(
+    const rfqRequestResponse = await takerClient.createRfqRequest(
         {
             tokenID: REQUEST_PARAMS.tokenID,
             price: REQUEST_PARAMS.price,
@@ -128,10 +128,6 @@ async function main() {
         },
         { tickSize: REQUEST_PARAMS.tickSize },
     );
-    
-    console.log("Request params:", rfqRequestParams);
-    
-    const rfqRequestResponse = await takerClient.postRfqRequest(rfqRequestParams);
     
     // Check for errors
     if (rfqRequestResponse.error) {

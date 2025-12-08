@@ -57,13 +57,15 @@ export class RfqClient implements IRfqClient {
     constructor(private readonly deps: RfqDeps) {}
 
     /**
-     * Creates an RFQ request from user order parameters
-     * Converts the order into the proper RFQ request format with asset amounts
+     * Creates and posts an RFQ request from user order parameters.
+     * Converts the order into the proper RFQ request format with asset amounts and submits it.
      */
     public async createRfqRequest(
         userOrder: RfqUserOrder,
         options?: Partial<CreateOrderOptions>,
-    ): Promise<CreateRfqRequestParams> {
+    ): Promise<RfqRequestResponse> {
+        this.ensureL2Auth();
+
         const { tokenID, price, side, size } = userOrder;
 
         const tickSize = await this.deps.resolveTickSize(tokenID, options?.tickSize);
@@ -96,20 +98,14 @@ export class RfqClient implements IRfqClient {
             assetOut = tokenID;
         }
 
-        return {
+        const payload: CreateRfqRequestParams = {
             assetIn,
             assetOut,
             amountIn,
             amountOut,
             userType: this.deps.userType,
         };
-    }
 
-    /**
-     * Posts an RFQ request to the server
-     */
-    public async postRfqRequest(payload: CreateRfqRequestParams): Promise<RfqRequestResponse> {
-        this.ensureL2Auth();
         const endpoint = CREATE_RFQ_REQUEST;
 
         const l2HeaderArgs = {

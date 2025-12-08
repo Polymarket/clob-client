@@ -20,7 +20,8 @@ async function main() {
 	// Create a buy order for 40 YES at 0.50 for $20
 	const YES = "34097058504275310827233323421517291090691602969494795225921954353603704046623"
 
-	const requestParams = await clobClient.rfq.createRfqRequest(
+	// Create and post the RFQ request
+	const request = await clobClient.rfq.createRfqRequest(
 		{
 			tokenID: YES,
 			price: 0.5,
@@ -29,17 +30,6 @@ async function main() {
 		},
 		{ tickSize: "0.01" },
 	);
-	// Request {
-	// 	amountIn: '40000000',
-	// 	assetIn: '34097058504275310827233323421517291090691602969494795225921954353603704046623',
-	// 	amountOut: '20000000',
-	// 	assetOut: '0',
-	// 	userType: 0
-	// }
-	console.log(requestParams);
-
-	// Send it to the server
-	const request = await clobClient.rfq.postRfqRequest(requestParams)
 	console.log(request);
 }
 main();

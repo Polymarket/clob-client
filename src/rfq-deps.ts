@@ -10,7 +10,6 @@ import type {
     CancelRfqRequestParams,
     CreateOrderOptions,
     CreateRfqQuoteParams,
-    CreateRfqRequestParams,
     GetRfqBestQuoteParams,
     GetRfqQuotesParams,
     GetRfqRequestsParams,
@@ -72,9 +71,7 @@ export interface IRfqClient {
     createRfqRequest(
         userOrder: RfqUserOrder,
         options?: Partial<CreateOrderOptions>,
-    ): Promise<CreateRfqRequestParams>;
-
-    postRfqRequest(payload: CreateRfqRequestParams): Promise<RfqRequestResponse>;
+    ): Promise<RfqRequestResponse>;
 
     cancelRfqRequest(request: CancelRfqRequestParams): Promise<"OK">;
 
