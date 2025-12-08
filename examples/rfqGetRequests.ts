@@ -20,11 +20,10 @@ async function main() {
 
     const clobClient = new ClobClient(host, chainId, wallet, creds);
 
-    // Example: Get quotes with various filters
+    // Example: Get requests with various filters
     const requests = await clobClient.rfq.getRfqRequests({
         // requestIds: ["0197656d-56ee-74a4-a06a-3b179121f3bf"],
-        // userAddress: "0x0000000000000000000000000000000000000000",
-        // state: "active",
+        state: "active",
         // markets: ["0x0000000000000000000000000000000000000000"],
         // sizeMin: 5,
         // sizeMax: 100,
