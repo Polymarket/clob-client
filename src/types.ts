@@ -608,7 +608,6 @@ export type RfqUserOrder = Pick<UserOrder, "price" | "size" | "side" | "tokenID"
 
 export interface GetRfqRequestsParams {
     requestIds?: string[];
-    userAddress?: string;
     states?: string[];
     state?: string; // active/inactive query param
     markets?: string[];
