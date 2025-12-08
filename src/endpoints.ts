@@ -8,6 +8,12 @@ export const DELETE_API_KEY = "/auth/api-key";
 export const DERIVE_API_KEY = "/auth/derive-api-key";
 export const CLOSED_ONLY = "/auth/ban-status/closed-only";
 
+// Readonly API Key endpoints
+export const CREATE_READONLY_API_KEY = "/auth/readonly-api-key";
+export const GET_READONLY_API_KEYS = "/auth/readonly-api-keys";
+export const DELETE_READONLY_API_KEY = "/auth/readonly-api-key";
+export const VALIDATE_READONLY_API_KEY = "/auth/validate-readonly-api-key";
+
 // Builder API Key endpoints
 export const CREATE_BUILDER_API_KEY = "/auth/builder-api-key";
 export const GET_BUILDER_API_KEYS = "/auth/builder-api-key";
