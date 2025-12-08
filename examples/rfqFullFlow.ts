@@ -15,14 +15,14 @@
  * 5. Make sure you're using the correct CLOB_API_URL for your environment
  * 
  * ENV VARIABLES:
- * TAKER_PK: Private key of the taker
- * TAKER_API_KEY: API key of the taker
- * TAKER_SECRET: Secret of the taker
- * TAKER_PASS_PHRASE: Passphrase of the taker
- * MAKER_PK: Private key of the maker
- * MAKER_API_KEY: API key of the maker
- * MAKER_SECRET: Secret of the maker
- * MAKER_PASS_PHRASE: Passphrase of the maker
+ * REQUESTER_PK: Private key of the requester
+ * REQUESTER_API_KEY: API key of the requester
+ * REQUESTER_SECRET: Secret of the requester
+ * REQUESTER_PASS_PHRASE: Passphrase of the requester
+ * QUOTER_PK: Private key of the quoter
+ * QUOTER_API_KEY: API key of the quoter
+ * QUOTER_SECRET: Secret of the quoter
+ * QUOTER_PASS_PHRASE: Passphrase of the quoter
  * CHAIN_ID: Chain ID of the network
  * CLOB_API_URL: URL of the CLOB API
  */
@@ -36,7 +36,7 @@ import { Chain, ClobClient, Side } from "../src/index.ts";
 dotenvConfig({ path: resolve(import.meta.dirname, "../.env") });
 
 // ============================================
-// RFQ REQUEST PARAMETERS (TAKER) - EDIT THESE
+// RFQ REQUEST PARAMETERS (REQUESTER) - EDIT THESE
 // ============================================
 const REQUEST_PARAMS = {
     tokenID: "34097058504275310827233323421517291090691602969494795225921954353603704046623",
@@ -47,7 +47,7 @@ const REQUEST_PARAMS = {
 };
 
 // ============================================
-// RFQ QUOTE PARAMETERS (MAKER) - EDIT THESE
+// RFQ QUOTE PARAMETERS (QUOTER) - EDIT THESE
 // ============================================
 // For BUY request: quote is selling tokens for USDC (assetIn=0, assetOut=tokenID)
 // For SELL request: quote is buying tokens with USDC (assetIn=tokenID, assetOut=0)
@@ -67,16 +67,16 @@ const EXPIRATION_CONFIG = {
 
 async function main() {
     // ============================================
-    // Setup: Initialize both taker and maker clients
+    // Setup: Initialize both requester and quoter clients
     // ============================================
     
-    // Taker (creates the request and accepts the quote)
-    const takerWallet = new ethers.Wallet(`${process.env.TAKER_PK}`);
-    const takerAddress = await takerWallet.getAddress();
+    // Requester (creates the request and accepts the quote)
+    const requesterWallet = new ethers.Wallet(`${process.env.REQUESTER_PK}`);
+    const requesterAddress = await requesterWallet.getAddress();
     
-    // Maker (creates the quote and approves the order)
-    const makerWallet = new ethers.Wallet(`${process.env.MAKER_PK}`);
-    const makerAddress = await makerWallet.getAddress();
+    // Quoter (creates the quote and approves the order)
+    const quoterWallet = new ethers.Wallet(`${process.env.QUOTER_PK}`);
+    const quoterAddress = await quoterWallet.getAddress();
     
     const chainId = parseInt(`${process.env.CHAIN_ID || Chain.AMOY}`) as Chain;
     const host = process.env.CLOB_API_URL || "http://localhost:8080";
@@ -84,42 +84,42 @@ async function main() {
     console.log("=".repeat(60));
     console.log("RFQ Full Flow");
     console.log("=".repeat(60));
-    console.log(`Taker Address: ${takerAddress}`);
-    console.log(`Maker Address: ${makerAddress}`);
+    console.log(`Requester Address: ${requesterAddress}`);
+    console.log(`Quoter Address: ${quoterAddress}`);
     console.log(`Chain ID: ${chainId}`);
     console.log(`Host: ${host}`);
     console.log("=".repeat(60));
     
-    // Taker credentials
-    const takerCreds: ApiKeyCreds = {
-        key: `${process.env.TAKER_API_KEY}`,
-        secret: `${process.env.TAKER_SECRET}`,
-        passphrase: `${process.env.TAKER_PASS_PHRASE}`,
+    // Requester credentials
+    const requesterCreds: ApiKeyCreds = {
+        key: `${process.env.REQUESTER_API_KEY}`,
+        secret: `${process.env.REQUESTER_SECRET}`,
+        passphrase: `${process.env.REQUESTER_PASS_PHRASE}`,
     };
     
-    // Maker credentials
-    const makerCreds: ApiKeyCreds = {
-        key: `${process.env.MAKER_API_KEY}`,
-        secret: `${process.env.MAKER_SECRET}`,
-        passphrase: `${process.env.MAKER_PASS_PHRASE}`,
+    // Quoter credentials
+    const quoterCreds: ApiKeyCreds = {
+        key: `${process.env.QUOTER_API_KEY}`,
+        secret: `${process.env.QUOTER_SECRET}`,
+        passphrase: `${process.env.QUOTER_PASS_PHRASE}`,
     };
     
-    const takerClob = new ClobClient(host, chainId, takerWallet, takerCreds);
-    const makerClob = new ClobClient(host, chainId, makerWallet, makerCreds);
+    const requesterClob = new ClobClient(host, chainId, requesterWallet, requesterCreds);
+    const quoterClob = new ClobClient(host, chainId, quoterWallet, quoterCreds);
 
-    const takerClient = takerClob.rfq;
-    const makerClient = makerClob.rfq;
+    const requesterClient = requesterClob.rfq;
+    const quoterClient = quoterClob.rfq;
     
     // ============================================
-    // Step 1: Taker creates RFQ request
+    // Step 1: Requester creates RFQ request
     // ============================================
-    console.log("\n[Step 1] Taker creating RFQ request...");
+    console.log("\n[Step 1] Requester creating RFQ request...");
     console.log(`  Token ID: ${REQUEST_PARAMS.tokenID}`);
     console.log(`  Side: ${REQUEST_PARAMS.side}`);
     console.log(`  Size: ${REQUEST_PARAMS.size}`);
     console.log(`  Price: ${REQUEST_PARAMS.price}`);
     
-    const rfqRequestResponse = await takerClient.createRfqRequest(
+    const rfqRequestResponse = await requesterClient.createRfqRequest(
         {
             tokenID: REQUEST_PARAMS.tokenID,
             price: REQUEST_PARAMS.price,
@@ -147,15 +147,15 @@ async function main() {
     console.log(`  Full response:`, rfqRequestResponse);
     
     // ============================================
-    // Step 2: Maker creates quote for the request
+    // Step 2: Quoter creates quote for the request
     // ============================================
-    console.log("\n[Step 2] Maker creating quote for request...");
+    console.log("\n[Step 2] Quoter creating quote for request...");
     console.log(`  Asset In: ${QUOTE_PARAMS.assetIn}`);
     console.log(`  Asset Out: ${QUOTE_PARAMS.assetOut}`);
     console.log(`  Amount In: ${QUOTE_PARAMS.amountIn}`);
     console.log(`  Amount Out: ${QUOTE_PARAMS.amountOut}`);
     
-    const rfqQuoteResponse = await makerClient.createRfqQuote({
+    const rfqQuoteResponse = await quoterClient.createRfqQuote({
         requestId: requestId,
         assetIn: QUOTE_PARAMS.assetIn,
         assetOut: QUOTE_PARAMS.assetOut,
@@ -182,11 +182,11 @@ async function main() {
     console.log(`  Full response:`, rfqQuoteResponse);
     
     // ============================================
-    // Step 3: Taker accepts the quote
+    // Step 3: Requester accepts the quote
     // ============================================
-    console.log("\n[Step 3] Taker accepting quote...");
+    console.log("\n[Step 3] Requester accepting quote...");
     
-    const acceptResult = await takerClient.acceptRfqQuote({
+    const acceptResult = await requesterClient.acceptRfqQuote({
         requestId: requestId,
         quoteId: quoteId,
         expiration: Math.floor(Date.now() / 1000) + EXPIRATION_CONFIG.expirationSeconds,
@@ -198,11 +198,11 @@ async function main() {
     console.log(`  Quote ID: ${quoteId}`);
     
     // ============================================
-    // Step 4: Maker approves the order
+    // Step 4: Quoter approves the order
     // ============================================
-    console.log("\n[Step 4] Maker approving order...");
+    console.log("\n[Step 4] Quoter approving order...");
     
-    const approveResult = await makerClient.approveRfqOrder({
+    const approveResult = await quoterClient.approveRfqOrder({
         requestId: requestId,
         quoteId: quoteId,
         expiration: Math.floor(Date.now() / 1000) + EXPIRATION_CONFIG.expirationSeconds,
@@ -221,8 +221,8 @@ async function main() {
     console.log("=".repeat(60));
     console.log(`Request ID: ${requestId}`);
     console.log(`Quote ID:   ${quoteId}`);
-    console.log(`Taker:      ${takerAddress}`);
-    console.log(`Maker:      ${makerAddress}`);
+    console.log(`Requester:  ${requesterAddress}`);
+    console.log(`Quoter:     ${quoterAddress}`);
     console.log("=".repeat(60));
 }
 
@@ -234,4 +234,3 @@ main().catch(error => {
     }
     process.exit(1);
 });
-
