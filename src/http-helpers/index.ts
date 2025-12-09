@@ -30,15 +30,50 @@ const overloadHeaders = (method: Method, headers?: SimpleHeaders) => {
     }
 };
 
+// Create axios instance with timeout
+const axiosInstance = axios.create({
+    timeout: 8000, // 8 seconds for trading systems
+});
+
+// Simple retry logic without external dependency
+const requestWithRetry = async (config: any, shouldRetry: boolean = false, maxRetries = 2): Promise<any> => {
+    if (!shouldRetry) {
+        // If retry is disabled, just make a single request
+        return await axiosInstance(config);
+    }
+
+    for (let attempt = 0; attempt <= maxRetries; attempt++) {
+        try {
+            return await axiosInstance(config);
+        } catch (error) {
+            const isLastAttempt = attempt === maxRetries;
+            const shouldRetryError = axios.isAxiosError(error) && (
+                error.code === 'ECONNABORTED' ||
+                error.message === 'Network Error' ||
+                error.response?.status === 0 ||
+                (error.response?.status !== undefined && error.response.status >= 500 && error.response.status <= 599)
+            );
+
+            if (isLastAttempt || !shouldRetryError) {
+                throw error;
+            }
+
+            // Wait before retry: 500ms * attempt (0ms, 500ms, 1000ms)
+            await new Promise(resolve => setTimeout(resolve, 500 * attempt));
+        }
+    }
+};
+
 export const request = async (
     endpoint: string,
     method: Method,
     headers?: SimpleHeaders,
     data?: any,
     params?: any,
+    retryOnError?: boolean,
 ): Promise<any> => {
     overloadHeaders(method, headers);
-    return await axios({ method, url: endpoint, headers, data, params });
+    return await requestWithRetry({ method, url: endpoint, headers, data, params }, retryOnError);
 };
 
 export type QueryParams = Record<string, any>;
@@ -47,6 +82,7 @@ export interface RequestOptions {
     headers?: SimpleHeaders;
     data?: any;
     params?: QueryParams;
+    retryOnError?: boolean;
 }
 
 export const post = async (endpoint: string, options?: RequestOptions): Promise<any> => {
@@ -57,6 +93,7 @@ export const post = async (endpoint: string, options?: RequestOptions): Promise<
             options?.headers,
             options?.data,
             options?.params,
+            options?.retryOnError,
         );
         return resp.data;
     } catch (err: unknown) {
@@ -66,7 +103,7 @@ export const post = async (endpoint: string, options?: RequestOptions): Promise<
 
 export const get = async (endpoint: string, options?: RequestOptions): Promise<any> => {
     try {
-        const resp = await request(endpoint, GET, options?.headers, options?.data, options?.params);
+        const resp = await request(endpoint, GET, options?.headers, options?.data, options?.params, options?.retryOnError);
         return resp.data;
     } catch (err: unknown) {
         return errorHandling(err);
@@ -81,6 +118,7 @@ export const del = async (endpoint: string, options?: RequestOptions): Promise<a
             options?.headers,
             options?.data,
             options?.params,
+            options?.retryOnError,
         );
         return resp.data;
     } catch (err: unknown) {
@@ -90,6 +128,31 @@ export const del = async (endpoint: string, options?: RequestOptions): Promise<a
 
 const errorHandling = (err: unknown) => {
     if (axios.isAxiosError(err)) {
+        // Enhanced logging for network errors and timeouts
+        if (err.code === 'ECONNABORTED') {
+            console.error(
+                "[CLOB Client] request timeout",
+                JSON.stringify({
+                    error: "Request timeout",
+                    url: err.config?.url,
+                    timeout: err.config?.timeout,
+                }),
+            );
+            return { error: "Request timeout", retryable: true };
+        }
+
+        if (err.message === 'Network Error' || err.response?.status === 0) {
+            console.error(
+                "[CLOB Client] network error",
+                JSON.stringify({
+                    error: "Network error",
+                    url: err.config?.url,
+                    message: err.message,
+                }),
+            );
+            return { error: "Network error", retryable: true };
+        }
+
         if (err.response) {
             console.error(
                 "[CLOB Client] request error",
