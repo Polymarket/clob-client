@@ -609,6 +609,8 @@ export interface GetRfqBestQuoteParams {
 
 export type RfqUserOrder = Pick<UserOrder, "price" | "size" | "side" | "tokenID">
 
+export type RfqUserQuote = RfqUserOrder & { requestId: string };
+
 
 export interface GetRfqRequestsParams {
     requestIds?: string[];

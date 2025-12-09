@@ -50,13 +50,14 @@ const REQUEST_PARAMS = {
 // ============================================
 // RFQ QUOTE PARAMETERS (QUOTER) - EDIT THESE
 // ============================================
-// For BUY request: quote is selling tokens for USDC (assetIn=0, assetOut=tokenID)
-// For SELL request: quote is buying tokens with USDC (assetIn=tokenID, assetOut=0)
+// For BUY request: quoter is selling tokens (Side.SELL)
+// For SELL request: quoter is buying tokens (Side.BUY)
 const QUOTE_PARAMS = {
-    assetIn: "0",  // USDC (for BUY request)
-    assetOut: "34097058504275310827233323421517291090691602969494795225921954353603704046623",
-    amountIn: "20000000",   // 20 USDC (6 decimals)
-    amountOut: "40000000",  // 40 tokens (6 decimals)
+    tokenID: "34097058504275310827233323421517291090691602969494795225921954353603704046623",
+    price: 0.5,         // Price per token (e.g., 0.50 = 50 cents)
+    side: Side.SELL,    // Side.SELL when responding to BUY request, Side.BUY when responding to SELL request
+    size: 40,           // Number of tokens
+    tickSize: "0.01" as const,   // Minimum price increment: "0.1" | "0.01" | "0.001" | "0.0001"
 };
 
 // ============================================
@@ -151,18 +152,21 @@ async function main() {
     // Step 2: Quoter creates quote for the request
     // ============================================
     console.log("\n[Step 2] Quoter creating quote for request...");
-    console.log(`  Asset In: ${QUOTE_PARAMS.assetIn}`);
-    console.log(`  Asset Out: ${QUOTE_PARAMS.assetOut}`);
-    console.log(`  Amount In: ${QUOTE_PARAMS.amountIn}`);
-    console.log(`  Amount Out: ${QUOTE_PARAMS.amountOut}`);
+    console.log(`  Token ID: ${QUOTE_PARAMS.tokenID}`);
+    console.log(`  Side: ${QUOTE_PARAMS.side}`);
+    console.log(`  Size: ${QUOTE_PARAMS.size}`);
+    console.log(`  Price: ${QUOTE_PARAMS.price}`);
     
-    const rfqQuoteResponse = await quoterClient.createRfqQuote({
-        requestId: requestId,
-        assetIn: QUOTE_PARAMS.assetIn,
-        assetOut: QUOTE_PARAMS.assetOut,
-        amountIn: QUOTE_PARAMS.amountIn,
-        amountOut: QUOTE_PARAMS.amountOut,
-    });
+    const rfqQuoteResponse = await quoterClient.createRfqQuote(
+        {
+            requestId: requestId,
+            tokenID: QUOTE_PARAMS.tokenID,
+            price: QUOTE_PARAMS.price,
+            side: QUOTE_PARAMS.side,
+            size: QUOTE_PARAMS.size,
+        },
+        { tickSize: QUOTE_PARAMS.tickSize },
+    );
     
     // Check for errors
     if (rfqQuoteResponse.error) {

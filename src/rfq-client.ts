@@ -3,6 +3,7 @@ import type {
     ApiKeyCreds,
     CreateOrderOptions,
     RfqUserOrder,
+    RfqUserQuote,
     CreateRfqRequestParams,
     CreateRfqQuoteParams,
     ImproveRfqQuoteParams,
@@ -171,15 +172,60 @@ export class RfqClient implements IRfqClient {
     }
 
     /**
-     * Creates a quote in response to an RFQ request
+     * Creates a quote in response to an RFQ request.
+     * Converts user-friendly parameters into the proper RFQ quote format with asset amounts and submits it.
      */
-    public async createRfqQuote(quote: CreateRfqQuoteParams): Promise<RfqQuoteResponse> {
+    public async createRfqQuote(
+        userQuote: RfqUserQuote,
+        options?: Partial<CreateOrderOptions>,
+    ): Promise<RfqQuoteResponse> {
         this.ensureL2Auth();
+
+        const { requestId, tokenID, price, side, size } = userQuote;
+
+        const tickSize = await this.deps.resolveTickSize(tokenID, options?.tickSize);
+
+        const roundConfig = ROUNDING_CONFIG[tickSize];
+
+        const roundedPrice = roundNormal(price, roundConfig.price).toFixed(roundConfig.price);
+        const roundedSize = roundDown(size, roundConfig.size).toFixed(roundConfig.size);
+
+        // Calculate amounts based on side
+        const sizeNum = parseFloat(roundedSize);
+        const priceNum = parseFloat(roundedPrice);
+
+        let amountIn: string;
+        let amountOut: string;
+        let assetIn: string;
+        let assetOut: string;
+
+        if (side === Side.SELL) {
+            // Quoter selling tokens: receive USDC (asset 0), give tokens (tokenID)
+            amountIn = parseUnits((sizeNum * priceNum).toFixed(roundConfig.amount), COLLATERAL_TOKEN_DECIMALS).toString();
+            amountOut = parseUnits(roundedSize, COLLATERAL_TOKEN_DECIMALS).toString();
+            assetIn = "0"; // USDC
+            assetOut = tokenID;
+        } else {
+            // Quoter buying tokens: receive tokens (tokenID), give USDC (asset 0)
+            amountIn = parseUnits(roundedSize, COLLATERAL_TOKEN_DECIMALS).toString();
+            amountOut = parseUnits((sizeNum * priceNum).toFixed(roundConfig.amount), COLLATERAL_TOKEN_DECIMALS).toString();
+            assetIn = tokenID;
+            assetOut = "0"; // USDC
+        }
+
+        const payload: CreateRfqQuoteParams = {
+            requestId,
+            assetIn,
+            assetOut,
+            amountIn,
+            amountOut,
+        };
+
         const endpoint = CREATE_RFQ_QUOTE;
 
         // Auto-fill userType from client's signatureType
         const quoteWithUserType = {
-            ...quote,
+            ...payload,
             userType: this.deps.userType,
         };
 

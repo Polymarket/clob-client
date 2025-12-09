@@ -9,7 +9,6 @@ import type {
     CancelRfqQuoteParams,
     CancelRfqRequestParams,
     CreateOrderOptions,
-    CreateRfqQuoteParams,
     GetRfqBestQuoteParams,
     GetRfqQuotesParams,
     GetRfqRequestsParams,
@@ -20,6 +19,7 @@ import type {
     RfqRequestResponse,
     RfqQuoteResponse,
     RfqUserOrder,
+    RfqUserQuote,
     TickSize,
     UserOrder,
 } from "./types.ts";
@@ -77,7 +77,10 @@ export interface IRfqClient {
 
     getRfqRequests(params?: GetRfqRequestsParams): Promise<RfqRequestsResponse>;
 
-    createRfqQuote(quote: CreateRfqQuoteParams): Promise<RfqQuoteResponse>;
+    createRfqQuote(
+        userQuote: RfqUserQuote,
+        options?: Partial<CreateOrderOptions>,
+    ): Promise<RfqQuoteResponse>;
 
     getRfqQuotes(params?: GetRfqQuotesParams): Promise<RfqQuotesResponse>;
 
