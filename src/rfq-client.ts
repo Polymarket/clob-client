@@ -6,7 +6,6 @@ import type {
     RfqUserQuote,
     CreateRfqRequestParams,
     CreateRfqQuoteParams,
-    ImproveRfqQuoteParams,
     CancelRfqQuoteParams,
     GetRfqQuotesParams,
     GetRfqBestQuoteParams,
@@ -34,7 +33,6 @@ import {
     CREATE_RFQ_QUOTE,
     GET_RFQ_QUOTES,
     GET_RFQ_BEST_QUOTE,
-    IMPROVE_RFQ_QUOTE,
     CANCEL_RFQ_QUOTE,
     CREATE_RFQ_REQUEST,
     RFQ_CONFIG,
@@ -291,29 +289,6 @@ export class RfqClient implements IRfqClient {
         );
 
         return this.deps.get(`${this.deps.host}${endpoint}`, { headers, params });
-    }
-
-    /**
-     * Improves an existing quote with a better amountOut
-     */
-    public async improveRfqQuote(quote: ImproveRfqQuoteParams): Promise<"OK"> {
-        this.ensureL2Auth();
-        const endpoint = IMPROVE_RFQ_QUOTE;
-
-        const l2HeaderArgs = {
-            method: PUT,
-            requestPath: endpoint,
-            body: JSON.stringify(quote),
-        };
-
-        const headers = await createL2Headers(
-            this.deps.signer as Wallet | JsonRpcSigner,
-            this.deps.creds as ApiKeyCreds,
-            l2HeaderArgs,
-            this.deps.useServerTime ? await this.deps.getServerTime() : undefined,
-        );
-
-        return this.deps.put(`${this.deps.host}${endpoint}`, { headers, data: quote });
     }
 
     /**

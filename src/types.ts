@@ -560,13 +560,6 @@ export interface CreateRfqQuoteParams {
     amountOut: string;
 }
 
-
-export interface ImproveRfqQuoteParams {
-    quoteId: string;
-    amountOut: string;
-}
-
-
 export interface CancelRfqQuoteParams {
     quoteId: string;
 }

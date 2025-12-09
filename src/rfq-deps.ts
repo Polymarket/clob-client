@@ -12,7 +12,6 @@ import type {
     GetRfqBestQuoteParams,
     GetRfqQuotesParams,
     GetRfqRequestsParams,
-    ImproveRfqQuoteParams,
     RfqQuote,
     RfqQuotesResponse,
     RfqRequestsResponse,
@@ -85,8 +84,6 @@ export interface IRfqClient {
     getRfqQuotes(params?: GetRfqQuotesParams): Promise<RfqQuotesResponse>;
 
     getRfqBestQuote(params?: GetRfqBestQuoteParams): Promise<RfqQuote>;
-
-    improveRfqQuote(quote: ImproveRfqQuoteParams): Promise<"OK">;
 
     cancelRfqQuote(quote: CancelRfqQuoteParams): Promise<"OK">;
 

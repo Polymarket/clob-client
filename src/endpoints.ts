@@ -82,7 +82,6 @@ export const CREATE_RFQ_REQUEST = "/rfq/request"
 export const CANCEL_RFQ_REQUEST = "/rfq/request";
 export const GET_RFQ_REQUESTS = "/rfq/data/requests";
 export const CREATE_RFQ_QUOTE = "/rfq/quote";
-export const IMPROVE_RFQ_QUOTE = "/rfq/quote";
 export const CANCEL_RFQ_QUOTE = "/rfq/quote";
 export const RFQ_REQUESTS_ACCEPT = "/rfq/request/accept";
 export const RFQ_QUOTE_APPROVE = "/rfq/quote/approve";
