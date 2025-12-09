@@ -24,7 +24,6 @@ import {
     DELETE,
     GET,
     POST,
-    PUT,
     parseRfqQuotesParams,
     parseRfqRequestsParams,
 } from "./http-helpers/index.ts";
