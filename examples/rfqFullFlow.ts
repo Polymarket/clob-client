@@ -3,6 +3,7 @@
  * 
  * This script demonstrates the complete RFQ (Request for Quote) flow between two parties.
  * For a single manual test, edit the REQUEST_PARAMS and QUOTE_PARAMS at the top.
+ * This example assumes two EOA wallets. For using different signature types, see other RFQ examples.
  * 
  * 
  * Usage: npx tsx examples/rfqFullFlow.ts

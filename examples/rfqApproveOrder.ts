@@ -3,6 +3,7 @@ import { config as dotenvConfig } from "dotenv";
 import { resolve } from "path";
 import type { ApiKeyCreds } from "../src/index.ts";
 import { Chain, ClobClient } from "../src/index.ts";
+// import { SignatureType } from "@polymarket/order-utils";
 
 dotenvConfig({ path: resolve(import.meta.dirname, "../.env") });
 
@@ -20,7 +21,12 @@ async function main() {
         secret: `${process.env.CLOB_SECRET}`,
         passphrase: `${process.env.CLOB_PASS_PHRASE}`,
     };
+    // For EOA signature type
     const clobClient = new ClobClient(host, chainId, wallet, creds);
+
+    // For Polymarket Gnosis safe signature type
+    // const funderAddress = "0x05259a655099324da89B0fC4F8A29816DcECb510";
+    // const clobClient = new ClobClient(host, chainId, wallet, creds, SignatureType.POLY_GNOSIS_SAFE, funderAddress);
 
     console.log("Approving order...");
     // approve the order
