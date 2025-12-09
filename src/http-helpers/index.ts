@@ -1,7 +1,7 @@
 /* eslint-disable max-depth */
 import axios from "axios";
 import type { Method } from "axios";
-import type { DropNotificationParams, OrdersScoringParams, SimpleHeaders } from "../types.ts";
+import type { DropNotificationParams, GetRfqQuotesParams, GetRfqRequestsParams, OrdersScoringParams, SimpleHeaders } from "../types.ts";
 import { isBrowser } from "browser-or-node";
 
 export const GET = "GET";
@@ -88,6 +88,21 @@ export const del = async (endpoint: string, options?: RequestOptions): Promise<a
     }
 };
 
+export const put = async (endpoint: string, options?: RequestOptions): Promise<any> => {
+    try {
+        const resp = await request(
+            endpoint,
+            PUT,
+            options?.headers,
+            options?.data,
+            options?.params,
+        );
+        return resp.data;
+    } catch (err: unknown) {
+        return errorHandling(err);
+    }
+};
+
 const errorHandling = (err: unknown) => {
     if (axios.isAxiosError(err)) {
         if (err.response) {
@@ -149,5 +164,46 @@ export const parseDropNotificationParams = (
             params["ids"] = dropNotificationParams?.ids.join(",");
         }
     }
+    return params;
+};
+
+export const parseRfqQuotesParams = (rfqQuotesParams?: GetRfqQuotesParams): QueryParams => {
+    if (!rfqQuotesParams) return {};
+
+    const params: QueryParams = { ...rfqQuotesParams };
+
+    // Convert array fields to comma-separated strings
+    if (rfqQuotesParams.quoteIds) {
+        params.quoteIds = rfqQuotesParams.quoteIds.join(",");
+    }
+    if (rfqQuotesParams.states) {
+        params.states = rfqQuotesParams.states.join(",");
+    }
+    if (rfqQuotesParams.markets) {
+        params.markets = rfqQuotesParams.markets.join(",");
+    }
+    if (rfqQuotesParams.requestIds) {
+        params.requestIds = rfqQuotesParams.requestIds.join(",");
+    }
+
+    return params;
+};
+
+export const parseRfqRequestsParams = (rfqRequestsParams?: GetRfqRequestsParams): QueryParams => {
+    if (!rfqRequestsParams) return {};
+
+    const params: QueryParams = { ...rfqRequestsParams };
+
+    // Convert array fields to comma-separated strings
+    if (rfqRequestsParams.requestIds) {
+        params.requestIds = rfqRequestsParams.requestIds.join(",");
+    }
+    if (rfqRequestsParams.states) {
+        params.states = rfqRequestsParams.states.join(",");
+    }
+    if (rfqRequestsParams.markets) {
+        params.markets = rfqRequestsParams.markets.join(",");
+    }
+
     return params;
 };
