@@ -51,6 +51,7 @@ import type {
     BuilderTrade,
     BuilderApiKey,
     BuilderApiKeyResponse,
+    ReadonlyApiKeyResponse,
 } from "./types.ts";
 import { createL1Headers, createL2Headers, injectBuilderHeaders } from "./headers/index.ts";
 import {
@@ -122,6 +123,10 @@ import {
     CREATE_BUILDER_API_KEY,
     GET_BUILDER_API_KEYS,
     REVOKE_BUILDER_API_KEY,
+    CREATE_READONLY_API_KEY,
+    GET_READONLY_API_KEYS,
+    DELETE_READONLY_API_KEY,
+    VALIDATE_READONLY_API_KEY,
 } from "./endpoints.ts";
 import { OrderBuilder } from "./order-builder/builder.ts";
 import { END_CURSOR, INITIAL_CURSOR } from "./constants.ts";
@@ -466,6 +471,86 @@ export class ClobClient {
         );
 
         return this.del(`${this.host}${endpoint}`, { headers });
+    }
+
+    /**
+     * Creates a new readonly API key for a user
+     * @returns ReadonlyApiKeyResponse
+     */
+    public async createReadonlyApiKey(): Promise<ReadonlyApiKeyResponse> {
+        this.canL2Auth();
+
+        const endpoint = CREATE_READONLY_API_KEY;
+        const headerArgs = {
+            method: POST,
+            requestPath: endpoint,
+        };
+
+        const headers = await createL2Headers(
+            this.signer as Wallet | JsonRpcSigner,
+            this.creds as ApiKeyCreds,
+            headerArgs,
+            this.useServerTime ? await this.getServerTime() : undefined,
+        );
+
+        return this.post(`${this.host}${endpoint}`, { headers });
+    }
+
+    public async getReadonlyApiKeys(): Promise<string[]> {
+        this.canL2Auth();
+
+        const endpoint = GET_READONLY_API_KEYS;
+        const headerArgs = {
+            method: GET,
+            requestPath: endpoint,
+        };
+
+        const headers = await createL2Headers(
+            this.signer as Wallet | JsonRpcSigner,
+            this.creds as ApiKeyCreds,
+            headerArgs,
+            this.useServerTime ? await this.getServerTime() : undefined,
+        );
+
+        return this.get(`${this.host}${endpoint}`, { headers });
+    }
+
+    /**
+     * Deletes a readonly API key for a user
+     * @param key The readonly API key to delete
+     * @returns boolean
+     */
+    public async deleteReadonlyApiKey(key: string): Promise<boolean> {
+        this.canL2Auth();
+
+        const endpoint = DELETE_READONLY_API_KEY;
+        const payload = { key };
+        const headerArgs = {
+            method: DELETE,
+            requestPath: endpoint,
+            body: JSON.stringify(payload),
+        };
+
+        const headers = await createL2Headers(
+            this.signer as Wallet | JsonRpcSigner,
+            this.creds as ApiKeyCreds,
+            headerArgs,
+            this.useServerTime ? await this.getServerTime() : undefined,
+        );
+
+        return this.del(`${this.host}${endpoint}`, { headers, data: payload });
+    }
+
+    /**
+     * Validates a readonly API key for a given address
+     * @param address The wallet address
+     * @param key The readonly API key to validate
+     * @returns string
+     */
+    public async validateReadonlyApiKey(address: string, key: string): Promise<string> {
+        return this.get(`${this.host}${VALIDATE_READONLY_API_KEY}`, {
+            params: { address, key },
+        });
     }
 
     public async getOrder(orderID: string): Promise<OpenOrder> {
