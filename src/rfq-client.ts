@@ -367,16 +367,18 @@ export class RfqClient implements IRfqClient {
      */
     public async acceptRfqQuote(payload: AcceptQuoteParams): Promise<"OK"> {
         this.ensureL2Auth();
-        let rfqQuotes: RfqQuotesResponse;
-        try {
-            rfqQuotes = await this.getRfqQuotes({
-                quoteIds: [payload.quoteId],
-            });
-            if (!rfqQuotes?.data || rfqQuotes.data.length === 0) {
-                throw new Error("RFQ quote not found");
-            }
-        } catch (error) {
-            throw new Error(error instanceof Error ? error.message : "Error fetching RFQ quote");
+        const rfqQuotes: RfqQuotesResponse | { error: any } = await this.getRfqQuotes({
+            quoteIds: [payload.quoteId],
+        });
+        // Check for HTTP errors first (network failures, auth errors, server errors)
+        if ("error" in rfqQuotes) {
+            const errorMsg = typeof rfqQuotes.error === "string" 
+                ? rfqQuotes.error 
+                : JSON.stringify(rfqQuotes.error);
+            throw new Error(`Error fetching RFQ quote: ${errorMsg}`);
+        }
+        if (!rfqQuotes?.data || rfqQuotes.data.length === 0) {
+            throw new Error("RFQ quote not found");
         }
         const rfqQuote = rfqQuotes.data[0];
         
@@ -431,16 +433,18 @@ export class RfqClient implements IRfqClient {
      */
     public async approveRfqOrder(payload: ApproveOrderParams): Promise<"OK"> {
         this.ensureL2Auth();
-        let rfqQuotes: RfqQuotesResponse;
-        try {
-            rfqQuotes = await this.getRfqQuotes({
-                quoteIds: [payload.quoteId],
-            });
-            if (!rfqQuotes?.data || rfqQuotes.data.length === 0) {
-                throw new Error("RFQ quote not found");
-            }
-        } catch (error) {
-            throw new Error(error instanceof Error ? error.message : "Error fetching RFQ quote");
+        const rfqQuotes: RfqQuotesResponse | { error: any } = await this.getRfqQuotes({
+            quoteIds: [payload.quoteId],
+        });
+        // Check for HTTP errors first (network failures, auth errors, server errors)
+        if ("error" in rfqQuotes) {
+            const errorMsg = typeof rfqQuotes.error === "string" 
+                ? rfqQuotes.error 
+                : JSON.stringify(rfqQuotes.error);
+            throw new Error(`Error fetching RFQ quote: ${errorMsg}`);
+        }
+        if (!rfqQuotes?.data || rfqQuotes.data.length === 0) {
+            throw new Error("RFQ quote not found");
         }
         const rfqQuote = rfqQuotes.data[0];
         
