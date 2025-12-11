@@ -1,4 +1,5 @@
 import { Side } from "./types.ts";
+import { INITIAL_CURSOR, END_CURSOR } from "./constants.ts";
 import type {
     ApiKeyCreds,
     CreateOrderOptions,
@@ -18,6 +19,7 @@ import type {
     RfqRequestResponse,
     RfqQuoteResponse,
     RfqQuote,
+    RfqRequest,
 } from "./types.ts";
 import { createL2Headers } from "./headers/index.ts";
 import {
@@ -265,6 +267,84 @@ export class RfqClient implements IRfqClient {
 
         return this.deps.get(`${this.deps.host}${endpoint}`, 
             { headers, params: parseRfqQuotesParams(params) }) as Promise<RfqQuotesResponse>;
+    }
+
+        /**
+     * Iterates through all pages of RFQ requests and returns the aggregated list.
+     * Uses next_cursor pagination until END_CURSOR.
+     *
+     * @param params Optional filtering params for the request list.
+     * @param next_cursor Optional initial cursor (defaults to INITIAL_CURSOR).
+     */
+    public async getAllRfqRequests(
+        params?: GetRfqRequestsParams,
+        next_cursor: string = INITIAL_CURSOR,
+    ): Promise<RfqRequest[]> {
+        this.ensureL2Auth();
+
+        let cursor: string = next_cursor ?? INITIAL_CURSOR;
+        let results: RfqRequest[] = [];
+        const baseParams = parseRfqRequestsParams(params);
+
+        while (cursor !== END_CURSOR) {
+            const endpoint = GET_RFQ_REQUESTS;
+            const l2HeaderArgs = { method: GET, requestPath: endpoint };
+            const headers = await createL2Headers(
+                this.deps.signer as Wallet | JsonRpcSigner,
+                this.deps.creds as ApiKeyCreds,
+                l2HeaderArgs,
+                this.deps.useServerTime ? await this.deps.getServerTime() : undefined,
+            );
+
+            const response = (await this.deps.get(`${this.deps.host}${endpoint}`, {
+                headers,
+                params: { ...baseParams, next_cursor: cursor },
+            })) as RfqRequestsResponse;
+
+            results = results.concat(response.data);
+            cursor = response.next_cursor;
+        }
+
+        return results;
+    }
+
+    /**
+     * Iterates through all pages of RFQ quotes and returns the aggregated list.
+     * Uses next_cursor pagination until END_CURSOR.
+     *
+     * @param params Optional filtering params for the quote list.
+     * @param next_cursor Optional initial cursor (defaults to INITIAL_CURSOR).
+     */
+    public async getAllRfqQuotes(
+        params?: GetRfqQuotesParams,
+        next_cursor: string = INITIAL_CURSOR,
+    ): Promise<RfqQuote[]> {
+        this.ensureL2Auth();
+
+        let cursor: string = next_cursor ?? INITIAL_CURSOR;
+        let results: RfqQuote[] = [];
+        const baseParams = parseRfqQuotesParams(params);
+
+        while (cursor !== END_CURSOR) {
+            const endpoint = GET_RFQ_QUOTES;
+            const l2HeaderArgs = { method: GET, requestPath: endpoint };
+            const headers = await createL2Headers(
+                this.deps.signer as Wallet | JsonRpcSigner,
+                this.deps.creds as ApiKeyCreds,
+                l2HeaderArgs,
+                this.deps.useServerTime ? await this.deps.getServerTime() : undefined,
+            );
+
+            const response = (await this.deps.get(`${this.deps.host}${endpoint}`, {
+                headers,
+                params: { ...baseParams, next_cursor: cursor },
+            })) as RfqQuotesResponse;
+
+            results = results.concat(response.data);
+            cursor = response.next_cursor;
+        }
+
+        return results;
     }
 
     /**
