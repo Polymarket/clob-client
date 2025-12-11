@@ -472,11 +472,9 @@ export class RfqClient implements IRfqClient {
 
     private getRequestOrderCreationPayload(matchType: string, quote: RfqQuote): RfqRequestOrderCreationPayload { 
         const quoteSide = quote.side;
-        console.log(`Quote Side: ${quoteSide}`);
         let side: Side;
         let token: string;
         let size: string;
-        console.log(`Match Type: ${matchType}`);
 
         switch (matchType) {
         case RfqMatchType.COMPLEMENTARY:
