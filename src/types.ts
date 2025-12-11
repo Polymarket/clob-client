@@ -650,6 +650,12 @@ export interface RfqRequest {
     readonly updatedAt: Date;
 }
 
+export enum RfqMatchType {
+    COMPLEMENTARY = "COMPLEMENTARY",
+    MERGE = "MERGE",
+    MINT = "MINT"
+} 
+
 
 export interface RfqQuote {
     readonly quoteId: string;
@@ -665,6 +671,7 @@ export interface RfqQuote {
     readonly price: number;
     readonly state: string;
     readonly expiry: Date;
+    readonly matchType: string;
     readonly createdAt: Date;
     readonly updatedAt: Date;
 }
@@ -683,4 +690,10 @@ export interface RfqRequestResponse {
 export interface RfqQuoteResponse {
     readonly quoteId: string;
     readonly error?: string;
+}
+
+export interface RfqRequestOrderCreationPayload {
+    readonly token: string;
+    readonly side: Side;
+    readonly size: string;
 }
