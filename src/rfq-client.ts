@@ -358,8 +358,7 @@ export class RfqClient implements IRfqClient {
         const rfqQuote = rfqQuotes.data[0];
         
         // Create an order, matching the quote
-        const matchType = rfqQuote.matchType;
-        const orderPayload = this.getRequestOrderCreationPayload(matchType, rfqQuote);
+        const orderPayload = this.getRequestOrderCreationPayload(rfqQuote);
         const orderSide = orderPayload.side;
         const size = orderPayload.size;
         const token = orderPayload.token;
@@ -470,8 +469,9 @@ export class RfqClient implements IRfqClient {
         return this.deps.post(`${this.deps.host}${endpoint}`, { headers, data: approvePayload });
     }
 
-    private getRequestOrderCreationPayload(matchType: string, quote: RfqQuote): RfqRequestOrderCreationPayload { 
+    private getRequestOrderCreationPayload(quote: RfqQuote): RfqRequestOrderCreationPayload { 
         const quoteSide = quote.side;
+        const matchType = quote.matchType;
         let side: Side;
         let token: string;
         let size: string;

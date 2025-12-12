@@ -654,7 +654,7 @@ export enum RfqMatchType {
     COMPLEMENTARY = "COMPLEMENTARY",
     MERGE = "MERGE",
     MINT = "MINT"
-} 
+}
 
 
 export interface RfqQuote {
