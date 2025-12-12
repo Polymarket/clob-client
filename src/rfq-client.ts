@@ -469,6 +469,19 @@ export class RfqClient implements IRfqClient {
         return this.deps.post(`${this.deps.host}${endpoint}`, { headers, data: approvePayload });
     }
 
+    /**
+     * Ensures L2 authentication is available for RFQ endpoints.
+     */
+    protected ensureL2Auth(): void {
+        if (this.deps.signer === undefined) {
+            throw L1_AUTH_UNAVAILABLE_ERROR;
+        }
+
+        if (this.deps.creds === undefined) {
+            throw L2_AUTH_NOT_AVAILABLE;
+        }
+    }
+
     private getRequestOrderCreationPayload(quote: RfqQuote): RfqRequestOrderCreationPayload { 
         const quoteSide = quote.side;
         const matchType = quote.matchType;
@@ -502,19 +515,6 @@ export class RfqClient implements IRfqClient {
             }
         default:
             throw new Error("invalid match type");
-        }
-    }
-
-    /**
-     * Ensures L2 authentication is available for RFQ endpoints.
-     */
-    protected ensureL2Auth(): void {
-        if (this.deps.signer === undefined) {
-            throw L1_AUTH_UNAVAILABLE_ERROR;
-        }
-
-        if (this.deps.creds === undefined) {
-            throw L2_AUTH_NOT_AVAILABLE;
         }
     }
 }
