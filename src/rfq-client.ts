@@ -1,4 +1,4 @@
-import { Side } from "./types.ts";
+import { RfqMatchType, Side } from "./types.ts";
 import type {
     ApiKeyCreds,
     CreateOrderOptions,
@@ -18,6 +18,7 @@ import type {
     RfqRequestResponse,
     RfqQuoteResponse,
     RfqQuote,
+    RfqRequestOrderCreationPayload,
 } from "./types.ts";
 import { createL2Headers } from "./headers/index.ts";
 import {
@@ -357,15 +358,16 @@ export class RfqClient implements IRfqClient {
         const rfqQuote = rfqQuotes.data[0];
         
         // Create an order, matching the quote
-        const side = rfqQuote.side === "BUY" ? Side.SELL : Side.BUY;
-        const size = rfqQuote.side === "BUY" ? 
-            rfqQuote.sizeIn : rfqQuote.sizeOut;
+        const orderPayload = this.getRequestOrderCreationPayload(rfqQuote);
+        const orderSide = orderPayload.side;
+        const size = orderPayload.size;
+        const token = orderPayload.token;
 
         const order = await this.deps.createOrder({
-            tokenID: rfqQuote.token,
+            tokenID: token,
             price: rfqQuote.price,
             size: parseFloat(size),
-            side: side,
+            side: orderSide,
             expiration: payload.expiration,
         });
 
@@ -379,7 +381,7 @@ export class RfqClient implements IRfqClient {
             owner: (this.deps.creds as ApiKeyCreds).key,
             ...order,
             expiration: parseInt(order.expiration),
-            side: side,
+            side: orderSide,
             salt: parseInt(order.salt.toString())
         };
         
@@ -477,6 +479,42 @@ export class RfqClient implements IRfqClient {
 
         if (this.deps.creds === undefined) {
             throw L2_AUTH_NOT_AVAILABLE;
+        }
+    }
+
+    private getRequestOrderCreationPayload(quote: RfqQuote): RfqRequestOrderCreationPayload { 
+        const quoteSide = quote.side;
+        const matchType = quote.matchType;
+        let side: Side;
+        let token: string;
+        let size: string;
+
+        switch (matchType) {
+        case RfqMatchType.COMPLEMENTARY:
+            // For BUY <> SELL and SELL <> BUY
+            // the order side is opposite the quote side
+            side = quoteSide === "BUY" ? Side.SELL: Side.BUY;
+            token = quote.token;
+            size = side == Side.BUY ? quote.sizeOut : quote.sizeIn;
+            return {
+                token,
+                side,
+                size,
+            };
+        case RfqMatchType.MINT:
+        case RfqMatchType.MERGE:
+            // BUY<> BUY, SELL <> SELL
+            // the order side is the same as the quote side
+            side = quoteSide === "BUY" ? Side.BUY: Side.SELL;
+            token = quote.complement;
+            size = side == Side.BUY ? quote.sizeIn : quote.sizeOut;
+            return {
+                token,
+                side,
+                size,
+            }
+        default:
+            throw new Error("invalid match type");
         }
     }
 }
