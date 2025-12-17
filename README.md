@@ -21,7 +21,7 @@ const funder = '';//This is your Polymarket Profile Address, where you send USDC
 const signer = new Wallet(""); //This is your Private key. If using email login export from https://reveal.magic.link/polymarket otherwise export from your Web3 Application
 
 
-//In general don't create a new API key, always derive or createOrDerive
+//In general don't create a new API key, always derive or use createOrDeriveApiKey()
 const creds = new ClobClient(host, 137, signer).createOrDeriveApiKey();
 
 //0: Browser Wallet(Metamask, Coinbase Wallet, etc)
