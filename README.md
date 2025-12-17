@@ -11,14 +11,14 @@ Typescript client for the Polymarket CLOB
 ```ts
 //npm install @polymarket/clob-client
 //npm install ethers
-//Client initialization example and dumping API Keys
+//Client initialization example and dumping API keys
 
 import { ApiKeyCreds, ClobClient, OrderType, Side, } from "@polymarket/clob-client";
 import { Wallet } from "@ethersproject/wallet";
 
 const host = 'https://clob.polymarket.com';
-const funder = '';//This is your Polymarket Profile Address, where you send UDSC to. 
-const signer = new Wallet(""); //This is your Private Key. If using email login export from https://reveal.magic.link/polymarket otherwise export from your Web3 Application
+const funder = '';//This is your Polymarket Profile Address, where you send USDC to. 
+const signer = new Wallet(""); //This is your Private key. If using email login export from https://reveal.magic.link/polymarket otherwise export from your Web3 Application
 
 
 //In general don't create a new API key, always derive or createOrDerive
