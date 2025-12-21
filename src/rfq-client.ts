@@ -365,7 +365,7 @@ export class RfqClient implements IRfqClient {
 
         const order = await this.deps.createOrder({
             tokenID: token,
-            price: rfqQuote.price,
+            price: orderPayload.price,
             size: parseFloat(size),
             side: orderSide,
             expiration: payload.expiration,
@@ -488,6 +488,7 @@ export class RfqClient implements IRfqClient {
         let side: Side;
         let token: string;
         let size: string;
+        let price: number;
 
         switch (matchType) {
         case RfqMatchType.COMPLEMENTARY:
@@ -496,22 +497,30 @@ export class RfqClient implements IRfqClient {
             side = quoteSide === "BUY" ? Side.SELL: Side.BUY;
             token = quote.token;
             size = side == Side.BUY ? quote.sizeOut : quote.sizeIn;
+            price = quote.price;
             return {
                 token,
                 side,
                 size,
+                price,
             };
         case RfqMatchType.MINT:
         case RfqMatchType.MERGE:
             // BUY<> BUY, SELL <> SELL
             // the order side is the same as the quote side
+
             side = quoteSide === "BUY" ? Side.BUY: Side.SELL;
             token = quote.complement;
             size = side == Side.BUY ? quote.sizeIn : quote.sizeOut;
+            // For a MINT or a MERGE, the requester price is the inverse of the quote price
+            // 95c Quote to BUY NO, implies that the Requester is buying YES at 5c
+            // 45c Quote to SELL NO, implies the Requester is selling YES at 55c
+            price = 1 - quote.price;
             return {
                 token,
                 side,
                 size,
+                price,
             }
         default:
             throw new Error("invalid match type");

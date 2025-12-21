@@ -696,4 +696,5 @@ export interface RfqRequestOrderCreationPayload {
     readonly token: string;
     readonly side: Side;
     readonly size: string;
+    readonly price: number;
 }
