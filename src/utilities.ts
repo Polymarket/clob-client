@@ -93,7 +93,7 @@ export const generateOrderBookSummaryHash = async (
     orderbook.hash = "";
     const message = JSON.stringify(orderbook);
     const messageBuffer = new TextEncoder().encode(message);
-    const hashBuffer = await crypto.subtle.digest("SHA-1", messageBuffer);
+    const hashBuffer = await globalThis.crypto.subtle.digest("SHA-1", messageBuffer);
     const hash = arrayBufferToHex(hashBuffer);
     orderbook.hash = hash;
     return hash;

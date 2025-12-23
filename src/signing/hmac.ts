@@ -54,7 +54,7 @@ export const buildPolyHmacSignature = async (
 
     // Import the secret key from base64
     const keyData = base64ToArrayBuffer(secret);
-    const cryptoKey = await crypto.subtle.importKey(
+    const cryptoKey = await globalThis.crypto.subtle.importKey(
         "raw",
         keyData,
         { name: "HMAC", hash: "SHA-256" },
@@ -64,7 +64,7 @@ export const buildPolyHmacSignature = async (
 
     // Sign the message
     const messageBuffer = new TextEncoder().encode(message);
-    const signatureBuffer = await crypto.subtle.sign("HMAC", cryptoKey, messageBuffer);
+    const signatureBuffer = await globalThis.crypto.subtle.sign("HMAC", cryptoKey, messageBuffer);
     const sig = arrayBufferToBase64(signatureBuffer);
 
     // NOTE: Must be url safe base64 encoding, but keep base64 "=" suffix
