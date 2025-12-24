@@ -43,6 +43,13 @@ const signatureType = 1;
     );
     console.log(resp2)
   })();
+
+> Note: The `price`, `size` and `tickSize` values in this example are placeholders.
+> Always use the tick size and minimum price increment specified for the target market,
+> otherwise the CLOB will reject the order with a validation error.
+> See the Orders documentation for details:
+> https://docs.polymarket.com/developers/CLOB/orders/orders.
+
 ```
 
 See [examples](examples/) for more information
