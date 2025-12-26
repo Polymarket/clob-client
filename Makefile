@@ -2,7 +2,7 @@
 build:
 	@echo "Building ts code..."
 	rm -rf dist
-	yarn tsc -p tsconfig.build.json
+	pnpm tsc -p tsconfig.build.json
 
 .PHONY: test
 test:
