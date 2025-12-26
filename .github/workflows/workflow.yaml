@@ -16,7 +16,6 @@ jobs:
               with:
                   node-version: 24
                   registry-url: "https://registry.npmjs.org"
-                  cache: "pnpm"
 
             - name: Enable pnpm
               run: |
