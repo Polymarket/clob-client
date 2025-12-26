@@ -6,15 +6,12 @@ build:
 
 .PHONY: test
 test:
-	pnpm nyc -a \
-	--reporter=html \
-	--reporter=text \
-	tsx node_modules/mocha/bin/mocha.js \
-	'./tests' \
-	--require jsdom-global/register \
-	'tests/**/*.test.ts' \
-	--timeout 300000 \
-	--exit
+	pnpm nyc -a --reporter=html --reporter=text \
+		ts-mocha \
+		--require jsdom-global/register \
+		"tests/**/*.test.ts" \
+		--timeout 300000 \
+		--exit
 
 .PHONY: lint
 lint:

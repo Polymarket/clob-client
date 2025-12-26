@@ -40,8 +40,7 @@
         "ethereum"
     ],
     "engines": {
-        "node": ">=20.10",
-        "yarn": ">=1"
+        "node": ">=20.10"
     },
     "license": "MIT",
     "packageManager": "pnpm@9.15.4",
