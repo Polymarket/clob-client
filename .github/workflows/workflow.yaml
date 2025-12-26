@@ -10,22 +10,20 @@ jobs:
         name: Build, Lint, and Test
         runs-on: ubuntu-latest
         steps:
-            - name: Checkout Code
-              uses: actions/checkout@v6
-            - uses: actions/setup-node@v6
-              with:
-                  node-version: 22
-                  cache: "npm"
-                  cache-dependency-path: pnpm-lock.yaml
-            - run: yarn --frozen-lockfile
-            - run: yarn lint
-            - run: yarn build
-            - run: yarn test
+            - uses: actions/checkout@v4
 
-    all-jobs-pass:
-        name: All jobs pass
-        runs-on: ubuntu-latest
-        needs:
-            - build-lint-test
-        steps:
-            - run: echo "success"
+            - uses: actions/setup-node@v4
+              with:
+                  node-version: 24
+                  registry-url: "https://registry.npmjs.org"
+                  cache: "pnpm"
+
+            - name: Enable Corepack (pnpm)
+              run: corepack enable
+
+            - name: Install deps
+              run: pnpm install --frozen-lockfile
+
+            - run: pnpm lint
+            - run: pnpm build
+            - run: pnpm test
