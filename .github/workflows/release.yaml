@@ -5,9 +5,8 @@ on:
         types: [published]
 
 permissions:
-    id-token: write
+    id-token: write # Required for OIDC
     contents: read
-    pull-requests: read
 
 jobs:
     release:
@@ -21,6 +20,7 @@ jobs:
                   node-version: 22
                   cache: "npm"
                   cache-dependency-path: pnpm-lock.yaml
+                  registry-url: "https://registry.npmjs.org"
             - run: yarn --frozen-lockfile
             - run: yarn lint
             - run: yarn build
