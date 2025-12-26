@@ -16,6 +16,7 @@ jobs:
               with:
                   node-version: 22
                   cache: "npm"
+                  cache-dependency-path: pnpm-lock.yaml
             - run: yarn --frozen-lockfile
             - run: yarn lint
             - run: yarn build
