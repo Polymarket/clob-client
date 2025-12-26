@@ -44,10 +44,11 @@
         "yarn": ">=1"
     },
     "license": "MIT",
+    "packageManager": "pnpm@9.15.4",
     "scripts": {
         "build": "make build",
         "lint": "make lint",
-        "deploy": "yarn build && npm publish",
+        "deploy": "pnpm build && npm publish --access public --provenance",
         "test": "make test"
     },
     "dependencies": {
