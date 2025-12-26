@@ -6,7 +6,7 @@ build:
 
 .PHONY: test
 test:
-	NODE_OPTIONS="--experimental-transform-types" yarn nyc -a \
+	pnpm nyc -a \
 		--reporter=html \
 		--reporter=text mocha './tests' \
 		--require jsdom-global/register \
