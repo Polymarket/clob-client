@@ -5,8 +5,8 @@ on:
         types: [published]
 
 permissions:
-    id-token: write # Required for OIDC
     contents: read
+    id-token: write
 
 jobs:
     release:
@@ -27,4 +27,4 @@ jobs:
             - run: yarn test
 
             - name: Publish to npm
-              run: npm publish
+              run: npm publish --access public
