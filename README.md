@@ -24,8 +24,9 @@ const signer = new Wallet(""); //This is your Private Key. If using email login 
 //In general don't create a new API key, always derive or createOrDerive
 const creds = new ClobClient(host, 137, signer).createOrDeriveApiKey();
 
-//0: Browser Wallet(Metamask, Coinbase Wallet, etc)
-//1: Magic/Email Login
+// 0: EOA / private key (no proxy)
+// 1: Polymarket proxy for Email / Magic accounts
+// 2: Polymarket proxy for browser wallets (Metamask, Coinbase Wallet, etc)
 const signatureType = 1; 
   (async () => {
     const clobClient = new ClobClient(host, 137, signer, await creds, signatureType, funder);
