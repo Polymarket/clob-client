@@ -1,8 +1,9 @@
 import { ethers } from "ethers";
 import { config as dotenvConfig } from "dotenv";
 import { resolve } from "path";
-import { ApiKeyCreds, Chain } from "../src";
-import { ClobClient } from "../src";
+import { Chain } from "../src/types.ts";
+import type { ApiKeyCreds } from "../src/types.ts";
+import { ClobClient } from "../src/client.ts";
 import { SignatureType } from "@polymarket/order-utils";
 
 dotenvConfig({ path: resolve(__dirname, "../.env") });
@@ -52,7 +53,7 @@ export async function redeemForEOA() {
     try {
         console.log("Redeeming outcome tokens for EOA wallet...");
         const receipt = await clobClient.redeemPositions({
-            ConditionID: conditionId,
+            conditionId: conditionId,
         });
 
         console.log(`Transaction successful! Hash: ${receipt.transactionHash}`);
@@ -106,7 +107,7 @@ export async function redeemForProxy() {
     try {
         console.log("Redeeming outcome tokens for Proxy wallet...");
         const receipt = await clobClient.redeemPositions({
-            ConditionID: conditionId,
+            conditionId: conditionId,
         });
 
         console.log(`Transaction successful! Hash: ${receipt.transactionHash}`);

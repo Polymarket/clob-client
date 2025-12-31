@@ -15,7 +15,8 @@ import {
     calculateSellMarketPrice,
     redeemMarketPositions,
 } from "../../src/order-builder/helpers.ts";
-import { SignatureType, Side as UtilsSide, OrderData } from "@polymarket/order-utils";
+import { SignatureType, Side as UtilsSide } from "@polymarket/order-utils";
+import type { OrderData } from "@polymarket/order-utils";
 import { Wallet } from "@ethersproject/wallet";
 import { decimalPlaces, roundDown, roundNormal } from "../../src/utilities.ts";
 import { getContractConfig } from "../../src/config.ts";
@@ -4390,7 +4391,7 @@ describe("helpers", () => {
                 "0xabcdef1234567890abcdef1234567890abcdef1234567890abcdef1234567890";
 
             const promise = redeemMarketPositions(wallet, chainId, SignatureType.EOA, {
-                ConditionID: mockConditionID,
+                conditionId: mockConditionID,
             });
 
             // Should return a promise
@@ -4403,7 +4404,7 @@ describe("helpers", () => {
             const funderWalletAddress = "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266";
 
             const promise = redeemMarketPositions(wallet, chainId, SignatureType.POLY_PROXY, {
-                ConditionID: mockConditionID,
+                conditionId: mockConditionID,
                 funderWalletAddress,
             });
 
@@ -4417,7 +4418,7 @@ describe("helpers", () => {
             const funderWalletAddress = "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266";
 
             const promise = redeemMarketPositions(wallet, chainId, SignatureType.POLY_GNOSIS_SAFE, {
-                ConditionID: mockConditionID,
+                conditionId: mockConditionID,
                 funderWalletAddress,
             });
 
@@ -4431,7 +4432,7 @@ describe("helpers", () => {
 
             try {
                 await redeemMarketPositions(wallet, chainId, SignatureType.POLY_GNOSIS_SAFE, {
-                    ConditionID: mockConditionID,
+                    conditionId: mockConditionID,
                 });
                 expect.fail("Should have thrown an error");
             } catch (error: any) {
@@ -4447,7 +4448,7 @@ describe("helpers", () => {
 
             try {
                 await redeemMarketPositions(wallet, chainId, SignatureType.POLY_PROXY, {
-                    ConditionID: mockConditionID,
+                    conditionId: mockConditionID,
                 });
                 expect.fail("Should have thrown an error");
             } catch (error: any) {
@@ -4462,7 +4463,7 @@ describe("helpers", () => {
                 "0xabcdef1234567890abcdef1234567890abcdef1234567890abcdef1234567890";
 
             const promise = redeemMarketPositions(wallet, chainId, SignatureType.EOA, {
-                ConditionID: mockConditionID,
+                conditionId: mockConditionID,
             });
 
             expect(promise).to.be.instanceOf(Promise);
@@ -4476,7 +4477,7 @@ describe("helpers", () => {
             const funderWalletAddress = "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266";
 
             const promise = redeemMarketPositions(wallet, chainId, SignatureType.POLY_GNOSIS_SAFE, {
-                ConditionID: mockConditionID,
+                conditionId: mockConditionID,
                 funderWalletAddress,
             });
 

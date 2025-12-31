@@ -529,9 +529,8 @@ export interface BuilderTrade {
 
 // RFQ Types
 export interface CancelRfqRequestParams {
-	requestId: string;
+    requestId: string;
 }
-
 
 export interface CreateRfqRequestParams {
     assetIn: string;
@@ -550,7 +549,6 @@ export interface RfqQuoteParams {
     userType: number;
 }
 
-
 export interface CreateRfqQuoteParams {
     requestId: string;
     assetIn: string;
@@ -563,19 +561,18 @@ export interface CancelRfqQuoteParams {
     quoteId: string;
 }
 
-
 export interface AcceptQuoteParams {
     requestId: string;
     quoteId: string;
     expiration: number;
 }
 
-
 export interface ApproveOrderParams {
     requestId: string;
     quoteId: string;
     expiration: number;
 }
+
 export interface GetRfqQuotesParams {
     quoteIds?: string[];
     states?: string[];
@@ -594,15 +591,14 @@ export interface GetRfqQuotesParams {
     limit?: number;
     offset?: string;
 }
+
 export interface GetRfqBestQuoteParams {
     requestId?: string;
 }
 
-
-export type RfqUserOrder = Pick<UserOrder, "price" | "size" | "side" | "tokenID">
+export type RfqUserOrder = Pick<UserOrder, "price" | "size" | "side" | "tokenID">;
 
 export type RfqUserQuote = RfqUserOrder & { requestId: string };
-
 
 export interface GetRfqRequestsParams {
     requestIds?: string[];
@@ -621,7 +617,6 @@ export interface GetRfqRequestsParams {
     offset?: string;
 }
 
-
 export interface RfqPaginatedResponse<T> {
     readonly data: T[];
     readonly next_cursor: string;
@@ -629,7 +624,6 @@ export interface RfqPaginatedResponse<T> {
     readonly count: number;
     readonly total_count?: number;
 }
-
 
 export interface RfqRequest {
     readonly requestId: string;
@@ -652,9 +646,8 @@ export interface RfqRequest {
 export enum RfqMatchType {
     COMPLEMENTARY = "COMPLEMENTARY",
     MERGE = "MERGE",
-    MINT = "MINT"
+    MINT = "MINT",
 }
-
 
 export interface RfqQuote {
     readonly quoteId: string;
@@ -675,16 +668,13 @@ export interface RfqQuote {
     readonly updatedAt: Date;
 }
 
-
 export type RfqRequestsResponse = RfqPaginatedResponse<RfqRequest>;
 export type RfqQuotesResponse = RfqPaginatedResponse<RfqQuote>;
-
 
 export interface RfqRequestResponse {
     readonly requestId: string;
     readonly error?: string;
 }
-
 
 export interface RfqQuoteResponse {
     readonly quoteId: string;
@@ -700,11 +690,11 @@ export interface RfqRequestOrderCreationPayload {
 
 // Blockchain Client Types
 export interface RedeemMarketPositionsParams {
-    ConditionID: string;
+    conditionId: string;
 }
 
 export interface RedeemMarketPositionsForSafeWalletParams {
-    ConditionID: string;
+    conditionId: string;
     safeWalletAddress: string;
 }
 

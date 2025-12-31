@@ -3,18 +3,18 @@ import {
     getContractConfig,
     REDEEM_POSITIONS_GAS_LIMIT,
     REDEEM_POSITIONS_MINIMUM_MAX_FEE,
-} from "../config";
-import {
+} from "../config.ts";
+import type {
     ApproveHashOnSafeParams,
-    Chain,
     RedeemMarketPositionsForSafeWalletParams,
     RedeemMarketPositionsParams,
     SafeTransactionHashParams,
-} from "../types";
-import { TransactionReceipt } from "@ethersproject/abstract-provider";
-import { CTF_ABI } from "./abi/ctf.abi";
-import { SAFE_ABI } from "./abi/safe.abi";
-import { AbiCoder } from "ethers/lib/utils";
+} from "../types.ts";
+import { Chain } from "../types.ts";
+import type { TransactionReceipt } from "@ethersproject/abstract-provider";
+import { CTF_ABI } from "./abi/ctf.abi.ts";
+import { SAFE_ABI } from "./abi/safe.abi.ts";
+import { AbiCoder } from "ethers/lib/utils.ts";
 import { JsonRpcSigner } from "@ethersproject/providers";
 
 export function getCtfContract(
@@ -120,7 +120,7 @@ export class BlockchainClient {
         const tx = await this.ctfContract.redeemPositions(
             contractConfig.collateral,
             ethers.constants.HashZero,
-            params.ConditionID,
+            params.conditionId,
             [1, 2],
             await this.getCurrentFeeParams(),
         );
@@ -145,7 +145,7 @@ export class BlockchainClient {
         const redeemData = ctfInterface.encodeFunctionData("redeemPositions", [
             contractConfig.collateral,
             ethers.constants.HashZero,
-            params.ConditionID,
+            params.conditionId,
             [1, 2],
         ]);
 

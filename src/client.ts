@@ -64,10 +64,14 @@ import {
     POST,
     post,
     put,
-    RequestOptions,
 } from "./http-helpers/index.ts";
 import type { RequestOptions } from "./http-helpers/index.ts";
-import { BUILDER_AUTH_FAILED, BUILDER_AUTH_NOT_AVAILABLE, L1_AUTH_UNAVAILABLE_ERROR, L2_AUTH_NOT_AVAILABLE } from "./errors.ts";
+import {
+    BUILDER_AUTH_FAILED,
+    BUILDER_AUTH_NOT_AVAILABLE,
+    L1_AUTH_UNAVAILABLE_ERROR,
+    L2_AUTH_NOT_AVAILABLE,
+} from "./errors.ts";
 import {
     generateOrderBookSummaryHash,
     isTickSizeSmaller,
@@ -133,7 +137,11 @@ import {
 } from "./endpoints.ts";
 import { OrderBuilder } from "./order-builder/builder.ts";
 import { END_CURSOR, INITIAL_CURSOR } from "./constants.ts";
-import { calculateBuyMarketPrice, calculateSellMarketPrice } from "./order-builder/helpers.ts";
+import {
+    calculateBuyMarketPrice,
+    calculateSellMarketPrice,
+    redeemMarketPositions,
+} from "./order-builder/helpers.ts";
 import { RfqClient } from "./rfq-client.ts";
 import type { IRfqClient, RfqDeps } from "./rfq-deps.ts";
 
@@ -175,7 +183,7 @@ export class ClobClient {
         geoBlockToken?: string,
         useServerTime?: boolean,
         builderConfig?: BuilderConfig,
-        getSigner?: () => Promise<Wallet | JsonRpcSigner> | (Wallet | JsonRpcSigner)
+        getSigner?: () => Promise<Wallet | JsonRpcSigner> | (Wallet | JsonRpcSigner),
     ) {
         this.host = host.endsWith("/") ? host.slice(0, -1) : host;
         this.chainId = chainId;
@@ -682,10 +690,7 @@ export class ClobClient {
             requestPath: endpoint,
         };
 
-        const headers = await this._getBuilderHeaders(
-            headerArgs.method,
-            headerArgs.requestPath,
-        );
+        const headers = await this._getBuilderHeaders(headerArgs.method, headerArgs.requestPath);
 
         if (headers == undefined) {
             throw BUILDER_AUTH_FAILED;
@@ -954,7 +959,10 @@ export class ClobClient {
         if (this.canBuilderAuth()) {
             const builderHeaders = await this._generateBuilderHeaders(headers, l2HeaderArgs);
             if (builderHeaders !== undefined) {
-                return this.post(`${this.host}${endpoint}`, { headers: builderHeaders, data: orderPayload });
+                return this.post(`${this.host}${endpoint}`, {
+                    headers: builderHeaders,
+                    data: orderPayload,
+                });
             }
         }
 
@@ -987,7 +995,10 @@ export class ClobClient {
         if (this.canBuilderAuth()) {
             const builderHeaders = await this._generateBuilderHeaders(headers, l2HeaderArgs);
             if (builderHeaders !== undefined) {
-                return this.post(`${this.host}${endpoint}`, { headers: builderHeaders, data: ordersPayload });
+                return this.post(`${this.host}${endpoint}`, {
+                    headers: builderHeaders,
+                    data: ordersPayload,
+                });
             }
         }
 
@@ -1337,15 +1348,31 @@ export class ClobClient {
             requestPath: endpoint,
         };
 
-        const headers = await this._getBuilderHeaders(
-            headerArgs.method,
-            headerArgs.requestPath,
-        );
+        const headers = await this._getBuilderHeaders(headerArgs.method, headerArgs.requestPath);
         if (headers == undefined) {
             throw BUILDER_AUTH_FAILED;
         }
 
         return this.del(`${this.host}${endpoint}`, { headers });
+    }
+
+    /**
+     * Redeem outcome tokens for a resolved market
+     * @param params Market and condition details for redemption
+     * @returns Transaction receipt
+     */
+    public async redeemPositions(params: RedeemMarketPositionsParams): Promise<any> {
+        this.canL1Auth();
+
+        return redeemMarketPositions(
+            this.signer as Wallet | JsonRpcSigner,
+            this.chainId,
+            this.orderBuilder.signatureType as SignatureType,
+            {
+                conditionId: params.conditionId,
+                funderWalletAddress: this.orderBuilder.funderAddress,
+            },
+        );
     }
 
     protected async _resolveTickSize(tokenID: string, tickSize?: TickSize): Promise<TickSize> {
@@ -1391,25 +1418,6 @@ export class ClobClient {
         });
     }
 
-    /**
-     * Redeem outcome tokens for a resolved market
-     * @param params Market and condition details for redemption
-     * @returns Transaction receipt
-     */
-    public async redeemPositions(params: RedeemMarketPositionsParams): Promise<any> {
-        this.canL1Auth();
-
-        return redeemMarketPositions(
-            this.signer as Wallet | JsonRpcSigner,
-            this.chainId,
-            this.orderBuilder.signatureType as SignatureType,
-            {
-                ConditionID: params.ConditionID,
-                funderWalletAddress: this.orderBuilder.funderAddress,
-            },
-        );
-    }
-
     private canL1Auth(): void {
         if (this.signer === undefined) {
             throw L1_AUTH_UNAVAILABLE_ERROR;
@@ -1433,12 +1441,16 @@ export class ClobClient {
     }
 
     private canBuilderAuth(): boolean {
-        return (this.builderConfig != undefined && this.builderConfig.isValid())
+        return this.builderConfig != undefined && this.builderConfig.isValid();
     }
 
     private async _resolveFeeRateBps(tokenID: string, userFeeRateBps?: number): Promise<number> {
         const marketFeeRateBps = await this.getFeeRateBps(tokenID);
-        if (marketFeeRateBps > 0 && userFeeRateBps != undefined && userFeeRateBps != marketFeeRateBps){
+        if (
+            marketFeeRateBps > 0 &&
+            userFeeRateBps != undefined &&
+            userFeeRateBps != marketFeeRateBps
+        ) {
             throw new Error(
                 `invalid user provided fee rate: ${userFeeRateBps}, fee rate for the market must be ${marketFeeRateBps}`,
             );
@@ -1450,7 +1462,6 @@ export class ClobClient {
         headers: L2PolyHeader,
         headerArgs: L2HeaderArgs,
     ): Promise<L2WithBuilderHeader | undefined> {
-
         if (this.builderConfig !== undefined) {
             const builderHeaders = await this._getBuilderHeaders(
                 headerArgs.method,
@@ -1469,12 +1480,8 @@ export class ClobClient {
     private async _getBuilderHeaders(
         method: string,
         path: string,
-        body?: string
+        body?: string,
     ): Promise<BuilderHeaderPayload | undefined> {
-        return (this.builderConfig as BuilderConfig).generateBuilderHeaders(
-            method,
-            path,
-            body,
-        );
+        return (this.builderConfig as BuilderConfig).generateBuilderHeaders(method, path, body);
     }
 }

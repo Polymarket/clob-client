@@ -1,29 +1,23 @@
 import type { JsonRpcSigner } from "@ethersproject/providers";
 import type { Wallet } from "@ethersproject/wallet";
 import { parseUnits } from "@ethersproject/units";
-import {
-    ExchangeOrderBuilder,
-    OrderData,
-    SignatureType,
-    Side as UtilsSide,
-    SignedOrder,
-} from "@polymarket/order-utils";
+import { ExchangeOrderBuilder, SignatureType, Side as UtilsSide } from "@polymarket/order-utils";
 import type { OrderData, SignedOrder } from "@polymarket/order-utils";
-import { Side, OrderType } from "../types.ts";
-import type {
-    UserOrder,
-    Chain,
-    CreateOrderOptions,
-    OrderSummary,
+import {
+    type Chain,
+    type CreateOrderOptions,
+    type OrderSummary,
     OrderType,
-    RoundConfig,
+    type RoundConfig,
     Side,
-    TickSize,
-    UserMarketOrder,
-    UserOrder,
+    type TickSize,
+    type UserMarketOrder,
+    type UserOrder,
 } from "../types.ts";
 import { decimalPlaces, roundDown, roundNormal, roundUp } from "../utilities.ts";
 import { COLLATERAL_TOKEN_DECIMALS, getContractConfig } from "../config.ts";
+import type { TransactionReceipt } from "@ethersproject/abstract-provider";
+import { BlockchainClient } from "../blockchain/blockchain.client.js";
 
 export const ROUNDING_CONFIG: Record<TickSize, RoundConfig> = {
     "0.1": {
@@ -401,14 +395,14 @@ export const redeemMarketPositions = (
     chainId: Chain,
     signatureType: SignatureType,
     params: {
-        ConditionID: string;
+        conditionId: string;
         funderWalletAddress?: string;
     },
 ): Promise<TransactionReceipt> => {
     const blockchainClient = new BlockchainClient(eoaSigner, chainId);
     if (signatureType === SignatureType.EOA) {
         return blockchainClient.redeemMarketPositionsForEOA({
-            ConditionID: params.ConditionID,
+            conditionId: params.conditionId,
         });
     }
     if (!params.funderWalletAddress) {
@@ -416,7 +410,7 @@ export const redeemMarketPositions = (
     }
 
     return blockchainClient.redeemMarketPositionsForSafeWallet({
-        ConditionID: params.ConditionID,
+        conditionId: params.conditionId,
         safeWalletAddress: params.funderWalletAddress,
     });
 };
