@@ -1,5 +1,4 @@
-import { SignatureType, SignedOrder } from "@polymarket/order-utils";
-import { AxiosRequestHeaders } from "axios";
+import type { SignatureType, SignedOrder } from "@polymarket/order-utils";
 
 export interface ApiKeyCreds {
     key: string;
@@ -13,14 +12,20 @@ export interface ApiKeyRaw {
     passphrase: string;
 }
 
+export interface ReadonlyApiKeyResponse {
+    apiKey: string;
+}
+
 export interface L2HeaderArgs {
     method: string;
     requestPath: string;
     body?: string;
 }
 
+export type SimpleHeaders = Record<string, string | number | boolean>;
+
 // EIP712 sig verification
-export interface L1PolyHeader extends AxiosRequestHeaders {
+export interface L1PolyHeader extends SimpleHeaders {
     POLY_ADDRESS: string;
     POLY_SIGNATURE: string;
     POLY_TIMESTAMP: string;
@@ -28,7 +33,7 @@ export interface L1PolyHeader extends AxiosRequestHeaders {
 }
 
 // API key verification
-export interface L2PolyHeader extends AxiosRequestHeaders {
+export interface L2PolyHeader extends SimpleHeaders {
     POLY_ADDRESS: string;
     POLY_SIGNATURE: string;
     POLY_TIMESTAMP: string;
@@ -468,6 +473,18 @@ export interface Earning {
     asset_rate: number;
 }
 
+export interface BuilderApiKey {
+    key: string;
+    secret: string;
+    passphrase: string;
+}
+
+export interface BuilderApiKeyResponse {
+    key: string;
+    createdAt?: string;
+    revokedAt?: string;
+}
+
 export interface UserRewardsEarning {
     condition_id: string;
     question: string;
@@ -508,6 +525,177 @@ export interface BuilderTrade {
     err_msg?: string | null;
     createdAt: string | null;
     updatedAt: string | null;
+}
+
+// RFQ Types
+export interface CancelRfqRequestParams {
+	requestId: string;
+}
+
+
+export interface CreateRfqRequestParams {
+    assetIn: string;
+    assetOut: string;
+    amountIn: string;
+    amountOut: string;
+    userType: number;
+}
+
+export interface RfqQuoteParams {
+    requestId: string;
+    assetIn: string;
+    assetOut: string;
+    amountIn: string;
+    amountOut: string;
+    userType: number;
+}
+
+
+export interface CreateRfqQuoteParams {
+    requestId: string;
+    assetIn: string;
+    assetOut: string;
+    amountIn: string;
+    amountOut: string;
+}
+
+export interface CancelRfqQuoteParams {
+    quoteId: string;
+}
+
+
+export interface AcceptQuoteParams {
+    requestId: string;
+    quoteId: string;
+    expiration: number;
+}
+
+
+export interface ApproveOrderParams {
+    requestId: string;
+    quoteId: string;
+    expiration: number;
+}
+export interface GetRfqQuotesParams {
+    quoteIds?: string[];
+    states?: string[];
+    userAddress?: string;
+    state?: string;
+    markets?: string[];
+    requestIds?: string[];
+    sizeMin?: number;
+    sizeMax?: number;
+    sizeUsdcMin?: number;
+    sizeUsdcMax?: number;
+    priceMin?: number;
+    priceMax?: number;
+    sortBy?: string;
+    sortDir?: string;
+    limit?: number;
+    offset?: string;
+}
+export interface GetRfqBestQuoteParams {
+    requestId?: string;
+}
+
+
+export type RfqUserOrder = Pick<UserOrder, "price" | "size" | "side" | "tokenID">
+
+export type RfqUserQuote = RfqUserOrder & { requestId: string };
+
+
+export interface GetRfqRequestsParams {
+    requestIds?: string[];
+    states?: string[];
+    state?: string; // active/inactive query param
+    markets?: string[];
+    sizeMin?: number;
+    sizeMax?: number;
+    sizeUsdcMin?: number;
+    sizeUsdcMax?: number;
+    priceMin?: number;
+    priceMax?: number;
+    sortBy?: string;
+    sortDir?: string;
+    limit?: number;
+    offset?: string;
+}
+
+
+export interface RfqPaginatedResponse<T> {
+    readonly data: T[];
+    readonly next_cursor: string;
+    readonly limit: number;
+    readonly count: number;
+    readonly total_count?: number;
+}
+
+
+export interface RfqRequest {
+    readonly requestId: string;
+    readonly userAddress: string;
+    readonly proxyAddress: string;
+    readonly token: string;
+    readonly complement: string;
+    readonly condition: string;
+    readonly side: string;
+    readonly sizeIn: string;
+    readonly sizeOut: string;
+    readonly price: number;
+    readonly acceptedQuoteId: string;
+    readonly state: string;
+    readonly expiry: Date;
+    readonly createdAt: Date;
+    readonly updatedAt: Date;
+}
+
+export enum RfqMatchType {
+    COMPLEMENTARY = "COMPLEMENTARY",
+    MERGE = "MERGE",
+    MINT = "MINT"
+}
+
+
+export interface RfqQuote {
+    readonly quoteId: string;
+    readonly requestId: string;
+    readonly userAddress: string;
+    readonly proxyAddress: string;
+    readonly complement: string;
+    readonly condition: string;
+    readonly token: string;
+    readonly side: string;
+    readonly sizeIn: string;
+    readonly sizeOut: string;
+    readonly price: number;
+    readonly state: string;
+    readonly expiry: Date;
+    readonly matchType: string;
+    readonly createdAt: Date;
+    readonly updatedAt: Date;
+}
+
+
+export type RfqRequestsResponse = RfqPaginatedResponse<RfqRequest>;
+export type RfqQuotesResponse = RfqPaginatedResponse<RfqQuote>;
+
+
+export interface RfqRequestResponse {
+    readonly requestId: string;
+    readonly error?: string;
+}
+
+
+export interface RfqQuoteResponse {
+    readonly quoteId: string;
+    readonly error?: string;
+}
+
+export interface RfqRequestOrderCreationPayload {
+    readonly token: string;
+    readonly side: Side;
+    readonly size: string;
+    readonly price: number;
 }
 
 // Blockchain Client Types

@@ -1,6 +1,7 @@
 import "mocha";
 import { expect } from "chai";
-import { UserOrder, Side, Chain, UserMarketOrder, OrderSummary, OrderType } from "../../src/types";
+import { Side, Chain, OrderType } from "../../src/types.ts";
+import type { UserOrder, UserMarketOrder, OrderSummary } from "../../src/types.ts";
 import {
     buildOrderCreationArgs,
     buildOrder,
@@ -13,11 +14,12 @@ import {
     calculateBuyMarketPrice,
     calculateSellMarketPrice,
     redeemMarketPositions,
-} from "../../src/order-builder/helpers";
-import { OrderData, SignatureType, Side as UtilsSide } from "@polymarket/order-utils";
+} from "../../src/order-builder/helpers.ts";
+import { SignatureType, Side as UtilsSide, OrderData } from "@polymarket/order-utils";
 import { Wallet } from "@ethersproject/wallet";
-import { decimalPlaces, roundDown, roundNormal } from "../../src/utilities";
-import { ContractConfig, getContractConfig } from "../../src/config";
+import { decimalPlaces, roundDown, roundNormal } from "../../src/utilities.ts";
+import { getContractConfig } from "../../src/config.ts";
+import type { ContractConfig } from "../../src/config.ts";
 
 describe("helpers", () => {
     const chainId = Chain.AMOY;

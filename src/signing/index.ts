@@ -1,2 +1,2 @@
-export * from "./eip712";
-export * from "./hmac";
+export * from "./eip712.ts";
+export * from "./hmac.ts";

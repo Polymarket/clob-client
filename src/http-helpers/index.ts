@@ -1,6 +1,7 @@
 /* eslint-disable max-depth */
-import axios, { AxiosRequestHeaders, Method } from "axios";
-import { DropNotificationParams, OrdersScoringParams } from "src/types";
+import axios from "axios";
+import type { Method } from "axios";
+import type { DropNotificationParams, GetRfqQuotesParams, GetRfqRequestsParams, OrdersScoringParams, SimpleHeaders } from "../types.ts";
 import { isBrowser } from "browser-or-node";
 
 export const GET = "GET";
@@ -8,7 +9,7 @@ export const POST = "POST";
 export const DELETE = "DELETE";
 export const PUT = "PUT";
 
-const overloadHeaders = (method: Method, headers?: Record<string, string | number | boolean>) => {
+const overloadHeaders = (method: Method, headers?: SimpleHeaders) => {
     if (isBrowser) {
         return;
     }
@@ -32,7 +33,7 @@ const overloadHeaders = (method: Method, headers?: Record<string, string | numbe
 export const request = async (
     endpoint: string,
     method: Method,
-    headers?: any,
+    headers?: SimpleHeaders,
     data?: any,
     params?: any,
 ): Promise<any> => {
@@ -43,7 +44,7 @@ export const request = async (
 export type QueryParams = Record<string, any>;
 
 export interface RequestOptions {
-    headers?: AxiosRequestHeaders;
+    headers?: SimpleHeaders;
     data?: any;
     params?: QueryParams;
 }
@@ -77,6 +78,21 @@ export const del = async (endpoint: string, options?: RequestOptions): Promise<a
         const resp = await request(
             endpoint,
             DELETE,
+            options?.headers,
+            options?.data,
+            options?.params,
+        );
+        return resp.data;
+    } catch (err: unknown) {
+        return errorHandling(err);
+    }
+};
+
+export const put = async (endpoint: string, options?: RequestOptions): Promise<any> => {
+    try {
+        const resp = await request(
+            endpoint,
+            PUT,
             options?.headers,
             options?.data,
             options?.params,
@@ -148,5 +164,46 @@ export const parseDropNotificationParams = (
             params["ids"] = dropNotificationParams?.ids.join(",");
         }
     }
+    return params;
+};
+
+export const parseRfqQuotesParams = (rfqQuotesParams?: GetRfqQuotesParams): QueryParams => {
+    if (!rfqQuotesParams) return {};
+
+    const params: QueryParams = { ...rfqQuotesParams };
+
+    // Convert array fields to comma-separated strings
+    if (rfqQuotesParams.quoteIds) {
+        params.quoteIds = rfqQuotesParams.quoteIds.join(",");
+    }
+    if (rfqQuotesParams.states) {
+        params.states = rfqQuotesParams.states.join(",");
+    }
+    if (rfqQuotesParams.markets) {
+        params.markets = rfqQuotesParams.markets.join(",");
+    }
+    if (rfqQuotesParams.requestIds) {
+        params.requestIds = rfqQuotesParams.requestIds.join(",");
+    }
+
+    return params;
+};
+
+export const parseRfqRequestsParams = (rfqRequestsParams?: GetRfqRequestsParams): QueryParams => {
+    if (!rfqRequestsParams) return {};
+
+    const params: QueryParams = { ...rfqRequestsParams };
+
+    // Convert array fields to comma-separated strings
+    if (rfqRequestsParams.requestIds) {
+        params.requestIds = rfqRequestsParams.requestIds.join(",");
+    }
+    if (rfqRequestsParams.states) {
+        params.states = rfqRequestsParams.states.join(",");
+    }
+    if (rfqRequestsParams.markets) {
+        params.markets = rfqRequestsParams.markets.join(",");
+    }
+
     return params;
 };
