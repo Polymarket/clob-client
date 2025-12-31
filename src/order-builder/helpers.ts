@@ -1,24 +1,23 @@
 import type { JsonRpcSigner } from "@ethersproject/providers";
 import type { Wallet } from "@ethersproject/wallet";
 import { parseUnits } from "@ethersproject/units";
-import {
-    ExchangeOrderBuilder,
-    SignatureType,
-    Side as UtilsSide,
-} from "@polymarket/order-utils";
+import { ExchangeOrderBuilder, SignatureType, Side as UtilsSide } from "@polymarket/order-utils";
 import type { OrderData, SignedOrder } from "@polymarket/order-utils";
-import { Side, OrderType } from "../types.ts";
-import type {
-    UserOrder,
-    Chain,
-    UserMarketOrder,
-    TickSize,
-    RoundConfig,
-    CreateOrderOptions,
-    OrderSummary,
+import {
+    type Chain,
+    type CreateOrderOptions,
+    type OrderSummary,
+    OrderType,
+    type RoundConfig,
+    Side,
+    type TickSize,
+    type UserMarketOrder,
+    type UserOrder,
 } from "../types.ts";
 import { decimalPlaces, roundDown, roundNormal, roundUp } from "../utilities.ts";
 import { COLLATERAL_TOKEN_DECIMALS, getContractConfig } from "../config.ts";
+import type { TransactionReceipt } from "@ethersproject/abstract-provider";
+import { BlockchainClient } from "../blockchain/blockchain.client.js";
 
 export const ROUNDING_CONFIG: Record<TickSize, RoundConfig> = {
     "0.1": {
@@ -389,4 +388,29 @@ export const calculateSellMarketPrice = (
         throw new Error("no match");
     }
     return parseFloat(positions[0].price);
+};
+
+export const redeemMarketPositions = (
+    eoaSigner: Wallet | JsonRpcSigner,
+    chainId: Chain,
+    signatureType: SignatureType,
+    params: {
+        conditionId: string;
+        funderWalletAddress?: string;
+    },
+): Promise<TransactionReceipt> => {
+    const blockchainClient = new BlockchainClient(eoaSigner, chainId);
+    if (signatureType === SignatureType.EOA) {
+        return blockchainClient.redeemMarketPositionsForEOA({
+            conditionId: params.conditionId,
+        });
+    }
+    if (!params.funderWalletAddress) {
+        throw new Error("funderWalletAddress is required for Safe wallet redemption");
+    }
+
+    return blockchainClient.redeemMarketPositionsForSafeWallet({
+        conditionId: params.conditionId,
+        safeWalletAddress: params.funderWalletAddress,
+    });
 };
