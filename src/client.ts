@@ -162,6 +162,8 @@ export class ClobClient {
 
     readonly rfq: IRfqClient;
 
+    readonly retryOnError?: boolean;
+
     // eslint-disable-next-line max-params
     constructor(
         host: string,
@@ -173,7 +175,8 @@ export class ClobClient {
         geoBlockToken?: string,
         useServerTime?: boolean,
         builderConfig?: BuilderConfig,
-        getSigner?: () => Promise<Wallet | JsonRpcSigner> | (Wallet | JsonRpcSigner)
+        getSigner?: () => Promise<Wallet | JsonRpcSigner> | (Wallet | JsonRpcSigner),
+        retryOnError?: boolean,
     ) {
         this.host = host.endsWith("/") ? host.slice(0, -1) : host;
         this.chainId = chainId;
@@ -196,6 +199,7 @@ export class ClobClient {
         this.feeRates = {};
         this.geoBlockToken = geoBlockToken;
         this.useServerTime = useServerTime;
+        this.retryOnError = retryOnError;
         if (builderConfig !== undefined) {
             this.builderConfig = builderConfig;
         }
@@ -1372,7 +1376,7 @@ export class ClobClient {
         return post(endpoint, {
             ...options,
             params: { ...options?.params, geo_block_token: this.geoBlockToken },
-        });
+        }, this.retryOnError);
     }
 
     protected async put(endpoint: string, options?: RequestOptions) {
