@@ -692,6 +692,11 @@ export interface RfqQuoteResponse {
     readonly error?: string;
 }
 
+export interface HeartbeatResponse {
+    readonly heartbeat_id: string;
+    readonly error?: string;
+}
+
 export interface RfqRequestOrderCreationPayload {
     readonly token: string;
     readonly side: Side;

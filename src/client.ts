@@ -52,6 +52,7 @@ import type {
     BuilderApiKey,
     BuilderApiKeyResponse,
     ReadonlyApiKeyResponse,
+    HeartbeatResponse,
 } from "./types.ts";
 import { createL1Headers, createL2Headers, injectBuilderHeaders } from "./headers/index.ts";
 import {
@@ -128,6 +129,7 @@ import {
     GET_READONLY_API_KEYS,
     DELETE_READONLY_API_KEY,
     VALIDATE_READONLY_API_KEY,
+    POST_HEARTBEAT,
 } from "./endpoints.ts";
 import { OrderBuilder } from "./order-builder/builder.ts";
 import { END_CURSOR, INITIAL_CURSOR } from "./constants.ts";
@@ -1043,6 +1045,39 @@ export class ClobClient {
             this.useServerTime ? await this.getServerTime() : undefined,
         );
         return this.del(`${this.host}${endpoint}`, { headers });
+    }
+
+    /**
+     * Sends a heartbeat to the server to keep the session active.
+     *
+     * If heartbeats are started and one isn't sent within 10s, all orders may be cancelled.
+     * Requires Level 2 authentication.
+     *
+     * Pass the previously returned `heartbeat_id` to chain heartbeats.
+     * Pass `undefined`/`null` to start a new heartbeat chain.
+     */
+    public async postHeartbeat(heartbeatId?: string | null): Promise<HeartbeatResponse> {
+        this.canL2Auth();
+        const endpoint = POST_HEARTBEAT;
+
+        const bodyObj = { heartbeat_id: heartbeatId ?? null };
+        const serialized = JSON.stringify(bodyObj);
+
+        const l2HeaderArgs = {
+            method: POST,
+            requestPath: endpoint,
+            body: serialized,
+        };
+
+        const headers = await createL2Headers(
+            this.signer as Wallet | JsonRpcSigner,
+            this.creds as ApiKeyCreds,
+            l2HeaderArgs,
+            this.useServerTime ? await this.getServerTime() : undefined,
+        );
+
+        // Send the exact serialized body we signed.
+        return this.post(`${this.host}${endpoint}`, { headers, data: serialized });
     }
 
     public async cancelMarketOrders(payload: OrderMarketCancelParams): Promise<any> {
