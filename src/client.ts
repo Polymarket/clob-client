@@ -879,9 +879,10 @@ export class ClobClient {
         options?: Partial<CreateOrderOptions>,
         orderType: T = OrderType.GTC as T,
         deferExec = false,
+        postOnly = false,
     ): Promise<any> {
         const order = await this.createOrder(userOrder, options);
-        return this.postOrder(order, orderType, deferExec);
+        return this.postOrder(order, orderType, deferExec, postOnly);
     }
 
     public async createAndPostMarketOrder<T extends OrderType.FOK | OrderType.FAK = OrderType.FOK>(
@@ -934,10 +935,11 @@ export class ClobClient {
         order: SignedOrder,
         orderType: T = OrderType.GTC as T,
         deferExec = false,
+        postOnly = false,
     ): Promise<any> {
         this.canL2Auth();
         const endpoint = POST_ORDER;
-        const orderPayload = orderToJson(order, this.creds?.key || "", orderType, deferExec);
+        const orderPayload = orderToJson(order, this.creds?.key || "", orderType, deferExec, postOnly);
 
         const l2HeaderArgs = {
             method: POST,
@@ -963,12 +965,18 @@ export class ClobClient {
         return this.post(`${this.host}${endpoint}`, { headers, data: orderPayload });
     }
 
-    public async postOrders(args: PostOrdersArgs[], deferExec = false): Promise<any> {
+    public async postOrders(args: PostOrdersArgs[], deferExec = false, defaultPostOnly = false): Promise<any> {
         this.canL2Auth();
         const endpoint = POST_ORDERS;
         const ordersPayload: NewOrder<any>[] = [];
-        for (const { order, orderType } of args) {
-            const orderPayload = orderToJson(order, this.creds?.key || "", orderType, deferExec);
+        for (const { order, orderType, postOnly: orderPostOnly } of args) {
+            const orderPayload = orderToJson(
+                order,
+                this.creds?.key || "",
+                orderType,
+                deferExec,
+                orderPostOnly ?? defaultPostOnly,
+            );
             ordersPayload.push(orderPayload);
         }
 

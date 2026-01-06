@@ -8,7 +8,12 @@ export function orderToJson<T extends OrderType>(
     owner: string,
     orderType: T,
     deferExec = false,
+    postOnly?: boolean,
 ): NewOrder<T> {
+    if (postOnly === true && orderType !== OrderType.GTC && orderType !== OrderType.GTD) {
+        throw new Error("postOnly is only supported for GTC and GTD orders");
+    }
+
     let side = Side.BUY;
     if (order.side == UtilsSide.BUY) {
         side = Side.BUY;
@@ -35,6 +40,7 @@ export function orderToJson<T extends OrderType>(
         },
         owner,
         orderType,
+        ...(typeof postOnly === "boolean" ? { postOnly } : {}),
     } as NewOrder<T>;
 }
 

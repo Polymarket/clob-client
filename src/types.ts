@@ -65,6 +65,7 @@ export enum OrderType {
 export interface PostOrdersArgs {
     order: SignedOrder;
     orderType: OrderType;
+    postOnly?: boolean;
 }
 
 export interface NewOrder<T extends OrderType> {
@@ -86,6 +87,7 @@ export interface NewOrder<T extends OrderType> {
     readonly owner: string;
     readonly orderType: T;
     readonly deferExec: boolean;
+    readonly postOnly?: boolean;
 }
 
 // Simplified order for users

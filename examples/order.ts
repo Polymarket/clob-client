@@ -28,6 +28,8 @@ const signatureType = 1;
         //{ tickSize: "0.001",negRisk: true },
 
         OrderType.GTC,
+        false, // deferExec
+        true, // postOnly (set true to avoid immediate matching; only supported for GTC/GTD)
     );
     console.log(resp2);
 })();
