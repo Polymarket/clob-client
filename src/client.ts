@@ -1050,7 +1050,7 @@ export class ClobClient {
     /**
      * Sends a heartbeat to the server to keep the session active.
      *
-     * If heartbeats are started and one isn't sent within 10s, all orders may be cancelled.
+     * If heartbeats are started and one isn't sent within 10s, all orders will be cancelled.
      * Requires Level 2 authentication.
      *
      * Pass the previously returned `heartbeat_id` to chain heartbeats.
@@ -1076,7 +1076,6 @@ export class ClobClient {
             this.useServerTime ? await this.getServerTime() : undefined,
         );
 
-        // Send the exact serialized body we signed.
         return this.post(`${this.host}${endpoint}`, { headers, data: serialized });
     }
 
