@@ -77,6 +77,9 @@ export const GET_REWARDS_EARNINGS_PERCENTAGES = "/rewards/user/markets";
 // Builder endpoints
 export const GET_BUILDER_TRADES = "/builder/trades";
 
+// Heartbeats
+export const POST_HEARTBEAT = "/v1/heartbeats";
+
 // RFQ
 export const CREATE_RFQ_REQUEST = "/rfq/request"
 export const CANCEL_RFQ_REQUEST = "/rfq/request";
