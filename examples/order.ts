@@ -29,7 +29,7 @@ const signatureType = 1;
 
         OrderType.GTC,
         false, // deferExec
-        true, // postOnly (set true to avoid immediate matching; only supported for GTC/GTD)
+        false, // postOnly (set true to avoid immediate matching; only supported for GTC/GTD)
     );
     console.log(resp2);
 })();
