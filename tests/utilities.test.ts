@@ -62,6 +62,36 @@ describe("utilities", () => {
             });
         });
 
+        it("includes postOnly when provided and validates orderType", () => {
+            const baseOrder = {
+                salt: "1000",
+                maker: "0x0000000000000000000000000000000000000001",
+                signer: "0x0000000000000000000000000000000000000002",
+                taker: "0x0000000000000000000000000000000000000003",
+                tokenId: "1",
+                makerAmount: "100000000",
+                takerAmount: "50000000",
+                side: UtilsSide.BUY,
+                expiration: "0",
+                nonce: "1",
+                feeRateBps: "100",
+                signatureType: SignatureType.POLY_GNOSIS_SAFE,
+                signature: "0x",
+            };
+
+            const jsonOrder = orderToJson(baseOrder, "aaaa-bbbb-cccc-dddd", OrderType.GTC, false, true);
+            expect(jsonOrder).deep.include({
+                owner: "aaaa-bbbb-cccc-dddd",
+                orderType: "GTC",
+                deferExec: false,
+                postOnly: true,
+            });
+
+            expect(() => orderToJson(baseOrder, "aaaa-bbbb-cccc-dddd", OrderType.FOK, false, true)).to.throw(
+                "postOnly is only supported for GTC and GTD orders",
+            );
+        });
+
         it("GTD sell", () => {
             const jsonOrder = orderToJson(
                 {
