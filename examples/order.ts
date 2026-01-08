@@ -6,7 +6,7 @@ import { ClobClient, OrderType, Side } from "../src/index.ts";
 import { Wallet } from "@ethersproject/wallet";
 
 const host = "https://clob.polymarket.com";
-const funder = ""; //This is your Polymarket Profile Address, where you send UDSC to.
+const funder = ""; //This is your Polymarket Profile Address, where you send USDC to.
 const signer = new Wallet(""); //This is your Private Key. If using email login export from https://reveal.magic.link/polymarket otherwise export from your Web3 Application
 
 //In general don't create a new API key, always derive or createOrDerive
