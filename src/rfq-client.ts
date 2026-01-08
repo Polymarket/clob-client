@@ -21,13 +21,7 @@ import type {
     RfqRequestOrderCreationPayload,
 } from "./types.ts";
 import { createL2Headers } from "./headers/index.ts";
-import {
-    DELETE,
-    GET,
-    POST,
-    parseRfqQuotesParams,
-    parseRfqRequestsParams,
-} from "./http-helpers/index.ts";
+import { DELETE, GET, POST } from "./http-helpers/index.ts";
 import {
     CANCEL_RFQ_REQUEST,
     CREATE_RFQ_QUOTE,
@@ -49,6 +43,25 @@ import type { IRfqClient, RfqDeps } from "./rfq-deps.ts";
 import type { JsonRpcSigner } from "@ethersproject/providers";
 import type { Wallet } from "@ethersproject/wallet";
 import { L1_AUTH_UNAVAILABLE_ERROR, L2_AUTH_NOT_AVAILABLE } from "./errors.ts";
+
+// RFQ list params need to be repeated e.g. quoteIds=...&quoteIds=...
+const buildRepeatedQuery = (params?: Record<string, any>): string => {
+    const sp = new URLSearchParams();
+    if (!params) return "";
+
+    Object.entries(params).forEach(([key, value]) => {
+        if (value === undefined || value === null) {
+            return;
+        }
+        if (Array.isArray(value)) {
+            value.forEach((v) => sp.append(key, String(v)));
+        } else {
+            sp.append(key, String(value));
+        }
+    });
+
+    return sp.toString();
+};
 
 /**
  * RfqClient provides RFQ (Request for Quote) functionality on top of a CLOB client.
@@ -166,8 +179,10 @@ export class RfqClient implements IRfqClient {
             this.deps.useServerTime ? await this.deps.getServerTime() : undefined,
         );
 
-        return this.deps.get(`${this.deps.host}${endpoint}`, 
-            { headers, params: parseRfqRequestsParams(params) }) as Promise<RfqRequestsResponse>;
+        const query = buildRepeatedQuery(params);
+        const url = query ? `${this.deps.host}${endpoint}?${query}` : `${this.deps.host}${endpoint}`;
+
+        return this.deps.get(url, { headers }) as Promise<RfqRequestsResponse>;
     }
 
     /**
@@ -266,8 +281,10 @@ export class RfqClient implements IRfqClient {
             this.deps.useServerTime ? await this.deps.getServerTime() : undefined,
         );
 
-        return this.deps.get(`${this.deps.host}${endpoint}`,
-            { headers, params: parseRfqQuotesParams(params) }) as Promise<RfqQuotesResponse>;
+        const query = buildRepeatedQuery(params);
+        const url = query ? `${this.deps.host}${endpoint}?${query}` : `${this.deps.host}${endpoint}`;
+
+        return this.deps.get(url, { headers }) as Promise<RfqQuotesResponse>;
     }
 
     /**
@@ -292,8 +309,10 @@ export class RfqClient implements IRfqClient {
             this.deps.useServerTime ? await this.deps.getServerTime() : undefined,
         );
 
-        return this.deps.get(`${this.deps.host}${endpoint}`,
-            { headers, params: parseRfqQuotesParams(params) }) as Promise<RfqQuotesResponse>;
+        const query = buildRepeatedQuery(params);
+        const url = query ? `${this.deps.host}${endpoint}?${query}` : `${this.deps.host}${endpoint}`;
+
+        return this.deps.get(url, { headers }) as Promise<RfqQuotesResponse>;
     }
 
     /**
