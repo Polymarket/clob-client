@@ -26,6 +26,7 @@ const creds = new ClobClient(host, 137, signer).createOrDeriveApiKey();
 
 //0: Browser Wallet(Metamask, Coinbase Wallet, etc)
 //1: Magic/Email Login
+//2: Signed by EOAs that own Polymarket Gnosis safes
 const signatureType = 1; 
   (async () => {
     const clobClient = new ClobClient(host, 137, signer, await creds, signatureType, funder);
