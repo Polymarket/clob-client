@@ -31,7 +31,8 @@ import {
 import {
     CANCEL_RFQ_REQUEST,
     CREATE_RFQ_QUOTE,
-    GET_RFQ_QUOTES,
+    GET_RFQ_REQUESTER_QUOTES,
+    GET_RFQ_QUOTER_QUOTES,
     GET_RFQ_BEST_QUOTE,
     CANCEL_RFQ_QUOTE,
     CREATE_RFQ_REQUEST,
@@ -244,13 +245,14 @@ export class RfqClient implements IRfqClient {
     }
 
     /**
-     * Gets RFQ quotes with optional filtering parameters
+     * Gets quotes on requests created by the authenticated user (requester view).
+     * Returns quotes that others have made on your requests.
      */
-    public async getRfqQuotes(
+    public async getRfqRequesterQuotes(
         params?: GetRfqQuotesParams
     ): Promise<RfqQuotesResponse> {
         this.ensureL2Auth();
-        const endpoint = GET_RFQ_QUOTES;
+        const endpoint = GET_RFQ_REQUESTER_QUOTES;
 
         const l2HeaderArgs = {
             method: GET,
@@ -264,7 +266,33 @@ export class RfqClient implements IRfqClient {
             this.deps.useServerTime ? await this.deps.getServerTime() : undefined,
         );
 
-        return this.deps.get(`${this.deps.host}${endpoint}`, 
+        return this.deps.get(`${this.deps.host}${endpoint}`,
+            { headers, params: parseRfqQuotesParams(params) }) as Promise<RfqQuotesResponse>;
+    }
+
+    /**
+     * Gets quotes created by the authenticated user (quoter view).
+     * Returns quotes that you have made on others' requests.
+     */
+    public async getRfqQuoterQuotes(
+        params?: GetRfqQuotesParams
+    ): Promise<RfqQuotesResponse> {
+        this.ensureL2Auth();
+        const endpoint = GET_RFQ_QUOTER_QUOTES;
+
+        const l2HeaderArgs = {
+            method: GET,
+            requestPath: endpoint,
+        };
+
+        const headers = await createL2Headers(
+            this.deps.signer as Wallet | JsonRpcSigner,
+            this.deps.creds as ApiKeyCreds,
+            l2HeaderArgs,
+            this.deps.useServerTime ? await this.deps.getServerTime() : undefined,
+        );
+
+        return this.deps.get(`${this.deps.host}${endpoint}`,
             { headers, params: parseRfqQuotesParams(params) }) as Promise<RfqQuotesResponse>;
     }
 
@@ -342,7 +370,7 @@ export class RfqClient implements IRfqClient {
      */
     public async acceptRfqQuote(payload: AcceptQuoteParams): Promise<"OK"> {
         this.ensureL2Auth();
-        const rfqQuotes: RfqQuotesResponse | { error: any } = await this.getRfqQuotes({
+        const rfqQuotes: RfqQuotesResponse | { error: any } = await this.getRfqRequesterQuotes({
             quoteIds: [payload.quoteId],
         });
         // Check for HTTP errors first (network failures, auth errors, server errors)
@@ -409,7 +437,7 @@ export class RfqClient implements IRfqClient {
      */
     public async approveRfqOrder(payload: ApproveOrderParams): Promise<"OK"> {
         this.ensureL2Auth();
-        const rfqQuotes: RfqQuotesResponse | { error: any } = await this.getRfqQuotes({
+        const rfqQuotes: RfqQuotesResponse | { error: any } = await this.getRfqQuoterQuotes({
             quoteIds: [payload.quoteId],
         });
         // Check for HTTP errors first (network failures, auth errors, server errors)
