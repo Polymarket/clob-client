@@ -81,7 +81,9 @@ export interface IRfqClient {
         options?: Partial<CreateOrderOptions>,
     ): Promise<RfqQuoteResponse>;
 
-    getRfqQuotes(params?: GetRfqQuotesParams): Promise<RfqQuotesResponse>;
+    getRfqRequesterQuotes(params?: GetRfqQuotesParams): Promise<RfqQuotesResponse>;
+
+    getRfqQuoterQuotes(params?: GetRfqQuotesParams): Promise<RfqQuotesResponse>;
 
     getRfqBestQuote(params?: GetRfqBestQuoteParams): Promise<RfqQuote>;
 
