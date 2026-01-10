@@ -1,15 +1,41 @@
-export const L1_AUTH_UNAVAILABLE_ERROR = new Error(
-    "Signer is needed to interact with this endpoint!",
-);
+export type ClobApiErrorCode =
+  | "UNAUTHORIZED"
+  | "INVALID_ORDER"
+  | "INSUFFICIENT_BALANCE"
+  | "MARKET_CLOSED"
+  | "RATE_LIMITED"
+  | "UNKNOWN_ERROR";
 
-export const L2_AUTH_NOT_AVAILABLE = new Error(
-    "API Credentials are needed to interact with this endpoint!",
-);
+export class ClobApiError extends Error {
+  public readonly code: ClobApiErrorCode;
+  public readonly status?: number;
+  public readonly details?: unknown;
 
-export const BUILDER_AUTH_NOT_AVAILABLE = new Error(
-    "Builder API Credentials needed to interact with this endpoint!",
-);
+  constructor(
+    message: string,
+    code: ClobApiErrorCode,
+    status?: number,
+    details?: unknown,
+  ) {
+    super(message);
+    this.name = "ClobApiError";
+    this.code = code;
+    this.status = status;
+    this.details = details;
+  }
+}
 
-export const BUILDER_AUTH_FAILED = new Error(
-    "Builder key auth failed!",
-);
+export function mapApiError(response: any, status?: number): ClobApiError {
+  const code = response?.errorCode ?? "UNKNOWN_ERROR";
+  const message =
+    response?.message ??
+    response?.error ??
+    "Unexpected error returned by CLOB API";
+
+  return new ClobApiError(
+    message,
+    code as ClobApiErrorCode,
+    status,
+    response,
+  );
+}
