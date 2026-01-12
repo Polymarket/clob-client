@@ -195,9 +195,6 @@ export const parseRfqQuotesParams = (rfqQuotesParams?: GetRfqQuotesParams): Quer
     if (rfqQuotesParams.quoteIds) {
         params.quoteIds = rfqQuotesParams.quoteIds.join(",");
     }
-    if (rfqQuotesParams.states) {
-        params.states = rfqQuotesParams.states.join(",");
-    }
     if (rfqQuotesParams.markets) {
         params.markets = rfqQuotesParams.markets.join(",");
     }
@@ -216,9 +213,6 @@ export const parseRfqRequestsParams = (rfqRequestsParams?: GetRfqRequestsParams)
     // Convert array fields to comma-separated strings
     if (rfqRequestsParams.requestIds) {
         params.requestIds = rfqRequestsParams.requestIds.join(",");
-    }
-    if (rfqRequestsParams.states) {
-        params.states = rfqRequestsParams.states.join(",");
     }
     if (rfqRequestsParams.markets) {
         params.markets = rfqRequestsParams.markets.join(",");
