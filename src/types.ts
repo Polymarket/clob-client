@@ -580,23 +580,63 @@ export interface ApproveOrderParams {
     quoteId: string;
     expiration: number;
 }
+
+export type RfqListState = "active" | "inactive";
+export type RfqSortDir = "asc" | "desc";
+export type RfqRequestsSortBy = "price" | "expiry" | "size" | "created";
+export type RfqQuotesSortBy = "price" | "expiry" | "created";
+
 export interface GetRfqQuotesParams {
+    /**
+     * Pagination cursor, base64-encoded integer (default "MA==" → 0)
+     */
+    offset?: string;
+    /**
+     * Integer (default 50, max 100)
+     */
+    limit?: number;
+    /**
+     * Optional; active | inactive (if omitted: no state filter)
+     */
+    state?: RfqListState;
+    /**
+     * Repeatable (UUIDs; invalid UUIDs are dropped server-side)
+     */
     quoteIds?: string[];
-    states?: string[];
-    userAddress?: string;
-    state?: string;
-    markets?: string[];
+    /**
+     * Repeatable (UUIDs; invalid UUIDs are dropped server-side)
+     */
     requestIds?: string[];
+    /**
+     * Repeatable (condition ids; must be 0x + 64 hex)
+     */
+    markets?: string[];
+    /**
+     * float (token size)
+     */
     sizeMin?: number;
+    /**
+     * float (token size)
+     */
     sizeMax?: number;
+    /**
+     * float (USDC size)
+     */
     sizeUsdcMin?: number;
+    /**
+     * float (USDC size)
+     */
     sizeUsdcMax?: number;
     priceMin?: number;
     priceMax?: number;
-    sortBy?: string;
-    sortDir?: string;
-    limit?: number;
-    offset?: string;
+    /**
+     * price | expiry | created (default created)
+     */
+    sortBy?: RfqQuotesSortBy;
+    /**
+     * asc | desc (default asc)
+     */
+    sortDir?: RfqSortDir;
 }
 export interface GetRfqBestQuoteParams {
     requestId?: string;
@@ -609,20 +649,52 @@ export type RfqUserQuote = RfqUserOrder & { requestId: string };
 
 
 export interface GetRfqRequestsParams {
+    /**
+     * Pagination cursor, base64-encoded integer (default "MA==" → 0)
+     */
+    offset?: string;
+    /**
+     * Integer (default 50, max 100)
+     */
+    limit?: number;
+    /**
+     * Optional; active | inactive (if omitted: no state filter)
+     */
+    state?: RfqListState;
+    /**
+     * Repeatable (UUIDs; invalid UUIDs are dropped server-side)
+     */
     requestIds?: string[];
-    states?: string[];
-    state?: string; // active/inactive query param
+    /**
+     * Repeatable (condition ids; must be 0x + 64 hex)
+     */
     markets?: string[];
+    /**
+     * float (token size)
+     */
     sizeMin?: number;
+    /**
+     * float (token size)
+     */
     sizeMax?: number;
+    /**
+     * float (USDC size)
+     */
     sizeUsdcMin?: number;
+    /**
+     * float (USDC size)
+     */
     sizeUsdcMax?: number;
     priceMin?: number;
     priceMax?: number;
-    sortBy?: string;
-    sortDir?: string;
-    limit?: number;
-    offset?: string;
+    /**
+     * price | expiry | size | created (default created)
+     */
+    sortBy?: RfqRequestsSortBy;
+    /**
+     * asc | desc (default asc)
+     */
+    sortDir?: RfqSortDir;
 }
 
 
