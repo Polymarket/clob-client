@@ -4,6 +4,8 @@ import { SignatureType } from "@polymarket/order-utils";
 import type { SignedOrder } from "@polymarket/order-utils";
 import type { BuilderConfig, BuilderHeaderPayload } from "@polymarket/builder-signing-sdk";
 import { OrderType, Side } from "./types.ts";
+import { isBrowser } from "browser-or-node";
+import { createRequire } from "module";
 import type {
     ApiKeyCreds,
     ApiKeysResponse,
@@ -136,6 +138,8 @@ import { END_CURSOR, INITIAL_CURSOR } from "./constants.ts";
 import { calculateBuyMarketPrice, calculateSellMarketPrice } from "./order-builder/helpers.ts";
 import { RfqClient } from "./rfq-client.ts";
 import type { IRfqClient, RfqDeps } from "./rfq-deps.ts";
+
+const require = createRequire(import.meta.url);
 
 export class ClobClient {
     readonly host: string;
@@ -1310,6 +1314,47 @@ export class ClobClient {
     public async getMarketTradesEvents(conditionID: string): Promise<MarketTradeEvent[]> {
         return this.get(`${this.host}${GET_MARKET_TRADES_EVENTS}${conditionID}`);
     }
+
+        public subscribeMarketTradesEvents(
+        conditionID: string,
+        onMessage: (event: MarketTradeEvent) => void,
+        onError?: (error: any) => void,
+    ): () => void {
+        const url = new URL(`${this.host}${GET_MARKET_TRADES_EVENTS}${conditionID}`);
+
+        if (this.geoBlockToken) {
+            url.searchParams.set("geo_block_token", this.geoBlockToken);
+        }
+
+        let eventSource: any;
+
+        if (isBrowser) {
+            // eslint-disable-next-line no-undef
+            eventSource = new EventSource(url.toString());
+} else {
+    // eslint-disable-next-line @typescript-eslint/no-var-requires
+    const { EventSource } = require("eventsource");
+    eventSource = new EventSource(url.toString());
+}
+
+        eventSource.onmessage = (evt: MessageEvent) => {
+            try {
+                const data: MarketTradeEvent = JSON.parse(evt.data);
+                onMessage(data);
+            } catch (err) {
+                onError?.(err);
+            }
+        };
+
+        eventSource.onerror = (err: any) => {
+            onError?.(err);
+        };
+
+        return () => {
+            eventSource.close();
+        };
+    }
+
 
     public async calculateMarketPrice(
         tokenID: string,
