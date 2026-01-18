@@ -1,15 +1,53 @@
-# folders
-artifacts/
-build/
-cache/
-contracts/
-coverage/
-dist/
-lib/
+# ==============================================================================
+# DEPENDENCIES
+# ==============================================================================
 node_modules/
-typechain/
+# 'lib/' genellikle Foundry veya harici bağımlılıklar içindir. 
+# Eğer kendi kütüphane kodlarınız buradaysa bu satırı silin (yorum satırı yapın).
+lib/
 
-# files
-.solcover.js
+# ==============================================================================
+# BUILD ARTIFACTS (Generated Files)
+# ==============================================================================
+# Hardhat compiled contracts & build info
+artifacts/
+cache/
+
+# TypeChain bindings (TypeScript types for contracts)
+typechain/
+typechain-types/
+
+# Distribution / Build output
+dist/
+build/
+
+# ==============================================================================
+# TESTING & COVERAGE
+# ==============================================================================
+coverage/
 coverage.json
-.eslintrc.js
+.solcover.js.report
+
+# ==============================================================================
+# SYSTEM & LOGS
+# ==============================================================================
+.DS_Store
+Thumbs.db
+npm-debug.log
+yarn-error.log
+*.log
+
+# ==============================================================================
+# SECURITY (CRITICAL)
+# ==============================================================================
+.env
+.env.local
+
+# ==============================================================================
+# WHITELIST NOTES (Code Artisan Comments)
+# ==============================================================================
+# The following should usually NOT be ignored (Keep them in your repo):
+# - contracts/       (Your Source Code)
+# - .solcover.js     (Coverage Config)
+# - .eslintrc.js     (Linting Config)
+# - hardhat.config.ts/js
