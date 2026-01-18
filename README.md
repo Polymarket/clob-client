@@ -29,6 +29,10 @@ const creds = new ClobClient(host, 137, signer).createOrDeriveApiKey();
 const signatureType = 1; 
   (async () => {
     const clobClient = new ClobClient(host, 137, signer, await creds, signatureType, funder);
+// 137 is Polygon mainnet. Use the same chain id as the markets you trade on.
+// signatureType should be 1 for Magic/email logins and 0 for browser wallets
+// (EOAs) connecting via Metamask, Coinbase Wallet, etc.
+
     const resp2 = await clobClient.createAndPostOrder(
         {
             tokenID: "", //Use https://docs.polymarket.com/developers/gamma-markets-api/get-markets to grab a sample token
