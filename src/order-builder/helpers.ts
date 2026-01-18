@@ -203,10 +203,10 @@ export const getMarketOrderRawAmounts = (
     if (side === Side.BUY) {
         const rawMakerAmt = roundDown(amount, roundConfig.size);
         let rawTakerAmt = rawMakerAmt / rawPrice;
-        if (decimalPlaces(rawTakerAmt) > roundConfig.amount) {
-            rawTakerAmt = roundUp(rawTakerAmt, roundConfig.amount + 4);
-            if (decimalPlaces(rawTakerAmt) > roundConfig.amount) {
-                rawTakerAmt = roundDown(rawTakerAmt, roundConfig.amount);
+        if (decimalPlaces(rawTakerAmt) > roundConfig.size) {
+            rawTakerAmt = roundUp(rawTakerAmt, roundConfig.size + 4);
+            if (decimalPlaces(rawTakerAmt) > roundConfig.size) {
+                rawTakerAmt = roundDown(rawTakerAmt, roundConfig.size);
             }
         }
         return {
