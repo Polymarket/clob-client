@@ -6,6 +6,10 @@
 
 Typescript client for the Polymarket CLOB
 
+### Requirements
+- Node.js (v16 or higher recommended)
+- npm or yarn
+
 ### Usage
 
 ```ts
