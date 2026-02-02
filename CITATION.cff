@@ -1,0 +1,7 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite it as below."
+authors:
+- family-names: "Polymarket"
+  given-names: "Developers"
+title: "clob-client: Python SDK for Polymarket CLOB"
+url: "https://github.com/Polymarket/clob-client"
