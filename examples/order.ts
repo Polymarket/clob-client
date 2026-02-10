@@ -2,21 +2,20 @@
 //npm install ethers
 //Client initialization example and dumping API Keys
 
-import { ApiKeyCreds, ClobClient, OrderType, Side, } from "@polymarket/clob-client";
+import { ClobClient, OrderType, Side } from "../src/index.ts";
 import { Wallet } from "@ethersproject/wallet";
 
-const host = 'https://clob.polymarket.com';
-const funder = '';//This is your Polymarket Profile Address, where you send UDSC to. 
+const host = "https://clob.polymarket.com";
+const funder = ""; //This is your Polymarket Profile Address, where you send UDSC to.
 const signer = new Wallet(""); //This is your Private Key. If using email login export from https://reveal.magic.link/polymarket otherwise export from your Web3 Application
-
 
 //In general don't create a new API key, always derive or createOrDerive
 const creds = new ClobClient(host, 137, signer).createOrDeriveApiKey();
 
 //0: Browser Wallet(Metamask, Coinbase Wallet, etc)
 //1: Magic/Email Login
-const signatureType = 1; 
-  (async () => {
+const signatureType = 1;
+(async () => {
     const clobClient = new ClobClient(host, 137, signer, await creds, signatureType, funder);
     const resp2 = await clobClient.createAndPostOrder(
         {
@@ -25,10 +24,12 @@ const signatureType = 1;
             side: Side.BUY,
             size: 5,
         },
-        { tickSize: "0.001",negRisk: false }, //You'll need to adjust these based on the market. Get the tickSize and negRisk T/F from the get-markets above
+        { tickSize: "0.001", negRisk: false }, //You'll need to adjust these based on the market. Get the tickSize and negRisk T/F from the get-markets above
         //{ tickSize: "0.001",negRisk: true },
 
-        OrderType.GTC, 
+        OrderType.GTC,
+        false, // deferExec
+        false, // postOnly (set true to avoid immediate matching; only supported for GTC/GTD)
     );
-    console.log(resp2)
-  })();
+    console.log(resp2);
+})();

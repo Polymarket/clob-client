@@ -1,8 +1,10 @@
-import { Wallet } from "@ethersproject/wallet";
-import { JsonRpcSigner } from "@ethersproject/providers";
-import { SignatureType, SignedOrder } from "@polymarket/order-utils";
-import { BuilderConfig, BuilderHeaderPayload } from "@polymarket/builder-signing-sdk";
-import {
+import type { Wallet } from "@ethersproject/wallet";
+import type { JsonRpcSigner } from "@ethersproject/providers";
+import { SignatureType } from "@polymarket/order-utils";
+import type { SignedOrder } from "@polymarket/order-utils";
+import type { BuilderConfig, BuilderHeaderPayload } from "@polymarket/builder-signing-sdk";
+import { OrderType, Side } from "./types.ts";
+import type {
     ApiKeyCreds,
     ApiKeysResponse,
     Chain,
@@ -13,8 +15,6 @@ import {
     OrderMarketCancelParams,
     OrderBookSummary,
     OrderPayload,
-    OrderType,
-    Side,
     Trade,
     Notification,
     TradeParams,
@@ -51,8 +51,10 @@ import {
     BuilderTrade,
     BuilderApiKey,
     BuilderApiKeyResponse,
-} from "./types";
-import { createL1Headers, createL2Headers, injectBuilderHeaders } from "./headers";
+    ReadonlyApiKeyResponse,
+    HeartbeatResponse,
+} from "./types.ts";
+import { createL1Headers, createL2Headers, injectBuilderHeaders } from "./headers/index.ts";
 import {
     del,
     DELETE,
@@ -61,15 +63,16 @@ import {
     parseDropNotificationParams,
     POST,
     post,
-    RequestOptions,
-} from "./http-helpers";
-import { BUILDER_AUTH_FAILED, BUILDER_AUTH_NOT_AVAILABLE, L1_AUTH_UNAVAILABLE_ERROR, L2_AUTH_NOT_AVAILABLE } from "./errors";
+    put,
+} from "./http-helpers/index.ts";
+import type { RequestOptions } from "./http-helpers/index.ts";
+import { BUILDER_AUTH_FAILED, BUILDER_AUTH_NOT_AVAILABLE, L1_AUTH_UNAVAILABLE_ERROR, L2_AUTH_NOT_AVAILABLE } from "./errors.ts";
 import {
     generateOrderBookSummaryHash,
     isTickSizeSmaller,
     orderToJson,
     priceValid,
-} from "./utilities";
+} from "./utilities.ts";
 import {
     CANCEL_ALL,
     CANCEL_ORDER,
@@ -122,10 +125,17 @@ import {
     CREATE_BUILDER_API_KEY,
     GET_BUILDER_API_KEYS,
     REVOKE_BUILDER_API_KEY,
-} from "./endpoints";
-import { OrderBuilder } from "./order-builder/builder";
-import { END_CURSOR, INITIAL_CURSOR } from "./constants";
-import { calculateBuyMarketPrice, calculateSellMarketPrice } from "./order-builder/helpers";
+    CREATE_READONLY_API_KEY,
+    GET_READONLY_API_KEYS,
+    DELETE_READONLY_API_KEY,
+    VALIDATE_READONLY_API_KEY,
+    POST_HEARTBEAT,
+} from "./endpoints.ts";
+import { OrderBuilder } from "./order-builder/builder.ts";
+import { END_CURSOR, INITIAL_CURSOR } from "./constants.ts";
+import { calculateBuyMarketPrice, calculateSellMarketPrice } from "./order-builder/helpers.ts";
+import { RfqClient } from "./rfq-client.ts";
+import type { IRfqClient, RfqDeps } from "./rfq-deps.ts";
 
 export class ClobClient {
     readonly host: string;
@@ -152,6 +162,10 @@ export class ClobClient {
 
     readonly builderConfig?: BuilderConfig;
 
+    readonly rfq: IRfqClient;
+
+    readonly retryOnError?: boolean;
+
     // eslint-disable-next-line max-params
     constructor(
         host: string,
@@ -163,7 +177,8 @@ export class ClobClient {
         geoBlockToken?: string,
         useServerTime?: boolean,
         builderConfig?: BuilderConfig,
-        getSigner?: () => Promise<Wallet | JsonRpcSigner> | (Wallet | JsonRpcSigner)
+        getSigner?: () => Promise<Wallet | JsonRpcSigner> | (Wallet | JsonRpcSigner),
+        retryOnError?: boolean,
     ) {
         this.host = host.endsWith("/") ? host.slice(0, -1) : host;
         this.chainId = chainId;
@@ -186,9 +201,29 @@ export class ClobClient {
         this.feeRates = {};
         this.geoBlockToken = geoBlockToken;
         this.useServerTime = useServerTime;
+        this.retryOnError = retryOnError;
         if (builderConfig !== undefined) {
             this.builderConfig = builderConfig;
         }
+
+        const rfqDeps: RfqDeps = {
+            host: this.host,
+            signer: this.signer,
+            creds: this.creds,
+            useServerTime: this.useServerTime,
+            geoBlockToken: this.geoBlockToken,
+            userType: this.orderBuilder.signatureType,
+            getServerTime: this.getServerTime.bind(this),
+            getTickSize: this.getTickSize.bind(this),
+            resolveTickSize: this._resolveTickSize.bind(this),
+            createOrder: this.createOrder.bind(this),
+            get: this.get.bind(this),
+            post: this.post.bind(this),
+            put: this.put.bind(this),
+            del: this.del.bind(this),
+        };
+
+        this.rfq = new RfqClient(rfqDeps);
     }
 
     // Public endpoints
@@ -286,7 +321,7 @@ export class ClobClient {
      * @param orderbook
      * @returns
      */
-    public getOrderBookHash(orderbook: OrderBookSummary): string {
+    public getOrderBookHash(orderbook: OrderBookSummary): Promise<string> {
         return generateOrderBookSummaryHash(orderbook);
     }
 
@@ -462,6 +497,86 @@ export class ClobClient {
         );
 
         return this.del(`${this.host}${endpoint}`, { headers });
+    }
+
+    /**
+     * Creates a new readonly API key for a user
+     * @returns ReadonlyApiKeyResponse
+     */
+    public async createReadonlyApiKey(): Promise<ReadonlyApiKeyResponse> {
+        this.canL2Auth();
+
+        const endpoint = CREATE_READONLY_API_KEY;
+        const headerArgs = {
+            method: POST,
+            requestPath: endpoint,
+        };
+
+        const headers = await createL2Headers(
+            this.signer as Wallet | JsonRpcSigner,
+            this.creds as ApiKeyCreds,
+            headerArgs,
+            this.useServerTime ? await this.getServerTime() : undefined,
+        );
+
+        return this.post(`${this.host}${endpoint}`, { headers });
+    }
+
+    public async getReadonlyApiKeys(): Promise<string[]> {
+        this.canL2Auth();
+
+        const endpoint = GET_READONLY_API_KEYS;
+        const headerArgs = {
+            method: GET,
+            requestPath: endpoint,
+        };
+
+        const headers = await createL2Headers(
+            this.signer as Wallet | JsonRpcSigner,
+            this.creds as ApiKeyCreds,
+            headerArgs,
+            this.useServerTime ? await this.getServerTime() : undefined,
+        );
+
+        return this.get(`${this.host}${endpoint}`, { headers });
+    }
+
+    /**
+     * Deletes a readonly API key for a user
+     * @param key The readonly API key to delete
+     * @returns boolean
+     */
+    public async deleteReadonlyApiKey(key: string): Promise<boolean> {
+        this.canL2Auth();
+
+        const endpoint = DELETE_READONLY_API_KEY;
+        const payload = { key };
+        const headerArgs = {
+            method: DELETE,
+            requestPath: endpoint,
+            body: JSON.stringify(payload),
+        };
+
+        const headers = await createL2Headers(
+            this.signer as Wallet | JsonRpcSigner,
+            this.creds as ApiKeyCreds,
+            headerArgs,
+            this.useServerTime ? await this.getServerTime() : undefined,
+        );
+
+        return this.del(`${this.host}${endpoint}`, { headers, data: payload });
+    }
+
+    /**
+     * Validates a readonly API key for a given address
+     * @param address The wallet address
+     * @param key The readonly API key to validate
+     * @returns string
+     */
+    public async validateReadonlyApiKey(address: string, key: string): Promise<string> {
+        return this.get(`${this.host}${VALIDATE_READONLY_API_KEY}`, {
+            params: { address, key },
+        });
     }
 
     public async getOrder(orderID: string): Promise<OpenOrder> {
@@ -766,9 +881,10 @@ export class ClobClient {
         options?: Partial<CreateOrderOptions>,
         orderType: T = OrderType.GTC as T,
         deferExec = false,
+        postOnly = false,
     ): Promise<any> {
         const order = await this.createOrder(userOrder, options);
-        return this.postOrder(order, orderType, deferExec);
+        return this.postOrder(order, orderType, deferExec, postOnly);
     }
 
     public async createAndPostMarketOrder<T extends OrderType.FOK | OrderType.FAK = OrderType.FOK>(
@@ -821,10 +937,11 @@ export class ClobClient {
         order: SignedOrder,
         orderType: T = OrderType.GTC as T,
         deferExec = false,
+        postOnly = false,
     ): Promise<any> {
         this.canL2Auth();
         const endpoint = POST_ORDER;
-        const orderPayload = orderToJson(order, this.creds?.key || "", orderType, deferExec);
+        const orderPayload = orderToJson(order, this.creds?.key || "", orderType, deferExec, postOnly);
 
         const l2HeaderArgs = {
             method: POST,
@@ -843,19 +960,25 @@ export class ClobClient {
         if (this.canBuilderAuth()) {
             const builderHeaders = await this._generateBuilderHeaders(headers, l2HeaderArgs);
             if (builderHeaders !== undefined) {
-                return this.post(`${this.host}${endpoint}`, { headers: builderHeaders, data: orderPayload });    
+                return this.post(`${this.host}${endpoint}`, { headers: builderHeaders, data: orderPayload });
             }
         }
 
         return this.post(`${this.host}${endpoint}`, { headers, data: orderPayload });
     }
 
-    public async postOrders(args: PostOrdersArgs[], deferExec = false): Promise<any> {
+    public async postOrders(args: PostOrdersArgs[], deferExec = false, defaultPostOnly = false): Promise<any> {
         this.canL2Auth();
         const endpoint = POST_ORDERS;
         const ordersPayload: NewOrder<any>[] = [];
-        for (const { order, orderType } of args) {
-            const orderPayload = orderToJson(order, this.creds?.key || "", orderType, deferExec);
+        for (const { order, orderType, postOnly: orderPostOnly } of args) {
+            const orderPayload = orderToJson(
+                order,
+                this.creds?.key || "",
+                orderType,
+                deferExec,
+                orderPostOnly ?? defaultPostOnly,
+            );
             ordersPayload.push(orderPayload);
         }
 
@@ -876,7 +999,7 @@ export class ClobClient {
         if (this.canBuilderAuth()) {
             const builderHeaders = await this._generateBuilderHeaders(headers, l2HeaderArgs);
             if (builderHeaders !== undefined) {
-                return this.post(`${this.host}${endpoint}`, { headers: builderHeaders, data: ordersPayload });    
+                return this.post(`${this.host}${endpoint}`, { headers: builderHeaders, data: ordersPayload });
             }
         }
 
@@ -934,6 +1057,38 @@ export class ClobClient {
             this.useServerTime ? await this.getServerTime() : undefined,
         );
         return this.del(`${this.host}${endpoint}`, { headers });
+    }
+
+    /**
+     * Sends a heartbeat to the server to keep the session active.
+     *
+     * If heartbeats are started and one isn't sent within 10s, all orders will be cancelled.
+     * Requires Level 2 authentication.
+     *
+     * Pass the previously returned `heartbeat_id` to chain heartbeats.
+     * Pass `undefined`/`null` to start a new heartbeat chain.
+     */
+    public async postHeartbeat(heartbeatId?: string | null): Promise<HeartbeatResponse> {
+        this.canL2Auth();
+        const endpoint = POST_HEARTBEAT;
+
+        const bodyObj = { heartbeat_id: heartbeatId ?? null };
+        const serialized = JSON.stringify(bodyObj);
+
+        const l2HeaderArgs = {
+            method: POST,
+            requestPath: endpoint,
+            body: serialized,
+        };
+
+        const headers = await createL2Headers(
+            this.signer as Wallet | JsonRpcSigner,
+            this.creds as ApiKeyCreds,
+            l2HeaderArgs,
+            this.useServerTime ? await this.getServerTime() : undefined,
+        );
+
+        return this.post(`${this.host}${endpoint}`, { headers, data: serialized });
     }
 
     public async cancelMarketOrders(payload: OrderMarketCancelParams): Promise<any> {
@@ -1182,7 +1337,7 @@ export class ClobClient {
 
     public async createBuilderApiKey(): Promise<BuilderApiKey> {
         this.canL2Auth();
-        
+
         const endpoint = CREATE_BUILDER_API_KEY;
         const headerArgs = {
             method: POST,
@@ -1201,7 +1356,7 @@ export class ClobClient {
 
     public async getBuilderApiKeys(): Promise<BuilderApiKeyResponse[]> {
         this.canL2Auth();
-        
+
         const endpoint = GET_BUILDER_API_KEYS;
         const headerArgs = {
             method: GET,
@@ -1220,7 +1375,7 @@ export class ClobClient {
 
     public async revokeBuilderApiKey(): Promise<any> {
         this.mustBuilderAuth();
-        
+
         const endpoint = REVOKE_BUILDER_API_KEY;
         const headerArgs = {
             method: DELETE,
@@ -1236,6 +1391,49 @@ export class ClobClient {
         }
 
         return this.del(`${this.host}${endpoint}`, { headers });
+    }
+
+    protected async _resolveTickSize(tokenID: string, tickSize?: TickSize): Promise<TickSize> {
+        const minTickSize = await this.getTickSize(tokenID);
+        if (tickSize) {
+            if (isTickSizeSmaller(tickSize, minTickSize)) {
+                throw new Error(
+                    `invalid tick size (${tickSize}), minimum for the market is ${minTickSize}`,
+                );
+            }
+        } else {
+            tickSize = minTickSize;
+        }
+        return tickSize;
+    }
+
+    // http methods
+    protected async get(endpoint: string, options?: RequestOptions) {
+        return get(endpoint, {
+            ...options,
+            params: { ...options?.params, geo_block_token: this.geoBlockToken },
+        });
+    }
+
+    protected async post(endpoint: string, options?: RequestOptions) {
+        return post(endpoint, {
+            ...options,
+            params: { ...options?.params, geo_block_token: this.geoBlockToken },
+        }, this.retryOnError);
+    }
+
+    protected async put(endpoint: string, options?: RequestOptions) {
+        return put(endpoint, {
+            ...options,
+            params: { ...options?.params, geo_block_token: this.geoBlockToken },
+        });
+    }
+
+    protected async del(endpoint: string, options?: RequestOptions) {
+        return del(endpoint, {
+            ...options,
+            params: { ...options?.params, geo_block_token: this.geoBlockToken },
+        });
     }
 
     private canL1Auth(): void {
@@ -1262,20 +1460,6 @@ export class ClobClient {
 
     private canBuilderAuth(): boolean {
         return (this.builderConfig != undefined && this.builderConfig.isValid())
-    }
-
-    private async _resolveTickSize(tokenID: string, tickSize?: TickSize): Promise<TickSize> {
-        const minTickSize = await this.getTickSize(tokenID);
-        if (tickSize) {
-            if (isTickSizeSmaller(tickSize, minTickSize)) {
-                throw new Error(
-                    `invalid tick size (${tickSize}), minimum for the market is ${minTickSize}`,
-                );
-            }
-        } else {
-            tickSize = minTickSize;
-        }
-        return tickSize;
     }
 
     private async _resolveFeeRateBps(tokenID: string, userFeeRateBps?: number): Promise<number> {
@@ -1318,27 +1502,5 @@ export class ClobClient {
             path,
             body,
         );
-    }
-
-    // http methods
-    private async get(endpoint: string, options?: RequestOptions) {
-        return get(endpoint, {
-            ...options,
-            params: { ...options?.params, geo_block_token: this.geoBlockToken },
-        });
-    }
-
-    private async post(endpoint: string, options?: RequestOptions) {
-        return post(endpoint, {
-            ...options,
-            params: { ...options?.params, geo_block_token: this.geoBlockToken },
-        });
-    }
-
-    private async del(endpoint: string, options?: RequestOptions) {
-        return del(endpoint, {
-            ...options,
-            params: { ...options?.params, geo_block_token: this.geoBlockToken },
-        });
     }
 }

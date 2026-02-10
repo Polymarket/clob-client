@@ -8,11 +8,12 @@ import {
     orderToJson,
     priceValid,
     roundDown,
-} from "../src/utilities";
+} from "../src/utilities.ts";
 import { Side as UtilsSide, SignatureType } from "@polymarket/order-utils";
-import { Chain, OrderBookSummary, OrderType, Side, UserMarketOrder, UserOrder } from "../src";
+import { Chain, OrderType, Side } from "../src/index.ts";
+import type { OrderBookSummary, UserMarketOrder, UserOrder } from "../src/index.ts";
 import { Wallet } from "@ethersproject/wallet";
-import { createMarketOrder, createOrder } from "../src/order-builder/helpers";
+import { createMarketOrder, createOrder } from "../src/order-builder/helpers.ts";
 
 describe("utilities", () => {
     describe("orderToJson", () => {
@@ -59,6 +60,36 @@ describe("utilities", () => {
                 orderType: "GTD",
                 deferExec: false,
             });
+        });
+
+        it("includes postOnly when provided and validates orderType", () => {
+            const baseOrder = {
+                salt: "1000",
+                maker: "0x0000000000000000000000000000000000000001",
+                signer: "0x0000000000000000000000000000000000000002",
+                taker: "0x0000000000000000000000000000000000000003",
+                tokenId: "1",
+                makerAmount: "100000000",
+                takerAmount: "50000000",
+                side: UtilsSide.BUY,
+                expiration: "0",
+                nonce: "1",
+                feeRateBps: "100",
+                signatureType: SignatureType.POLY_GNOSIS_SAFE,
+                signature: "0x",
+            };
+
+            const jsonOrder = orderToJson(baseOrder, "aaaa-bbbb-cccc-dddd", OrderType.GTC, false, true);
+            expect(jsonOrder).deep.include({
+                owner: "aaaa-bbbb-cccc-dddd",
+                orderType: "GTC",
+                deferExec: false,
+                postOnly: true,
+            });
+
+            expect(() => orderToJson(baseOrder, "aaaa-bbbb-cccc-dddd", OrderType.FOK, false, true)).to.throw(
+                "postOnly is only supported for GTC and GTD orders",
+            );
         });
 
         it("GTD sell", () => {
@@ -6788,7 +6819,7 @@ describe("utilities", () => {
         expect(roundDown(0.57, 4)).to.equal(0.57);
     });
 
-    it("generateOrderBookSummaryHash", () => {
+    it("generateOrderBookSummaryHash", async () => {
         let orderbook = {
             market: "0xaabbcc",
             asset_id: "100",
@@ -6807,7 +6838,7 @@ describe("utilities", () => {
             hash: "",
         } as OrderBookSummary;
 
-        expect(generateOrderBookSummaryHash(orderbook)).to.equal(
+        expect(await generateOrderBookSummaryHash(orderbook)).to.equal(
             "36f56998e26d9a7c553446f35b240481efb271a3",
         );
         expect(orderbook.hash).to.equal("36f56998e26d9a7c553446f35b240481efb271a3");
@@ -6828,7 +6859,7 @@ describe("utilities", () => {
             hash: "36f56998e26d9a7c553446f35b240481efb271a3",
         } as OrderBookSummary;
 
-        expect(generateOrderBookSummaryHash(orderbook)).to.equal(
+        expect(await generateOrderBookSummaryHash(orderbook)).to.equal(
             "5489da29343426f88622d61044975dc5fd828a27",
         );
         expect(orderbook.hash).to.equal("5489da29343426f88622d61044975dc5fd828a27");
@@ -6846,7 +6877,7 @@ describe("utilities", () => {
             hash: "",
         } as OrderBookSummary;
 
-        expect(generateOrderBookSummaryHash(orderbook)).to.equal(
+        expect(await generateOrderBookSummaryHash(orderbook)).to.equal(
             "d4d4e4ea0f1d86ce02d22704bd33414f45573e84",
         );
         expect(orderbook.hash).to.equal("d4d4e4ea0f1d86ce02d22704bd33414f45573e84");

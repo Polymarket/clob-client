@@ -8,6 +8,12 @@ export const DELETE_API_KEY = "/auth/api-key";
 export const DERIVE_API_KEY = "/auth/derive-api-key";
 export const CLOSED_ONLY = "/auth/ban-status/closed-only";
 
+// Readonly API Key endpoints
+export const CREATE_READONLY_API_KEY = "/auth/readonly-api-key";
+export const GET_READONLY_API_KEYS = "/auth/readonly-api-keys";
+export const DELETE_READONLY_API_KEY = "/auth/readonly-api-key";
+export const VALIDATE_READONLY_API_KEY = "/auth/validate-readonly-api-key";
+
 // Builder API Key endpoints
 export const CREATE_BUILDER_API_KEY = "/auth/builder-api-key";
 export const GET_BUILDER_API_KEYS = "/auth/builder-api-key";
@@ -70,3 +76,19 @@ export const GET_REWARDS_EARNINGS_PERCENTAGES = "/rewards/user/markets";
 
 // Builder endpoints
 export const GET_BUILDER_TRADES = "/builder/trades";
+
+// Heartbeats
+export const POST_HEARTBEAT = "/v1/heartbeats";
+
+// RFQ
+export const CREATE_RFQ_REQUEST = "/rfq/request"
+export const CANCEL_RFQ_REQUEST = "/rfq/request";
+export const GET_RFQ_REQUESTS = "/rfq/data/requests";
+export const CREATE_RFQ_QUOTE = "/rfq/quote";
+export const CANCEL_RFQ_QUOTE = "/rfq/quote";
+export const RFQ_REQUESTS_ACCEPT = "/rfq/request/accept";
+export const RFQ_QUOTE_APPROVE = "/rfq/quote/approve";
+export const GET_RFQ_REQUESTER_QUOTES = "/rfq/data/requester/quotes";
+export const GET_RFQ_QUOTER_QUOTES = "/rfq/data/quoter/quotes";
+export const GET_RFQ_BEST_QUOTE = "/rfq/data/best-quote";
+export const RFQ_CONFIG = "/rfq/config";

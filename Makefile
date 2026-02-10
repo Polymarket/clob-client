@@ -2,17 +2,14 @@
 build:
 	@echo "Building ts code..."
 	rm -rf dist
-	yarn tsc --module commonjs
+	pnpm tsc -p tsconfig.build.json
 
 .PHONY: test
 test:
-	yarn nyc -a \
-		--reporter=html \
-		--reporter=text mocha './tests' \
-		--require esm \
+	pnpm nyc -a --reporter=html --reporter=text \
+		ts-mocha \
 		--require jsdom-global/register \
-		--require ts-node/register 'tests/**/*.test.ts' \
-		--require tsconfig-paths/register \
+		"tests/**/*.test.ts" \
 		--timeout 300000 \
 		--exit
 
