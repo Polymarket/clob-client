@@ -291,10 +291,9 @@ export class ClobClient {
     }
 
     public async getTickSize(tokenID: string): Promise<TickSize> {
-        const now = Date.now();
         const cachedAt = this.tickSizeTimestamps[tokenID];
 
-        if (tokenID in this.tickSizes && cachedAt && (now - cachedAt) < this.tickSizeTtlMs) {
+        if (tokenID in this.tickSizes && cachedAt && (Date.now() - cachedAt) < this.tickSizeTtlMs) {
             return this.tickSizes[tokenID];
         }
 
@@ -302,7 +301,7 @@ export class ClobClient {
             params: { token_id: tokenID },
         });
         this.tickSizes[tokenID] = result.minimum_tick_size.toString() as TickSize;
-        this.tickSizeTimestamps[tokenID] = now;
+        this.tickSizeTimestamps[tokenID] = Date.now();
 
         return this.tickSizes[tokenID];
     }
