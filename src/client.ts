@@ -311,7 +311,7 @@ export class ClobClient {
      * @param tokenID - If provided, only clears the cache for this token. Otherwise clears all.
      */
     public clearTickSizeCache(tokenID?: string): void {
-        if (tokenID) {
+        if (tokenID !== undefined) {
             delete this.tickSizes[tokenID];
             delete this.tickSizeTimestamps[tokenID];
         } else {
