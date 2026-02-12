@@ -152,6 +152,10 @@ export class ClobClient {
 
     readonly tickSizes: TickSizes;
 
+    private tickSizeTimestamps: Record<string, number>;
+
+    private readonly tickSizeTtlMs: number;
+
     readonly negRisk: NegRisk;
 
     readonly feeRates: FeeRates;
@@ -179,6 +183,7 @@ export class ClobClient {
         builderConfig?: BuilderConfig,
         getSigner?: () => Promise<Wallet | JsonRpcSigner> | (Wallet | JsonRpcSigner),
         retryOnError?: boolean,
+        tickSizeTtlMs?: number,
     ) {
         this.host = host.endsWith("/") ? host.slice(0, -1) : host;
         this.chainId = chainId;
@@ -197,6 +202,8 @@ export class ClobClient {
             getSigner,
         );
         this.tickSizes = {};
+        this.tickSizeTimestamps = {};
+        this.tickSizeTtlMs = tickSizeTtlMs ?? 300_000;
         this.negRisk = {};
         this.feeRates = {};
         this.geoBlockToken = geoBlockToken;
@@ -266,19 +273,28 @@ export class ClobClient {
     }
 
     public async getOrderBook(tokenID: string): Promise<OrderBookSummary> {
-        return this.get(`${this.host}${GET_ORDER_BOOK}`, {
+        const result: OrderBookSummary = await this.get(`${this.host}${GET_ORDER_BOOK}`, {
             params: { token_id: tokenID },
         });
+        this.updateTickSizeFromOrderBook(result);
+        return result;
     }
 
     public async getOrderBooks(params: BookParams[]): Promise<OrderBookSummary[]> {
-        return this.post(`${this.host}${GET_ORDER_BOOKS}`, {
+        const results: OrderBookSummary[] = await this.post(`${this.host}${GET_ORDER_BOOKS}`, {
             data: params,
         });
+        for (const book of results) {
+            this.updateTickSizeFromOrderBook(book);
+        }
+        return results;
     }
 
     public async getTickSize(tokenID: string): Promise<TickSize> {
-        if (tokenID in this.tickSizes) {
+        const now = Date.now();
+        const cachedAt = this.tickSizeTimestamps[tokenID];
+
+        if (tokenID in this.tickSizes && cachedAt && (now - cachedAt) < this.tickSizeTtlMs) {
             return this.tickSizes[tokenID];
         }
 
@@ -286,8 +302,25 @@ export class ClobClient {
             params: { token_id: tokenID },
         });
         this.tickSizes[tokenID] = result.minimum_tick_size.toString() as TickSize;
+        this.tickSizeTimestamps[tokenID] = now;
 
         return this.tickSizes[tokenID];
+    }
+
+    /**
+     * Clears the tick size cache, forcing fresh fetches on the next access.
+     * @param tokenID - If provided, only clears the cache for this token. Otherwise clears all.
+     */
+    public clearTickSizeCache(tokenID?: string): void {
+        if (tokenID) {
+            delete this.tickSizes[tokenID];
+            delete this.tickSizeTimestamps[tokenID];
+        } else {
+            for (const key of Object.keys(this.tickSizes)) {
+                delete this.tickSizes[key];
+            }
+            this.tickSizeTimestamps = {};
+        }
     }
 
     public async getNegRisk(tokenID: string): Promise<boolean> {
@@ -1501,5 +1534,16 @@ export class ClobClient {
             path,
             body,
         );
+    }
+
+    /**
+     * Opportunistically updates the tick size cache from an order book response.
+     */
+    private updateTickSizeFromOrderBook(book: OrderBookSummary): void {
+        if (book?.asset_id && book?.tick_size) {
+            const tickSize = book.tick_size as TickSize;
+            this.tickSizes[book.asset_id] = tickSize;
+            this.tickSizeTimestamps[book.asset_id] = Date.now();
+        }
     }
 }
