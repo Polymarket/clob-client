@@ -152,10 +152,6 @@ export class ClobClient {
 
     readonly tickSizes: TickSizes;
 
-    private tickSizeTimestamps: Record<string, number>;
-
-    private readonly tickSizeTtlMs: number;
-
     readonly negRisk: NegRisk;
 
     readonly feeRates: FeeRates;
@@ -169,6 +165,10 @@ export class ClobClient {
     readonly rfq: IRfqClient;
 
     readonly retryOnError?: boolean;
+
+    private tickSizeTimestamps: Record<string, number>;
+
+    private readonly tickSizeTtlMs: number;
 
     // eslint-disable-next-line max-params
     constructor(
