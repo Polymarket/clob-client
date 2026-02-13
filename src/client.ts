@@ -300,6 +300,9 @@ export class ClobClient {
         const result = await this.get(`${this.host}${GET_TICK_SIZE}`, {
             params: { token_id: tokenID },
         });
+        if (result.error) {
+            throw new Error(result.error);
+        }
         this.tickSizes[tokenID] = result.minimum_tick_size.toString() as TickSize;
         this.tickSizeTimestamps[tokenID] = Date.now();
 
@@ -330,6 +333,9 @@ export class ClobClient {
         const result = await this.get(`${this.host}${GET_NEG_RISK}`, {
             params: { token_id: tokenID },
         });
+        if (result.error) {
+            throw new Error(result.error);
+        }
         this.negRisk[tokenID] = result.neg_risk as boolean;
 
         return this.negRisk[tokenID];
@@ -343,6 +349,9 @@ export class ClobClient {
         const result = await this.get(`${this.host}${GET_FEE_RATE}`, {
             params: { token_id: tokenID },
         });
+        if (result.error) {
+            throw new Error(result.error);
+        }
         this.feeRates[tokenID] = result.base_fee as number;
 
         return this.feeRates[tokenID];
