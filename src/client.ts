@@ -636,6 +636,14 @@ export class ClobClient {
             this.useServerTime ? await this.getServerTime() : undefined,
         );
 
+        // builders flow
+        if (this.canBuilderAuth()) {
+            const builderHeaders = await this._generateBuilderHeaders(headers, headerArgs);
+            if (builderHeaders !== undefined) {
+                return this.get(`${this.host}${endpoint}`, { headers: builderHeaders });
+            }
+        }
+
         return this.get(`${this.host}${endpoint}`, { headers });
     }
 
@@ -957,6 +965,15 @@ export class ClobClient {
             this.useServerTime ? await this.getServerTime() : undefined,
         );
 
+        // builders flow
+        let requestHeaders: any = headers;
+        if (this.canBuilderAuth()) {
+            const builderHeaders = await this._generateBuilderHeaders(headers, l2HeaderArgs);
+            if (builderHeaders !== undefined) {
+                requestHeaders = builderHeaders;
+            }
+        }
+
         let results: OpenOrder[] = [];
         next_cursor = next_cursor || INITIAL_CURSOR;
         while (next_cursor != END_CURSOR && (next_cursor === INITIAL_CURSOR || !only_first_page)) {
@@ -965,7 +982,7 @@ export class ClobClient {
                 next_cursor,
             };
             const response = await this.get(`${this.host}${endpoint}`, {
-                headers,
+                headers: requestHeaders,
                 params: _params,
             });
             next_cursor = response.next_cursor;
