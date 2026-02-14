@@ -6,6 +6,13 @@
 
 Typescript client for the Polymarket CLOB
 
+### Security Best Practices
+
+When using this client, please ensure:
+- Never commit your `API_KEY` or `PRIVATE_KEY` to public repositories.
+- Use environment variables (`.env` files) to store sensitive credentials.
+- Add `.env` to your `.gitignore` file immediately.
+  
 ### Usage
 
 ```ts
