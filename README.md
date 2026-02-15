@@ -4,7 +4,7 @@
     <img src='https://img.shields.io/npm/v/@polymarket/clob-client.svg' alt='NPM'/>
 </a>
 
-Typescript client for the Polymarket CLOB
+TypeScript client for the Polymarket CLOB
 
 ### Usage
 
