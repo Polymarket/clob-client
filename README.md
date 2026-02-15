@@ -46,3 +46,7 @@ const signatureType = 1;
 ```
 
 See [examples](examples/) for more information
+
+### External Resources
+- [Official CLOB API Documentation](https://docs.polymarket.com/)
+- [Polymarket Help Center](https://learn.polymarket.com/)
