@@ -46,3 +46,32 @@ const signatureType = 1;
 ```
 
 See [examples](examples/) for more information
+
+### Error Handling
+
+By default, API errors are returned as `{ error: "...", status: ... }` objects. To have the client throw errors instead, pass `throwOnError: true` as the last constructor argument:
+
+```ts
+import { ClobClient, ApiError } from "@polymarket/clob-client";
+
+const clobClient = new ClobClient(
+    host, 137, signer, await creds, signatureType, funder,
+    undefined, // geoBlockToken
+    undefined, // useServerTime
+    undefined, // builderConfig
+    undefined, // getSigner
+    undefined, // retryOnError
+    undefined, // tickSizeTtlMs
+    true,      // throwOnError
+);
+
+try {
+    const book = await clobClient.getOrderBook(tokenID);
+} catch (e) {
+    if (e instanceof ApiError) {
+        console.log(e.message); // "No orderbook exists for the requested token id"
+        console.log(e.status);  // 404
+        console.log(e.data);    // full error response object from the API
+    }
+}
+```
