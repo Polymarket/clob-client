@@ -71,7 +71,7 @@ try {
     if (e instanceof ApiError) {
         console.log(e.message); // "No orderbook exists for the requested token id"
         console.log(e.status);  // 404
-        console.log(e.data);    // full error response object
+        console.log(e.data);    // full error response object from the API
     }
 }
 ```

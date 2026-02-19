@@ -1487,7 +1487,7 @@ export class ClobClient {
     private throwIfError(result: any): any {
         if (this.throwOnError && result && typeof result === "object" && "error" in result) {
             const msg = typeof result.error === "string" ? result.error : JSON.stringify(result.error);
-            throw new ApiError(msg, result.status, result.statusText, result);
+            throw new ApiError(msg, result.status, result);
         }
         return result;
     }

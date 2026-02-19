@@ -100,11 +100,10 @@ describe("throwOnError", () => {
 
     describe("ApiError", () => {
         it("has correct name and fields", () => {
-            const err = new ApiError("test error", 500, "Internal Server Error", { error: "test" });
+            const err = new ApiError("test error", 500, { error: "test" });
             expect(err.name).to.equal("ApiError");
             expect(err.message).to.equal("test error");
             expect(err.status).to.equal(500);
-            expect(err.statusText).to.equal("Internal Server Error");
             expect(err.data).to.deep.equal({ error: "test" });
             expect(err).to.be.instanceOf(Error);
         });
@@ -113,7 +112,6 @@ describe("throwOnError", () => {
             const err = new ApiError("oops");
             expect(err.message).to.equal("oops");
             expect(err.status).to.be.undefined;
-            expect(err.statusText).to.be.undefined;
             expect(err.data).to.be.undefined;
         });
     });
