@@ -1,7 +1,7 @@
 {
     "name": "@polymarket/clob-client",
     "description": "Typescript client for Polymarket's CLOB",
-    "version": "5.2.3",
+    "version": "5.2.4",
     "repository": {
         "type": "git",
         "url": "git+https://github.com/Polymarket/clob-client.git"
