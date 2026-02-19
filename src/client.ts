@@ -66,7 +66,7 @@ import {
     put,
 } from "./http-helpers/index.ts";
 import type { RequestOptions } from "./http-helpers/index.ts";
-import { BUILDER_AUTH_FAILED, BUILDER_AUTH_NOT_AVAILABLE, L1_AUTH_UNAVAILABLE_ERROR, L2_AUTH_NOT_AVAILABLE } from "./errors.ts";
+import { ApiError, BUILDER_AUTH_FAILED, BUILDER_AUTH_NOT_AVAILABLE, L1_AUTH_UNAVAILABLE_ERROR, L2_AUTH_NOT_AVAILABLE } from "./errors.ts";
 import {
     generateOrderBookSummaryHash,
     isTickSizeSmaller,
@@ -166,6 +166,8 @@ export class ClobClient {
 
     readonly retryOnError?: boolean;
 
+    readonly throwOnError: boolean;
+
     private tickSizeTimestamps: Record<string, number>;
 
     private readonly tickSizeTtlMs: number;
@@ -184,6 +186,7 @@ export class ClobClient {
         getSigner?: () => Promise<Wallet | JsonRpcSigner> | (Wallet | JsonRpcSigner),
         retryOnError?: boolean,
         tickSizeTtlMs?: number,
+        throwOnError?: boolean,
     ) {
         this.host = host.endsWith("/") ? host.slice(0, -1) : host;
         this.chainId = chainId;
@@ -209,6 +212,7 @@ export class ClobClient {
         this.geoBlockToken = geoBlockToken;
         this.useServerTime = useServerTime;
         this.retryOnError = retryOnError;
+        this.throwOnError = throwOnError ?? false;
         if (builderConfig !== undefined) {
             this.builderConfig = builderConfig;
         }
@@ -1447,33 +1451,45 @@ export class ClobClient {
         return tickSize;
     }
 
+    private throwIfError(result: any): any {
+        if (this.throwOnError && result && typeof result === "object" && "error" in result) {
+            const msg = typeof result.error === "string" ? result.error : JSON.stringify(result.error);
+            throw new ApiError(msg, result.status, result.statusText, result);
+        }
+        return result;
+    }
+
     // http methods
     protected async get(endpoint: string, options?: RequestOptions) {
-        return get(endpoint, {
+        const result = await get(endpoint, {
             ...options,
             params: { ...options?.params, geo_block_token: this.geoBlockToken },
         });
+        return this.throwIfError(result);
     }
 
     protected async post(endpoint: string, options?: RequestOptions) {
-        return post(endpoint, {
+        const result = await post(endpoint, {
             ...options,
             params: { ...options?.params, geo_block_token: this.geoBlockToken },
         }, this.retryOnError);
+        return this.throwIfError(result);
     }
 
     protected async put(endpoint: string, options?: RequestOptions) {
-        return put(endpoint, {
+        const result = await put(endpoint, {
             ...options,
             params: { ...options?.params, geo_block_token: this.geoBlockToken },
         });
+        return this.throwIfError(result);
     }
 
     protected async del(endpoint: string, options?: RequestOptions) {
-        return del(endpoint, {
+        const result = await del(endpoint, {
             ...options,
             params: { ...options?.params, geo_block_token: this.geoBlockToken },
         });
+        return this.throwIfError(result);
     }
 
     private canL1Auth(): void {

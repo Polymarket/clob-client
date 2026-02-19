@@ -1,3 +1,16 @@
+export class ApiError extends Error {
+    status: number | undefined;
+    statusText: string | undefined;
+    data: any;
+    constructor(message: string, status?: number, statusText?: string, data?: any) {
+        super(message);
+        this.name = "ApiError";
+        this.status = status;
+        this.statusText = statusText;
+        this.data = data;
+    }
+}
+
 export const L1_AUTH_UNAVAILABLE_ERROR = new Error(
     "Signer is needed to interact with this endpoint!",
 );
