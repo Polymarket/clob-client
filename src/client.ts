@@ -1451,14 +1451,6 @@ export class ClobClient {
         return tickSize;
     }
 
-    private throwIfError(result: any): any {
-        if (this.throwOnError && result && typeof result === "object" && "error" in result) {
-            const msg = typeof result.error === "string" ? result.error : JSON.stringify(result.error);
-            throw new ApiError(msg, result.status, result.statusText, result);
-        }
-        return result;
-    }
-
     // http methods
     protected async get(endpoint: string, options?: RequestOptions) {
         const result = await get(endpoint, {
@@ -1490,6 +1482,14 @@ export class ClobClient {
             params: { ...options?.params, geo_block_token: this.geoBlockToken },
         });
         return this.throwIfError(result);
+    }
+
+    private throwIfError(result: any): any {
+        if (this.throwOnError && result && typeof result === "object" && "error" in result) {
+            const msg = typeof result.error === "string" ? result.error : JSON.stringify(result.error);
+            throw new ApiError(msg, result.status, result.statusText, result);
+        }
+        return result;
     }
 
     private canL1Auth(): void {
