@@ -3,7 +3,7 @@ import { config as dotenvConfig } from "dotenv";
 import { resolve } from "path";
 import type { ApiKeyCreds } from "../src/index.ts";
 import { Chain, ClobClient, Side } from "../src/index.ts";
-// import { SignatureType } from "@polymarket/order-utils";
+// import { SignatureType } from "../src/index.ts";
 
 dotenvConfig({ path: resolve(import.meta.dirname, "../.env") });
 async function main() {

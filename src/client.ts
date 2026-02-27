@@ -1,7 +1,7 @@
 import type { Wallet } from "@ethersproject/wallet";
 import type { JsonRpcSigner } from "@ethersproject/providers";
-import { SignatureType } from "@polymarket/order-utils";
-import type { SignedOrder } from "@polymarket/order-utils";
+import { SignatureType } from "./order-utils/index.ts";
+import type { SignedOrder } from "./order-utils/index.ts";
 import type { BuilderConfig, BuilderHeaderPayload } from "@polymarket/builder-signing-sdk";
 import { OrderType, Side } from "./types.ts";
 import type {

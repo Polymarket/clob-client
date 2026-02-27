@@ -5,8 +5,8 @@ import {
     ExchangeOrderBuilder,
     SignatureType,
     Side as UtilsSide,
-} from "@polymarket/order-utils";
-import type { OrderData, SignedOrder } from "@polymarket/order-utils";
+} from "../order-utils/index.ts";
+import type { OrderData, SignedOrder } from "../order-utils/index.ts";
 import { Side, OrderType } from "../types.ts";
 import type {
     UserOrder,

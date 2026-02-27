@@ -1,8 +1,7 @@
 import { ethers } from "ethers";
 import { config as dotenvConfig } from "dotenv";
 import { resolve } from "path";
-import { type ApiKeyCreds, Chain, ClobClient } from "../src/index.ts";
-import { SignatureType } from "@polymarket/order-utils";
+import { type ApiKeyCreds, Chain, ClobClient, SignatureType } from "../src/index.ts";
 
 dotenvConfig({ path: resolve(import.meta.dirname, "../.env") });
 
@@ -42,6 +41,10 @@ async function main() {
         SignatureType.POLY_GNOSIS_SAFE,
         gnosisSafeAddress,
     );
+
+    void clobClient;
+    void polyProxyClient;
+    void polyGnosisSafeClient;
 }
 
 main();
