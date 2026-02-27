@@ -6,10 +6,12 @@ build:
 
 .PHONY: test
 test:
+	rm -rf dist
+	pnpm tsc -p tsconfig.json
 	pnpm nyc -a --reporter=html --reporter=text \
-		ts-mocha \
+		mocha \
 		--require jsdom-global/register \
-		"tests/**/*.test.ts" \
+		"dist/tests/**/*.test.js" \
 		--timeout 300000 \
 		--exit
 

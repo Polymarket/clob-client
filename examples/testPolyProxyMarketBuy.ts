@@ -1,8 +1,7 @@
 import { ethers } from "ethers";
 import { config as dotenvConfig } from "dotenv";
 import { resolve } from "path";
-import { type ApiKeyCreds, Chain, ClobClient, Side } from "../src/index.ts";
-import { SignatureType } from "@polymarket/order-utils";
+import { type ApiKeyCreds, Chain, ClobClient, Side, SignatureType } from "../src/index.ts";
 
 dotenvConfig({ path: resolve(import.meta.dirname, "../.env") });
 

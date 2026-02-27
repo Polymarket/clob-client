@@ -14,8 +14,8 @@ import {
     calculateBuyMarketPrice,
     calculateSellMarketPrice,
 } from "../../src/order-builder/helpers.ts";
-import { SignatureType, Side as UtilsSide } from "@polymarket/order-utils";
-import type { OrderData } from "@polymarket/order-utils";
+import { SignatureType, Side as UtilsSide } from "../../src/order-utils/index.ts";
+import type { OrderData } from "../../src/order-utils/index.ts";
 import { Wallet } from "@ethersproject/wallet";
 import { decimalPlaces, roundDown, roundNormal } from "../../src/utilities.ts";
 import { getContractConfig } from "../../src/config.ts";

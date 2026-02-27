@@ -1,7 +1,7 @@
 import type { Wallet } from "@ethersproject/wallet";
 import type { JsonRpcSigner } from "@ethersproject/providers";
-import { SignatureType } from "@polymarket/order-utils";
-import type { SignedOrder } from "@polymarket/order-utils";
+import { SignatureType } from "../order-utils/index.ts";
+import type { SignedOrder } from "../order-utils/index.ts";
 import { createMarketOrder, createOrder } from "./helpers.ts";
 import type { Chain, CreateOrderOptions, UserMarketOrder, UserOrder } from "../types.ts";
 

@@ -1,6 +1,6 @@
 import type { Wallet } from "@ethersproject/wallet";
 import type { JsonRpcSigner } from "@ethersproject/providers";
-import type { SignedOrder } from "@polymarket/order-utils";
+import type { SignedOrder } from "./order-utils/index.ts";
 
 import type {
     AcceptQuoteParams,

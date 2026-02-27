@@ -1,4 +1,4 @@
-import type { SignatureType, SignedOrder } from "@polymarket/order-utils";
+import type { SignatureType, SignedOrder } from "./order-utils/index.ts";
 
 export interface ApiKeyCreds {
     key: string;

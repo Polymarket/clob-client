@@ -9,7 +9,7 @@ import {
     priceValid,
     roundDown,
 } from "../src/utilities.ts";
-import { Side as UtilsSide, SignatureType } from "@polymarket/order-utils";
+import { Side as UtilsSide, SignatureType } from "../src/order-utils/index.ts";
 import { Chain, OrderType, Side } from "../src/index.ts";
 import type { OrderBookSummary, UserMarketOrder, UserOrder } from "../src/index.ts";
 import { Wallet } from "@ethersproject/wallet";
@@ -6874,13 +6874,14 @@ describe("utilities", () => {
             min_order_size: "15",
             tick_size: "0.001",
             neg_risk: false,
+            last_trade_price: "0",
             hash: "",
         } as OrderBookSummary;
 
         expect(await generateOrderBookSummaryHash(orderbook)).to.equal(
-            "d4d4e4ea0f1d86ce02d22704bd33414f45573e84",
+            "671cb98e93a82db4c16d49daaf72ef5b3286b50a",
         );
-        expect(orderbook.hash).to.equal("d4d4e4ea0f1d86ce02d22704bd33414f45573e84");
+        expect(orderbook.hash).to.equal("671cb98e93a82db4c16d49daaf72ef5b3286b50a");
     });
 
     it("isTickSizeSmaller", () => {
