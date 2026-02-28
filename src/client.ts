@@ -270,6 +270,89 @@ export class ClobClient {
         return this.get(`${this.host}${GET_MARKETS}`, {
             params: { next_cursor },
         });
+
+        /**
+     * Fetches all pages of markets by iterating through pagination cursors.
+     * Aggregates `data` from each page until `END_CURSOR` is reached.
+     *
+     * @param next_cursor The initial cursor (defaults to INITIAL_CURSOR).
+     * @returns Array with all market objects.
+     */
+    public async getAllMarkets(next_cursor: string = INITIAL_CURSOR): Promise<any[]> {
+        let results: any[] = [];
+        let cursor: string = next_cursor ?? INITIAL_CURSOR;
+
+        while (cursor !== END_CURSOR) {
+            const response = await this.getMarkets(cursor);
+            cursor = response.next_cursor;
+            results = results.concat(response.data);
+        }
+
+        return results;
+    }
+
+    /**
+     * Fetches all pages of simplified markets.
+     * Iterates through paginated results until `END_CURSOR` is reached.
+     *
+     * @param next_cursor The initial cursor (defaults to INITIAL_CURSOR).
+     * @returns Array with all simplified market objects.
+     */
+    public async getAllSimplifiedMarkets(
+        next_cursor: string = INITIAL_CURSOR,
+    ): Promise<any[]> {
+        let results: any[] = [];
+        let cursor: string = next_cursor ?? INITIAL_CURSOR;
+
+        while (cursor !== END_CURSOR) {
+            const response = await this.getSimplifiedMarkets(cursor);
+            cursor = response.next_cursor;
+            results = results.concat(response.data);
+        }
+
+        return results;
+    }
+
+    /**
+     * Fetches all pages of sampling markets (markets with rewards enabled).
+     *
+     * @param next_cursor The initial cursor (defaults to INITIAL_CURSOR).
+     * @returns Array with all sampling markets.
+     */
+    public async getAllSamplingMarkets(
+        next_cursor: string = INITIAL_CURSOR,
+    ): Promise<any[]> {
+        let results: any[] = [];
+        let cursor: string = next_cursor ?? INITIAL_CURSOR;
+
+        while (cursor !== END_CURSOR) {
+            const response = await this.getSamplingMarkets(cursor);
+            cursor = response.next_cursor;
+            results = results.concat(response.data);
+        }
+
+        return results;
+    }
+
+    /**
+     * Fetches all pages of sampling simplified markets.
+     *
+     * @param next_cursor The initial cursor (defaults to INITIAL_CURSOR).
+     * @returns Array with all sampling simplified market objects.
+     */
+    public async getAllSamplingSimplifiedMarkets(
+        next_cursor: string = INITIAL_CURSOR,
+    ): Promise<any[]> {
+        let results: any[] = [];
+        let cursor: string = next_cursor ?? INITIAL_CURSOR;
+
+        while (cursor !== END_CURSOR) {
+            const response = await this.getSamplingSimplifiedMarkets(cursor);
+            cursor = response.next_cursor;
+            results = results.concat(response.data);
+        }
+
+        return results;
     }
 
     public async getMarket(conditionID: string): Promise<any> {
