@@ -59,38 +59,34 @@
         "test": "make test"
     },
     "dependencies": {
-        "@ethersproject/providers": "^5.7.2",
-        "@ethersproject/units": "^5.7.0",
-        "@ethersproject/wallet": "^5.7.0",
+        "@ethersproject/hash": "^5.8.0",
+        "@ethersproject/providers": "^5.8.0",
+        "@ethersproject/units": "^5.8.0",
+        "@ethersproject/wallet": "^5.8.0",
         "@polymarket/builder-signing-sdk": "^0.0.8",
         "axios": "^1.0.0",
         "browser-or-node": "^2.1.1",
-        "ethers": "^5.7.1",
         "tslib": "^2.4.0"
     },
     "devDependencies": {
-        "@babel/core": "7.23.2",
-        "@babel/traverse": ">=7.23.2",
         "@types/chai": "^4.3.3",
-        "@types/mocha": "^9.1.1",
+        "@types/mocha": "^10.0.10",
         "@types/node": "^22.19.1",
         "@types/ws": "^8.5.3",
         "@typescript-eslint/eslint-plugin": "^5.37.0",
         "@typescript-eslint/parser": "^5.37.0",
         "chai": "^4.3.6",
-        "dotenv": "^16.0.2",
+        "dotenv": "^17.3.1",
         "eslint": "^8.23.1",
         "eslint-config-prettier": "^8.5.0",
         "eslint-plugin-unused-imports": "^2.0.0",
+        "ethers": "^5.8.0",
         "jsdom": "^20.0.0",
         "jsdom-global": "^3.0.2",
-        "mocha": "^10.0.0",
-        "nyc": "^15.1.0",
+        "mocha": "^11.7.5",
+        "nyc": "^18.0.0",
         "prettier": "^2.7.1",
         "typescript": "^5.9.3",
         "ws": "^8.11.0"
-    },
-    "resolutions": {
-        "@babel/traverse": ">=7.23.2"
     }
 }
