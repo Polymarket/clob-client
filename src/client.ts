@@ -1378,8 +1378,9 @@ export class ClobClient {
         side: Side,
         amount: number,
         orderType: OrderType = OrderType.FOK,
+        orderBook?: OrderBookSummary
     ): Promise<number> {
-        const book = await this.getOrderBook(tokenID);
+        const book = orderBook ?? await this.getOrderBook(tokenID);
         if (!book) {
             throw new Error("no orderbook");
         }
