@@ -1,7 +1,7 @@
-import type { Wallet } from "@ethersproject/wallet";
-import type { JsonRpcSigner } from "@ethersproject/providers";
 import { MSG_TO_SIGN } from "./constants.ts";
 import type { Chain } from "../types.ts";
+import { getSignerAddress, signTypedDataWithSigner } from "../signer.ts";
+import type { ClobSigner } from "../signer.ts";
 
 /**
  * Builds the canonical Polymarket CLOB EIP712 signature
@@ -10,12 +10,12 @@ import type { Chain } from "../types.ts";
  * @returns string
  */
 export const buildClobEip712Signature = async (
-    signer: Wallet | JsonRpcSigner,
+    signer: ClobSigner,
     chainId: Chain,
     timestamp: number,
     nonce: number,
 ): Promise<string> => {
-    const address = await signer.getAddress();
+    const address = await getSignerAddress(signer);
     const ts = `${timestamp}`;
 
     const domain = {
@@ -38,7 +38,12 @@ export const buildClobEip712Signature = async (
         nonce,
         message: MSG_TO_SIGN,
     };
-    // eslint-disable-next-line no-underscore-dangle
-    const sig = await signer._signTypedData(domain, types, value);
+    const sig = await signTypedDataWithSigner({
+        signer,
+        domain,
+        types,
+        value,
+        primaryType: "ClobAuth",
+    });
     return sig;
 };
