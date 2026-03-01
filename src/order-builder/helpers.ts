@@ -44,7 +44,7 @@ export const ROUNDING_CONFIG: Record<TickSize, RoundConfig> = {
 };
 
 /**
- * Generate and sign a order
+ * Generate and sign an order
  *
  * @param signer
  * @param exchangeAddress ctf exchange contract address

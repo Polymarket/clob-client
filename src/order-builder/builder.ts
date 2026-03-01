@@ -42,7 +42,7 @@ export class OrderBuilder {
     }
 
     /**
-     * Generate and sign a order
+     * Generate and sign an order
      */
     public async buildOrder(
         userOrder: UserOrder,
