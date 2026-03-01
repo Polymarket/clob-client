@@ -1,6 +1,6 @@
 import type { JsonRpcSigner } from "@ethersproject/providers";
 import type { Wallet } from "@ethersproject/wallet";
-import { ethers } from "ethers";
+import { _TypedDataEncoder } from "@ethersproject/hash";
 import {
     EIP712_DOMAIN,
     ORDER_STRUCTURE,
@@ -200,10 +200,10 @@ export class ExchangeOrderBuilder {
         const orderTypes = { ...orderTypedData.types };
         delete orderTypes.EIP712Domain;
 
-        return ethers.utils._TypedDataEncoder.hash(
-            orderTypedData.domain as Parameters<typeof ethers.utils._TypedDataEncoder.hash>[0],
-            orderTypes as Parameters<typeof ethers.utils._TypedDataEncoder.hash>[1],
-            orderTypedData.message as Parameters<typeof ethers.utils._TypedDataEncoder.hash>[2],
+        return _TypedDataEncoder.hash(
+            orderTypedData.domain as Parameters<typeof _TypedDataEncoder.hash>[0],
+            orderTypes as Parameters<typeof _TypedDataEncoder.hash>[1],
+            orderTypedData.message as Parameters<typeof _TypedDataEncoder.hash>[2],
         );
     }
 
