@@ -1,5 +1,3 @@
-import type { Wallet } from "@ethersproject/wallet";
-import type { JsonRpcSigner } from "@ethersproject/providers";
 import { SignatureType } from "./order-utils/index.ts";
 import type { SignedOrder } from "./order-utils/index.ts";
 import type { BuilderConfig, BuilderHeaderPayload } from "@polymarket/builder-signing-sdk";
@@ -136,6 +134,7 @@ import { END_CURSOR, INITIAL_CURSOR } from "./constants.ts";
 import { calculateBuyMarketPrice, calculateSellMarketPrice } from "./order-builder/helpers.ts";
 import { RfqClient } from "./rfq-client.ts";
 import type { IRfqClient, RfqDeps } from "./rfq-deps.ts";
+import type { ClobSigner } from "./signer.ts";
 
 export class ClobClient {
     readonly host: string;
@@ -143,7 +142,7 @@ export class ClobClient {
     readonly chainId: Chain;
 
     // Used to perform Level 1 authentication and sign orders
-    readonly signer?: Wallet | JsonRpcSigner;
+    readonly signer?: ClobSigner;
 
     // Used to perform Level 2 authentication
     readonly creds?: ApiKeyCreds;
@@ -176,14 +175,14 @@ export class ClobClient {
     constructor(
         host: string,
         chainId: Chain,
-        signer?: Wallet | JsonRpcSigner,
+        signer?: ClobSigner,
         creds?: ApiKeyCreds,
         signatureType?: SignatureType,
         funderAddress?: string,
         geoBlockToken?: string,
         useServerTime?: boolean,
         builderConfig?: BuilderConfig,
-        getSigner?: () => Promise<Wallet | JsonRpcSigner> | (Wallet | JsonRpcSigner),
+        getSigner?: () => Promise<ClobSigner> | ClobSigner,
         retryOnError?: boolean,
         tickSizeTtlMs?: number,
         throwOnError?: boolean,
@@ -198,7 +197,7 @@ export class ClobClient {
             this.creds = creds;
         }
         this.orderBuilder = new OrderBuilder(
-            signer as Wallet | JsonRpcSigner,
+            signer as ClobSigner,
             chainId,
             signatureType,
             funderAddress,
@@ -436,7 +435,7 @@ export class ClobClient {
 
         const endpoint = `${this.host}${CREATE_API_KEY}`;
         const headers = await createL1Headers(
-            this.signer as Wallet | JsonRpcSigner,
+            this.signer as ClobSigner,
             this.chainId,
             nonce,
             this.useServerTime ? await this.getServerTime() : undefined,
@@ -462,7 +461,7 @@ export class ClobClient {
 
         const endpoint = `${this.host}${DERIVE_API_KEY}`;
         const headers = await createL1Headers(
-            this.signer as Wallet | JsonRpcSigner,
+            this.signer as ClobSigner,
             this.chainId,
             nonce,
             this.useServerTime ? await this.getServerTime() : undefined,
@@ -497,7 +496,7 @@ export class ClobClient {
         };
 
         const headers = await createL2Headers(
-            this.signer as Wallet | JsonRpcSigner,
+            this.signer as ClobSigner,
             this.creds as ApiKeyCreds,
             headerArgs,
             this.useServerTime ? await this.getServerTime() : undefined,
@@ -516,7 +515,7 @@ export class ClobClient {
         };
 
         const headers = await createL2Headers(
-            this.signer as Wallet | JsonRpcSigner,
+            this.signer as ClobSigner,
             this.creds as ApiKeyCreds,
             headerArgs,
             this.useServerTime ? await this.getServerTime() : undefined,
@@ -535,7 +534,7 @@ export class ClobClient {
         };
 
         const headers = await createL2Headers(
-            this.signer as Wallet | JsonRpcSigner,
+            this.signer as ClobSigner,
             this.creds as ApiKeyCreds,
             headerArgs,
             this.useServerTime ? await this.getServerTime() : undefined,
@@ -558,7 +557,7 @@ export class ClobClient {
         };
 
         const headers = await createL2Headers(
-            this.signer as Wallet | JsonRpcSigner,
+            this.signer as ClobSigner,
             this.creds as ApiKeyCreds,
             headerArgs,
             this.useServerTime ? await this.getServerTime() : undefined,
@@ -577,7 +576,7 @@ export class ClobClient {
         };
 
         const headers = await createL2Headers(
-            this.signer as Wallet | JsonRpcSigner,
+            this.signer as ClobSigner,
             this.creds as ApiKeyCreds,
             headerArgs,
             this.useServerTime ? await this.getServerTime() : undefined,
@@ -603,7 +602,7 @@ export class ClobClient {
         };
 
         const headers = await createL2Headers(
-            this.signer as Wallet | JsonRpcSigner,
+            this.signer as ClobSigner,
             this.creds as ApiKeyCreds,
             headerArgs,
             this.useServerTime ? await this.getServerTime() : undefined,
@@ -634,7 +633,7 @@ export class ClobClient {
         };
 
         const headers = await createL2Headers(
-            this.signer as Wallet | JsonRpcSigner,
+            this.signer as ClobSigner,
             this.creds as ApiKeyCreds,
             headerArgs,
             this.useServerTime ? await this.getServerTime() : undefined,
@@ -665,7 +664,7 @@ export class ClobClient {
         };
 
         const headers = await createL2Headers(
-            this.signer as Wallet | JsonRpcSigner,
+            this.signer as ClobSigner,
             this.creds as ApiKeyCreds,
             headerArgs,
             this.useServerTime ? await this.getServerTime() : undefined,
@@ -701,7 +700,7 @@ export class ClobClient {
         };
 
         const headers = await createL2Headers(
-            this.signer as Wallet | JsonRpcSigner,
+            this.signer as ClobSigner,
             this.creds as ApiKeyCreds,
             headerArgs,
             this.useServerTime ? await this.getServerTime() : undefined,
@@ -778,7 +777,7 @@ export class ClobClient {
         };
 
         const headers = await createL2Headers(
-            this.signer as Wallet | JsonRpcSigner,
+            this.signer as ClobSigner,
             this.creds as ApiKeyCreds,
             headerArgs,
             this.useServerTime ? await this.getServerTime() : undefined,
@@ -800,7 +799,7 @@ export class ClobClient {
         };
 
         const headers = await createL2Headers(
-            this.signer as Wallet | JsonRpcSigner,
+            this.signer as ClobSigner,
             this.creds as ApiKeyCreds,
             l2HeaderArgs,
             this.useServerTime ? await this.getServerTime() : undefined,
@@ -824,7 +823,7 @@ export class ClobClient {
         };
 
         const headers = await createL2Headers(
-            this.signer as Wallet | JsonRpcSigner,
+            this.signer as ClobSigner,
             this.creds as ApiKeyCreds,
             headerArgs,
             this.useServerTime ? await this.getServerTime() : undefined,
@@ -848,7 +847,7 @@ export class ClobClient {
         };
 
         const headers = await createL2Headers(
-            this.signer as Wallet | JsonRpcSigner,
+            this.signer as ClobSigner,
             this.creds as ApiKeyCreds,
             headerArgs,
             this.useServerTime ? await this.getServerTime() : undefined,
@@ -963,7 +962,7 @@ export class ClobClient {
         };
 
         const headers = await createL2Headers(
-            this.signer as Wallet | JsonRpcSigner,
+            this.signer as ClobSigner,
             this.creds as ApiKeyCreds,
             l2HeaderArgs,
             this.useServerTime ? await this.getServerTime() : undefined,
@@ -1012,7 +1011,7 @@ export class ClobClient {
         };
 
         const headers = await createL2Headers(
-            this.signer as Wallet | JsonRpcSigner,
+            this.signer as ClobSigner,
             this.creds as ApiKeyCreds,
             l2HeaderArgs,
             this.useServerTime ? await this.getServerTime() : undefined,
@@ -1051,7 +1050,7 @@ export class ClobClient {
         };
 
         const headers = await createL2Headers(
-            this.signer as Wallet | JsonRpcSigner,
+            this.signer as ClobSigner,
             this.creds as ApiKeyCreds,
             l2HeaderArgs,
             this.useServerTime ? await this.getServerTime() : undefined,
@@ -1078,7 +1077,7 @@ export class ClobClient {
         };
 
         const headers = await createL2Headers(
-            this.signer as Wallet | JsonRpcSigner,
+            this.signer as ClobSigner,
             this.creds as ApiKeyCreds,
             l2HeaderArgs,
             this.useServerTime ? await this.getServerTime() : undefined,
@@ -1096,7 +1095,7 @@ export class ClobClient {
         };
 
         const headers = await createL2Headers(
-            this.signer as Wallet | JsonRpcSigner,
+            this.signer as ClobSigner,
             this.creds as ApiKeyCreds,
             l2HeaderArgs,
             this.useServerTime ? await this.getServerTime() : undefined,
@@ -1113,7 +1112,7 @@ export class ClobClient {
         };
 
         const headers = await createL2Headers(
-            this.signer as Wallet | JsonRpcSigner,
+            this.signer as ClobSigner,
             this.creds as ApiKeyCreds,
             l2HeaderArgs,
             this.useServerTime ? await this.getServerTime() : undefined,
@@ -1144,7 +1143,7 @@ export class ClobClient {
         };
 
         const headers = await createL2Headers(
-            this.signer as Wallet | JsonRpcSigner,
+            this.signer as ClobSigner,
             this.creds as ApiKeyCreds,
             l2HeaderArgs,
             this.useServerTime ? await this.getServerTime() : undefined,
@@ -1163,7 +1162,7 @@ export class ClobClient {
         };
 
         const headers = await createL2Headers(
-            this.signer as Wallet | JsonRpcSigner,
+            this.signer as ClobSigner,
             this.creds as ApiKeyCreds,
             l2HeaderArgs,
             this.useServerTime ? await this.getServerTime() : undefined,
@@ -1181,7 +1180,7 @@ export class ClobClient {
         };
 
         const headers = await createL2Headers(
-            this.signer as Wallet | JsonRpcSigner,
+            this.signer as ClobSigner,
             this.creds as ApiKeyCreds,
             headerArgs,
             this.useServerTime ? await this.getServerTime() : undefined,
@@ -1202,7 +1201,7 @@ export class ClobClient {
         };
 
         const headers = await createL2Headers(
-            this.signer as Wallet | JsonRpcSigner,
+            this.signer as ClobSigner,
             this.creds as ApiKeyCreds,
             headerArgs,
             this.useServerTime ? await this.getServerTime() : undefined,
@@ -1225,7 +1224,7 @@ export class ClobClient {
         };
 
         const headers = await createL2Headers(
-            this.signer as Wallet | JsonRpcSigner,
+            this.signer as ClobSigner,
             this.creds as ApiKeyCreds,
             headerArgs,
             this.useServerTime ? await this.getServerTime() : undefined,
@@ -1260,7 +1259,7 @@ export class ClobClient {
         };
 
         const headers = await createL2Headers(
-            this.signer as Wallet | JsonRpcSigner,
+            this.signer as ClobSigner,
             this.creds as ApiKeyCreds,
             headerArgs,
             this.useServerTime ? await this.getServerTime() : undefined,
@@ -1292,7 +1291,7 @@ export class ClobClient {
         };
 
         const headers = await createL2Headers(
-            this.signer as Wallet | JsonRpcSigner,
+            this.signer as ClobSigner,
             this.creds as ApiKeyCreds,
             headerArgs,
             this.useServerTime ? await this.getServerTime() : undefined,
@@ -1330,7 +1329,7 @@ export class ClobClient {
         };
 
         const headers = await createL2Headers(
-            this.signer as Wallet | JsonRpcSigner,
+            this.signer as ClobSigner,
             this.creds as ApiKeyCreds,
             headerArgs,
             this.useServerTime ? await this.getServerTime() : undefined,
@@ -1406,7 +1405,7 @@ export class ClobClient {
         };
 
         const headers = await createL2Headers(
-            this.signer as Wallet | JsonRpcSigner,
+            this.signer as ClobSigner,
             this.creds as ApiKeyCreds,
             headerArgs,
             this.useServerTime ? await this.getServerTime() : undefined,
@@ -1425,7 +1424,7 @@ export class ClobClient {
         };
 
         const headers = await createL2Headers(
-            this.signer as Wallet | JsonRpcSigner,
+            this.signer as ClobSigner,
             this.creds as ApiKeyCreds,
             headerArgs,
             this.useServerTime ? await this.getServerTime() : undefined,

@@ -1,12 +1,11 @@
-import type { Wallet } from "@ethersproject/wallet";
-import type { JsonRpcSigner } from "@ethersproject/providers";
 import { SignatureType } from "../order-utils/index.ts";
 import type { SignedOrder } from "../order-utils/index.ts";
 import { createMarketOrder, createOrder } from "./helpers.ts";
 import type { Chain, CreateOrderOptions, UserMarketOrder, UserOrder } from "../types.ts";
+import type { ClobSigner } from "../signer.ts";
 
 export class OrderBuilder {
-    readonly signer: Wallet | JsonRpcSigner;
+    readonly signer: ClobSigner;
 
     readonly chainId: Chain;
 
@@ -22,17 +21,17 @@ export class OrderBuilder {
      * Optional function to dynamically resolve the signer.
      * If provided, this function will be called to obtain a fresh signer instance
      * (e.g., for smart contract wallets or when the signer may change).
-     * Should return a Wallet or JsonRpcSigner, or a Promise resolving to one.
+     * Should return an ethers-compatible signer or WalletClient, or a Promise resolving to one.
      * If not provided, the static `signer` property is used.
      */
-    private getSigner?: () => Promise<Wallet | JsonRpcSigner> | (Wallet | JsonRpcSigner);
+    private getSigner?: () => Promise<ClobSigner> | ClobSigner;
 
     constructor(
-        signer: Wallet | JsonRpcSigner,
+        signer: ClobSigner,
         chainId: Chain,
         signatureType?: SignatureType,
         funderAddress?: string,
-        getSigner?: () => Promise<Wallet | JsonRpcSigner> | (Wallet | JsonRpcSigner)
+        getSigner?: () => Promise<ClobSigner> | ClobSigner
     ) {
         this.signer = signer;
         this.chainId = chainId;
@@ -78,7 +77,7 @@ export class OrderBuilder {
     }
 
     /** Unified getter: use fresh signer if available */
-    private async resolveSigner(): Promise<Wallet | JsonRpcSigner> {
+    private async resolveSigner(): Promise<ClobSigner> {
         if (this.getSigner) {
             const s = await this.getSigner();
             if (!s) throw new Error("getSigner() function returned undefined or null");

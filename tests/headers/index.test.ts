@@ -4,6 +4,7 @@ import { createL1Headers, createL2Headers } from "../../src/headers/index.ts";
 import { Wallet } from "ethers";
 import { Chain } from "../../src/types.ts";
 import type { ApiKeyCreds } from "../../src/types.ts";
+import type { WalletClient } from "viem";
 
 describe("headers", () => {
     const chainId = Chain.AMOY;
@@ -45,6 +46,20 @@ describe("headers", () => {
             expect(parseInt(l1Headers.POLY_TIMESTAMP) <= Math.floor(Date.now() / 1000)).true;
             expect(l1Headers.POLY_NONCE).equal("1012");
         });
+
+        it("wallet client signer", async () => {
+            const accountAddress = "0x00000000000000000000000000000000000000a1";
+            const walletClientMock = {
+                account: { address: accountAddress },
+                signTypedData: async (_args: unknown) => "0xdeadbeef",
+            } as unknown as WalletClient;
+
+            const l1Headers = await createL1Headers(walletClientMock, chainId, 3, 1700000000);
+            expect(l1Headers.POLY_ADDRESS).equal(accountAddress);
+            expect(l1Headers.POLY_SIGNATURE).equal("0xdeadbeef");
+            expect(l1Headers.POLY_TIMESTAMP).equal("1700000000");
+            expect(l1Headers.POLY_NONCE).equal("3");
+        });
     });
 
     describe("createL2Headers", async () => {
@@ -77,6 +92,25 @@ describe("headers", () => {
             expect(l2Headers.POLY_SIGNATURE).not.empty;
             expect(l2Headers.POLY_TIMESTAMP).not.empty;
             expect(parseInt(l2Headers.POLY_TIMESTAMP) <= Math.floor(Date.now() / 1000)).true;
+            expect(l2Headers.POLY_API_KEY).equal(creds.key);
+            expect(l2Headers.POLY_PASSPHRASE).equal(creds.passphrase);
+        });
+
+        it("wallet client signer with requestAddresses fallback", async () => {
+            const requestedAddress = "0x00000000000000000000000000000000000000a2";
+            const walletClientMock = {
+                signTypedData: async (_args: unknown) => "0xdeadbeef",
+                requestAddresses: async () => [requestedAddress],
+            } as unknown as WalletClient;
+
+            const l2Headers = await createL2Headers(walletClientMock, creds, {
+                method: "get",
+                requestPath: "/order",
+            }, 1700000000);
+
+            expect(l2Headers.POLY_ADDRESS).equal(requestedAddress);
+            expect(l2Headers.POLY_SIGNATURE).not.empty;
+            expect(l2Headers.POLY_TIMESTAMP).equal("1700000000");
             expect(l2Headers.POLY_API_KEY).equal(creds.key);
             expect(l2Headers.POLY_PASSPHRASE).equal(creds.passphrase);
         });
