@@ -147,10 +147,10 @@ export class ExchangeOrderBuilder {
         delete orderTypes.EIP712Domain;
 
         return hashTypedData({
-            domain: orderTypedData.domain as Parameters<typeof hashTypedData>[0]["domain"],
-            types: orderTypes as Parameters<typeof hashTypedData>[0]["types"],
-            primaryType: orderTypedData.primaryType as string,
-            message: orderTypedData.message as Record<string, unknown>,
+            domain: orderTypedData.domain,
+            types: orderTypes,
+            primaryType: orderTypedData.primaryType,
+            message: orderTypedData.message,
         });
     }
 
