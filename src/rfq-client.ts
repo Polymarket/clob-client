@@ -37,7 +37,7 @@ import {
 } from "./endpoints.ts";
 import { ROUNDING_CONFIG } from "./order-builder/helpers.ts";
 import { roundDown, roundNormal } from "./utilities.ts";
-import { parseUnits } from "@ethersproject/units";
+import { parseUnits } from "viem";
 import { COLLATERAL_TOKEN_DECIMALS } from "./config.ts";
 import type { IRfqClient, RfqDeps } from "./rfq-deps.ts";
 import type { ClobSigner } from "./signer.ts";
