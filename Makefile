@@ -6,6 +6,7 @@ build:
 
 .PHONY: test
 test:
+	pnpm tsc -p tsconfig.test.json --noEmit
 	pnpm vitest run --coverage
 
 .PHONY: lint
