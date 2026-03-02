@@ -1,5 +1,3 @@
-import "mocha";
-import { expect } from "chai";
 import { buildClobEip712Signature } from "../../src/signing/eip712.ts";
 import { Chain } from "../../src/types.ts";
 import { Wallet } from "@ethersproject/wallet";

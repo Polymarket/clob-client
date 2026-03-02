@@ -1,5 +1,3 @@
-import "mocha";
-import { expect } from "chai";
 import { buildPolyHmacSignature } from "../../src/signing/hmac.ts";
 
 describe("hmac", () => {

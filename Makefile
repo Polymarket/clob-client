@@ -6,14 +6,7 @@ build:
 
 .PHONY: test
 test:
-	rm -rf dist
-	pnpm tsc -p tsconfig.json
-	pnpm nyc -a --reporter=html --reporter=text \
-		mocha \
-		--require jsdom-global/register \
-		"dist/tests/**/*.test.js" \
-		--timeout 300000 \
-		--exit
+	pnpm vitest run --coverage
 
 .PHONY: lint
 lint:

@@ -23,7 +23,7 @@
         "noUnusedParameters": true,
         "resolveJsonModule": true,
         "strictNullChecks": true,
-        "typeRoots": ["node_modules/@types"],
+        "types": ["node", "vitest/globals"],
         "lib": ["es2022", "dom"],
         "skipLibCheck": true,
         // Enforce `import type` for compatibility with Node.js TS support

@@ -70,28 +70,18 @@
         "viem": "^2.0.0"
     },
     "devDependencies": {
-        "@babel/core": "7.23.2",
-        "@babel/traverse": ">=7.23.2",
-        "@types/chai": "^4.3.3",
-        "@types/mocha": "^9.1.1",
         "@types/node": "^22.19.1",
         "@types/ws": "^8.5.3",
         "@typescript-eslint/eslint-plugin": "^5.37.0",
         "@typescript-eslint/parser": "^5.37.0",
-        "chai": "^4.3.6",
+        "@vitest/coverage-v8": "^4.0.18",
         "dotenv": "^16.0.2",
         "eslint": "^8.23.1",
         "eslint-config-prettier": "^8.5.0",
         "eslint-plugin-unused-imports": "^2.0.0",
-        "jsdom": "^20.0.0",
-        "jsdom-global": "^3.0.2",
-        "mocha": "^10.0.0",
-        "nyc": "^15.1.0",
         "prettier": "^2.7.1",
         "typescript": "^5.9.3",
+        "vitest": "^4.0.18",
         "ws": "^8.11.0"
-    },
-    "resolutions": {
-        "@babel/traverse": ">=7.23.2"
     }
 }
