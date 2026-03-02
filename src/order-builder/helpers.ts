@@ -1,5 +1,3 @@
-import type { JsonRpcSigner } from "@ethersproject/providers";
-import type { Wallet } from "@ethersproject/wallet";
 import { parseUnits } from "@ethersproject/units";
 import {
     ExchangeOrderBuilder,
@@ -19,6 +17,8 @@ import type {
 } from "../types.ts";
 import { decimalPlaces, roundDown, roundNormal, roundUp } from "../utilities.ts";
 import { COLLATERAL_TOKEN_DECIMALS, getContractConfig } from "../config.ts";
+import { getSignerAddress } from "../signer.ts";
+import type { ClobSigner } from "../signer.ts";
 
 export const ROUNDING_CONFIG: Record<TickSize, RoundConfig> = {
     "0.1": {
@@ -53,7 +53,7 @@ export const ROUNDING_CONFIG: Record<TickSize, RoundConfig> = {
  * @returns SignedOrder
  */
 export const buildOrder = async (
-    signer: Wallet | JsonRpcSigner,
+    signer: ClobSigner,
     exchangeAddress: string,
     chainId: number,
     orderData: OrderData,
@@ -163,14 +163,14 @@ export const buildOrderCreationArgs = async (
 };
 
 export const createOrder = async (
-    eoaSigner: Wallet | JsonRpcSigner,
+    eoaSigner: ClobSigner,
     chainId: Chain,
     signatureType: SignatureType,
     funderAddress: string | undefined,
     userOrder: UserOrder,
     options: CreateOrderOptions,
 ): Promise<SignedOrder> => {
-    const eoaSignerAddress = await eoaSigner.getAddress();
+    const eoaSignerAddress = await getSignerAddress(eoaSigner);
 
     // If funder address is not given, use the signer address
     const maker = funderAddress === undefined ? eoaSignerAddress : funderAddress;
@@ -289,14 +289,14 @@ export const buildMarketOrderCreationArgs = async (
 };
 
 export const createMarketOrder = async (
-    eoaSigner: Wallet | JsonRpcSigner,
+    eoaSigner: ClobSigner,
     chainId: Chain,
     signatureType: SignatureType,
     funderAddress: string | undefined,
     userMarketOrder: UserMarketOrder,
     options: CreateOrderOptions,
 ): Promise<SignedOrder> => {
-    const eoaSignerAddress = await eoaSigner.getAddress();
+    const eoaSignerAddress = await getSignerAddress(eoaSigner);
 
     // If funder address is not given, use the signer address
     const maker = funderAddress === undefined ? eoaSignerAddress : funderAddress;

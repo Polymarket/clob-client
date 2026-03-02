@@ -1,5 +1,3 @@
-import type { JsonRpcSigner } from "@ethersproject/providers";
-import type { Wallet } from "@ethersproject/wallet";
 import { ethers } from "ethers";
 import {
     EIP712_DOMAIN,
@@ -7,7 +5,7 @@ import {
     PROTOCOL_NAME,
     PROTOCOL_VERSION,
 } from "./exchange.order.const.ts";
-import type { EIP712Object, EIP712TypedData, EIP712Types } from "./model/eip712.model.ts";
+import type { EIP712TypedData } from "./model/eip712.model.ts";
 import type {
     Order,
     OrderData,
@@ -17,69 +15,16 @@ import type {
 } from "./model/order.model.ts";
 import { SignatureType } from "./model/signature-types.model.ts";
 import { generateOrderSalt } from "./utils.ts";
-
-type ExchangeOrderSigner = Wallet | JsonRpcSigner | WalletClientLike;
-
-interface WalletClientLike {
-    account?: {
-        address: string;
-    };
-    requestAddresses?: () => Promise<string[] | readonly string[]>;
-    signTypedData(args: unknown): Promise<string>;
-}
-
-interface ExchangeTypedDataSigner {
-    getAddress(): Promise<string>;
-    signTypedData(
-        domain: EIP712Object,
-        types: EIP712Types,
-        value: EIP712Object,
-        primaryType?: string,
-    ): Promise<string>;
-}
-
-interface EthersTypedDataSigner {
-    getAddress(): Promise<string>;
-    _signTypedData(domain: EIP712Object, types: EIP712Types, value: EIP712Object): Promise<string>;
-}
-
-const isEthersTypedDataSigner = (signer: unknown): signer is EthersTypedDataSigner =>
-    typeof (signer as EthersTypedDataSigner)._signTypedData === "function";
-
-const isWalletClientLike = (signer: unknown): signer is WalletClientLike => {
-    if (typeof signer !== "object" || signer === null) {
-        return false;
-    }
-    return typeof (signer as WalletClientLike).signTypedData === "function";
-};
-
-const getWalletClientAddress = async (walletClient: WalletClientLike): Promise<string> => {
-    const accountAddress = walletClient.account?.address;
-    if (typeof accountAddress === "string" && accountAddress.length > 0) {
-        return accountAddress;
-    }
-
-    if (typeof walletClient.requestAddresses === "function") {
-        const [address] = await walletClient.requestAddresses();
-        if (typeof address === "string" && address.length > 0) {
-            return address;
-        }
-    }
-
-    throw new Error("wallet client is missing account address");
-};
+import { getSignerAddress, signTypedDataWithSigner } from "../signer.ts";
+import type { ClobSigner } from "../signer.ts";
 
 export class ExchangeOrderBuilder {
-    private readonly normalizedSigner: ExchangeTypedDataSigner;
-
     constructor(
         private readonly contractAddress: string,
         private readonly chainId: number,
-        private readonly signer: ExchangeOrderSigner,
+        private readonly signer: ClobSigner,
         private readonly generateSalt = generateOrderSalt,
-    ) {
-        this.normalizedSigner = this.normalizeSigner(this.signer);
-    }
+    ) {}
 
     /**
      * Build an order object including the signature.
@@ -115,7 +60,7 @@ export class ExchangeOrderBuilder {
             signer = maker;
         }
 
-        const signerAddress = await this.normalizedSigner.getAddress();
+        const signerAddress = await getSignerAddress(this.signer);
         if (signer !== signerAddress) {
             throw new Error("signer does not match");
         }
@@ -181,16 +126,17 @@ export class ExchangeOrderBuilder {
     /**
      * Generates order signature from EIP712 typed data.
      */
-    buildOrderSignature(typedData: EIP712TypedData): Promise<OrderSignature> {
+    async buildOrderSignature(typedData: EIP712TypedData): Promise<OrderSignature> {
         const orderTypes = { ...typedData.types };
         delete orderTypes.EIP712Domain;
 
-        return this.normalizedSigner.signTypedData(
-            typedData.domain,
-            orderTypes,
-            typedData.message,
-            typedData.primaryType,
-        );
+        return signTypedDataWithSigner({
+            signer: this.signer,
+            domain: typedData.domain,
+            types: orderTypes,
+            value: typedData.message,
+            primaryType: typedData.primaryType,
+        });
     }
 
     /**
@@ -207,33 +153,4 @@ export class ExchangeOrderBuilder {
         );
     }
 
-    private normalizeSigner(signer: ExchangeOrderSigner): ExchangeTypedDataSigner {
-        if (isEthersTypedDataSigner(signer)) {
-            return {
-                getAddress: async () => signer.getAddress(),
-                signTypedData: async (domain, types, value) =>
-                    signer._signTypedData(domain, types, value),
-            };
-        }
-
-        if (isWalletClientLike(signer)) {
-            return {
-                getAddress: async () => getWalletClientAddress(signer),
-                signTypedData: async (domain, types, value, primaryType) => {
-                    const account = signer.account?.address
-                        ? signer.account
-                        : await getWalletClientAddress(signer);
-                    return signer.signTypedData({
-                        account,
-                        domain,
-                        types,
-                        primaryType,
-                        message: value,
-                    });
-                },
-            };
-        }
-
-        throw new Error("unsupported signer type");
-    }
 }

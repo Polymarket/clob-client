@@ -40,8 +40,7 @@ import { roundDown, roundNormal } from "./utilities.ts";
 import { parseUnits } from "@ethersproject/units";
 import { COLLATERAL_TOKEN_DECIMALS } from "./config.ts";
 import type { IRfqClient, RfqDeps } from "./rfq-deps.ts";
-import type { JsonRpcSigner } from "@ethersproject/providers";
-import type { Wallet } from "@ethersproject/wallet";
+import type { ClobSigner } from "./signer.ts";
 import { L1_AUTH_UNAVAILABLE_ERROR, L2_AUTH_NOT_AVAILABLE } from "./errors.ts";
 
 // RFQ list params need to be repeated e.g. quoteIds=...&quoteIds=...
@@ -128,7 +127,7 @@ export class RfqClient implements IRfqClient {
         };
 
         const headers = await createL2Headers(
-            this.deps.signer as Wallet | JsonRpcSigner,
+            this.deps.signer as ClobSigner,
             this.deps.creds as ApiKeyCreds,
             l2HeaderArgs,
             this.deps.useServerTime ? await this.deps.getServerTime() : undefined,
@@ -151,7 +150,7 @@ export class RfqClient implements IRfqClient {
         };
 
         const headers = await createL2Headers(
-            this.deps.signer as Wallet | JsonRpcSigner,
+            this.deps.signer as ClobSigner,
             this.deps.creds as ApiKeyCreds,
             l2HeaderArgs,
             this.deps.useServerTime ? await this.deps.getServerTime() : undefined,
@@ -173,7 +172,7 @@ export class RfqClient implements IRfqClient {
         };
 
         const headers = await createL2Headers(
-            this.deps.signer as Wallet | JsonRpcSigner,
+            this.deps.signer as ClobSigner,
             this.deps.creds as ApiKeyCreds,
             l2HeaderArgs,
             this.deps.useServerTime ? await this.deps.getServerTime() : undefined,
@@ -250,7 +249,7 @@ export class RfqClient implements IRfqClient {
         };
 
         const headers = await createL2Headers(
-            this.deps.signer as Wallet | JsonRpcSigner,
+            this.deps.signer as ClobSigner,
             this.deps.creds as ApiKeyCreds,
             l2HeaderArgs,
             this.deps.useServerTime ? await this.deps.getServerTime() : undefined,
@@ -275,7 +274,7 @@ export class RfqClient implements IRfqClient {
         };
 
         const headers = await createL2Headers(
-            this.deps.signer as Wallet | JsonRpcSigner,
+            this.deps.signer as ClobSigner,
             this.deps.creds as ApiKeyCreds,
             l2HeaderArgs,
             this.deps.useServerTime ? await this.deps.getServerTime() : undefined,
@@ -303,7 +302,7 @@ export class RfqClient implements IRfqClient {
         };
 
         const headers = await createL2Headers(
-            this.deps.signer as Wallet | JsonRpcSigner,
+            this.deps.signer as ClobSigner,
             this.deps.creds as ApiKeyCreds,
             l2HeaderArgs,
             this.deps.useServerTime ? await this.deps.getServerTime() : undefined,
@@ -329,7 +328,7 @@ export class RfqClient implements IRfqClient {
         };
 
         const headers = await createL2Headers(
-            this.deps.signer as Wallet | JsonRpcSigner,
+            this.deps.signer as ClobSigner,
             this.deps.creds as ApiKeyCreds,
             l2HeaderArgs,
             this.deps.useServerTime ? await this.deps.getServerTime() : undefined,
@@ -352,7 +351,7 @@ export class RfqClient implements IRfqClient {
         };
 
         const headers = await createL2Headers(
-            this.deps.signer as Wallet | JsonRpcSigner,
+            this.deps.signer as ClobSigner,
             this.deps.creds as ApiKeyCreds,
             l2HeaderArgs,
             this.deps.useServerTime ? await this.deps.getServerTime() : undefined,
@@ -374,7 +373,7 @@ export class RfqClient implements IRfqClient {
         };
 
         const headers = await createL2Headers(
-            this.deps.signer as Wallet | JsonRpcSigner,
+            this.deps.signer as ClobSigner,
             this.deps.creds as ApiKeyCreds,
             l2HeaderArgs,
             this.deps.useServerTime ? await this.deps.getServerTime() : undefined,
@@ -441,7 +440,7 @@ export class RfqClient implements IRfqClient {
         };
 
         const headers = await createL2Headers(
-            this.deps.signer as Wallet | JsonRpcSigner,
+            this.deps.signer as ClobSigner,
             this.deps.creds as ApiKeyCreds,
             l2HeaderArgs,
             this.deps.useServerTime ? await this.deps.getServerTime() : undefined,
@@ -507,7 +506,7 @@ export class RfqClient implements IRfqClient {
         };
 
         const headers = await createL2Headers(
-            this.deps.signer as Wallet | JsonRpcSigner,
+            this.deps.signer as ClobSigner,
             this.deps.creds as ApiKeyCreds,
             l2HeaderArgs,
             this.deps.useServerTime ? await this.deps.getServerTime() : undefined,

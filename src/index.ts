@@ -6,6 +6,7 @@ export * from "./errors.ts";
 export * from "./headers/index.ts";
 export * from "./rfq-client.ts";
 export * from "./rfq-deps.ts";
+export type { ClobSigner } from "./signer.ts";
 export { ExchangeOrderBuilder, SignatureType, Side as OrderSide } from "./order-utils/index.ts";
 export type {
     EIP712Object,

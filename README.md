@@ -47,6 +47,25 @@ const signatureType = 1;
 
 See [examples](examples/) for more information
 
+### Using viem WalletClient
+
+```ts
+import { ClobClient } from "@polymarket/clob-client";
+import { createWalletClient, http } from "viem";
+import { polygon } from "viem/chains";
+import { privateKeyToAccount } from "viem/accounts";
+
+const host = "https://clob.polymarket.com";
+const account = privateKeyToAccount("0x...");
+const walletClient = createWalletClient({
+    account,
+    chain: polygon,
+    transport: http(),
+});
+
+const clobClient = new ClobClient(host, 137, walletClient);
+```
+
 ### Error Handling
 
 By default, API errors are returned as `{ error: "...", status: ... }` objects. To have the client throw errors instead, pass `throwOnError: true` as the last constructor argument:

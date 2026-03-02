@@ -1,7 +1,7 @@
 {
     "name": "@polymarket/clob-client",
     "description": "Typescript client for Polymarket's CLOB",
-    "version": "5.4.0",
+    "version": "5.5.0",
     "repository": {
         "type": "git",
         "url": "git+https://github.com/Polymarket/clob-client.git"
@@ -66,7 +66,8 @@
         "axios": "^1.0.0",
         "browser-or-node": "^2.1.1",
         "ethers": "^5.7.1",
-        "tslib": "^2.4.0"
+        "tslib": "^2.4.0",
+        "viem": "^2.0.0"
     },
     "devDependencies": {
         "@babel/core": "7.23.2",

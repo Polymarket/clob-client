@@ -1,6 +1,5 @@
-import type { Wallet } from "@ethersproject/wallet";
-import type { JsonRpcSigner } from "@ethersproject/providers";
 import type { SignedOrder } from "./order-utils/index.ts";
+import type { ClobSigner } from "./signer.ts";
 
 import type {
     AcceptQuoteParams,
@@ -30,7 +29,7 @@ import type { RequestOptions } from "./http-helpers/index.ts";
 export interface RfqDeps {
     host: string;
 
-    signer?: Wallet | JsonRpcSigner;
+    signer?: ClobSigner;
 
     creds?: ApiKeyCreds;
 

@@ -20,6 +20,7 @@ import { Wallet } from "@ethersproject/wallet";
 import { decimalPlaces, roundDown, roundNormal } from "../../src/utilities.ts";
 import { getContractConfig } from "../../src/config.ts";
 import type { ContractConfig } from "../../src/config.ts";
+import type { WalletClient } from "viem";
 
 describe("helpers", () => {
     const chainId = Chain.AMOY;
@@ -30,6 +31,33 @@ describe("helpers", () => {
         const privateKey = "0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80";
         wallet = new Wallet(privateKey);
         contractConfig = getContractConfig(chainId);
+    });
+
+    describe("viem signer support", () => {
+        it("createOrder supports WalletClient signers", async () => {
+            const signerAddress = "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266";
+            const walletClientMock = {
+                account: { address: signerAddress },
+                signTypedData: async (_args: unknown): Promise<string> => "0xdeadbeef",
+            } as unknown as WalletClient;
+
+            const signedOrder = await createOrder(
+                walletClientMock,
+                chainId,
+                SignatureType.EOA,
+                undefined,
+                {
+                    tokenID: "123",
+                    price: 0.5,
+                    size: 10,
+                    side: Side.BUY,
+                },
+                { tickSize: "0.01", negRisk: false },
+            );
+
+            expect(signedOrder.signer).to.equal(signerAddress);
+            expect(signedOrder.signature).to.equal("0xdeadbeef");
+        });
     });
 
     describe("buildOrder", () => {
