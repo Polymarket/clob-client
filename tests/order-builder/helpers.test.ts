@@ -1,5 +1,3 @@
-import "mocha";
-import { expect } from "chai";
 import { Side, Chain, OrderType } from "../../src/types.ts";
 import type { UserOrder, UserMarketOrder, OrderSummary } from "../../src/types.ts";
 import {

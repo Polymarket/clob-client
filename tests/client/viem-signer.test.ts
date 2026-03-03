@@ -1,5 +1,3 @@
-import "mocha";
-import { expect } from "chai";
 import { ClobClient } from "../../src/client.ts";
 import { Chain } from "../../src/types.ts";
 import type { ApiKeyCreds } from "../../src/types.ts";
