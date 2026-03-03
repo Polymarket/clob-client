@@ -1,4 +1,4 @@
-import { ethers } from "ethers";
+import { hashTypedData } from "viem";
 import {
     EIP712_DOMAIN,
     ORDER_STRUCTURE,
@@ -146,11 +146,12 @@ export class ExchangeOrderBuilder {
         const orderTypes = { ...orderTypedData.types };
         delete orderTypes.EIP712Domain;
 
-        return ethers.utils._TypedDataEncoder.hash(
-            orderTypedData.domain as Parameters<typeof ethers.utils._TypedDataEncoder.hash>[0],
-            orderTypes as Parameters<typeof ethers.utils._TypedDataEncoder.hash>[1],
-            orderTypedData.message as Parameters<typeof ethers.utils._TypedDataEncoder.hash>[2],
-        );
+        return hashTypedData({
+            domain: orderTypedData.domain as Parameters<typeof hashTypedData>[0]["domain"],
+            types: orderTypes as Parameters<typeof hashTypedData>[0]["types"],
+            primaryType: orderTypedData.primaryType as string,
+            message: orderTypedData.message as Record<string, unknown>,
+        });
     }
 
 }

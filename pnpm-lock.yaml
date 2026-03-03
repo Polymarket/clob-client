@@ -9,13 +9,10 @@ importers:
   .:
     dependencies:
       '@ethersproject/providers':
-        specifier: ^5.7.2
-        version: 5.8.0
-      '@ethersproject/units':
-        specifier: ^5.7.0
+        specifier: ^5.8.0
         version: 5.8.0
       '@ethersproject/wallet':
-        specifier: ^5.7.0
+        specifier: ^5.8.0
         version: 5.8.0
       '@polymarket/builder-signing-sdk':
         specifier: ^0.0.8
@@ -26,9 +23,6 @@ importers:
       browser-or-node:
         specifier: ^2.1.1
         version: 2.1.1
-      ethers:
-        specifier: ^5.7.1
-        version: 5.8.0
       tslib:
         specifier: ^2.4.0
         version: 2.8.1
@@ -63,6 +57,9 @@ importers:
       eslint-plugin-unused-imports:
         specifier: ^2.0.0
         version: 2.0.0(@typescript-eslint/eslint-plugin@5.62.0(@typescript-eslint/parser@5.62.0(eslint@8.57.1)(typescript@5.9.3))(eslint@8.57.1)(typescript@5.9.3))(eslint@8.57.1)
+      ethers:
+        specifier: ^5.8.0
+        version: 5.8.0
       prettier:
         specifier: ^2.7.1
         version: 2.8.8
@@ -1069,7 +1066,7 @@ packages:
 
   glob@7.2.3:
     resolution: {integrity: sha512-nFR0zLpU2YCaRxwoCJvL6UvCH2JFyFVIvwTLsIf21AuHlMskA1hhTdk+LlYJtOlYt9v6dvszD2BGRqBL+iQK9Q==}
-    deprecated: Glob versions prior to v9 are no longer supported
+    deprecated: Old versions of glob are not supported, and contain widely publicized security vulnerabilities, which have been fixed in the current version. Please update. Support for old versions may be purchased (at exorbitant rates) by contacting i@izs.me
 
   globals@13.24.0:
     resolution: {integrity: sha512-AhO5QUcj8llrbG09iWhPU2B204J1xnPeL8kQmVorSsy+Sjj1sk8gIyh6cUocGmH4L0UuhAJy+hJMRA4mgA4mFQ==}
