@@ -12,4 +12,4 @@ test:
 .PHONY: lint
 lint:
 	@echo "Linting code..."
-	./node_modules/.bin/eslint ./src --ext .js,.ts
+	./node_modules/.bin/biome check ./src

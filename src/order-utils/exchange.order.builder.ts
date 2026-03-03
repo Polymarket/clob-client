@@ -1,4 +1,6 @@
 import { hashTypedData } from "viem";
+import { getSignerAddress, signTypedDataWithSigner } from "../signer.ts";
+import type { ClobSigner } from "../signer.ts";
 import {
     EIP712_DOMAIN,
     ORDER_STRUCTURE,
@@ -15,8 +17,6 @@ import type {
 } from "./model/order.model.ts";
 import { SignatureType } from "./model/signature-types.model.ts";
 import { generateOrderSalt } from "./utils.ts";
-import { getSignerAddress, signTypedDataWithSigner } from "../signer.ts";
-import type { ClobSigner } from "../signer.ts";
 
 export class ExchangeOrderBuilder {
     constructor(
@@ -153,5 +153,4 @@ export class ExchangeOrderBuilder {
             message: orderTypedData.message,
         });
     }
-
 }

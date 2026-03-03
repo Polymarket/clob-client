@@ -1,8 +1,8 @@
 import { SignatureType } from "../order-utils/index.ts";
 import type { SignedOrder } from "../order-utils/index.ts";
-import { createMarketOrder, createOrder } from "./helpers.ts";
-import type { Chain, CreateOrderOptions, UserMarketOrder, UserOrder } from "../types.ts";
 import type { ClobSigner } from "../signer.ts";
+import type { Chain, CreateOrderOptions, UserMarketOrder, UserOrder } from "../types.ts";
+import { createMarketOrder, createOrder } from "./helpers.ts";
 
 export class OrderBuilder {
     readonly signer: ClobSigner;
@@ -31,7 +31,7 @@ export class OrderBuilder {
         chainId: Chain,
         signatureType?: SignatureType,
         funderAddress?: string,
-        getSigner?: () => Promise<ClobSigner> | ClobSigner
+        getSigner?: () => Promise<ClobSigner> | ClobSigner,
     ) {
         this.signer = signer;
         this.chainId = chainId;

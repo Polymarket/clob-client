@@ -1,8 +1,14 @@
 /* eslint-disable max-depth */
 import axios from "axios";
 import type { Method } from "axios";
-import type { DropNotificationParams, GetRfqQuotesParams, GetRfqRequestsParams, OrdersScoringParams, SimpleHeaders } from "../types.ts";
 import { isBrowser } from "browser-or-node";
+import type {
+    DropNotificationParams,
+    GetRfqQuotesParams,
+    GetRfqRequestsParams,
+    OrdersScoringParams,
+    SimpleHeaders,
+} from "../types.ts";
 
 export const GET = "GET";
 export const POST = "POST";
@@ -14,14 +20,14 @@ const overloadHeaders = (method: Method, headers?: SimpleHeaders) => {
         return;
     }
 
-    if (!headers || typeof headers === undefined) {
+    if (!headers || typeof headers === "undefined") {
         headers = {};
     }
 
     if (headers) {
-        headers["User-Agent"] = `@polymarket/clob-client`;
-        headers["Accept"] = "*/*";
-        headers["Connection"] = "keep-alive";
+        headers["User-Agent"] = "@polymarket/clob-client";
+        headers.Accept = "*/*";
+        headers.Connection = "keep-alive";
         headers["Content-Type"] = "application/json";
 
         if (method === GET) {
@@ -49,7 +55,7 @@ export interface RequestOptions {
     params?: QueryParams;
 }
 
-const sleep = (ms: number) => new Promise((res) => setTimeout(res, ms));
+const sleep = (ms: number) => new Promise(res => setTimeout(res, ms));
 
 const isTransientAxiosError = (err: unknown): boolean => {
     if (!axios.isAxiosError(err)) return false;
@@ -66,14 +72,26 @@ export const post = async (
     retryOnError?: boolean,
 ): Promise<any> => {
     try {
-        const resp = await request(endpoint, POST, options?.headers, options?.data, options?.params);
+        const resp = await request(
+            endpoint,
+            POST,
+            options?.headers,
+            options?.data,
+            options?.params,
+        );
         return resp.data;
     } catch (err: unknown) {
         if (retryOnError && isTransientAxiosError(err)) {
             console.log("[CLOB Client] transient error, retrying once after 30 ms");
             await sleep(30);
             try {
-                const resp = await request(endpoint, POST, options?.headers, options?.data, options?.params);
+                const resp = await request(
+                    endpoint,
+                    POST,
+                    options?.headers,
+                    options?.data,
+                    options?.params,
+                );
                 return resp.data;
             } catch (retryErr: unknown) {
                 return errorHandling(retryErr);
@@ -109,13 +127,7 @@ export const del = async (endpoint: string, options?: RequestOptions): Promise<a
 
 export const put = async (endpoint: string, options?: RequestOptions): Promise<any> => {
     try {
-        const resp = await request(
-            endpoint,
-            PUT,
-            options?.headers,
-            options?.data,
-            options?.params,
-        );
+        const resp = await request(endpoint, PUT, options?.headers, options?.data, options?.params);
         return resp.data;
     } catch (err: unknown) {
         return errorHandling(err);
@@ -168,7 +180,7 @@ export const parseOrdersScoringParams = (orderScoringParams?: OrdersScoringParam
     const params: QueryParams = {};
     if (orderScoringParams !== undefined) {
         if (orderScoringParams.orderIds !== undefined) {
-            params["order_ids"] = orderScoringParams?.orderIds.join(",");
+            params.order_ids = orderScoringParams?.orderIds.join(",");
         }
     }
     return params;
@@ -180,7 +192,7 @@ export const parseDropNotificationParams = (
     const params: QueryParams = {};
     if (dropNotificationParams !== undefined) {
         if (dropNotificationParams.ids !== undefined) {
-            params["ids"] = dropNotificationParams?.ids.join(",");
+            params.ids = dropNotificationParams?.ids.join(",");
         }
     }
     return params;

@@ -71,7 +71,7 @@ export const signTypedDataWithSigner = async ({
     }
 
     if (isWalletClientSigner(signer)) {
-        const account: Account | Address = signer.account ?? await getWalletClientAddress(signer);
+        const account: Account | Address = signer.account ?? (await getWalletClientAddress(signer));
         return signer.signTypedData({
             account,
             domain,

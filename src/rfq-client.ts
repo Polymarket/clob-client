@@ -1,47 +1,47 @@
-import { RfqMatchType, Side } from "./types.ts";
-import type {
-    ApiKeyCreds,
-    CreateOrderOptions,
-    RfqUserOrder,
-    RfqUserQuote,
-    CreateRfqRequestParams,
-    CreateRfqQuoteParams,
-    CancelRfqQuoteParams,
-    GetRfqQuotesParams,
-    GetRfqBestQuoteParams,
-    CancelRfqRequestParams,
-    AcceptQuoteParams,
-    ApproveOrderParams,
-    GetRfqRequestsParams,
-    RfqRequestsResponse,
-    RfqQuotesResponse,
-    RfqRequestResponse,
-    RfqQuoteResponse,
-    RfqQuote,
-    RfqRequestOrderCreationPayload,
-} from "./types.ts";
-import { createL2Headers } from "./headers/index.ts";
-import { DELETE, GET, POST } from "./http-helpers/index.ts";
-import {
-    CANCEL_RFQ_REQUEST,
-    CREATE_RFQ_QUOTE,
-    GET_RFQ_REQUESTER_QUOTES,
-    GET_RFQ_QUOTER_QUOTES,
-    GET_RFQ_BEST_QUOTE,
-    CANCEL_RFQ_QUOTE,
-    CREATE_RFQ_REQUEST,
-    RFQ_CONFIG,
-    GET_RFQ_REQUESTS,
-    RFQ_REQUESTS_ACCEPT,
-    RFQ_QUOTE_APPROVE,
-} from "./endpoints.ts";
-import { ROUNDING_CONFIG } from "./order-builder/helpers.ts";
-import { roundDown, roundNormal } from "./utilities.ts";
 import { parseUnits } from "viem";
 import { COLLATERAL_TOKEN_DECIMALS } from "./config.ts";
+import {
+    CANCEL_RFQ_QUOTE,
+    CANCEL_RFQ_REQUEST,
+    CREATE_RFQ_QUOTE,
+    CREATE_RFQ_REQUEST,
+    GET_RFQ_BEST_QUOTE,
+    GET_RFQ_QUOTER_QUOTES,
+    GET_RFQ_REQUESTER_QUOTES,
+    GET_RFQ_REQUESTS,
+    RFQ_CONFIG,
+    RFQ_QUOTE_APPROVE,
+    RFQ_REQUESTS_ACCEPT,
+} from "./endpoints.ts";
+import { L1_AUTH_UNAVAILABLE_ERROR, L2_AUTH_NOT_AVAILABLE } from "./errors.ts";
+import { createL2Headers } from "./headers/index.ts";
+import { DELETE, GET, POST } from "./http-helpers/index.ts";
+import { ROUNDING_CONFIG } from "./order-builder/helpers.ts";
 import type { IRfqClient, RfqDeps } from "./rfq-deps.ts";
 import type { ClobSigner } from "./signer.ts";
-import { L1_AUTH_UNAVAILABLE_ERROR, L2_AUTH_NOT_AVAILABLE } from "./errors.ts";
+import { RfqMatchType, Side } from "./types.ts";
+import type {
+    AcceptQuoteParams,
+    ApiKeyCreds,
+    ApproveOrderParams,
+    CancelRfqQuoteParams,
+    CancelRfqRequestParams,
+    CreateOrderOptions,
+    CreateRfqQuoteParams,
+    CreateRfqRequestParams,
+    GetRfqBestQuoteParams,
+    GetRfqQuotesParams,
+    GetRfqRequestsParams,
+    RfqQuote,
+    RfqQuoteResponse,
+    RfqQuotesResponse,
+    RfqRequestOrderCreationPayload,
+    RfqRequestResponse,
+    RfqRequestsResponse,
+    RfqUserOrder,
+    RfqUserQuote,
+} from "./types.ts";
+import { roundDown, roundNormal } from "./utilities.ts";
 
 // RFQ list params need to be repeated e.g. quoteIds=...&quoteIds=...
 const buildRepeatedQuery = (params?: Record<string, any>): string => {
@@ -53,7 +53,7 @@ const buildRepeatedQuery = (params?: Record<string, any>): string => {
             return;
         }
         if (Array.isArray(value)) {
-            value.forEach((v) => sp.append(key, String(v)));
+            value.forEach(v => sp.append(key, String(v)));
         } else {
             sp.append(key, String(value));
         }
@@ -88,8 +88,8 @@ export class RfqClient implements IRfqClient {
         const roundedSize = roundDown(size, roundConfig.size).toFixed(roundConfig.size);
 
         // Calculate amounts based on side
-        const sizeNum = parseFloat(roundedSize);
-        const priceNum = parseFloat(roundedPrice);
+        const sizeNum = Number.parseFloat(roundedSize);
+        const priceNum = Number.parseFloat(roundedPrice);
 
         let amountIn: string;
         let amountOut: string;
@@ -99,12 +99,18 @@ export class RfqClient implements IRfqClient {
         if (side === Side.BUY) {
             // Buying: pay USDC (asset 0), receive tokens (tokenID)
             amountIn = parseUnits(roundedSize, COLLATERAL_TOKEN_DECIMALS).toString();
-            amountOut = parseUnits((sizeNum * priceNum).toFixed(roundConfig.amount), COLLATERAL_TOKEN_DECIMALS).toString();
+            amountOut = parseUnits(
+                (sizeNum * priceNum).toFixed(roundConfig.amount),
+                COLLATERAL_TOKEN_DECIMALS,
+            ).toString();
             assetIn = tokenID;
             assetOut = "0"; // USDC
         } else {
             // Selling: pay tokens (tokenID), receive USDC (asset 0)
-            amountIn = parseUnits((sizeNum * priceNum).toFixed(roundConfig.amount), COLLATERAL_TOKEN_DECIMALS).toString();
+            amountIn = parseUnits(
+                (sizeNum * priceNum).toFixed(roundConfig.amount),
+                COLLATERAL_TOKEN_DECIMALS,
+            ).toString();
             amountOut = parseUnits(roundedSize, COLLATERAL_TOKEN_DECIMALS).toString();
             assetIn = "0"; // USDC
             assetOut = tokenID;
@@ -179,7 +185,9 @@ export class RfqClient implements IRfqClient {
         );
 
         const query = buildRepeatedQuery(params);
-        const url = query ? `${this.deps.host}${endpoint}?${query}` : `${this.deps.host}${endpoint}`;
+        const url = query
+            ? `${this.deps.host}${endpoint}?${query}`
+            : `${this.deps.host}${endpoint}`;
 
         return this.deps.get(url, { headers }) as Promise<RfqRequestsResponse>;
     }
@@ -204,8 +212,8 @@ export class RfqClient implements IRfqClient {
         const roundedSize = roundDown(size, roundConfig.size).toFixed(roundConfig.size);
 
         // Calculate amounts based on side
-        const sizeNum = parseFloat(roundedSize);
-        const priceNum = parseFloat(roundedPrice);
+        const sizeNum = Number.parseFloat(roundedSize);
+        const priceNum = Number.parseFloat(roundedPrice);
 
         let amountIn: string;
         let amountOut: string;
@@ -214,14 +222,20 @@ export class RfqClient implements IRfqClient {
 
         if (side === Side.SELL) {
             // Quoter selling tokens: receive USDC (asset 0), give tokens (tokenID)
-            amountIn = parseUnits((sizeNum * priceNum).toFixed(roundConfig.amount), COLLATERAL_TOKEN_DECIMALS).toString();
+            amountIn = parseUnits(
+                (sizeNum * priceNum).toFixed(roundConfig.amount),
+                COLLATERAL_TOKEN_DECIMALS,
+            ).toString();
             amountOut = parseUnits(roundedSize, COLLATERAL_TOKEN_DECIMALS).toString();
             assetIn = "0"; // USDC
             assetOut = tokenID;
         } else {
             // Quoter buying tokens: receive tokens (tokenID), give USDC (asset 0)
             amountIn = parseUnits(roundedSize, COLLATERAL_TOKEN_DECIMALS).toString();
-            amountOut = parseUnits((sizeNum * priceNum).toFixed(roundConfig.amount), COLLATERAL_TOKEN_DECIMALS).toString();
+            amountOut = parseUnits(
+                (sizeNum * priceNum).toFixed(roundConfig.amount),
+                COLLATERAL_TOKEN_DECIMALS,
+            ).toString();
             assetIn = tokenID;
             assetOut = "0"; // USDC
         }
@@ -262,9 +276,7 @@ export class RfqClient implements IRfqClient {
      * Gets quotes on requests created by the authenticated user (requester view).
      * Returns quotes that others have made on your requests.
      */
-    public async getRfqRequesterQuotes(
-        params?: GetRfqQuotesParams
-    ): Promise<RfqQuotesResponse> {
+    public async getRfqRequesterQuotes(params?: GetRfqQuotesParams): Promise<RfqQuotesResponse> {
         this.ensureL2Auth();
         const endpoint = GET_RFQ_REQUESTER_QUOTES;
 
@@ -281,7 +293,9 @@ export class RfqClient implements IRfqClient {
         );
 
         const query = buildRepeatedQuery(params);
-        const url = query ? `${this.deps.host}${endpoint}?${query}` : `${this.deps.host}${endpoint}`;
+        const url = query
+            ? `${this.deps.host}${endpoint}?${query}`
+            : `${this.deps.host}${endpoint}`;
 
         return this.deps.get(url, { headers }) as Promise<RfqQuotesResponse>;
     }
@@ -290,9 +304,7 @@ export class RfqClient implements IRfqClient {
      * Gets quotes created by the authenticated user (quoter view).
      * Returns quotes that you have made on others' requests.
      */
-    public async getRfqQuoterQuotes(
-        params?: GetRfqQuotesParams
-    ): Promise<RfqQuotesResponse> {
+    public async getRfqQuoterQuotes(params?: GetRfqQuotesParams): Promise<RfqQuotesResponse> {
         this.ensureL2Auth();
         const endpoint = GET_RFQ_QUOTER_QUOTES;
 
@@ -309,7 +321,9 @@ export class RfqClient implements IRfqClient {
         );
 
         const query = buildRepeatedQuery(params);
-        const url = query ? `${this.deps.host}${endpoint}?${query}` : `${this.deps.host}${endpoint}`;
+        const url = query
+            ? `${this.deps.host}${endpoint}?${query}`
+            : `${this.deps.host}${endpoint}`;
 
         return this.deps.get(url, { headers }) as Promise<RfqQuotesResponse>;
     }
@@ -317,9 +331,7 @@ export class RfqClient implements IRfqClient {
     /**
      * Gets the best quote for a given request ID
      */
-    public async getRfqBestQuote(
-        params?: GetRfqBestQuoteParams
-    ): Promise<RfqQuote> {
+    public async getRfqBestQuote(params?: GetRfqBestQuoteParams): Promise<RfqQuote> {
         this.ensureL2Auth();
         const endpoint = GET_RFQ_BEST_QUOTE;
         const l2HeaderArgs = {
@@ -393,16 +405,17 @@ export class RfqClient implements IRfqClient {
         });
         // Check for HTTP errors first (network failures, auth errors, server errors)
         if ("error" in rfqQuotes) {
-            const errorMsg = typeof rfqQuotes.error === "string" 
-                ? rfqQuotes.error 
-                : JSON.stringify(rfqQuotes.error);
+            const errorMsg =
+                typeof rfqQuotes.error === "string"
+                    ? rfqQuotes.error
+                    : JSON.stringify(rfqQuotes.error);
             throw new Error(`Error fetching RFQ quote: ${errorMsg}`);
         }
         if (!rfqQuotes?.data || rfqQuotes.data.length === 0) {
             throw new Error("RFQ quote not found");
         }
         const rfqQuote = rfqQuotes.data[0];
-        
+
         // Create an order, matching the quote
         const orderPayload = this.getRequestOrderCreationPayload(rfqQuote);
         const orderSide = orderPayload.side;
@@ -412,7 +425,7 @@ export class RfqClient implements IRfqClient {
         const order = await this.deps.createOrder({
             tokenID: token,
             price: orderPayload.price,
-            size: parseFloat(size),
+            size: Number.parseFloat(size),
             side: orderSide,
             expiration: payload.expiration,
         });
@@ -420,17 +433,17 @@ export class RfqClient implements IRfqClient {
         if (!order) {
             throw new Error("Error creating order");
         }
-        
+
         const acceptPayload = {
             requestId: payload.requestId,
             quoteId: payload.quoteId,
             owner: (this.deps.creds as ApiKeyCreds).key,
             ...order,
-            expiration: parseInt(order.expiration),
+            expiration: Number.parseInt(order.expiration),
             side: orderSide,
-            salt: parseInt(order.salt.toString())
+            salt: Number.parseInt(order.salt.toString()),
         };
-        
+
         const endpoint = RFQ_REQUESTS_ACCEPT;
 
         const l2HeaderArgs = {
@@ -445,7 +458,7 @@ export class RfqClient implements IRfqClient {
             l2HeaderArgs,
             this.deps.useServerTime ? await this.deps.getServerTime() : undefined,
         );
-        
+
         return this.deps.post(`${this.deps.host}${endpoint}`, { headers, data: acceptPayload });
     }
 
@@ -460,43 +473,43 @@ export class RfqClient implements IRfqClient {
         });
         // Check for HTTP errors first (network failures, auth errors, server errors)
         if ("error" in rfqQuotes) {
-            const errorMsg = typeof rfqQuotes.error === "string" 
-                ? rfqQuotes.error 
-                : JSON.stringify(rfqQuotes.error);
+            const errorMsg =
+                typeof rfqQuotes.error === "string"
+                    ? rfqQuotes.error
+                    : JSON.stringify(rfqQuotes.error);
             throw new Error(`Error fetching RFQ quote: ${errorMsg}`);
         }
         if (!rfqQuotes?.data || rfqQuotes.data.length === 0) {
             throw new Error("RFQ quote not found");
         }
         const rfqQuote = rfqQuotes.data[0];
-        
+
         // Create an order based on the quote details
         const side = rfqQuote.side === "BUY" ? Side.BUY : Side.SELL;
-        const size = rfqQuote.side === "BUY" ? 
-            rfqQuote.sizeIn : rfqQuote.sizeOut;
+        const size = rfqQuote.side === "BUY" ? rfqQuote.sizeIn : rfqQuote.sizeOut;
 
         const order = await this.deps.createOrder({
             tokenID: rfqQuote.token,
             price: rfqQuote.price,
-            size: parseFloat(size),
+            size: Number.parseFloat(size),
             side: side,
             expiration: payload.expiration,
         });
-        
+
         if (!order) {
             throw new Error("Error creating order");
         }
-        
+
         const approvePayload = {
             requestId: payload.requestId,
             quoteId: payload.quoteId,
             owner: (this.deps.creds as ApiKeyCreds).key,
             ...order,
-            expiration: parseInt(order.expiration),
+            expiration: Number.parseInt(order.expiration),
             side: side,
-            salt: parseInt(order.salt.toString())
+            salt: Number.parseInt(order.salt.toString()),
         };
-        
+
         const endpoint = RFQ_QUOTE_APPROVE;
 
         const l2HeaderArgs = {
@@ -528,7 +541,7 @@ export class RfqClient implements IRfqClient {
         }
     }
 
-    private getRequestOrderCreationPayload(quote: RfqQuote): RfqRequestOrderCreationPayload { 
+    private getRequestOrderCreationPayload(quote: RfqQuote): RfqRequestOrderCreationPayload {
         const quoteSide = quote.side;
         const matchType = quote.matchType;
         let side: Side;
@@ -537,39 +550,39 @@ export class RfqClient implements IRfqClient {
         let price: number;
 
         switch (matchType) {
-        case RfqMatchType.COMPLEMENTARY:
-            // For BUY <> SELL and SELL <> BUY
-            // the order side is opposite the quote side
-            side = quoteSide === "BUY" ? Side.SELL: Side.BUY;
-            token = quote.token;
-            size = side == Side.BUY ? quote.sizeOut : quote.sizeIn;
-            price = quote.price;
-            return {
-                token,
-                side,
-                size,
-                price,
-            };
-        case RfqMatchType.MINT:
-        case RfqMatchType.MERGE:
-            // BUY<> BUY, SELL <> SELL
-            // the order side is the same as the quote side
+            case RfqMatchType.COMPLEMENTARY:
+                // For BUY <> SELL and SELL <> BUY
+                // the order side is opposite the quote side
+                side = quoteSide === "BUY" ? Side.SELL : Side.BUY;
+                token = quote.token;
+                size = side === Side.BUY ? quote.sizeOut : quote.sizeIn;
+                price = quote.price;
+                return {
+                    token,
+                    side,
+                    size,
+                    price,
+                };
+            case RfqMatchType.MINT:
+            case RfqMatchType.MERGE:
+                // BUY<> BUY, SELL <> SELL
+                // the order side is the same as the quote side
 
-            side = quoteSide === "BUY" ? Side.BUY: Side.SELL;
-            token = quote.complement;
-            size = side == Side.BUY ? quote.sizeIn : quote.sizeOut;
-            // For a MINT or a MERGE, the requester price is the inverse of the quote price
-            // 95c Quote to BUY NO, implies that the Requester is buying YES at 5c
-            // 45c Quote to SELL NO, implies the Requester is selling YES at 55c
-            price = 1 - quote.price;
-            return {
-                token,
-                side,
-                size,
-                price,
-            }
-        default:
-            throw new Error("invalid match type");
+                side = quoteSide === "BUY" ? Side.BUY : Side.SELL;
+                token = quote.complement;
+                size = side === Side.BUY ? quote.sizeIn : quote.sizeOut;
+                // For a MINT or a MERGE, the requester price is the inverse of the quote price
+                // 95c Quote to BUY NO, implies that the Requester is buying YES at 5c
+                // 45c Quote to SELL NO, implies the Requester is selling YES at 55c
+                price = 1 - quote.price;
+                return {
+                    token,
+                    side,
+                    size,
+                    price,
+                };
+            default:
+                throw new Error("invalid match type");
         }
     }
 }

@@ -81,7 +81,7 @@ export const GET_BUILDER_TRADES = "/builder/trades";
 export const POST_HEARTBEAT = "/v1/heartbeats";
 
 // RFQ
-export const CREATE_RFQ_REQUEST = "/rfq/request"
+export const CREATE_RFQ_REQUEST = "/rfq/request";
 export const CANCEL_RFQ_REQUEST = "/rfq/request";
 export const GET_RFQ_REQUESTS = "/rfq/data/requests";
 export const CREATE_RFQ_QUOTE = "/rfq/quote";

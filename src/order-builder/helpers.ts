@@ -1,24 +1,24 @@
 import { parseUnits } from "viem";
+import { COLLATERAL_TOKEN_DECIMALS, getContractConfig } from "../config.ts";
 import {
     ExchangeOrderBuilder,
-    SignatureType,
+    type SignatureType,
     Side as UtilsSide,
 } from "../order-utils/index.ts";
 import type { OrderData, SignedOrder } from "../order-utils/index.ts";
-import { Side, OrderType } from "../types.ts";
-import type {
-    UserOrder,
-    Chain,
-    UserMarketOrder,
-    TickSize,
-    RoundConfig,
-    CreateOrderOptions,
-    OrderSummary,
-} from "../types.ts";
-import { decimalPlaces, roundDown, roundNormal, roundUp } from "../utilities.ts";
-import { COLLATERAL_TOKEN_DECIMALS, getContractConfig } from "../config.ts";
 import { getSignerAddress } from "../signer.ts";
 import type { ClobSigner } from "../signer.ts";
+import { OrderType, Side } from "../types.ts";
+import type {
+    Chain,
+    CreateOrderOptions,
+    OrderSummary,
+    RoundConfig,
+    TickSize,
+    UserMarketOrder,
+    UserOrder,
+} from "../types.ts";
+import { decimalPlaces, roundDown, roundNormal, roundUp } from "../utilities.ts";
 
 export const ROUNDING_CONFIG: Record<TickSize, RoundConfig> = {
     "0.1": {
@@ -87,23 +87,22 @@ export const getOrderRawAmounts = (
             rawMakerAmt,
             rawTakerAmt,
         };
-    } else {
-        const rawMakerAmt = roundDown(size, roundConfig.size);
-
-        let rawTakerAmt = rawMakerAmt * rawPrice;
-        if (decimalPlaces(rawTakerAmt) > roundConfig.amount) {
-            rawTakerAmt = roundUp(rawTakerAmt, roundConfig.amount + 4);
-            if (decimalPlaces(rawTakerAmt) > roundConfig.amount) {
-                rawTakerAmt = roundDown(rawTakerAmt, roundConfig.amount);
-            }
-        }
-
-        return {
-            side: UtilsSide.SELL,
-            rawMakerAmt,
-            rawTakerAmt,
-        };
     }
+    const rawMakerAmt = roundDown(size, roundConfig.size);
+
+    let rawTakerAmt = rawMakerAmt * rawPrice;
+    if (decimalPlaces(rawTakerAmt) > roundConfig.amount) {
+        rawTakerAmt = roundUp(rawTakerAmt, roundConfig.amount + 4);
+        if (decimalPlaces(rawTakerAmt) > roundConfig.amount) {
+            rawTakerAmt = roundDown(rawTakerAmt, roundConfig.amount);
+        }
+    }
+
+    return {
+        side: UtilsSide.SELL,
+        rawMakerAmt,
+        rawTakerAmt,
+    };
 };
 
 /**
@@ -214,22 +213,21 @@ export const getMarketOrderRawAmounts = (
             rawMakerAmt,
             rawTakerAmt,
         };
-    } else {
-        const rawMakerAmt = roundDown(amount, roundConfig.size);
-        let rawTakerAmt = rawMakerAmt * rawPrice;
-        if (decimalPlaces(rawTakerAmt) > roundConfig.amount) {
-            rawTakerAmt = roundUp(rawTakerAmt, roundConfig.amount + 4);
-            if (decimalPlaces(rawTakerAmt) > roundConfig.amount) {
-                rawTakerAmt = roundDown(rawTakerAmt, roundConfig.amount);
-            }
-        }
-
-        return {
-            side: UtilsSide.SELL,
-            rawMakerAmt,
-            rawTakerAmt,
-        };
     }
+    const rawMakerAmt = roundDown(amount, roundConfig.size);
+    let rawTakerAmt = rawMakerAmt * rawPrice;
+    if (decimalPlaces(rawTakerAmt) > roundConfig.amount) {
+        rawTakerAmt = roundUp(rawTakerAmt, roundConfig.amount + 4);
+        if (decimalPlaces(rawTakerAmt) > roundConfig.amount) {
+            rawTakerAmt = roundDown(rawTakerAmt, roundConfig.amount);
+        }
+    }
+
+    return {
+        side: UtilsSide.SELL,
+        rawMakerAmt,
+        rawTakerAmt,
+    };
 };
 
 /**
@@ -343,15 +341,15 @@ export const calculateBuyMarketPrice = (
     */
     for (let i = positions.length - 1; i >= 0; i--) {
         const p = positions[i];
-        sum += parseFloat(p.size) * parseFloat(p.price);
+        sum += Number.parseFloat(p.size) * Number.parseFloat(p.price);
         if (sum >= amountToMatch) {
-            return parseFloat(p.price);
+            return Number.parseFloat(p.price);
         }
     }
     if (orderType === OrderType.FOK) {
         throw new Error("no match");
     }
-    return parseFloat(positions[0].price);
+    return Number.parseFloat(positions[0].price);
 };
 
 /**
@@ -380,13 +378,13 @@ export const calculateSellMarketPrice = (
     */
     for (let i = positions.length - 1; i >= 0; i--) {
         const p = positions[i];
-        sum += parseFloat(p.size);
+        sum += Number.parseFloat(p.size);
         if (sum >= amountToMatch) {
-            return parseFloat(p.price);
+            return Number.parseFloat(p.price);
         }
     }
     if (orderType === OrderType.FOK) {
         throw new Error("no match");
     }
-    return parseFloat(positions[0].price);
+    return Number.parseFloat(positions[0].price);
 };
