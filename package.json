@@ -40,7 +40,8 @@
     "types": "dist/index.d.ts",
     "type": "module",
     "files": [
-        "/dist"
+        "/dist",
+        "!/dist/**/*.js.map"
     ],
     "sideEffects": false,
     "keywords": [
