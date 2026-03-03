@@ -1551,7 +1551,7 @@ export class ClobClient {
     }
 
     private canBuilderAuth(): boolean {
-        return this.builderConfig != undefined && this.builderConfig.isValid();
+        return this.builderConfig?.isValid() ?? false;
     }
 
     private async _resolveFeeRateBps(tokenID: string, userFeeRateBps?: number): Promise<number> {

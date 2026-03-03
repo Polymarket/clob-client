@@ -127,8 +127,7 @@ export class ExchangeOrderBuilder {
      * Generates order signature from EIP712 typed data.
      */
     async buildOrderSignature(typedData: EIP712TypedData): Promise<OrderSignature> {
-        const orderTypes = { ...typedData.types };
-        delete orderTypes.EIP712Domain;
+        const { EIP712Domain: _, ...orderTypes } = typedData.types;
 
         return signTypedDataWithSigner({
             signer: this.signer,
@@ -143,8 +142,7 @@ export class ExchangeOrderBuilder {
      * Generates the hash of the order from EIP712 typed data.
      */
     buildOrderHash(orderTypedData: EIP712TypedData): OrderHash {
-        const orderTypes = { ...orderTypedData.types };
-        delete orderTypes.EIP712Domain;
+        const { EIP712Domain: _, ...orderTypes } = orderTypedData.types;
 
         return hashTypedData({
             domain: orderTypedData.domain,
