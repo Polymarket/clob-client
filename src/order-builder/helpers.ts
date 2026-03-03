@@ -1,4 +1,4 @@
-import { parseUnits } from "@ethersproject/units";
+import { parseUnits } from "viem";
 import {
     ExchangeOrderBuilder,
     SignatureType,

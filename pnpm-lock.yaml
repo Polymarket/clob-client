@@ -12,13 +12,10 @@ importers:
   .:
     dependencies:
       '@ethersproject/providers':
-        specifier: ^5.7.2
-        version: 5.8.0
-      '@ethersproject/units':
-        specifier: ^5.7.0
+        specifier: ^5.8.0
         version: 5.8.0
       '@ethersproject/wallet':
-        specifier: ^5.7.0
+        specifier: ^5.8.0
         version: 5.8.0
       '@polymarket/builder-signing-sdk':
         specifier: ^0.0.8
@@ -29,9 +26,6 @@ importers:
       browser-or-node:
         specifier: ^2.1.1
         version: 2.1.1
-      ethers:
-        specifier: ^5.7.1
-        version: 5.8.0
       tslib:
         specifier: ^2.4.0
         version: 2.8.1
@@ -78,6 +72,9 @@ importers:
       eslint-plugin-unused-imports:
         specifier: ^2.0.0
         version: 2.0.0(@typescript-eslint/eslint-plugin@5.62.0(@typescript-eslint/parser@5.62.0(eslint@8.57.1)(typescript@5.9.3))(eslint@8.57.1)(typescript@5.9.3))(eslint@8.57.1)
+      ethers:
+        specifier: ^5.8.0
+        version: 5.8.0
       jsdom:
         specifier: ^20.0.0
         version: 20.0.3
