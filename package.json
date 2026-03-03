@@ -53,10 +53,12 @@
     "license": "MIT",
     "packageManager": "pnpm@9.15.4",
     "scripts": {
-        "build": "make build",
-        "lint": "make lint",
-        "deploy": "pnpm build && npm publish --access public --provenance",
-        "test": "make test"
+        "build": "rm -rf dist && tsc -p tsconfig.build.json",
+        "typecheck": "tsc -p tsconfig.test.json --noEmit",
+        "test": "pnpm typecheck && vitest run --coverage",
+        "lint": "biome check ./src",
+        "ci": "pnpm lint && pnpm test && pnpm build",
+        "deploy": "pnpm build && npm publish --access public --provenance"
     },
     "dependencies": {
         "@ethersproject/providers": "^5.8.0",
