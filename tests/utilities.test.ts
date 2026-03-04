@@ -1,4 +1,3 @@
-/* eslint-disable max-len */
 import {
     decimalPlaces,
     generateOrderBookSummaryHash,
@@ -77,7 +76,13 @@ describe("utilities", () => {
                 signature: "0x",
             };
 
-            const jsonOrder = orderToJson(baseOrder, "aaaa-bbbb-cccc-dddd", OrderType.GTC, false, true);
+            const jsonOrder = orderToJson(
+                baseOrder,
+                "aaaa-bbbb-cccc-dddd",
+                OrderType.GTC,
+                false,
+                true,
+            );
             expect(jsonOrder).deep.include({
                 owner: "aaaa-bbbb-cccc-dddd",
                 orderType: "GTC",
@@ -85,9 +90,9 @@ describe("utilities", () => {
                 postOnly: true,
             });
 
-            expect(() => orderToJson(baseOrder, "aaaa-bbbb-cccc-dddd", OrderType.FOK, false, true)).to.throw(
-                "postOnly is only supported for GTC and GTD orders",
-            );
+            expect(() =>
+                orderToJson(baseOrder, "aaaa-bbbb-cccc-dddd", OrderType.FOK, false, true),
+            ).to.throw("postOnly is only supported for GTC and GTD orders");
         });
 
         it("GTD sell", () => {

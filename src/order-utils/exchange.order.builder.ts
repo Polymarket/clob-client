@@ -1,4 +1,6 @@
 import { hashTypedData } from "viem";
+import type { ClobSigner } from "../signer.ts";
+import { getSignerAddress, signTypedDataWithSigner } from "../signer.ts";
 import {
     EIP712_DOMAIN,
     ORDER_STRUCTURE,
@@ -15,8 +17,6 @@ import type {
 } from "./model/order.model.ts";
 import { SignatureType } from "./model/signature-types.model.ts";
 import { generateOrderSalt } from "./utils.ts";
-import { getSignerAddress, signTypedDataWithSigner } from "../signer.ts";
-import type { ClobSigner } from "../signer.ts";
 
 export class ExchangeOrderBuilder {
     constructor(
@@ -127,8 +127,7 @@ export class ExchangeOrderBuilder {
      * Generates order signature from EIP712 typed data.
      */
     async buildOrderSignature(typedData: EIP712TypedData): Promise<OrderSignature> {
-        const orderTypes = { ...typedData.types };
-        delete orderTypes.EIP712Domain;
+        const { EIP712Domain: _, ...orderTypes } = typedData.types;
 
         return signTypedDataWithSigner({
             signer: this.signer,
@@ -143,15 +142,13 @@ export class ExchangeOrderBuilder {
      * Generates the hash of the order from EIP712 typed data.
      */
     buildOrderHash(orderTypedData: EIP712TypedData): OrderHash {
-        const orderTypes = { ...orderTypedData.types };
-        delete orderTypes.EIP712Domain;
+        const { EIP712Domain: _, ...orderTypes } = orderTypedData.types;
 
         return hashTypedData({
-            domain: orderTypedData.domain as Parameters<typeof hashTypedData>[0]["domain"],
-            types: orderTypes as Parameters<typeof hashTypedData>[0]["types"],
-            primaryType: orderTypedData.primaryType as string,
-            message: orderTypedData.message as Record<string, unknown>,
+            domain: orderTypedData.domain,
+            types: orderTypes,
+            primaryType: orderTypedData.primaryType,
+            message: orderTypedData.message,
         });
     }
-
 }

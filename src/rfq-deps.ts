@@ -1,6 +1,6 @@
+import type { RequestOptions } from "./http-helpers/index.ts";
 import type { SignedOrder } from "./order-utils/index.ts";
 import type { ClobSigner } from "./signer.ts";
-
 import type {
     AcceptQuoteParams,
     ApiKeyCreds,
@@ -12,16 +12,15 @@ import type {
     GetRfqQuotesParams,
     GetRfqRequestsParams,
     RfqQuote,
-    RfqQuotesResponse,
-    RfqRequestsResponse,
-    RfqRequestResponse,
     RfqQuoteResponse,
+    RfqQuotesResponse,
+    RfqRequestResponse,
+    RfqRequestsResponse,
     RfqUserOrder,
     RfqUserQuote,
     TickSize,
     UserOrder,
 } from "./types.ts";
-import type { RequestOptions } from "./http-helpers/index.ts";
 
 /**
  * Minimal surface from the core CLOB client that RFQ functionality depends on.
@@ -48,10 +47,7 @@ export interface RfqDeps {
 
     resolveTickSize(tokenID: string, tickSize?: TickSize): Promise<TickSize>;
 
-    createOrder(
-        userOrder: UserOrder,
-        options?: Partial<CreateOrderOptions>,
-    ): Promise<SignedOrder>;
+    createOrder(userOrder: UserOrder, options?: Partial<CreateOrderOptions>): Promise<SignedOrder>;
 
     // HTTP methods that include geo_block_token injection
     get(endpoint: string, options?: RequestOptions): Promise<any>;

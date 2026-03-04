@@ -1,140 +1,145 @@
-import { SignatureType } from "./order-utils/index.ts";
-import type { SignedOrder } from "./order-utils/index.ts";
 import type { BuilderConfig, BuilderHeaderPayload } from "@polymarket/builder-signing-sdk";
-import { OrderType, Side } from "./types.ts";
-import type {
-    ApiKeyCreds,
-    ApiKeysResponse,
-    Chain,
-    CreateOrderOptions,
-    MarketPrice,
-    OpenOrderParams,
-    OpenOrdersResponse,
-    OrderMarketCancelParams,
-    OrderBookSummary,
-    OrderPayload,
-    Trade,
-    Notification,
-    TradeParams,
-    UserMarketOrder,
-    UserOrder,
-    BalanceAllowanceParams,
-    BalanceAllowanceResponse,
-    ApiKeyRaw,
-    OrderScoringParams,
-    OrderScoring,
-    OpenOrder,
-    TickSizes,
-    TickSize,
-    OrdersScoringParams,
-    OrdersScoring,
-    PriceHistoryFilterParams,
-    PaginationPayload,
-    MarketTradeEvent,
-    DropNotificationParams,
-    BookParams,
-    UserEarning,
-    RewardsPercentages,
-    MarketReward,
-    UserRewardsEarning,
-    TotalUserEarning,
-    NegRisk,
-    BanStatus,
-    NewOrder,
-    PostOrdersArgs,
-    FeeRates,
-    L2WithBuilderHeader,
-    L2PolyHeader,
-    L2HeaderArgs,
-    BuilderTrade,
-    BuilderApiKey,
-    BuilderApiKeyResponse,
-    ReadonlyApiKeyResponse,
-    HeartbeatResponse,
-} from "./types.ts";
-import { createL1Headers, createL2Headers, injectBuilderHeaders } from "./headers/index.ts";
+import { END_CURSOR, INITIAL_CURSOR } from "./constants.ts";
 import {
-    del,
+    ARE_ORDERS_SCORING,
+    CANCEL_ALL,
+    CANCEL_MARKET_ORDERS,
+    CANCEL_ORDER,
+    CANCEL_ORDERS,
+    CLOSED_ONLY,
+    CREATE_API_KEY,
+    CREATE_BUILDER_API_KEY,
+    CREATE_READONLY_API_KEY,
+    DELETE_API_KEY,
+    DELETE_READONLY_API_KEY,
+    DERIVE_API_KEY,
+    DROP_NOTIFICATIONS,
+    GET_API_KEYS,
+    GET_BALANCE_ALLOWANCE,
+    GET_BUILDER_API_KEYS,
+    GET_BUILDER_TRADES,
+    GET_EARNINGS_FOR_USER_FOR_DAY,
+    GET_FEE_RATE,
+    GET_LAST_TRADE_PRICE,
+    GET_LAST_TRADES_PRICES,
+    GET_LIQUIDITY_REWARD_PERCENTAGES,
+    GET_MARKET,
+    GET_MARKET_TRADES_EVENTS,
+    GET_MARKETS,
+    GET_MIDPOINT,
+    GET_MIDPOINTS,
+    GET_NEG_RISK,
+    GET_NOTIFICATIONS,
+    GET_OPEN_ORDERS,
+    GET_ORDER,
+    GET_ORDER_BOOK,
+    GET_ORDER_BOOKS,
+    GET_PRICE,
+    GET_PRICES,
+    GET_PRICES_HISTORY,
+    GET_READONLY_API_KEYS,
+    GET_REWARDS_EARNINGS_PERCENTAGES,
+    GET_REWARDS_MARKETS,
+    GET_REWARDS_MARKETS_CURRENT,
+    GET_SAMPLING_MARKETS,
+    GET_SAMPLING_SIMPLIFIED_MARKETS,
+    GET_SIMPLIFIED_MARKETS,
+    GET_SPREAD,
+    GET_SPREADS,
+    GET_TICK_SIZE,
+    GET_TOTAL_EARNINGS_FOR_USER_FOR_DAY,
+    GET_TRADES,
+    IS_ORDER_SCORING,
+    POST_HEARTBEAT,
+    POST_ORDER,
+    POST_ORDERS,
+    REVOKE_BUILDER_API_KEY,
+    TIME,
+    UPDATE_BALANCE_ALLOWANCE,
+    VALIDATE_READONLY_API_KEY,
+} from "./endpoints.ts";
+import {
+    ApiError,
+    BUILDER_AUTH_FAILED,
+    BUILDER_AUTH_NOT_AVAILABLE,
+    L1_AUTH_UNAVAILABLE_ERROR,
+    L2_AUTH_NOT_AVAILABLE,
+} from "./errors.ts";
+import { createL1Headers, createL2Headers, injectBuilderHeaders } from "./headers/index.ts";
+import type { RequestOptions } from "./http-helpers/index.ts";
+import {
     DELETE,
+    del,
     GET,
     get,
-    parseDropNotificationParams,
     POST,
+    parseDropNotificationParams,
     post,
     put,
 } from "./http-helpers/index.ts";
-import type { RequestOptions } from "./http-helpers/index.ts";
-import { ApiError, BUILDER_AUTH_FAILED, BUILDER_AUTH_NOT_AVAILABLE, L1_AUTH_UNAVAILABLE_ERROR, L2_AUTH_NOT_AVAILABLE } from "./errors.ts";
+import { OrderBuilder } from "./order-builder/builder.ts";
+import { calculateBuyMarketPrice, calculateSellMarketPrice } from "./order-builder/helpers.ts";
+import type { SignatureType, SignedOrder } from "./order-utils/index.ts";
+import { RfqClient } from "./rfq-client.ts";
+import type { IRfqClient, RfqDeps } from "./rfq-deps.ts";
+import type { ClobSigner } from "./signer.ts";
+import type {
+    ApiKeyCreds,
+    ApiKeyRaw,
+    ApiKeysResponse,
+    BalanceAllowanceParams,
+    BalanceAllowanceResponse,
+    BanStatus,
+    BookParams,
+    BuilderApiKey,
+    BuilderApiKeyResponse,
+    BuilderTrade,
+    Chain,
+    CreateOrderOptions,
+    DropNotificationParams,
+    FeeRates,
+    HeartbeatResponse,
+    L2HeaderArgs,
+    L2PolyHeader,
+    L2WithBuilderHeader,
+    MarketPrice,
+    MarketReward,
+    MarketTradeEvent,
+    NegRisk,
+    NewOrder,
+    Notification,
+    OpenOrder,
+    OpenOrderParams,
+    OpenOrdersResponse,
+    OrderBookSummary,
+    OrderMarketCancelParams,
+    OrderPayload,
+    OrderScoring,
+    OrderScoringParams,
+    OrdersScoring,
+    OrdersScoringParams,
+    PaginationPayload,
+    PostOrdersArgs,
+    PriceHistoryFilterParams,
+    ReadonlyApiKeyResponse,
+    RewardsPercentages,
+    TickSize,
+    TickSizes,
+    TotalUserEarning,
+    Trade,
+    TradeParams,
+    UserEarning,
+    UserMarketOrder,
+    UserOrder,
+    UserRewardsEarning,
+} from "./types.ts";
+import { OrderType, Side } from "./types.ts";
 import {
     generateOrderBookSummaryHash,
     isTickSizeSmaller,
     orderToJson,
     priceValid,
 } from "./utilities.ts";
-import {
-    CANCEL_ALL,
-    CANCEL_ORDER,
-    CREATE_API_KEY,
-    GET_API_KEYS,
-    CLOSED_ONLY,
-    GET_ORDER,
-    POST_ORDER,
-    TIME,
-    GET_TRADES,
-    GET_ORDER_BOOK,
-    DELETE_API_KEY,
-    GET_MIDPOINT,
-    GET_PRICE,
-    GET_OPEN_ORDERS,
-    DERIVE_API_KEY,
-    GET_LAST_TRADE_PRICE,
-    GET_MARKETS,
-    GET_MARKET,
-    GET_PRICES_HISTORY,
-    GET_NOTIFICATIONS,
-    DROP_NOTIFICATIONS,
-    CANCEL_ORDERS,
-    CANCEL_MARKET_ORDERS,
-    GET_BALANCE_ALLOWANCE,
-    IS_ORDER_SCORING,
-    GET_TICK_SIZE,
-    GET_NEG_RISK,
-    ARE_ORDERS_SCORING,
-    GET_SIMPLIFIED_MARKETS,
-    GET_SAMPLING_SIMPLIFIED_MARKETS,
-    GET_SAMPLING_MARKETS,
-    GET_MARKET_TRADES_EVENTS,
-    GET_ORDER_BOOKS,
-    GET_MIDPOINTS,
-    GET_PRICES,
-    GET_LAST_TRADES_PRICES,
-    GET_EARNINGS_FOR_USER_FOR_DAY,
-    GET_LIQUIDITY_REWARD_PERCENTAGES,
-    GET_REWARDS_MARKETS_CURRENT,
-    GET_REWARDS_MARKETS,
-    GET_REWARDS_EARNINGS_PERCENTAGES,
-    GET_TOTAL_EARNINGS_FOR_USER_FOR_DAY,
-    GET_SPREAD,
-    GET_SPREADS,
-    UPDATE_BALANCE_ALLOWANCE,
-    POST_ORDERS,
-    GET_FEE_RATE,
-    GET_BUILDER_TRADES,
-    CREATE_BUILDER_API_KEY,
-    GET_BUILDER_API_KEYS,
-    REVOKE_BUILDER_API_KEY,
-    CREATE_READONLY_API_KEY,
-    GET_READONLY_API_KEYS,
-    DELETE_READONLY_API_KEY,
-    VALIDATE_READONLY_API_KEY,
-    POST_HEARTBEAT,
-} from "./endpoints.ts";
-import { OrderBuilder } from "./order-builder/builder.ts";
-import { END_CURSOR, INITIAL_CURSOR } from "./constants.ts";
-import { calculateBuyMarketPrice, calculateSellMarketPrice } from "./order-builder/helpers.ts";
-import { RfqClient } from "./rfq-client.ts";
-import type { IRfqClient, RfqDeps } from "./rfq-deps.ts";
-import type { ClobSigner } from "./signer.ts";
 
 export class ClobClient {
     readonly host: string;
@@ -296,7 +301,7 @@ export class ClobClient {
     public async getTickSize(tokenID: string): Promise<TickSize> {
         const cachedAt = this.tickSizeTimestamps[tokenID];
 
-        if (tokenID in this.tickSizes && cachedAt && (Date.now() - cachedAt) < this.tickSizeTtlMs) {
+        if (tokenID in this.tickSizes && cachedAt && Date.now() - cachedAt < this.tickSizeTtlMs) {
             return this.tickSizes[tokenID];
         }
 
@@ -672,8 +677,8 @@ export class ClobClient {
 
         let results: Trade[] = [];
         next_cursor = next_cursor || INITIAL_CURSOR;
-        while (next_cursor != END_CURSOR && (next_cursor === INITIAL_CURSOR || !only_first_page)) {
-            const _params: any = {
+        while (next_cursor !== END_CURSOR && (next_cursor === INITIAL_CURSOR || !only_first_page)) {
+            const _params = {
                 ...params,
                 next_cursor,
             };
@@ -708,7 +713,7 @@ export class ClobClient {
 
         next_cursor = next_cursor || INITIAL_CURSOR;
 
-        const _params: any = { ...params, next_cursor };
+        const _params = { ...params, next_cursor };
 
         const {
             data,
@@ -738,18 +743,15 @@ export class ClobClient {
             requestPath: endpoint,
         };
 
-        const headers = await this._getBuilderHeaders(
-            headerArgs.method,
-            headerArgs.requestPath,
-        );
+        const headers = await this._getBuilderHeaders(headerArgs.method, headerArgs.requestPath);
 
-        if (headers == undefined) {
+        if (headers === undefined || headers === null) {
             throw BUILDER_AUTH_FAILED;
         }
 
         next_cursor = next_cursor || INITIAL_CURSOR;
 
-        const _params: any = { ...params, next_cursor };
+        const _params = { ...params, next_cursor };
 
         const {
             data,
@@ -876,8 +878,8 @@ export class ClobClient {
 
         if (!priceValid(userOrder.price, tickSize)) {
             throw new Error(
-                `invalid price (${userOrder.price}), min: ${parseFloat(tickSize)} - max: ${
-                    1 - parseFloat(tickSize)
+                `invalid price (${userOrder.price}), min: ${Number.parseFloat(tickSize)} - max: ${
+                    1 - Number.parseFloat(tickSize)
                 }`,
             );
         }
@@ -914,8 +916,8 @@ export class ClobClient {
 
         if (!priceValid(userMarketOrder.price, tickSize)) {
             throw new Error(
-                `invalid price (${userMarketOrder.price}), min: ${parseFloat(tickSize)} - max: ${
-                    1 - parseFloat(tickSize)
+                `invalid price (${userMarketOrder.price}), min: ${Number.parseFloat(tickSize)} - max: ${
+                    1 - Number.parseFloat(tickSize)
                 }`,
             );
         }
@@ -969,7 +971,7 @@ export class ClobClient {
         );
 
         // builders flow
-        let requestHeaders: any = headers;
+        let requestHeaders = headers;
         if (this.canBuilderAuth()) {
             const builderHeaders = await this._generateBuilderHeaders(headers, l2HeaderArgs);
             if (builderHeaders !== undefined) {
@@ -979,8 +981,8 @@ export class ClobClient {
 
         let results: OpenOrder[] = [];
         next_cursor = next_cursor || INITIAL_CURSOR;
-        while (next_cursor != END_CURSOR && (next_cursor === INITIAL_CURSOR || !only_first_page)) {
-            const _params: any = {
+        while (next_cursor !== END_CURSOR && (next_cursor === INITIAL_CURSOR || !only_first_page)) {
+            const _params = {
                 ...params,
                 next_cursor,
             };
@@ -1002,7 +1004,13 @@ export class ClobClient {
     ): Promise<any> {
         this.canL2Auth();
         const endpoint = POST_ORDER;
-        const orderPayload = orderToJson(order, this.creds?.key || "", orderType, deferExec, postOnly);
+        const orderPayload = orderToJson(
+            order,
+            this.creds?.key || "",
+            orderType,
+            deferExec,
+            postOnly,
+        );
 
         const l2HeaderArgs = {
             method: POST,
@@ -1021,14 +1029,21 @@ export class ClobClient {
         if (this.canBuilderAuth()) {
             const builderHeaders = await this._generateBuilderHeaders(headers, l2HeaderArgs);
             if (builderHeaders !== undefined) {
-                return this.post(`${this.host}${endpoint}`, { headers: builderHeaders, data: orderPayload });
+                return this.post(`${this.host}${endpoint}`, {
+                    headers: builderHeaders,
+                    data: orderPayload,
+                });
             }
         }
 
         return this.post(`${this.host}${endpoint}`, { headers, data: orderPayload });
     }
 
-    public async postOrders(args: PostOrdersArgs[], deferExec = false, defaultPostOnly = false): Promise<any> {
+    public async postOrders(
+        args: PostOrdersArgs[],
+        deferExec = false,
+        defaultPostOnly = false,
+    ): Promise<any> {
         this.canL2Auth();
         const endpoint = POST_ORDERS;
         const ordersPayload: NewOrder<any>[] = [];
@@ -1060,7 +1075,10 @@ export class ClobClient {
         if (this.canBuilderAuth()) {
             const builderHeaders = await this._generateBuilderHeaders(headers, l2HeaderArgs);
             if (builderHeaders !== undefined) {
-                return this.post(`${this.host}${endpoint}`, { headers: builderHeaders, data: ordersPayload });
+                return this.post(`${this.host}${endpoint}`, {
+                    headers: builderHeaders,
+                    data: ordersPayload,
+                });
             }
         }
 
@@ -1232,7 +1250,7 @@ export class ClobClient {
 
         let results: UserEarning[] = [];
         let next_cursor = INITIAL_CURSOR;
-        while (next_cursor != END_CURSOR) {
+        while (next_cursor !== END_CURSOR) {
             const params = {
                 date,
                 signature_type: this.orderBuilder.signatureType,
@@ -1299,7 +1317,7 @@ export class ClobClient {
 
         let results: UserRewardsEarning[] = [];
         let next_cursor = INITIAL_CURSOR;
-        while (next_cursor != END_CURSOR) {
+        while (next_cursor !== END_CURSOR) {
             const params = {
                 date,
                 signature_type: this.orderBuilder.signatureType,
@@ -1345,7 +1363,7 @@ export class ClobClient {
     public async getCurrentRewards(): Promise<MarketReward[]> {
         let results: MarketReward[] = [];
         let next_cursor = INITIAL_CURSOR;
-        while (next_cursor != END_CURSOR) {
+        while (next_cursor !== END_CURSOR) {
             const response = await this.get(`${this.host}${GET_REWARDS_MARKETS_CURRENT}`, {
                 params: { next_cursor },
             });
@@ -1358,7 +1376,7 @@ export class ClobClient {
     public async getRawRewardsForMarket(conditionId: string): Promise<MarketReward[]> {
         let results: MarketReward[] = [];
         let next_cursor = INITIAL_CURSOR;
-        while (next_cursor != END_CURSOR) {
+        while (next_cursor !== END_CURSOR) {
             const response = await this.get(`${this.host}${GET_REWARDS_MARKETS}${conditionId}`, {
                 params: { next_cursor },
             });
@@ -1387,12 +1405,11 @@ export class ClobClient {
                 throw new Error("no match");
             }
             return calculateBuyMarketPrice(book.asks, amount, orderType);
-        } else {
-            if (!book.bids) {
-                throw new Error("no match");
-            }
-            return calculateSellMarketPrice(book.bids, amount, orderType);
         }
+        if (!book.bids) {
+            throw new Error("no match");
+        }
+        return calculateSellMarketPrice(book.bids, amount, orderType);
     }
 
     public async createBuilderApiKey(): Promise<BuilderApiKey> {
@@ -1442,11 +1459,8 @@ export class ClobClient {
             requestPath: endpoint,
         };
 
-        const headers = await this._getBuilderHeaders(
-            headerArgs.method,
-            headerArgs.requestPath,
-        );
-        if (headers == undefined) {
+        const headers = await this._getBuilderHeaders(headerArgs.method, headerArgs.requestPath);
+        if (headers === undefined || headers === null) {
             throw BUILDER_AUTH_FAILED;
         }
 
@@ -1477,10 +1491,14 @@ export class ClobClient {
     }
 
     protected async post(endpoint: string, options?: RequestOptions) {
-        const result = await post(endpoint, {
-            ...options,
-            params: { ...options?.params, geo_block_token: this.geoBlockToken },
-        }, this.retryOnError);
+        const result = await post(
+            endpoint,
+            {
+                ...options,
+                params: { ...options?.params, geo_block_token: this.geoBlockToken },
+            },
+            this.retryOnError,
+        );
         return this.throwIfError(result);
     }
 
@@ -1502,7 +1520,8 @@ export class ClobClient {
 
     private throwIfError(result: any): any {
         if (this.throwOnError && result && typeof result === "object" && "error" in result) {
-            const msg = typeof result.error === "string" ? result.error : JSON.stringify(result.error);
+            const msg =
+                typeof result.error === "string" ? result.error : JSON.stringify(result.error);
             throw new ApiError(msg, result.status, result);
         }
         return result;
@@ -1531,12 +1550,16 @@ export class ClobClient {
     }
 
     private canBuilderAuth(): boolean {
-        return (this.builderConfig != undefined && this.builderConfig.isValid())
+        return this.builderConfig?.isValid() ?? false;
     }
 
     private async _resolveFeeRateBps(tokenID: string, userFeeRateBps?: number): Promise<number> {
         const marketFeeRateBps = await this.getFeeRateBps(tokenID);
-        if (marketFeeRateBps > 0 && userFeeRateBps != undefined && userFeeRateBps != marketFeeRateBps){
+        if (
+            marketFeeRateBps > 0 &&
+            userFeeRateBps !== undefined &&
+            userFeeRateBps !== marketFeeRateBps
+        ) {
             throw new Error(
                 `invalid user provided fee rate: ${userFeeRateBps}, fee rate for the market must be ${marketFeeRateBps}`,
             );
@@ -1548,14 +1571,13 @@ export class ClobClient {
         headers: L2PolyHeader,
         headerArgs: L2HeaderArgs,
     ): Promise<L2WithBuilderHeader | undefined> {
-
         if (this.builderConfig !== undefined) {
             const builderHeaders = await this._getBuilderHeaders(
                 headerArgs.method,
                 headerArgs.requestPath,
                 headerArgs.body,
             );
-            if (builderHeaders == undefined) {
+            if (builderHeaders === undefined || builderHeaders === null) {
                 return undefined;
             }
             return injectBuilderHeaders(headers, builderHeaders);
@@ -1567,13 +1589,9 @@ export class ClobClient {
     private async _getBuilderHeaders(
         method: string,
         path: string,
-        body?: string
+        body?: string,
     ): Promise<BuilderHeaderPayload | undefined> {
-        return (this.builderConfig as BuilderConfig).generateBuilderHeaders(
-            method,
-            path,
-            body,
-        );
+        return (this.builderConfig as BuilderConfig).generateBuilderHeaders(method, path, body);
     }
 
     /**

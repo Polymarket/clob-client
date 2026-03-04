@@ -21,6 +21,4 @@ export const BUILDER_AUTH_NOT_AVAILABLE = new Error(
     "Builder API Credentials needed to interact with this endpoint!",
 );
 
-export const BUILDER_AUTH_FAILED = new Error(
-    "Builder key auth failed!",
-);
+export const BUILDER_AUTH_FAILED = new Error("Builder key auth failed!");

@@ -1,0 +1,52 @@
+{
+    "$schema": "https://biomejs.dev/schemas/2.4.5/schema.json",
+    "files": {
+        "includes": [
+            "**",
+            "!**/artifacts/",
+            "!**/build/",
+            "!**/cache/",
+            "!**/contracts/",
+            "!**/coverage/",
+            "!**/dist/",
+            "!**/lib/",
+            "!**/typechain/",
+            "!**/forks/"
+        ]
+    },
+    "formatter": {
+        "enabled": true,
+        "indentStyle": "space",
+        "indentWidth": 4,
+        "lineWidth": 100,
+        "lineEnding": "lf"
+    },
+    "javascript": {
+        "formatter": {
+            "quoteStyle": "double",
+            "trailingCommas": "all",
+            "arrowParentheses": "asNeeded",
+            "bracketSpacing": true
+        }
+    },
+    "linter": {
+        "enabled": true,
+        "rules": {
+            "recommended": true,
+            "correctness": {
+                "noUnusedImports": "error",
+                "noUnusedVariables": "off"
+            },
+            "suspicious": {
+                "noExplicitAny": "off",
+                "noImplicitAnyLet": "off"
+            },
+            "style": {
+                "noParameterAssign": "off"
+            },
+            "complexity": {
+                "noForEach": "off"
+            }
+        }
+    }
+}
