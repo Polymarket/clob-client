@@ -14,7 +14,6 @@
         "esModuleInterop": true,
         "experimentalDecorators": true,
         "allowSyntheticDefaultImports": true,
-        "importHelpers": true,
         "rewriteRelativeImportExtensions": true,
         "strict": true,
         "noFallthroughCasesInSwitch": true,
