@@ -17,7 +17,7 @@ import { ApiKeyCreds, ClobClient, OrderType, Side, } from "@polymarket/clob-clie
 import { Wallet } from "@ethersproject/wallet";
 
 const host = 'https://clob.polymarket.com';
-const funder = '';//This is your Polymarket Profile Address, where you send UDSC to. 
+const funder = '';//This is your Polymarket Profile Address, where you send USDC to. 
 const signer = new Wallet(""); //This is your Private Key. If using email login export from https://reveal.magic.link/polymarket otherwise export from your Web3 Application
 
 
@@ -26,6 +26,7 @@ const creds = new ClobClient(host, 137, signer).createOrDeriveApiKey();
 
 //0: Browser Wallet(Metamask, Coinbase Wallet, etc)
 //1: Magic/Email Login
+//2: Signed by EOAs that own Polymarket Gnosis safes
 const signatureType = 1; 
   (async () => {
     const clobClient = new ClobClient(host, 137, signer, await creds, signatureType, funder);
