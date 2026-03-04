@@ -1,16 +1,17 @@
 {
-    "$schema": "https://biomejs.dev/schemas/1.9.4/schema.json",
+    "$schema": "https://biomejs.dev/schemas/2.4.5/schema.json",
     "files": {
-        "ignore": [
-            "artifacts/",
-            "build/",
-            "cache/",
-            "contracts/",
-            "coverage/",
-            "dist/",
-            "lib/",
-            "typechain/",
-            "forks/"
+        "includes": [
+            "**",
+            "!**/artifacts/",
+            "!**/build/",
+            "!**/cache/",
+            "!**/contracts/",
+            "!**/coverage/",
+            "!**/dist/",
+            "!**/lib/",
+            "!**/typechain/",
+            "!**/forks/"
         ]
     },
     "formatter": {

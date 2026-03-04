@@ -20,12 +20,12 @@ import {
     GET_BUILDER_TRADES,
     GET_EARNINGS_FOR_USER_FOR_DAY,
     GET_FEE_RATE,
-    GET_LAST_TRADES_PRICES,
     GET_LAST_TRADE_PRICE,
+    GET_LAST_TRADES_PRICES,
     GET_LIQUIDITY_REWARD_PERCENTAGES,
     GET_MARKET,
-    GET_MARKETS,
     GET_MARKET_TRADES_EVENTS,
+    GET_MARKETS,
     GET_MIDPOINT,
     GET_MIDPOINTS,
     GET_NEG_RISK,
@@ -66,25 +66,23 @@ import {
     L2_AUTH_NOT_AVAILABLE,
 } from "./errors.ts";
 import { createL1Headers, createL2Headers, injectBuilderHeaders } from "./headers/index.ts";
+import type { RequestOptions } from "./http-helpers/index.ts";
 import {
     DELETE,
-    GET,
-    POST,
     del,
+    GET,
     get,
+    POST,
     parseDropNotificationParams,
     post,
     put,
 } from "./http-helpers/index.ts";
-import type { RequestOptions } from "./http-helpers/index.ts";
 import { OrderBuilder } from "./order-builder/builder.ts";
 import { calculateBuyMarketPrice, calculateSellMarketPrice } from "./order-builder/helpers.ts";
-import type { SignatureType } from "./order-utils/index.ts";
-import type { SignedOrder } from "./order-utils/index.ts";
+import type { SignatureType, SignedOrder } from "./order-utils/index.ts";
 import { RfqClient } from "./rfq-client.ts";
 import type { IRfqClient, RfqDeps } from "./rfq-deps.ts";
 import type { ClobSigner } from "./signer.ts";
-import { OrderType, Side } from "./types.ts";
 import type {
     ApiKeyCreds,
     ApiKeyRaw,
@@ -135,6 +133,7 @@ import type {
     UserOrder,
     UserRewardsEarning,
 } from "./types.ts";
+import { OrderType, Side } from "./types.ts";
 import {
     generateOrderBookSummaryHash,
     isTickSizeSmaller,

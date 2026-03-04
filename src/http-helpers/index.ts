@@ -1,6 +1,7 @@
 /* eslint-disable max-depth */
-import axios from "axios";
+
 import type { Method } from "axios";
+import axios from "axios";
 import { isBrowser } from "browser-or-node";
 import type {
     DropNotificationParams,
@@ -153,7 +154,7 @@ const errorHandling = (err: unknown) => {
                 ) {
                     return { error: err.response?.data, status: err.response?.status };
                 }
-                if (!Object.prototype.hasOwnProperty.call(err.response?.data, "error")) {
+                if (!Object.hasOwn(err.response?.data, "error")) {
                     return { error: err.response?.data, status: err.response?.status };
                 }
                 // in this case the field 'error' is included

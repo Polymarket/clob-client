@@ -1,6 +1,6 @@
 import { hashTypedData } from "viem";
-import { getSignerAddress, signTypedDataWithSigner } from "../signer.ts";
 import type { ClobSigner } from "../signer.ts";
+import { getSignerAddress, signTypedDataWithSigner } from "../signer.ts";
 import {
     EIP712_DOMAIN,
     ORDER_STRUCTURE,

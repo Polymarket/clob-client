@@ -1,7 +1,7 @@
-import { Side as UtilsSide } from "./order-utils/index.ts";
 import type { SignedOrder } from "./order-utils/index.ts";
-import { OrderType, Side } from "./types.ts";
+import { Side as UtilsSide } from "./order-utils/index.ts";
 import type { NewOrder, OrderBookSummary, TickSize } from "./types.ts";
+import { OrderType, Side } from "./types.ts";
 
 export function orderToJson<T extends OrderType>(
     order: SignedOrder,

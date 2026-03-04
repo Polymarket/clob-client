@@ -1,5 +1,5 @@
-import { SignatureType } from "../order-utils/index.ts";
 import type { SignedOrder } from "../order-utils/index.ts";
+import { SignatureType } from "../order-utils/index.ts";
 import type { ClobSigner } from "../signer.ts";
 import type { Chain, CreateOrderOptions, UserMarketOrder, UserOrder } from "../types.ts";
 import { createMarketOrder, createOrder } from "./helpers.ts";

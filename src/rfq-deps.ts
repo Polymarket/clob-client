@@ -1,7 +1,6 @@
+import type { RequestOptions } from "./http-helpers/index.ts";
 import type { SignedOrder } from "./order-utils/index.ts";
 import type { ClobSigner } from "./signer.ts";
-
-import type { RequestOptions } from "./http-helpers/index.ts";
 import type {
     AcceptQuoteParams,
     ApiKeyCreds,

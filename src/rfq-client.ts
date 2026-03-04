@@ -19,7 +19,6 @@ import { DELETE, GET, POST } from "./http-helpers/index.ts";
 import { ROUNDING_CONFIG } from "./order-builder/helpers.ts";
 import type { IRfqClient, RfqDeps } from "./rfq-deps.ts";
 import type { ClobSigner } from "./signer.ts";
-import { RfqMatchType, Side } from "./types.ts";
 import type {
     AcceptQuoteParams,
     ApiKeyCreds,
@@ -41,6 +40,7 @@ import type {
     RfqUserOrder,
     RfqUserQuote,
 } from "./types.ts";
+import { RfqMatchType, Side } from "./types.ts";
 import { roundDown, roundNormal } from "./utilities.ts";
 
 // RFQ list params need to be repeated e.g. quoteIds=...&quoteIds=...
@@ -53,7 +53,7 @@ const buildRepeatedQuery = (params?: Record<string, any>): string => {
             return;
         }
         if (Array.isArray(value)) {
-            value.forEach(v => sp.append(key, String(v)));
+            for (const v of value) sp.append(key, String(v));
         } else {
             sp.append(key, String(value));
         }
@@ -439,9 +439,9 @@ export class RfqClient implements IRfqClient {
             quoteId: payload.quoteId,
             owner: (this.deps.creds as ApiKeyCreds).key,
             ...order,
-            expiration: Number.parseInt(order.expiration),
+            expiration: Number.parseInt(order.expiration, 10),
             side: orderSide,
-            salt: Number.parseInt(order.salt.toString()),
+            salt: Number.parseInt(order.salt.toString(), 10),
         };
 
         const endpoint = RFQ_REQUESTS_ACCEPT;
@@ -505,9 +505,9 @@ export class RfqClient implements IRfqClient {
             quoteId: payload.quoteId,
             owner: (this.deps.creds as ApiKeyCreds).key,
             ...order,
-            expiration: Number.parseInt(order.expiration),
+            expiration: Number.parseInt(order.expiration, 10),
             side: side,
-            salt: Number.parseInt(order.salt.toString()),
+            salt: Number.parseInt(order.salt.toString(), 10),
         };
 
         const endpoint = RFQ_QUOTE_APPROVE;

@@ -1,13 +1,8 @@
 export * from "./client.ts";
-export * from "./types.ts";
-export * from "./order-builder/index.ts";
 export * from "./config.ts";
 export * from "./errors.ts";
 export * from "./headers/index.ts";
-export * from "./rfq-client.ts";
-export * from "./rfq-deps.ts";
-export type { ClobSigner } from "./signer.ts";
-export { ExchangeOrderBuilder, SignatureType, Side as OrderSide } from "./order-utils/index.ts";
+export * from "./order-builder/index.ts";
 export type {
     EIP712Object,
     EIP712ObjectValue,
@@ -20,3 +15,8 @@ export type {
     OrderSignature,
     SignedOrder,
 } from "./order-utils/index.ts";
+export { ExchangeOrderBuilder, Side as OrderSide, SignatureType } from "./order-utils/index.ts";
+export * from "./rfq-client.ts";
+export * from "./rfq-deps.ts";
+export type { ClobSigner } from "./signer.ts";
+export * from "./types.ts";

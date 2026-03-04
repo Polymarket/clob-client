@@ -1,14 +1,13 @@
 import { parseUnits } from "viem";
 import { COLLATERAL_TOKEN_DECIMALS, getContractConfig } from "../config.ts";
+import type { OrderData, SignedOrder } from "../order-utils/index.ts";
 import {
     ExchangeOrderBuilder,
     type SignatureType,
     Side as UtilsSide,
 } from "../order-utils/index.ts";
-import type { OrderData, SignedOrder } from "../order-utils/index.ts";
-import { getSignerAddress } from "../signer.ts";
 import type { ClobSigner } from "../signer.ts";
-import { OrderType, Side } from "../types.ts";
+import { getSignerAddress } from "../signer.ts";
 import type {
     Chain,
     CreateOrderOptions,
@@ -18,6 +17,7 @@ import type {
     UserMarketOrder,
     UserOrder,
 } from "../types.ts";
+import { OrderType, Side } from "../types.ts";
 import { decimalPlaces, roundDown, roundNormal, roundUp } from "../utilities.ts";
 
 export const ROUNDING_CONFIG: Record<TickSize, RoundConfig> = {

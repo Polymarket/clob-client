@@ -1,6 +1,6 @@
 import type { BuilderHeaderPayload } from "@polymarket/builder-signing-sdk";
-import { getSignerAddress } from "../signer.ts";
 import type { ClobSigner } from "../signer.ts";
+import { getSignerAddress } from "../signer.ts";
 import { buildClobEip712Signature, buildPolyHmacSignature } from "../signing/index.ts";
 import type {
     ApiKeyCreds,
