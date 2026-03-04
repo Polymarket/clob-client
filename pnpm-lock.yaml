@@ -8,12 +8,6 @@ importers:
 
   .:
     dependencies:
-      '@ethersproject/providers':
-        specifier: ^5.8.0
-        version: 5.8.0
-      '@ethersproject/wallet':
-        specifier: ^5.8.0
-        version: 5.8.0
       '@polymarket/builder-signing-sdk':
         specifier: ^0.0.8
         version: 0.0.8
@@ -33,6 +27,9 @@ importers:
       '@biomejs/biome':
         specifier: ^2.4.5
         version: 2.4.5
+      '@ethersproject/wallet':
+        specifier: ^5.8.0
+        version: 5.8.0
       '@types/node':
         specifier: ^22.19.1
         version: 22.19.2

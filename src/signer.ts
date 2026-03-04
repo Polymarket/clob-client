@@ -1,12 +1,17 @@
-import type { JsonRpcSigner } from "@ethersproject/providers";
-import type { Wallet } from "@ethersproject/wallet";
 import type { Account, Address, WalletClient } from "viem";
 
 type TypedDataDomain = Record<string, unknown>;
 type TypedDataTypes = Record<string, Array<{ name: string; type: string }>>;
 type TypedDataValue = Record<string, unknown>;
 
-type EthersSigner = Wallet | JsonRpcSigner;
+interface EthersSigner {
+    _signTypedData(
+        domain: TypedDataDomain,
+        types: TypedDataTypes,
+        value: TypedDataValue,
+    ): Promise<string>;
+    getAddress(): Promise<string>;
+}
 
 export type ClobSigner = EthersSigner | WalletClient;
 
