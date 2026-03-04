@@ -678,7 +678,7 @@ export class ClobClient {
         let results: Trade[] = [];
         next_cursor = next_cursor || INITIAL_CURSOR;
         while (next_cursor !== END_CURSOR && (next_cursor === INITIAL_CURSOR || !only_first_page)) {
-            const _params: any = {
+            const _params = {
                 ...params,
                 next_cursor,
             };
@@ -713,7 +713,7 @@ export class ClobClient {
 
         next_cursor = next_cursor || INITIAL_CURSOR;
 
-        const _params: any = { ...params, next_cursor };
+        const _params = { ...params, next_cursor };
 
         const {
             data,
@@ -745,13 +745,13 @@ export class ClobClient {
 
         const headers = await this._getBuilderHeaders(headerArgs.method, headerArgs.requestPath);
 
-        if (headers === undefined) {
+        if (headers === undefined || headers === null) {
             throw BUILDER_AUTH_FAILED;
         }
 
         next_cursor = next_cursor || INITIAL_CURSOR;
 
-        const _params: any = { ...params, next_cursor };
+        const _params = { ...params, next_cursor };
 
         const {
             data,
@@ -971,7 +971,7 @@ export class ClobClient {
         );
 
         // builders flow
-        let requestHeaders: any = headers;
+        let requestHeaders = headers;
         if (this.canBuilderAuth()) {
             const builderHeaders = await this._generateBuilderHeaders(headers, l2HeaderArgs);
             if (builderHeaders !== undefined) {
@@ -982,7 +982,7 @@ export class ClobClient {
         let results: OpenOrder[] = [];
         next_cursor = next_cursor || INITIAL_CURSOR;
         while (next_cursor !== END_CURSOR && (next_cursor === INITIAL_CURSOR || !only_first_page)) {
-            const _params: any = {
+            const _params = {
                 ...params,
                 next_cursor,
             };
@@ -1460,7 +1460,7 @@ export class ClobClient {
         };
 
         const headers = await this._getBuilderHeaders(headerArgs.method, headerArgs.requestPath);
-        if (headers === undefined) {
+        if (headers === undefined || headers === null) {
             throw BUILDER_AUTH_FAILED;
         }
 
@@ -1577,7 +1577,7 @@ export class ClobClient {
                 headerArgs.requestPath,
                 headerArgs.body,
             );
-            if (builderHeaders === undefined) {
+            if (builderHeaders === undefined || builderHeaders === null) {
                 return undefined;
             }
             return injectBuilderHeaders(headers, builderHeaders);

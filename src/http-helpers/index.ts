@@ -1,5 +1,3 @@
-/* eslint-disable max-depth */
-
 import type { Method } from "axios";
 import axios from "axios";
 import { isBrowser } from "browser-or-node";
