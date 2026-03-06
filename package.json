@@ -1,7 +1,7 @@
 {
     "name": "@polymarket/clob-client",
     "description": "Typescript client for Polymarket's CLOB",
-    "version": "5.7.0",
+    "version": "5.8.0",
     "repository": {
         "type": "git",
         "url": "git+https://github.com/Polymarket/clob-client.git"
@@ -61,7 +61,7 @@
         "deploy": "pnpm build && npm publish --access public --provenance"
     },
     "dependencies": {
-        "@polymarket/builder-signing-sdk": "^0.0.8",
+        "@polymarket/builder-signing-sdk": "^1.0.0",
         "axios": "^1.0.0",
         "browser-or-node": "^2.1.1",
         "viem": "^2.46.3"
