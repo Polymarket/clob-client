@@ -2,6 +2,8 @@ import { config as dotenvConfig } from "dotenv";
 import { resolve } from "path";
 import { Chain, ClobClient } from "../src/index.ts";
 
+// Example showcasing market-related read-only endpoints.
+// Demonstrates basic client initialization and pagination helpers.
 dotenvConfig({ path: resolve(import.meta.dirname, "../.env") });
 
 async function main() {
