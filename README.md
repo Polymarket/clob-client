@@ -6,6 +6,16 @@
 
 Typescript client for the Polymarket CLOB
 
+### API Rate Limits Reference
+
+To avoid getting throttled, keep in mind the following rate limits:
+
+| Action | Limit (Standard) | Limit (Whitelisted) |
+|:---|:---:|:---:|
+| Order Placement | 10/sec | Custom |
+| Order Cancellation | 50/sec | Custom |
+| Get Orders | 100/sec | 500/sec |
+
 ### Usage
 
 ```ts
