@@ -102,6 +102,7 @@ import type {
     L2HeaderArgs,
     L2PolyHeader,
     L2WithBuilderHeader,
+    Market,
     MarketPrice,
     MarketReward,
     MarketTradeEvent,
@@ -119,10 +120,12 @@ import type {
     OrdersScoring,
     OrdersScoringParams,
     PaginationPayload,
+    PostOrderResponse,
     PostOrdersArgs,
     PriceHistoryFilterParams,
     ReadonlyApiKeyResponse,
     RewardsPercentages,
+    SimplifiedMarket,
     TickSize,
     TickSizes,
     TotalUserEarning,
@@ -252,31 +255,35 @@ export class ClobClient {
 
     public async getSamplingSimplifiedMarkets(
         next_cursor = INITIAL_CURSOR,
-    ): Promise<PaginationPayload> {
+    ): Promise<PaginationPayload<SimplifiedMarket>> {
         return this.get(`${this.host}${GET_SAMPLING_SIMPLIFIED_MARKETS}`, {
             params: { next_cursor },
         });
     }
 
-    public async getSamplingMarkets(next_cursor = INITIAL_CURSOR): Promise<PaginationPayload> {
+    public async getSamplingMarkets(
+        next_cursor = INITIAL_CURSOR,
+    ): Promise<PaginationPayload<Market>> {
         return this.get(`${this.host}${GET_SAMPLING_MARKETS}`, {
             params: { next_cursor },
         });
     }
 
-    public async getSimplifiedMarkets(next_cursor = INITIAL_CURSOR): Promise<PaginationPayload> {
+    public async getSimplifiedMarkets(
+        next_cursor = INITIAL_CURSOR,
+    ): Promise<PaginationPayload<SimplifiedMarket>> {
         return this.get(`${this.host}${GET_SIMPLIFIED_MARKETS}`, {
             params: { next_cursor },
         });
     }
 
-    public async getMarkets(next_cursor = INITIAL_CURSOR): Promise<PaginationPayload> {
+    public async getMarkets(next_cursor = INITIAL_CURSOR): Promise<PaginationPayload<Market>> {
         return this.get(`${this.host}${GET_MARKETS}`, {
             params: { next_cursor },
         });
     }
 
-    public async getMarket(conditionID: string): Promise<any> {
+    public async getMarket(conditionID: string): Promise<Market> {
         return this.get(`${this.host}${GET_MARKET}${conditionID}`);
     }
 
@@ -936,7 +943,7 @@ export class ClobClient {
         orderType: T = OrderType.GTC as T,
         deferExec = false,
         postOnly = false,
-    ): Promise<any> {
+    ): Promise<PostOrderResponse> {
         const order = await this.createOrder(userOrder, options);
         return this.postOrder(order, orderType, deferExec, postOnly);
     }
@@ -946,7 +953,7 @@ export class ClobClient {
         options?: Partial<CreateOrderOptions>,
         orderType: T = OrderType.FOK as T,
         deferExec = false,
-    ): Promise<any> {
+    ): Promise<PostOrderResponse> {
         const order = await this.createMarketOrder(userMarketOrder, options);
         return this.postOrder(order, orderType, deferExec);
     }
@@ -1001,7 +1008,7 @@ export class ClobClient {
         orderType: T = OrderType.GTC as T,
         deferExec = false,
         postOnly = false,
-    ): Promise<any> {
+    ): Promise<PostOrderResponse> {
         this.canL2Auth();
         const endpoint = POST_ORDER;
         const orderPayload = orderToJson(
