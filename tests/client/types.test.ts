@@ -1,11 +1,11 @@
 import { ClobClient } from "../../src/client.ts";
-import { Chain } from "../../src/types.ts";
 import type {
     Market,
+    OrderResponse,
     PaginationPayload,
-    PostOrderResponse,
     SimplifiedMarket,
 } from "../../src/types.ts";
+import { Chain } from "../../src/types.ts";
 
 class StubClient extends ClobClient {
     private _stub: unknown;
@@ -100,9 +100,9 @@ describe("typed return values", () => {
         });
     });
 
-    describe("PostOrderResponse", () => {
-        it("postOrder returns typed PostOrderResponse", async () => {
-            const response: PostOrderResponse = {
+    describe("OrderResponse", () => {
+        it("postOrder returns typed OrderResponse", async () => {
+            const response: OrderResponse = {
                 orderID: "0x123",
                 status: "matched",
                 transactTime: "1234567890",
@@ -110,15 +110,15 @@ describe("typed return values", () => {
             };
             client.setStub(response);
             // postOrder requires L2 auth; test the type shape directly
-            const typed: PostOrderResponse = response;
+            const typed: OrderResponse = response;
             expect(typed.orderID).to.equal("0x123");
             expect(typed.status).to.equal("matched");
             expect(typed.transactTime).to.equal("1234567890");
             expect(typed.owner).to.equal("0xabc");
         });
 
-        it("PostOrderResponse optional fields are optional", () => {
-            const minimal: PostOrderResponse = {
+        it("OrderResponse optional fields are optional", () => {
+            const minimal: OrderResponse = {
                 orderID: "0x456",
                 status: "live",
                 transactTime: "999",

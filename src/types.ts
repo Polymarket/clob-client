@@ -192,13 +192,15 @@ export interface BanStatus {
 }
 
 export interface OrderResponse {
-    success: boolean;
-    errorMsg: string;
     orderID: string;
-    transactionsHashes: string[];
     status: string;
-    takingAmount: string;
-    makingAmount: string;
+    transactTime?: string;
+    owner?: string;
+    success?: boolean;
+    errorMsg?: string;
+    transactionsHashes?: string[];
+    takingAmount?: string;
+    makingAmount?: string;
 }
 
 export interface OpenOrder {
@@ -390,17 +392,6 @@ export interface PaginationPayload<T = unknown> {
     readonly count: number;
     readonly next_cursor: string;
     readonly data: T[];
-}
-
-export interface PostOrderResponse {
-    orderID: string;
-    status: string;
-    transactTime: string;
-    owner: string;
-    errorMsg?: string;
-    takingAmount?: string;
-    makingAmount?: string;
-    transactionsHashes?: string[];
 }
 
 export interface SimplifiedMarket {

@@ -115,12 +115,12 @@ import type {
     OrderBookSummary,
     OrderMarketCancelParams,
     OrderPayload,
+    OrderResponse,
     OrderScoring,
     OrderScoringParams,
     OrdersScoring,
     OrdersScoringParams,
     PaginationPayload,
-    PostOrderResponse,
     PostOrdersArgs,
     PriceHistoryFilterParams,
     ReadonlyApiKeyResponse,
@@ -943,7 +943,7 @@ export class ClobClient {
         orderType: T = OrderType.GTC as T,
         deferExec = false,
         postOnly = false,
-    ): Promise<PostOrderResponse> {
+    ): Promise<OrderResponse> {
         const order = await this.createOrder(userOrder, options);
         return this.postOrder(order, orderType, deferExec, postOnly);
     }
@@ -953,7 +953,7 @@ export class ClobClient {
         options?: Partial<CreateOrderOptions>,
         orderType: T = OrderType.FOK as T,
         deferExec = false,
-    ): Promise<PostOrderResponse> {
+    ): Promise<OrderResponse> {
         const order = await this.createMarketOrder(userMarketOrder, options);
         return this.postOrder(order, orderType, deferExec);
     }
@@ -1008,7 +1008,7 @@ export class ClobClient {
         orderType: T = OrderType.GTC as T,
         deferExec = false,
         postOnly = false,
-    ): Promise<PostOrderResponse> {
+    ): Promise<OrderResponse> {
         this.canL2Auth();
         const endpoint = POST_ORDER;
         const orderPayload = orderToJson(
