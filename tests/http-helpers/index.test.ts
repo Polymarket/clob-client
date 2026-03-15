@@ -1,6 +1,7 @@
 import {
     parseDropNotificationParams,
     parseOrdersScoringParams,
+    sanitizeAxiosResponseConfig,
 } from "../../src/http-helpers/index.ts";
 import type { DropNotificationParams, OrdersScoringParams } from "../../src/types.ts";
 
@@ -25,6 +26,23 @@ describe("utilities", () => {
             expect(params).not.undefined;
             expect(params).not.empty;
             expect(params).deep.equal({ ids: "0,1,2" });
+        });
+    });
+
+    describe("sanitizeAxiosResponseConfig", () => {
+        it("removes sensitive headers and auth details", () => {
+            const sanitized = sanitizeAxiosResponseConfig({
+                method: "post",
+                url: "https://clob.polymarket.com/order",
+                timeout: 5000,
+                headers: { Authorization: "Bearer secret" },
+                auth: { username: "u", password: "p" },
+            });
+            expect(sanitized).deep.equal({
+                method: "post",
+                url: "https://clob.polymarket.com/order",
+                timeout: 5000,
+            });
         });
     });
 });
