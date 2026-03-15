@@ -133,6 +133,18 @@ export const put = async (endpoint: string, options?: RequestOptions): Promise<a
     }
 };
 
+export const sanitizeAxiosResponseConfig = (config: unknown) => {
+    if (!config || typeof config !== "object") {
+        return undefined;
+    }
+    const maybe = config as Record<string, unknown>;
+    return {
+        method: maybe.method,
+        url: maybe.url,
+        timeout: maybe.timeout,
+    };
+};
+
 const errorHandling = (err: unknown) => {
     if (axios.isAxiosError(err)) {
         if (err.response) {
@@ -142,7 +154,7 @@ const errorHandling = (err: unknown) => {
                     status: err.response?.status,
                     statusText: err.response?.statusText,
                     data: err.response?.data,
-                    config: err.response?.config,
+                    config: sanitizeAxiosResponseConfig(err.response?.config),
                 }),
             );
             if (err.response?.data) {
