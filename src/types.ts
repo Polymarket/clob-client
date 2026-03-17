@@ -194,13 +194,13 @@ export interface BanStatus {
 export interface OrderResponse {
     orderID: string;
     status: string;
+    success: boolean;
+    errorMsg: string;
+    transactionsHashes: string[];
+    takingAmount: string;
+    makingAmount: string;
     transactTime?: string;
     owner?: string;
-    success?: boolean;
-    errorMsg?: string;
-    transactionsHashes?: string[];
-    takingAmount?: string;
-    makingAmount?: string;
 }
 
 export interface OpenOrder {

@@ -105,6 +105,11 @@ describe("typed return values", () => {
             const response: OrderResponse = {
                 orderID: "0x123",
                 status: "matched",
+                success: true,
+                errorMsg: "",
+                transactionsHashes: ["0xhash1"],
+                takingAmount: "100",
+                makingAmount: "50",
                 transactTime: "1234567890",
                 owner: "0xabc",
             };
@@ -113,6 +118,7 @@ describe("typed return values", () => {
             const typed: OrderResponse = response;
             expect(typed.orderID).to.equal("0x123");
             expect(typed.status).to.equal("matched");
+            expect(typed.success).to.equal(true);
             expect(typed.transactTime).to.equal("1234567890");
             expect(typed.owner).to.equal("0xabc");
         });
@@ -121,13 +127,14 @@ describe("typed return values", () => {
             const minimal: OrderResponse = {
                 orderID: "0x456",
                 status: "live",
-                transactTime: "999",
-                owner: "0xdef",
+                success: false,
+                errorMsg: "",
+                transactionsHashes: [],
+                takingAmount: "0",
+                makingAmount: "0",
             };
-            expect(minimal.errorMsg).to.be.undefined;
-            expect(minimal.takingAmount).to.be.undefined;
-            expect(minimal.makingAmount).to.be.undefined;
-            expect(minimal.transactionsHashes).to.be.undefined;
+            expect(minimal.transactTime).to.be.undefined;
+            expect(minimal.owner).to.be.undefined;
         });
     });
 
