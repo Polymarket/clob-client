@@ -192,13 +192,15 @@ export interface BanStatus {
 }
 
 export interface OrderResponse {
+    orderID: string;
+    status: string;
     success: boolean;
     errorMsg: string;
-    orderID: string;
     transactionsHashes: string[];
-    status: string;
     takingAmount: string;
     makingAmount: string;
+    transactTime?: string;
+    owner?: string;
 }
 
 export interface OpenOrder {
@@ -385,11 +387,63 @@ export interface FeeRates {
     [tokenId: string]: number;
 }
 
-export interface PaginationPayload {
+export interface PaginationPayload<T = unknown> {
     readonly limit: number;
     readonly count: number;
     readonly next_cursor: string;
-    readonly data: any[];
+    readonly data: T[];
+}
+
+export interface SimplifiedMarket {
+    condition_id: string;
+    tokens: Token[];
+    rewards: {
+        min_size: number;
+        max_spread: number;
+    };
+    min_incentive_size: string;
+    max_incentive_spread: string;
+    accepting_orders: boolean;
+    enable_order_book: boolean;
+}
+
+export interface Market {
+    condition_id: string;
+    question_id: string;
+    question: string;
+    description: string;
+    market_slug: string;
+    end_date_iso: string;
+    game_start_time: string;
+    seconds_delay: number;
+    fpmm: string;
+    maker_base_fee: number;
+    taker_base_fee: number;
+    notifications_enabled: boolean;
+    neg_risk: boolean;
+    neg_risk_market_id: string;
+    neg_risk_request_id: string;
+    icon: string;
+    image: string;
+    tokens: Token[];
+    tags: string[];
+    is_50_50_outcome: boolean;
+    accepting_orders: boolean;
+    accepting_order_timestamp: string | null;
+    minimum_order_size: string;
+    minimum_tick_size: string;
+    active: boolean;
+    closed: boolean;
+    archived: boolean;
+    enable_order_book: boolean;
+    rewards: {
+        min_size: number;
+        max_spread: number;
+        event_start_date: string;
+        event_end_date: string;
+        in_game_multiplier: number;
+        reward_epoch: number;
+    };
 }
 
 export interface MarketTradeEvent {
