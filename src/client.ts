@@ -1,4 +1,5 @@
 import type { BuilderConfig, BuilderHeaderPayload } from "@polymarket/builder-signing-sdk";
+import type { PublicClient } from "viem";
 import { END_CURSOR, INITIAL_CURSOR } from "./constants.ts";
 import {
     ARE_ORDERS_SCORING,
@@ -83,6 +84,7 @@ import type { SignatureType, SignedOrder } from "./order-utils/index.ts";
 import { RfqClient } from "./rfq-client.ts";
 import type { IRfqClient, RfqDeps } from "./rfq-deps.ts";
 import type { ClobSigner } from "./signer.ts";
+import { getSignerAddress } from "./signer.ts";
 import type {
     ApiKeyCreds,
     ApiKeyRaw,
@@ -140,6 +142,48 @@ import {
     orderToJson,
     priceValid,
 } from "./utilities.ts";
+import type { WalletDetectionResult } from "./wallet-detection.ts";
+import { resolveWalletConfig } from "./wallet-detection.ts";
+
+/**
+ * Configuration object for {@link ClobClient.create}.
+ *
+ * When `funderAddress` is provided but `signatureType` is omitted, the
+ * factory method will auto-detect the wallet type via an on-chain call.
+ * This requires either `rpcUrl` or `publicClient` to be set.
+ */
+export interface ClobClientConfig {
+    host: string;
+    chainId: Chain;
+    signer?: ClobSigner;
+    creds?: ApiKeyCreds;
+
+    /**
+     * Explicit wallet type. When omitted and `funderAddress` differs from
+     * the signer address, auto-detection is attempted.
+     */
+    signatureType?: SignatureType;
+
+    /**
+     * The smart-contract wallet that holds funds (proxy or Safe address).
+     * Omit for plain EOA wallets.
+     */
+    funderAddress?: string;
+
+    /** JSON-RPC URL used for on-chain wallet-type detection. */
+    rpcUrl?: string;
+
+    /** Pre-configured viem PublicClient for on-chain wallet-type detection. */
+    publicClient?: PublicClient;
+
+    geoBlockToken?: string;
+    useServerTime?: boolean;
+    builderConfig?: BuilderConfig;
+    getSigner?: () => Promise<ClobSigner> | ClobSigner;
+    retryOnError?: boolean;
+    tickSizeTtlMs?: number;
+    throwOnError?: boolean;
+}
 
 export class ClobClient {
     readonly host: string;
@@ -239,6 +283,58 @@ export class ClobClient {
         };
 
         this.rfq = new RfqClient(rfqDeps);
+    }
+
+    /**
+     * Async factory that auto-detects the wallet type when `signatureType`
+     * is omitted and a `funderAddress` is provided.
+     *
+     * For plain EOA usage (no proxy/safe), this behaves identically to the
+     * constructor — no RPC call is made.
+     *
+     * @example
+     * ```ts
+     * // Auto-detect: provide funderAddress + rpcUrl, omit signatureType
+     * const client = await ClobClient.create({
+     *     host: "https://clob.polymarket.com",
+     *     chainId: 137,
+     *     signer: wallet,
+     *     creds,
+     *     funderAddress: "0xMyPolymarketWallet...",
+     *     rpcUrl: "https://polygon-rpc.com",
+     * });
+     * ```
+     */
+    static async create(config: ClobClientConfig): Promise<ClobClient> {
+        let { signatureType, funderAddress } = config;
+
+        if (signatureType === undefined && config.signer) {
+            const signerAddress = await getSignerAddress(config.signer);
+            const resolved: WalletDetectionResult = await resolveWalletConfig(signerAddress, {
+                funderAddress,
+                signatureType,
+                clientOrUrl: config.publicClient ?? config.rpcUrl,
+                chainId: config.chainId,
+            });
+            signatureType = resolved.signatureType;
+            funderAddress = resolved.funderAddress;
+        }
+
+        return new ClobClient(
+            config.host,
+            config.chainId,
+            config.signer,
+            config.creds,
+            signatureType,
+            funderAddress,
+            config.geoBlockToken,
+            config.useServerTime,
+            config.builderConfig,
+            config.getSigner,
+            config.retryOnError,
+            config.tickSizeTtlMs,
+            config.throwOnError,
+        );
     }
 
     // Public endpoints
