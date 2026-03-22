@@ -96,14 +96,8 @@ export const post = async (
                 );
                 return resp.data;
             } catch (retryErr: unknown) {
-                if (!silenceLogs) {
-                    console.error("[CLOB Client] request error", retryErr);
-                }
                 return errorHandling(retryErr, silenceLogs);
             }
-        }
-        if (!silenceLogs) {
-            console.error("[CLOB Client] request error", err);
         }
         return errorHandling(err, silenceLogs);
     }
