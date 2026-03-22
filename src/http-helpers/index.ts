@@ -69,6 +69,7 @@ export const post = async (
     endpoint: string,
     options?: RequestOptions,
     retryOnError?: boolean,
+    silenceLogs = false,
 ): Promise<any> => {
     try {
         const resp = await request(
@@ -81,7 +82,9 @@ export const post = async (
         return resp.data;
     } catch (err: unknown) {
         if (retryOnError && isTransientAxiosError(err)) {
-            console.log("[CLOB Client] transient error, retrying once after 30 ms");
+            if (!silenceLogs) {
+                console.log("[CLOB Client] transient error, retrying once after 30 ms");
+            }
             await sleep(30);
             try {
                 const resp = await request(
@@ -93,23 +96,31 @@ export const post = async (
                 );
                 return resp.data;
             } catch (retryErr: unknown) {
-                return errorHandling(retryErr);
+                return errorHandling(retryErr, silenceLogs);
             }
         }
-        return errorHandling(err);
+        return errorHandling(err, silenceLogs);
     }
 };
 
-export const get = async (endpoint: string, options?: RequestOptions): Promise<any> => {
+export const get = async (
+    endpoint: string,
+    options?: RequestOptions,
+    silenceLogs = false,
+): Promise<any> => {
     try {
         const resp = await request(endpoint, GET, options?.headers, options?.data, options?.params);
         return resp.data;
     } catch (err: unknown) {
-        return errorHandling(err);
+        return errorHandling(err, silenceLogs);
     }
 };
 
-export const del = async (endpoint: string, options?: RequestOptions): Promise<any> => {
+export const del = async (
+    endpoint: string,
+    options?: RequestOptions,
+    silenceLogs = false,
+): Promise<any> => {
     try {
         const resp = await request(
             endpoint,
@@ -120,31 +131,38 @@ export const del = async (endpoint: string, options?: RequestOptions): Promise<a
         );
         return resp.data;
     } catch (err: unknown) {
-        return errorHandling(err);
+        return errorHandling(err, silenceLogs);
     }
 };
 
-export const put = async (endpoint: string, options?: RequestOptions): Promise<any> => {
+export const put = async (
+    endpoint: string,
+    options?: RequestOptions,
+    silenceLogs = false,
+): Promise<any> => {
     try {
         const resp = await request(endpoint, PUT, options?.headers, options?.data, options?.params);
         return resp.data;
     } catch (err: unknown) {
-        return errorHandling(err);
+        return errorHandling(err, silenceLogs);
     }
 };
 
-const errorHandling = (err: unknown) => {
+const errorHandling = (err: unknown, silenceLogs: boolean) => {
     if (axios.isAxiosError(err)) {
         if (err.response) {
-            console.error(
-                "[CLOB Client] request error",
-                JSON.stringify({
-                    status: err.response?.status,
-                    statusText: err.response?.statusText,
-                    data: err.response?.data,
-                    config: err.response?.config,
-                }),
-            );
+            if (!silenceLogs) {
+                console.error(
+                    "[CLOB Client] request error",
+                    JSON.stringify({
+                        status: err.response?.status,
+                        statusText: err.response?.statusText,
+                        data: err.response?.data,
+                        config: err.response?.config,
+                    }),
+                );
+            }
+
             if (err.response?.data) {
                 if (
                     typeof err.response?.data === "string" ||
@@ -161,17 +179,21 @@ const errorHandling = (err: unknown) => {
         }
 
         if (err.message) {
-            console.error(
-                "[CLOB Client] request error",
-                JSON.stringify({
-                    error: err.message,
-                }),
-            );
+            if (!silenceLogs) {
+                console.error(
+                    "[CLOB Client] request error",
+                    JSON.stringify({
+                        error: err.message,
+                    }),
+                );
+            }
             return { error: err.message };
         }
     }
 
-    console.error("[CLOB Client] request error", err);
+    if (!silenceLogs) {
+        console.error("[CLOB Client] request error", err);
+    }
     return { error: err };
 };
 

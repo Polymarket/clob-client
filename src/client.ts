@@ -172,6 +172,8 @@ export class ClobClient {
 
     readonly throwOnError: boolean;
 
+    readonly silenceLogs?: boolean;
+
     private tickSizeTimestamps: Record<string, number>;
 
     private readonly tickSizeTtlMs: number;
@@ -191,6 +193,7 @@ export class ClobClient {
         retryOnError?: boolean,
         tickSizeTtlMs?: number,
         throwOnError?: boolean,
+        silenceLogs?: boolean,
     ) {
         this.host = host.endsWith("/") ? host.slice(0, -1) : host;
         this.chainId = chainId;
@@ -217,6 +220,7 @@ export class ClobClient {
         this.useServerTime = useServerTime;
         this.retryOnError = retryOnError;
         this.throwOnError = throwOnError ?? false;
+        this.silenceLogs = silenceLogs ?? false;
         if (builderConfig !== undefined) {
             this.builderConfig = builderConfig;
         }
@@ -695,7 +699,12 @@ export class ClobClient {
     public async getTradesPaginated(
         params?: TradeParams,
         next_cursor?: string,
-    ): Promise<{ trades: Trade[]; next_cursor: string; limit: number; count: number }> {
+    ): Promise<{
+        trades: Trade[];
+        next_cursor: string;
+        limit: number;
+        count: number;
+    }> {
         this.canL2Auth();
 
         const endpoint = GET_TRADES;
@@ -734,7 +743,12 @@ export class ClobClient {
     public async getBuilderTrades(
         params?: TradeParams,
         next_cursor?: string,
-    ): Promise<{ trades: BuilderTrade[]; next_cursor: string; limit: number; count: number }> {
+    ): Promise<{
+        trades: BuilderTrade[];
+        next_cursor: string;
+        limit: number;
+        count: number;
+    }> {
         this.mustBuilderAuth();
 
         const endpoint = GET_BUILDER_TRADES;
@@ -1036,7 +1050,10 @@ export class ClobClient {
             }
         }
 
-        return this.post(`${this.host}${endpoint}`, { headers, data: orderPayload });
+        return this.post(`${this.host}${endpoint}`, {
+            headers,
+            data: orderPayload,
+        });
     }
 
     public async postOrders(
@@ -1082,7 +1099,10 @@ export class ClobClient {
             }
         }
 
-        return this.post(`${this.host}${endpoint}`, { headers, data: ordersPayload });
+        return this.post(`${this.host}${endpoint}`, {
+            headers,
+            data: ordersPayload,
+        });
     }
 
     public async cancelOrder(payload: OrderPayload): Promise<any> {
@@ -1483,10 +1503,14 @@ export class ClobClient {
 
     // http methods
     protected async get(endpoint: string, options?: RequestOptions) {
-        const result = await get(endpoint, {
-            ...options,
-            params: { ...options?.params, geo_block_token: this.geoBlockToken },
-        });
+        const result = await get(
+            endpoint,
+            {
+                ...options,
+                params: { ...options?.params, geo_block_token: this.geoBlockToken },
+            },
+            this.silenceLogs,
+        );
         return this.throwIfError(result);
     }
 
@@ -1498,23 +1522,32 @@ export class ClobClient {
                 params: { ...options?.params, geo_block_token: this.geoBlockToken },
             },
             this.retryOnError,
+            this.silenceLogs,
         );
         return this.throwIfError(result);
     }
 
     protected async put(endpoint: string, options?: RequestOptions) {
-        const result = await put(endpoint, {
-            ...options,
-            params: { ...options?.params, geo_block_token: this.geoBlockToken },
-        });
+        const result = await put(
+            endpoint,
+            {
+                ...options,
+                params: { ...options?.params, geo_block_token: this.geoBlockToken },
+            },
+            this.silenceLogs,
+        );
         return this.throwIfError(result);
     }
 
     protected async del(endpoint: string, options?: RequestOptions) {
-        const result = await del(endpoint, {
-            ...options,
-            params: { ...options?.params, geo_block_token: this.geoBlockToken },
-        });
+        const result = await del(
+            endpoint,
+            {
+                ...options,
+                params: { ...options?.params, geo_block_token: this.geoBlockToken },
+            },
+            this.silenceLogs,
+        );
         return this.throwIfError(result);
     }
 
