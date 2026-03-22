@@ -69,7 +69,7 @@ export const post = async (
     endpoint: string,
     options?: RequestOptions,
     retryOnError?: boolean,
-    silenceLogs = true,
+    silenceLogs = false,
 ): Promise<any> => {
     try {
         const resp = await request(
@@ -82,7 +82,7 @@ export const post = async (
         return resp.data;
     } catch (err: unknown) {
         if (retryOnError && isTransientAxiosError(err)) {
-            if (silenceLogs) {
+            if (!silenceLogs) {
                 console.log("[CLOB Client] transient error, retrying once after 30 ms");
             }
             await sleep(30);
@@ -96,13 +96,13 @@ export const post = async (
                 );
                 return resp.data;
             } catch (retryErr: unknown) {
-                if (silenceLogs) {
+                if (!silenceLogs) {
                     console.error("[CLOB Client] request error", retryErr);
                 }
                 return errorHandling(retryErr, silenceLogs);
             }
         }
-        if (silenceLogs) {
+        if (!silenceLogs) {
             console.error("[CLOB Client] request error", err);
         }
         return errorHandling(err, silenceLogs);
@@ -112,7 +112,7 @@ export const post = async (
 export const get = async (
     endpoint: string,
     options?: RequestOptions,
-    silenceLogs = true,
+    silenceLogs = false,
 ): Promise<any> => {
     try {
         const resp = await request(endpoint, GET, options?.headers, options?.data, options?.params);
@@ -125,7 +125,7 @@ export const get = async (
 export const del = async (
     endpoint: string,
     options?: RequestOptions,
-    silenceLogs = true,
+    silenceLogs = false,
 ): Promise<any> => {
     try {
         const resp = await request(
@@ -144,7 +144,7 @@ export const del = async (
 export const put = async (
     endpoint: string,
     options?: RequestOptions,
-    silenceLogs = true,
+    silenceLogs = false,
 ): Promise<any> => {
     try {
         const resp = await request(endpoint, PUT, options?.headers, options?.data, options?.params);
@@ -157,7 +157,7 @@ export const put = async (
 const errorHandling = (err: unknown, silenceLogs: boolean) => {
     if (axios.isAxiosError(err)) {
         if (err.response) {
-            if (silenceLogs) {
+            if (!silenceLogs) {
                 console.error(
                     "[CLOB Client] request error",
                     JSON.stringify({
@@ -185,7 +185,7 @@ const errorHandling = (err: unknown, silenceLogs: boolean) => {
         }
 
         if (err.message) {
-            if (silenceLogs) {
+            if (!silenceLogs) {
                 console.error(
                     "[CLOB Client] request error",
                     JSON.stringify({
@@ -197,7 +197,7 @@ const errorHandling = (err: unknown, silenceLogs: boolean) => {
         }
     }
 
-    if (silenceLogs) {
+    if (!silenceLogs) {
         console.error("[CLOB Client] request error", err);
     }
     return { error: err };

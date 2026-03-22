@@ -193,7 +193,7 @@ export class ClobClient {
         retryOnError?: boolean,
         tickSizeTtlMs?: number,
         throwOnError?: boolean,
-        logErrors?: boolean,
+        silenceLogs?: boolean,
     ) {
         this.host = host.endsWith("/") ? host.slice(0, -1) : host;
         this.chainId = chainId;
@@ -220,7 +220,7 @@ export class ClobClient {
         this.useServerTime = useServerTime;
         this.retryOnError = retryOnError;
         this.throwOnError = throwOnError ?? false;
-        this.silenceLogs = logErrors ?? false;
+        this.silenceLogs = silenceLogs ?? false;
         if (builderConfig !== undefined) {
             this.builderConfig = builderConfig;
         }
