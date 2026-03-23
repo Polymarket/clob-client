@@ -81,7 +81,6 @@ export const post = async (
         return resp.data;
     } catch (err: unknown) {
         if (retryOnError && isTransientAxiosError(err)) {
-            console.log("[CLOB Client] transient error, retrying once after 30 ms");
             await sleep(30);
             try {
                 const resp = await request(
@@ -136,15 +135,6 @@ export const put = async (endpoint: string, options?: RequestOptions): Promise<a
 const errorHandling = (err: unknown) => {
     if (axios.isAxiosError(err)) {
         if (err.response) {
-            console.error(
-                "[CLOB Client] request error",
-                JSON.stringify({
-                    status: err.response?.status,
-                    statusText: err.response?.statusText,
-                    data: err.response?.data,
-                    config: err.response?.config,
-                }),
-            );
             if (err.response?.data) {
                 if (
                     typeof err.response?.data === "string" ||
@@ -161,17 +151,10 @@ const errorHandling = (err: unknown) => {
         }
 
         if (err.message) {
-            console.error(
-                "[CLOB Client] request error",
-                JSON.stringify({
-                    error: err.message,
-                }),
-            );
             return { error: err.message };
         }
     }
 
-    console.error("[CLOB Client] request error", err);
     return { error: err };
 };
 
