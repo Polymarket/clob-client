@@ -4,7 +4,6 @@
         "node_modules",
     ],
     "compilerOptions": {
-        "baseUrl": "./",
         "module": "nodenext",
         "moduleResolution": "nodenext",
         "target": "es2022",
