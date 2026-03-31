@@ -62,7 +62,7 @@
     },
     "dependencies": {
         "@polymarket/builder-signing-sdk": "^1.0.0",
-        "axios": "^1.0.0",
+        "axios": "1.14.0",
         "browser-or-node": "^2.1.1",
         "viem": "^2.46.3"
     },
