@@ -35,6 +35,7 @@ export interface RfqDeps {
     useServerTime?: boolean;
 
     geoBlockToken?: string;
+    funderAddress?: string;
 
     /**
      * Numeric user type (backed by SignatureType in the order builder).
