@@ -114,6 +114,7 @@ import type {
     OrderBookSummary,
     OrderMarketCancelParams,
     OrderPayload,
+    OrderResponse,
     OrderScoring,
     OrderScoringParams,
     OrdersScoring,
@@ -936,7 +937,7 @@ export class ClobClient {
         orderType: T = OrderType.GTC as T,
         deferExec = false,
         postOnly = false,
-    ): Promise<any> {
+    ): Promise<OrderResponse> {
         const order = await this.createOrder(userOrder, options);
         return this.postOrder(order, orderType, deferExec, postOnly);
     }
@@ -946,7 +947,7 @@ export class ClobClient {
         options?: Partial<CreateOrderOptions>,
         orderType: T = OrderType.FOK as T,
         deferExec = false,
-    ): Promise<any> {
+    ): Promise<OrderResponse> {
         const order = await this.createMarketOrder(userMarketOrder, options);
         return this.postOrder(order, orderType, deferExec);
     }
@@ -1001,7 +1002,7 @@ export class ClobClient {
         orderType: T = OrderType.GTC as T,
         deferExec = false,
         postOnly = false,
-    ): Promise<any> {
+    ): Promise<OrderResponse> {
         this.canL2Auth();
         const endpoint = POST_ORDER;
         const orderPayload = orderToJson(
@@ -1043,7 +1044,7 @@ export class ClobClient {
         args: PostOrdersArgs[],
         deferExec = false,
         defaultPostOnly = false,
-    ): Promise<any> {
+    ): Promise<OrderResponse[]> {
         this.canL2Auth();
         const endpoint = POST_ORDERS;
         const ordersPayload: NewOrder<any>[] = [];
