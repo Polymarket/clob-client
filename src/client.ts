@@ -102,9 +102,13 @@ import type {
     L2HeaderArgs,
     L2PolyHeader,
     L2WithBuilderHeader,
+    LastTradePriceResponse,
+    LastTradePricesResponse,
     MarketPrice,
     MarketReward,
     MarketTradeEvent,
+    MidpointResponse,
+    MidpointsResponse,
     NegRisk,
     NewOrder,
     Notification,
@@ -121,8 +125,12 @@ import type {
     PaginationPayload,
     PostOrdersArgs,
     PriceHistoryFilterParams,
+    PriceResponse,
+    PricesResponse,
     ReadonlyApiKeyResponse,
     RewardsPercentages,
+    SpreadResponse,
+    SpreadsResponse,
     TickSize,
     TickSizes,
     TotalUserEarning,
@@ -374,49 +382,49 @@ export class ClobClient {
         return generateOrderBookSummaryHash(orderbook);
     }
 
-    public async getMidpoint(tokenID: string): Promise<any> {
+    public async getMidpoint(tokenID: string): Promise<MidpointResponse> {
         return this.get(`${this.host}${GET_MIDPOINT}`, {
             params: { token_id: tokenID },
         });
     }
 
-    public async getMidpoints(params: BookParams[]): Promise<any> {
+    public async getMidpoints(params: BookParams[]): Promise<MidpointsResponse> {
         return this.post(`${this.host}${GET_MIDPOINTS}`, {
             data: params,
         });
     }
 
-    public async getPrice(tokenID: string, side: string): Promise<any> {
+    public async getPrice(tokenID: string, side: string): Promise<PriceResponse> {
         return this.get(`${this.host}${GET_PRICE}`, {
             params: { token_id: tokenID, side: side },
         });
     }
 
-    public async getPrices(params: BookParams[]): Promise<any> {
+    public async getPrices(params: BookParams[]): Promise<PricesResponse> {
         return this.post(`${this.host}${GET_PRICES}`, {
             data: params,
         });
     }
 
-    public async getSpread(tokenID: string): Promise<any> {
+    public async getSpread(tokenID: string): Promise<SpreadResponse> {
         return this.get(`${this.host}${GET_SPREAD}`, {
             params: { token_id: tokenID },
         });
     }
 
-    public async getSpreads(params: BookParams[]): Promise<any> {
+    public async getSpreads(params: BookParams[]): Promise<SpreadsResponse> {
         return this.post(`${this.host}${GET_SPREADS}`, {
             data: params,
         });
     }
 
-    public async getLastTradePrice(tokenID: string): Promise<any> {
+    public async getLastTradePrice(tokenID: string): Promise<LastTradePriceResponse> {
         return this.get(`${this.host}${GET_LAST_TRADE_PRICE}`, {
             params: { token_id: tokenID },
         });
     }
 
-    public async getLastTradesPrices(params: BookParams[]): Promise<any> {
+    public async getLastTradesPrices(params: BookParams[]): Promise<LastTradePricesResponse> {
         return this.post(`${this.host}${GET_LAST_TRADES_PRICES}`, {
             data: params,
         });
