@@ -59,8 +59,6 @@ const sleep = (ms: number) => new Promise(res => setTimeout(res, ms));
 const isTransientAxiosError = (err: unknown): boolean => {
     if (!axios.isAxiosError(err)) return false;
     if (!err.response) return true; // network error
-    const status = err.response.status ?? 0;
-    if (status >= 500 && status < 600) return true; // 5xx
     const code = (err.code ?? "").toString();
     return ["ECONNABORTED", "ENETUNREACH", "EAI_AGAIN", "ETIMEDOUT"].includes(code);
 };
