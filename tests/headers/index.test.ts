@@ -113,4 +113,37 @@ describe("headers", () => {
             expect(l2Headers.POLY_PASSPHRASE).equal(creds.passphrase);
         });
     });
+
+    describe("funderAddress override", () => {
+        const funder = "0x1234567890abcdef1234567890abcdef12345678";
+
+        it("L1 headers use funderAddress for POLY_ADDRESS when provided", async () => {
+            const l1Headers = await createL1Headers(wallet, chainId, 0, undefined, funder);
+            expect(l1Headers.POLY_ADDRESS).equal(funder);
+            expect(l1Headers.POLY_SIGNATURE).not.empty;
+        });
+
+        it("L1 headers fall back to signer address when funderAddress is undefined", async () => {
+            const l1Headers = await createL1Headers(wallet, chainId, 0, undefined, undefined);
+            expect(l1Headers.POLY_ADDRESS).equal(wallet.address);
+        });
+
+        it("L2 headers use funderAddress for POLY_ADDRESS when provided", async () => {
+            const l2Headers = await createL2Headers(wallet, creds, {
+                method: "get",
+                requestPath: "/order",
+            }, undefined, funder);
+            expect(l2Headers.POLY_ADDRESS).equal(funder);
+            expect(l2Headers.POLY_SIGNATURE).not.empty;
+            expect(l2Headers.POLY_API_KEY).equal(creds.key);
+        });
+
+        it("L2 headers fall back to signer address when funderAddress is undefined", async () => {
+            const l2Headers = await createL2Headers(wallet, creds, {
+                method: "get",
+                requestPath: "/order",
+            }, undefined, undefined);
+            expect(l2Headers.POLY_ADDRESS).equal(wallet.address);
+        });
+    });
 });
