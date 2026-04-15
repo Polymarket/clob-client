@@ -297,6 +297,31 @@ export enum PriceHistoryInterval {
     ONE_HOUR = "1h",
 }
 
+export interface MidpointResponse {
+    midpoint: string;
+}
+
+export type MidpointsResponse = MidpointResponse[] | Record<string, string>;
+
+export interface PriceResponse {
+    price: string;
+}
+
+export type PricesResponse = PriceResponse[] | Record<string, string>;
+
+export interface SpreadResponse {
+    spread: string;
+}
+
+export type SpreadsResponse = SpreadResponse[] | Record<string, string>;
+
+export interface LastTradePriceResponse {
+    last_trade_price?: string;
+    price?: string;
+}
+
+export type LastTradePricesResponse = LastTradePriceResponse[] | Record<string, string>;
+
 export interface DropNotificationParams {
     ids: string[];
 }
