@@ -47,6 +47,16 @@ const signatureType = 1;
 
 See [examples](examples/) for more information
 
+### Signer compatibility
+
+`ClobClient` accepts the following signer types:
+
+- **viem `WalletClient`** (recommended) — see [Using viem WalletClient](#using-viem-walletclient).
+- **ethers v5** — any signer exposing `_signTypedData` and `getAddress`, including `Wallet` from `ethers@^5` or the standalone `@ethersproject/wallet` package (used in the example above).
+- **ethers v6 is not directly supported.** v6 renamed `_signTypedData` to `signTypedData`, which this client's ethers path still requires. If you are on ethers v6, use a viem `WalletClient` instead.
+
+`ethers` is not a runtime dependency of this package — install it only if you pass an ethers signer.
+
 ### Using viem WalletClient
 
 ```ts
