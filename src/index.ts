@@ -20,3 +20,5 @@ export * from "./rfq-client.ts";
 export * from "./rfq-deps.ts";
 export type { ClobSigner } from "./signer.ts";
 export * from "./types.ts";
+export type { WalletDetectionResult } from "./wallet-detection.ts";
+export { detectWalletType, resolveWalletConfig } from "./wallet-detection.ts";

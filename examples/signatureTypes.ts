@@ -17,10 +17,12 @@ async function main() {
         passphrase: `${process.env.CLOB_PASS_PHRASE}`,
     };
 
-    // Client used with an EOA: Signature type 0
+    // ─── Option A: Explicit wallet type (existing API, still works) ───
+
+    // EOA: Signature type 0
     const clobClient = new ClobClient(host, chainId, wallet, creds);
 
-    // Client used with a Polymarket Proxy Wallet: Signature type 1
+    // Polymarket Proxy Wallet: Signature type 1
     const proxyWalletAddress = "0x...";
     const polyProxyClient = new ClobClient(
         host,
@@ -31,7 +33,7 @@ async function main() {
         proxyWalletAddress,
     );
 
-    // Client used with a Polymarket Gnosis safe: Signature Type 2
+    // Polymarket Gnosis Safe: Signature type 2
     const gnosisSafeAddress = "0x...";
     const polyGnosisSafeClient = new ClobClient(
         host,
@@ -42,9 +44,33 @@ async function main() {
         gnosisSafeAddress,
     );
 
+    // ─── Option B: Auto-detect wallet type (new API) ───
+    // Just provide the funderAddress (your Polymarket wallet) and an RPC URL.
+    // The SDK figures out whether it's a Proxy or a Safe automatically.
+
+    const polymarketWallet = "0x..."; // your address from polymarket.com/settings
+    const autoDetectedClient = await ClobClient.create({
+        host,
+        chainId,
+        signer: wallet,
+        creds,
+        funderAddress: polymarketWallet,
+        rpcUrl: "https://polygon-rpc.com",
+    });
+
+    // EOA usage with ClobClient.create() — no funderAddress needed
+    const eaoClient = await ClobClient.create({
+        host,
+        chainId,
+        signer: wallet,
+        creds,
+    });
+
     void clobClient;
     void polyProxyClient;
     void polyGnosisSafeClient;
+    void autoDetectedClient;
+    void eaoClient;
 }
 
 main();
