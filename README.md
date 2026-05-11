@@ -1,3 +1,11 @@
+> [!WARNING]
+> This repository has been archived and is no longer maintained.
+>
+> The client is no longer functional and should not be used for new or existing integrations.
+>
+> Please migrate to the V2 client:
+> https://github.com/Polymarket/clob-client-v2
+
 # Polymarket CLOB Client
 
 <a href='https://www.npmjs.com/package/@polymarket/clob-client'>
