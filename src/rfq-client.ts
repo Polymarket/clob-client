@@ -137,6 +137,7 @@ export class RfqClient implements IRfqClient {
             this.deps.creds as ApiKeyCreds,
             l2HeaderArgs,
             this.deps.useServerTime ? await this.deps.getServerTime() : undefined,
+            this.deps.funderAddress,
         );
 
         return this.deps.post(`${this.deps.host}${endpoint}`, { headers, data: payload });
@@ -160,6 +161,7 @@ export class RfqClient implements IRfqClient {
             this.deps.creds as ApiKeyCreds,
             l2HeaderArgs,
             this.deps.useServerTime ? await this.deps.getServerTime() : undefined,
+            this.deps.funderAddress,
         );
 
         return this.deps.del(`${this.deps.host}${endpoint}`, { headers, data: request });
@@ -182,6 +184,7 @@ export class RfqClient implements IRfqClient {
             this.deps.creds as ApiKeyCreds,
             l2HeaderArgs,
             this.deps.useServerTime ? await this.deps.getServerTime() : undefined,
+            this.deps.funderAddress,
         );
 
         const query = buildRepeatedQuery(params);
@@ -267,6 +270,7 @@ export class RfqClient implements IRfqClient {
             this.deps.creds as ApiKeyCreds,
             l2HeaderArgs,
             this.deps.useServerTime ? await this.deps.getServerTime() : undefined,
+            this.deps.funderAddress,
         );
 
         return this.deps.post(`${this.deps.host}${endpoint}`, { headers, data: quoteWithUserType });
@@ -290,6 +294,7 @@ export class RfqClient implements IRfqClient {
             this.deps.creds as ApiKeyCreds,
             l2HeaderArgs,
             this.deps.useServerTime ? await this.deps.getServerTime() : undefined,
+            this.deps.funderAddress,
         );
 
         const query = buildRepeatedQuery(params);
@@ -318,6 +323,7 @@ export class RfqClient implements IRfqClient {
             this.deps.creds as ApiKeyCreds,
             l2HeaderArgs,
             this.deps.useServerTime ? await this.deps.getServerTime() : undefined,
+            this.deps.funderAddress,
         );
 
         const query = buildRepeatedQuery(params);
@@ -344,6 +350,7 @@ export class RfqClient implements IRfqClient {
             this.deps.creds as ApiKeyCreds,
             l2HeaderArgs,
             this.deps.useServerTime ? await this.deps.getServerTime() : undefined,
+            this.deps.funderAddress,
         );
 
         return this.deps.get(`${this.deps.host}${endpoint}`, { headers, params });
@@ -367,6 +374,7 @@ export class RfqClient implements IRfqClient {
             this.deps.creds as ApiKeyCreds,
             l2HeaderArgs,
             this.deps.useServerTime ? await this.deps.getServerTime() : undefined,
+            this.deps.funderAddress,
         );
 
         return this.deps.del(`${this.deps.host}${endpoint}`, { headers, data: quote });
@@ -389,6 +397,7 @@ export class RfqClient implements IRfqClient {
             this.deps.creds as ApiKeyCreds,
             l2HeaderArgs,
             this.deps.useServerTime ? await this.deps.getServerTime() : undefined,
+            this.deps.funderAddress,
         );
 
         return this.deps.get(`${this.deps.host}${endpoint}`, { headers });
@@ -457,6 +466,7 @@ export class RfqClient implements IRfqClient {
             this.deps.creds as ApiKeyCreds,
             l2HeaderArgs,
             this.deps.useServerTime ? await this.deps.getServerTime() : undefined,
+            this.deps.funderAddress,
         );
 
         return this.deps.post(`${this.deps.host}${endpoint}`, { headers, data: acceptPayload });
@@ -523,6 +533,7 @@ export class RfqClient implements IRfqClient {
             this.deps.creds as ApiKeyCreds,
             l2HeaderArgs,
             this.deps.useServerTime ? await this.deps.getServerTime() : undefined,
+            this.deps.funderAddress,
         );
 
         return this.deps.post(`${this.deps.host}${endpoint}`, { headers, data: approvePayload });

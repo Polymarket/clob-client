@@ -171,6 +171,7 @@ export class ClobClient {
     readonly retryOnError?: boolean;
 
     readonly throwOnError: boolean;
+    readonly funderAddress?: string;
 
     private tickSizeTimestamps: Record<string, number>;
 
@@ -217,6 +218,7 @@ export class ClobClient {
         this.useServerTime = useServerTime;
         this.retryOnError = retryOnError;
         this.throwOnError = throwOnError ?? false;
+        this.funderAddress = funderAddress;
         if (builderConfig !== undefined) {
             this.builderConfig = builderConfig;
         }
@@ -227,6 +229,7 @@ export class ClobClient {
             creds: this.creds,
             useServerTime: this.useServerTime,
             geoBlockToken: this.geoBlockToken,
+            funderAddress: this.funderAddress,
             userType: this.orderBuilder.signatureType,
             getServerTime: this.getServerTime.bind(this),
             getTickSize: this.getTickSize.bind(this),
@@ -505,6 +508,7 @@ export class ClobClient {
             this.creds as ApiKeyCreds,
             headerArgs,
             this.useServerTime ? await this.getServerTime() : undefined,
+            this.funderAddress,
         );
 
         return this.get(`${this.host}${endpoint}`, { headers });
@@ -524,6 +528,7 @@ export class ClobClient {
             this.creds as ApiKeyCreds,
             headerArgs,
             this.useServerTime ? await this.getServerTime() : undefined,
+            this.funderAddress,
         );
 
         return this.get(`${this.host}${endpoint}`, { headers });
@@ -543,6 +548,7 @@ export class ClobClient {
             this.creds as ApiKeyCreds,
             headerArgs,
             this.useServerTime ? await this.getServerTime() : undefined,
+            this.funderAddress,
         );
 
         return this.del(`${this.host}${endpoint}`, { headers });
@@ -566,6 +572,7 @@ export class ClobClient {
             this.creds as ApiKeyCreds,
             headerArgs,
             this.useServerTime ? await this.getServerTime() : undefined,
+            this.funderAddress,
         );
 
         return this.post(`${this.host}${endpoint}`, { headers });
@@ -585,6 +592,7 @@ export class ClobClient {
             this.creds as ApiKeyCreds,
             headerArgs,
             this.useServerTime ? await this.getServerTime() : undefined,
+            this.funderAddress,
         );
 
         return this.get(`${this.host}${endpoint}`, { headers });
@@ -611,6 +619,7 @@ export class ClobClient {
             this.creds as ApiKeyCreds,
             headerArgs,
             this.useServerTime ? await this.getServerTime() : undefined,
+            this.funderAddress,
         );
 
         return this.del(`${this.host}${endpoint}`, { headers, data: payload });
@@ -642,6 +651,7 @@ export class ClobClient {
             this.creds as ApiKeyCreds,
             headerArgs,
             this.useServerTime ? await this.getServerTime() : undefined,
+            this.funderAddress,
         );
 
         // builders flow
@@ -673,6 +683,7 @@ export class ClobClient {
             this.creds as ApiKeyCreds,
             headerArgs,
             this.useServerTime ? await this.getServerTime() : undefined,
+            this.funderAddress,
         );
 
         let results: Trade[] = [];
@@ -709,6 +720,7 @@ export class ClobClient {
             this.creds as ApiKeyCreds,
             headerArgs,
             this.useServerTime ? await this.getServerTime() : undefined,
+            this.funderAddress,
         );
 
         next_cursor = next_cursor || INITIAL_CURSOR;
@@ -783,6 +795,7 @@ export class ClobClient {
             this.creds as ApiKeyCreds,
             headerArgs,
             this.useServerTime ? await this.getServerTime() : undefined,
+            this.funderAddress,
         );
 
         return this.get(`${this.host}${endpoint}`, {
@@ -805,6 +818,7 @@ export class ClobClient {
             this.creds as ApiKeyCreds,
             l2HeaderArgs,
             this.useServerTime ? await this.getServerTime() : undefined,
+            this.funderAddress,
         );
 
         return this.del(`${this.host}${endpoint}`, {
@@ -829,6 +843,7 @@ export class ClobClient {
             this.creds as ApiKeyCreds,
             headerArgs,
             this.useServerTime ? await this.getServerTime() : undefined,
+            this.funderAddress,
         );
 
         const _params = {
@@ -853,6 +868,7 @@ export class ClobClient {
             this.creds as ApiKeyCreds,
             headerArgs,
             this.useServerTime ? await this.getServerTime() : undefined,
+            this.funderAddress,
         );
 
         const _params = {
@@ -968,6 +984,7 @@ export class ClobClient {
             this.creds as ApiKeyCreds,
             l2HeaderArgs,
             this.useServerTime ? await this.getServerTime() : undefined,
+            this.funderAddress,
         );
 
         // builders flow
@@ -1023,6 +1040,7 @@ export class ClobClient {
             this.creds as ApiKeyCreds,
             l2HeaderArgs,
             this.useServerTime ? await this.getServerTime() : undefined,
+            this.funderAddress,
         );
 
         // builders flow
@@ -1069,6 +1087,7 @@ export class ClobClient {
             this.creds as ApiKeyCreds,
             l2HeaderArgs,
             this.useServerTime ? await this.getServerTime() : undefined,
+            this.funderAddress,
         );
 
         // builders flow
@@ -1099,6 +1118,7 @@ export class ClobClient {
             this.creds as ApiKeyCreds,
             l2HeaderArgs,
             this.useServerTime ? await this.getServerTime() : undefined,
+            this.funderAddress,
         );
         return this.del(`${this.host}${endpoint}`, { headers, data: payload });
     }
@@ -1117,6 +1137,7 @@ export class ClobClient {
             this.creds as ApiKeyCreds,
             l2HeaderArgs,
             this.useServerTime ? await this.getServerTime() : undefined,
+            this.funderAddress,
         );
         return this.del(`${this.host}${endpoint}`, { headers, data: ordersHashes });
     }
@@ -1134,6 +1155,7 @@ export class ClobClient {
             this.creds as ApiKeyCreds,
             l2HeaderArgs,
             this.useServerTime ? await this.getServerTime() : undefined,
+            this.funderAddress,
         );
         return this.del(`${this.host}${endpoint}`, { headers });
     }
@@ -1165,6 +1187,7 @@ export class ClobClient {
             this.creds as ApiKeyCreds,
             l2HeaderArgs,
             this.useServerTime ? await this.getServerTime() : undefined,
+            this.funderAddress,
         );
 
         return this.post(`${this.host}${endpoint}`, { headers, data: serialized });
@@ -1184,6 +1207,7 @@ export class ClobClient {
             this.creds as ApiKeyCreds,
             l2HeaderArgs,
             this.useServerTime ? await this.getServerTime() : undefined,
+            this.funderAddress,
         );
         return this.del(`${this.host}${endpoint}`, { headers, data: payload });
     }
@@ -1202,6 +1226,7 @@ export class ClobClient {
             this.creds as ApiKeyCreds,
             headerArgs,
             this.useServerTime ? await this.getServerTime() : undefined,
+            this.funderAddress,
         );
 
         return this.get(`${this.host}${endpoint}`, { headers, params });
@@ -1223,6 +1248,7 @@ export class ClobClient {
             this.creds as ApiKeyCreds,
             headerArgs,
             this.useServerTime ? await this.getServerTime() : undefined,
+            this.funderAddress,
         );
 
         return this.post(`${this.host}${endpoint}`, {
@@ -1246,6 +1272,7 @@ export class ClobClient {
             this.creds as ApiKeyCreds,
             headerArgs,
             this.useServerTime ? await this.getServerTime() : undefined,
+            this.funderAddress,
         );
 
         let results: UserEarning[] = [];
@@ -1281,6 +1308,7 @@ export class ClobClient {
             this.creds as ApiKeyCreds,
             headerArgs,
             this.useServerTime ? await this.getServerTime() : undefined,
+            this.funderAddress,
         );
 
         const params = {
@@ -1313,6 +1341,7 @@ export class ClobClient {
             this.creds as ApiKeyCreds,
             headerArgs,
             this.useServerTime ? await this.getServerTime() : undefined,
+            this.funderAddress,
         );
 
         let results: UserRewardsEarning[] = [];
@@ -1351,6 +1380,7 @@ export class ClobClient {
             this.creds as ApiKeyCreds,
             headerArgs,
             this.useServerTime ? await this.getServerTime() : undefined,
+            this.funderAddress,
         );
 
         const _params = {
@@ -1426,6 +1456,7 @@ export class ClobClient {
             this.creds as ApiKeyCreds,
             headerArgs,
             this.useServerTime ? await this.getServerTime() : undefined,
+            this.funderAddress,
         );
 
         return this.post(`${this.host}${endpoint}`, { headers });
@@ -1445,6 +1476,7 @@ export class ClobClient {
             this.creds as ApiKeyCreds,
             headerArgs,
             this.useServerTime ? await this.getServerTime() : undefined,
+            this.funderAddress,
         );
 
         return this.get(`${this.host}${endpoint}`, { headers });
