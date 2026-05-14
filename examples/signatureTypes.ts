@@ -42,9 +42,21 @@ async function main() {
         gnosisSafeAddress,
     );
 
+    // Client used with a Polymarket Deposit Wallet: Signature type 3
+    const depositWalletAddress = "0x...";
+    const depositWalletClient = new ClobClient(
+        host,
+        chainId,
+        wallet,
+        creds,
+        SignatureType.POLY_DEPOSIT_WALLET,
+        depositWalletAddress,
+    );
+
     void clobClient;
     void polyProxyClient;
     void polyGnosisSafeClient;
+    void depositWalletClient;
 }
 
 main();
